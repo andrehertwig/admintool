@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body >
+	
+	<div th:remove="tag" th:fragment="submenuInclude (menuItem, withIcon)">
+		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" >
+			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
+				<i class="fa fa-link" th:if="${withIcon}"></i>
+				<span th:text="${menuItem.displayName}">Link</span>
+				<i class="fa fa-angle-left pull-right" th:if="${not #lists.isEmpty(menuItem.submenu)}"></i>
+			</a>
+			<ul class="treeview-menu" th:if="${not #lists.isEmpty(menuItem.submenu)}">
+				<li th:each="submenuItem,iterState : ${menuItem.submenu}" th:remove="tag">
+					<span th:replace="admintool/fragments/fragements :: submenuInclude (${submenuItem}, false)" />
+				</li>
+			</ul>
+		</li>
+	</div>
+
+
+</body>
+
+</html>

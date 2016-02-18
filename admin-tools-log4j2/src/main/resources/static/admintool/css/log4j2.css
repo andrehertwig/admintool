@@ -1,0 +1,34 @@
+
+.label {
+	margin: 0 2px 0 0;
+}
+ 
+.label-muted {
+	background-color:#777 !important;
+}
+
+.changeLogger {
+	color: #fff;
+	cursor: pointer; 
+	cursor: hand; 
+}
+
+.logname {
+	white-space: normal;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	/*word-break: break-word;*/
+	word-break: break-all;
+	-ms-hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+}
+td.loglevel {
+	width: 58px;
+	min-width: 58px;
+}
+td.logaction {
+	width:325px;
+	min-width: 325px;
+}

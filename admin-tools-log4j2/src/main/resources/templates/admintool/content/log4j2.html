@@ -1,0 +1,103 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Log4j Console <small>Configuration</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+		<li class="active">Here</li>
+	</ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+	<div class="box box-info" th:with="parentLoggers=${@adminToolLog4j2Util.getParentLoggers()}">
+		
+		<div class="box-header with-border">
+			<h3 class="box-title">
+			<i class="fa fa-bug"></i>
+				Parent Loggers <span th:text="' ('+ ${parentLoggers.size()} +')'"></span>
+			</h3>
+			<button class="btn btn-default pull-right" id="removeCustomLogger">Remove Custom Parent Loggers</button>
+		</div>
+		<div class="box-body">
+
+			<div class="table-responsive">
+				<table class="table no-margin">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Level</th>
+							<th>Change Level</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="logger, iterState : ${parentLoggers}" class="logrow parent">
+							<td class="logname" th:text="${#strings.defaultString(logger.getName(),'ROOT')}"></td>
+							<td th:text="${logger.getLevel()}"
+								th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
+							<td class="logaction">
+								<span th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
+									th:class="'label ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('label', level)}">
+									<a class="changeLogger" th:text="${level}"></a>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="box-footer clearfix">
+		&nbsp;
+		</div>
+	
+	</div>
+
+	<div class="box box-info" th:with="allLoggers=${@adminToolLog4j2Util.getLoggers()}">
+		
+		<div class="box-header with-border">
+			<h3 class="box-title">
+			<i class="fa fa-bug"></i>
+				All Loggers <span th:text="' ('+ ${allLoggers.size()} +')'"></span>
+			</h3>
+			<button class="btn btn-default pull-right" id="removeCustomLogger">Remove Custom Loggers</button>
+		</div>
+		<div class="box-body">
+
+			<div class="table-responsive">
+				<table class="table no-margin">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Level</th>
+							<th>Change Level</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="logger, iterState : ${allLoggers}" class="logrow">
+							<td>
+								<div class="logname" th:text="${#strings.defaultString(logger.getName(),'ROOT')}"></div>
+							</td>
+							<td th:text="${logger.getLevel()}"
+								th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
+							<td class="logaction">
+								<span th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
+									th:class="'label ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('label', level)}">
+									<a class="changeLogger" th:text="${level}"></a>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="box-footer clearfix">
+		&nbsp;
+		</div>
+	
+	</div>
+
+</section>
+<!-- /.content -->
+

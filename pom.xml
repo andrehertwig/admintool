@@ -1,0 +1,210 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools</artifactId>
+	<!--<version>1.0.0</version>-->
+	<version>1.0.0-SNAPSHOT</version> 
+	<packaging>pom</packaging>
+
+	<name>Admin tools</name>
+	<description>Collection of tools for maintain web applications</description>
+	
+	<url>https://www.chandre.de</url>
+	<inceptionYear>2016</inceptionYear>
+
+	<developers>
+		<developer>
+			<id>adwohr</id>
+			<name>André Hertwig</name>
+			<email>adwohr@users.noreply.github.com</email>
+			<url>https://github.com/adwohr</url>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>André Hertwig</name>
+			<email>adwohr@users.noreply.github.com</email>
+			<url>https://github.com/adwohr</url>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</contributor>
+	</contributors>
+	
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<modules>
+		<module>admin-tools-core</module>
+		<module>admin-tools-melody</module>
+		<module>admin-tools-jminix</module>
+		<module>admin-tools-log4j2</module>
+		<module>admin-tools-demo</module>
+		<!-- 
+		<module>admin-tools-quartz</module>
+		<module>admin-tools-dbbrowser</module>
+		<module>admin-tools-cluster</module> -->
+	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<!-- java compiler version -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		
+		<maven-site-plugin.version>3.4</maven-site-plugin.version>
+		<site.skipDeploy>true</site.skipDeploy>
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+		<skip.unit.tests>false</skip.unit.tests>
+		<jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
+		
+		<commons-lang.version>3.4</commons-lang.version>
+		<commons-collections.version>4.1</commons-collections.version>
+		<commons-io.version>2.4</commons-io.version>
+		<commons-logging.version>1.2</commons-logging.version>
+		
+		<org.json.version>20151123</org.json.version>
+		
+		<spring-boot.version>1.3.2.RELEASE</spring-boot.version>
+		
+		<thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
+		<thymeleaf-extras-conditionalcomments.version>2.1.1.RELEASE</thymeleaf-extras-conditionalcomments.version>
+		<thymeleaf-layout-dialect.version>1.3.1</thymeleaf-layout-dialect.version>
+		
+	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+		<!-- Project dependencies-->
+			<dependency>
+				<groupId>de.chandre.admin-tools</groupId>
+				<artifactId>admin-tools-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+		<!-- 3rd party dependencies-->
+		
+			<!-- Apache Commons-->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>${commons-collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			
+			<!-- Simple JSON Impl -->
+			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${org.json.version}</version>
+			</dependency>
+			
+			<!-- Spring Framework-->
+			<dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <type>pom</type>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+            </dependency>
+            
+            <dependency>
+				<groupId>net.bull.javamelody</groupId>
+				<artifactId>javamelody-core</artifactId>
+				<version>[1.58,)</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf</artifactId>
+				<version>${thymeleaf.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.thymeleaf</groupId>
+				<artifactId>thymeleaf-spring4</artifactId>
+				<version>${thymeleaf.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.thymeleaf.extras</groupId>
+				<artifactId>thymeleaf-extras-conditionalcomments</artifactId>
+				<version>${thymeleaf-extras-conditionalcomments.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>nz.net.ultraq.thymeleaf</groupId>
+				<artifactId>thymeleaf-layout-dialect</artifactId>
+				<version>${thymeleaf-layout-dialect.version}</version>
+			</dependency>
+			
+		</dependencies>
+	</dependencyManagement>
+	
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven-site-plugin.version}</version>
+				</plugin>
+				<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-surefire-plugin</artifactId>
+				    <version>${maven-surefire-plugin.version}</version>
+			    </plugin>
+			    <plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<plugins>
+			
+		</plugins>
+	</build>
+
+
+</project>
