@@ -35,10 +35,9 @@
 							<td th:text="${logger.getLevel()}"
 								th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
 							<td class="logaction">
-								<span th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
-									th:class="'label ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('label', level)}">
-									<a class="changeLogger" th:text="${level}"></a>
-								</span>
+								<button th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}" th:text="${level}"
+									th:class="'changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
+								</button>
 							</td>
 						</tr>
 					</tbody>
@@ -79,10 +78,9 @@
 							<td th:text="${logger.getLevel()}"
 								th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
 							<td class="logaction">
-								<span th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
-									th:class="'label ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('label', level)}">
-									<a class="changeLogger" th:text="${level}"></a>
-								</span>
+								<button th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}" th:text="${level}"
+									th:class="'changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
+								</button>
 							</td>
 						</tr>
 					</tbody>
