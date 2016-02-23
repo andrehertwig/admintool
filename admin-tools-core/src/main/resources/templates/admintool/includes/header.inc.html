@@ -1,0 +1,44 @@
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="language" content="de, deutsch" />
+<title>AdminTool</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+<link rel="stylesheet"
+	href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+
+<link rel="stylesheet"
+	href="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/AdminLTE.min.css" />
+
+<link rel="stylesheet"
+	href="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/skins/skin-blue.min.css" />
+
+<link rel="stylesheet" href="/static/admintool/css/adminTool.css" />
+
+<!--
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ -->
+  
+<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/js/app.min.js"></script>
+
+<script src="/static/admintool/js/adminTool.js"></script>
+
+<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
+	<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
+		<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" th:href="${cssPath}" />
+		<script th:each="jsPath,iterStateJS : ${adminComponent.additionalJS}" th:src="${jsPath}"></script>
+	</div>
+</div>		

@@ -83,7 +83,11 @@ public class AdminToolMenuUtils {
 	 */
 	public List<MenuEntry> getBreadcrumbList(MenuEntry actualEntry) {
 		List<MenuEntry> result = new LinkedList<>();
-		actualEntry.reverseFlattened().collect(toListReversed()).forEach(entry -> result.add(entry));
+		if (null != actualEntry) {
+			actualEntry.reverseFlattened().collect(toListReversed()).forEach(entry -> {
+				if(null != entry) result.add(entry);
+			});
+		}
 		return result;
 	}
 
