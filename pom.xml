@@ -60,8 +60,8 @@
 		<module>admin-tools-jminix</module>
 		<module>admin-tools-log4j2</module>
 		<module>admin-tools-demo</module>
-		<!-- 
 		<module>admin-tools-quartz</module>
+		<!-- 
 		<module>admin-tools-dbbrowser</module>
 		<module>admin-tools-cluster</module> -->
 	</modules>

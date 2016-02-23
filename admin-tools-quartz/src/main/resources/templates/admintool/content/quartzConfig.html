@@ -1,0 +1,107 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Quartz <small>Configuration</small>
+	</h1>
+	<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+	<div class="box box-info">
+	
+		<div class="box-header with-border">
+			<h3 class="box-title">
+			<i class="fa fa-refresh"></i>
+				Quartz Scheduler MetaData
+			</h3>
+		</div>
+		<div class="box-body">
+			<div class="table-responsive">
+				<table class="table no-margin">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody th:with="metaData = ${@adminToolQuartzService.getMetaData()}">
+						<tr>
+							<td>Scheduler is running</td>
+							<td>
+								<button id="changeScheduler" th:class="${@adminToolQuartzService.isSchedulerRunning()} ? 'btn btn-success' : 'btn btn-danger'" 
+									th:text="${@adminToolQuartzService.isSchedulerRunning()}"
+									th:title="${@adminToolQuartzService.isSchedulerRunning()} ? 'stop' : 'start'">
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>Scheduler name</td>
+							<td th:text="${metaData.getSchedulerName()}">Value</td>
+						</tr>
+						<tr>
+							<td>Scheduler instance Id</td>
+							<td th:text="${metaData.getSchedulerInstanceId()}">Value</td>
+						</tr>
+						<tr>
+							<td>Scheduler version</td>
+							<td th:text="${metaData.getVersion()}">Value</td>
+						</tr>
+						<tr>
+							<td>Number of jobs executed</td>
+							<td th:text="${metaData.getNumberOfJobsExecuted()}">Value</td>
+						</tr>
+						<tr>
+							<td>is started</td>
+							<td th:text="${metaData.isStarted()}">Value</td>
+						</tr>
+						<tr>
+							<td>is in standby</td>
+							<td th:text="${metaData.isInStandbyMode()}">Value</td>
+						</tr>
+						<tr>
+							<td>is running since</td>
+							<td th:text="${#dates.format(metaData.getRunningSince(), 'dd.MM.yyyy HH:mm')}">Value</td>
+						</tr>
+						<tr>
+							<td>Thread pool Class</td>
+							<td th:text="${metaData.getThreadPoolClass().getName()}">Value</td>
+						</tr>
+						<tr>
+							<td>Thread pool size</td>
+							<td th:text="${metaData.getThreadPoolSize()}">Value</td>
+						</tr>
+						<tr>
+							<td>Scheduler is remote</td>
+							<td th:text="${metaData.isSchedulerRemote()}">Value</td>
+						</tr>
+						<tr>
+							<td>Scheduler Class</td>
+							<td th:text="${metaData.getSchedulerClass().getName()}">Value</td>
+						</tr>
+						<tr>
+							<td>JobStore Class</td>
+							<td th:text="${metaData.getJobStoreClass().getName()}">Value</td>
+						</tr>
+						<tr>
+							<td>Job store is clustered</td>
+							<td th:text="${metaData.isJobStoreClustered()}">Value</td>
+						</tr>
+						<tr>
+							<td>Job store supports persistence</td>
+							<td th:text="${metaData.isJobStoreSupportsPersistence()}">Value</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="box-footer clearfix">
+		&nbsp;
+		</div>
+	</div>
+	
+	
+</section>
+<!-- /.content -->
+

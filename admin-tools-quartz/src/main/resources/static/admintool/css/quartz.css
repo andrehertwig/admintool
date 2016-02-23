@@ -1,0 +1,10 @@
+
+.label {
+	margin: 0 2px 0 0;
+}
+
+.changeJob, .execJob {
+	color: #fff;
+	cursor: pointer; 
+	cursor: hand; 
+}

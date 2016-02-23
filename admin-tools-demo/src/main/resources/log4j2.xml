@@ -41,6 +41,9 @@
 		<Logger name="org.hibernate" level="warn" additivity="false">
 			<AppenderRef ref="Console"/>
 		</Logger>
+		<Logger name="org.quartz" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
 		
 		<!-- 
 		<Logger name="*" level="info" additivity="false">
