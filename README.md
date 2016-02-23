@@ -7,8 +7,8 @@
 * `jminix`: simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required in own project)
 * `log4j2`: dashboard for all log4j2 loggers with the possibility to the log level at runtime
 * `quartz`: 
-··* dashboard for configuration with possibility to deactivate the scheduler
-··* dashboard for configured jobs with possibility to pause/resume or fire them (not implemented yet: change jobs)
+  * dashboard for configuration with possibility to deactivate the scheduler
+  * dashboard for configured jobs with possibility to pause/resume or fire them (not implemented yet: change jobs)
 * `demo`: simple spring boot web application for showcase
 
 ## Requirements
