@@ -33,6 +33,12 @@ public class MenuEntry implements Serializable
 		super();
 	}
 	
+	/**
+	 * 
+	 * @param name - the link mapping 
+	 * @param displayName - the display name
+	 * @param target -  the template path. see {@link #setTarget(String)}
+	 */
 	public MenuEntry(String name, String displayName, String target) {
 		super();
 		this.name = name;

@@ -3,9 +3,7 @@
 	<h1>
 		Demo Dashboard <small>Part 1</small>
 	</h1>
-	<ol class="breadcrumb">
-		<li th:text="${@adminToolMenuUtils.getBreadcrumb(activeMenu)}"></li>
-	</ol>
+	<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 </section>
 
 <!-- Main content -->

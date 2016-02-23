@@ -16,6 +16,15 @@
 			</ul>
 		</li>
 	</div>
+	
+	<ol class="breadcrumb" th:fragment="breadcrumb">
+		<li th:each="menuItem, iterState : ${@adminToolMenuUtils.getBreadcrumbList(activeMenu)}">
+			<a href="#" th:inline="text" th:class="${iterState.last} ? 'active'">
+				<i class="fa fa-dashboard" th:if="${iterState.first}"></i> 
+				[[${menuItem.displayName}]]
+			</a>
+		</li>
+	</ol>
 
 
 </body>

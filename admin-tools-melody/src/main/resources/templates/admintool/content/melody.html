@@ -3,27 +3,11 @@
 	<h1>
 		Java Melody <small>Monitoring</small>
 	</h1>
-	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-		<li class="active">Here</li>
-	</ol>
+	<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 </section>
 
 <!-- Main content -->
 <section class="content">
-
-	<script th:inline="javascript">
-	/*<![CDATA[*/
-	  function iframeLoaded() {
-	      var iFrameID = document.getElementById('inneriframe');
-	      if(iFrameID) {
-	            // here you can make the height, I delete it first, then I make it again
-	            iFrameID.height = "";
-	            iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
-	      }   
-	  }
-	/*]]>*/
-	</script> 
 
 	<div class="fluidMedia">
 		<iframe src="" th:src="${melodyPath}" scrolling="auto" frameborder="0"></iframe>

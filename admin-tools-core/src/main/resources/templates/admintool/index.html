@@ -35,6 +35,8 @@
 	<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/bootstrap/js/bootstrap.min.js"></script>
 	<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/js/app.min.js"></script>
 	
+	<script src="/static/admintool/js/adminTool.js"></script>
+	
 	<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
 		<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
 			<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" th:href="${cssPath}" />
@@ -157,36 +159,6 @@
 					</div>
 				</form>
 				<!-- /.search form -->
-
-				<!-- Sidebar Menu
-				<ul class="sidebar-menu">
-					<li class="header">MAINMENU</li>
-					<div th:each="adminComponent,iterState : ${adminTool.components}" th:remove="tag">
-					
-						<li class="treeview" th:if="${not #lists.isEmpty(adminComponent.mainMenu.submenu)}">
-							<a href="#" th:href="${rootContext} + '/' + ${adminComponent.mainMenu.name}">
-								<i class="fa fa-link"></i>
-								<span th:text="${adminComponent.displayName}">Component</span>
-								<i class="fa fa-angle-left pull-right"></i>
-							</a>
-							<ul class="treeview-menu">
-								<li th:each="submenuItem,iterState : ${adminComponent.mainMenu.submenu}">
-									<a href="#" th:href="${rootContext} + '/' + ${submenuItem.name}" th:text="${submenuItem.displayName}">Link in component</a>
-								</li>
-							</ul>
-						</li>
-						
-						<li class="active" th:if="${#lists.isEmpty(adminComponent.mainMenu.submenu)}">
-							<a href="#" th:href="${rootContext} + '/' + ${adminComponent.mainMenu.name}">
-								<i class="fa fa-link"></i>
-								<span th:text="${adminComponent.displayName}">Link</span>
-							</a>
-						</li>
-
-					</div>
-
-				</ul>
-				 -->
 				
 				 <ul class="sidebar-menu">
 					<li class="header">MAINMENU</li>

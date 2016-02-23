@@ -4,10 +4,7 @@
 		<h1>
 			Page Header <small>Optional description</small>
 		</h1>
-		<ol class="breadcrumb">
-			<li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-			<li class="active">Here</li>
-		</ol>
+		<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 	</section>
 
 	<!-- Main content -->
@@ -29,7 +26,7 @@
 					<p th:inline="text">
 						[[${integrityError.error} + ' on menu item occured ' + ${integrityError.menuEntries.size()} + ' times:']]
 						<ul>
-							<li th:each="errorEntry,iterState2 : ${integrityError.menuEntries}" th:text="${@adminToolMenuUtils.getBreadcrumb(errorEntry)}"></li>
+							<li th:each="errorEntry,iterState2 : ${integrityError.menuEntries}" th:text="${@adminToolMenuUtils.getBreadcrumb(errorEntry, '')}"></li>
 						</ul>
 					</p>
 				</div>
