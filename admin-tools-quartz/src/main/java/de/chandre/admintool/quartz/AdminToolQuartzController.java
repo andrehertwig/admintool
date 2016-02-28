@@ -1,9 +1,14 @@
 package de.chandre.admintool.quartz;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +44,9 @@ public class AdminToolQuartzController {
 		return quarzService.isSchedulerRunning();
 	}
 
-	@RequestMapping(path = "/triggerJob", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/executeJob", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean triggerJob(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
+	public boolean executeJob(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
 			HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving triggerJob request for group: %s, job: %s", groupName, jobName));
@@ -71,15 +76,76 @@ public class AdminToolQuartzController {
 	@RequestMapping(path = "/interruptJob", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public boolean interruptJob(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
-			HttpServletRequest request) {
+			@RequestParam(name = "triggerName", required = false) String triggerName, HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving interruptJob request for group: %s, job: %s", groupName, jobName));
 		try {
-			quarzService.interruptJob(groupName, jobName);
+			if (null != triggerName) {
+				quarzService.interruptTrigger(groupName, jobName, triggerName);
+			} else {
+				quarzService.interruptJob(groupName, jobName);
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return false;
 		}
 		return true;
 	}
+	
+	@RequestMapping(path = "/removeTrigger", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public boolean removeTrigger(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
+			@RequestParam(name = "triggerName") String triggerName, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving removeTrigger request for group: %s, job: %s, trigger: %s", groupName,
+					jobName, triggerName));
+		try {
+			return quarzService.removeTrigger(groupName, jobName, triggerName);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	@RequestMapping(path = "/getTriggerInfo", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public JobTriggerTA getTriggerInfo(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
+			@RequestParam(name = "triggerName", required=false) String triggerName, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving getTriggerInfo request for group: %s, job: %s, trigger: %s", groupName,
+					jobName, triggerName));
+		try {
+			return quarzService.getTriggerInfo(groupName, jobName, triggerName);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return null;
+		}
+	}
+	
+	@RequestMapping(path = "/getMisfireInstructions", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Collection<JobTriggerTA> getMisfireInstructions(HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getMisfireInstructions request");
+		return quarzService.getMisfireInstructionSets();
+	}
+	
+	@RequestMapping(path = "/getCalendarNames", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Collection<String> getCalendarNames(HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getCalendarNames request");
+		try {
+			return quarzService.getCalendarNames();
+		} catch (SchedulerException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return null;
+	}
+	
+	@RequestMapping(path = "/getIntervalUnits", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Collection<IntervalUnit> getIntervalUnits(HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getCalendarNames request");
+		return Arrays.asList(IntervalUnit.values());
+	}
+	
 }

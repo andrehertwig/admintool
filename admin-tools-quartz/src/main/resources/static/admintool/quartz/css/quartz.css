@@ -1,0 +1,54 @@
+.inner h4 {
+	font-weight: bold;
+}
+.small-box .icon {
+	font-size: 75px;
+}
+.small-box:hover .icon {
+	font-size: 85px;
+}
+.small-box:hover {
+	color: #333;
+}
+.small-box code {
+	font-size: 12px;
+}
+a.small-box-footer-custom {
+	background: rgba(0, 0, 0, 0.1) none repeat scroll 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    width: auto;
+    padding: 3px 0;
+    text-align: center;
+    display: block;
+}
+
+.row-header {
+	background: rgba(0, 0, 0, 0.1) none repeat scroll 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+}
+
+/*http://colorschemedesigner.com/csd-3.5/#0v31TsCw0w0w0 */
+.bg-light-orange {
+	background-color: #ffa354 !important;
+}
+
+.btn-warning {
+	border-color: #a65109;
+	background-color: #ff841b;
+}
+
+.btn-warning:hover {
+	border-color: #a65109;
+	background-color: #bf7a3f;
+}
+
+.btn-success {
+	border-color: #07820f;
+	background-color: #15c921;
+}
+
+.btn-success:hover {
+	border-color: #07820f;
+	background-color: #329638;
+}

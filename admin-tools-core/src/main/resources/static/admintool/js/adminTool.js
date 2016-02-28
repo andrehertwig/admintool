@@ -1,10 +1,10 @@
 $( document ).ready(function() {
 	if($('#reloadPage').length > 0) {
-		$('#reloadPage').click(function (){
+		$('#reloadPage').click(function () {
 			location.reload();
 		});
 	}
-}
+});
 
 /**
  * JQuery function for sending a XHR 
@@ -47,4 +47,24 @@ function switchClass($object, classToCheck1, classToCheck2) {
 	} else {
 		removeAddClass($object, classToCheck2, classToCheck1);
 	}
+}
+
+function getID(id) {
+	return id.startsWith('#') ? id : "#"+id;  
+}
+function getByID(id) {
+	return $(getID(id));  
+}
+function getClazz(clazz) {
+	return clazz.startsWith('.') ? clazz : "."+clazz;  
+}
+function getByClazz(clazz) {
+	return $(clazz.startsWith('.') ? clazz : "."+clazz);  
+}
+
+if (!String.prototype.startsWith) {
+	String.prototype.startsWith = function(searchString, position) {
+		position = position || 0;
+		return this.indexOf(searchString, position) === position;
+	};
 }

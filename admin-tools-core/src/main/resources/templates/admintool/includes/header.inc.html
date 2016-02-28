@@ -5,7 +5,7 @@
 	name="viewport" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="language" content="de, deutsch" />
-<title>AdminTool</title>
+<title>AdminTool</title>	
 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -25,20 +25,8 @@
 
 <link rel="stylesheet" href="/static/admintool/css/adminTool.css" />
 
-<!--
-<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
-<script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
- -->
-  
-<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/bootstrap/js/bootstrap.min.js"></script>
-<script src="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/js/app.min.js"></script>
-
-<script src="/static/admintool/js/adminTool.js"></script>
-
 <div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
 	<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
 		<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" th:href="${cssPath}" />
-		<script th:each="jsPath,iterStateJS : ${adminComponent.additionalJS}" th:src="${jsPath}"></script>
 	</div>
-</div>		
+</div>

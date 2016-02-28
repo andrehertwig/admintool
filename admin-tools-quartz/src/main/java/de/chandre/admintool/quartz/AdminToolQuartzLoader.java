@@ -29,8 +29,14 @@ public class AdminToolQuartzLoader
 		
 		AdminComponent component = new AdminComponent();
 		component.setDisplayName("Quartz");
-		component.addAdditionalCSS("/static/admintool/css/quartz.css");
-		component.addAdditionalJS("/static/admintool/js/quartz.js");
+		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css");
+		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js");
+		
+		component.addAdditionalJS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/datepicker/bootstrap-datepicker.js");
+		component.addAdditionalCSS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/datepicker/datepicker3.css");
+		component.addAdditionalJS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.js");
+		component.addAdditionalCSS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.css");
+		
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Quartz");
@@ -38,9 +44,10 @@ public class AdminToolQuartzLoader
 		mainMenu.setTarget("content/quartz");
 		component.setMainMenu(mainMenu);
 		
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "content/quartzConfig"));
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "content/quartzJobs"));
-		
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig"));
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs"));
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs2", "Quartz-Jobs 2", "quartz/content/quartzJobs2"));
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs3", "Quartz-Jobs 3", "quartz/content/quartzJobs3"));
 		adminTool.addComponent(component);
 		return adminTool;
 	}

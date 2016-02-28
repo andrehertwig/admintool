@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="template-content">
+		<section class="content-header">
+			<h1>
+				Quartz <small>Jobs</small>
+			</h1>
+			<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+		
+		<!-- Main content -->
+		<section class="content">
+		
+			<div class="box box-info">
+			
+				<div class="box-header with-border">
+					<h3 class="box-title">
+					<i class="fa fa-refresh" id="reloadPage"></i>
+						Quartz Scheduler Jobs
+					</h3>
+				</div>
+				<div class="box-body" th:with="groups = ${@adminToolQuartzService.getJobGroups()}">
+				
+					<th:block th:each="group, groupIter : ${groups}">
+					
+						<th:block th:each="jobKey, jobkeyIter : ${@adminToolQuartzService.getJobKeys(group)}">
+					
+							<div class="small-box bg-light-orange" th:id="'box_' + ${group} + '_' + ${jobKey.getName()}">
+								<div class="inner">
+									<div class="row">
+										<div class="col-xs-6">
+											<h4 th:text="${group} + ': ' + ${jobKey.getName()}"></h4>
+										</div>
+										<div class="col-xs-6">
+											<i class="fa fa-refresh" title="actual running triggers"></i>
+											<span title="actual running triggers" th:text="${@adminToolQuartzService.getCurrentlyExecutingAmount(jobKey)}"></span>
+										</div>
+									</div>
+									<blockquote>
+										<p th:if="${@adminToolQuartzService.getJobDescription(jobKey)} != null" th:text="${@adminToolQuartzService.getJobDescription(jobKey)}"></p>
+										<code th:unless="${@adminToolQuartzService.getJobDescription(jobKey)} != null">&lt;!-- No description available --&gt;</code>
+									</blockquote>
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-xs-2">
+												Stateful
+											</div>
+											<div class="col-xs-2" th:text="${@adminToolQuartzService.isStateful(jobKey)}">
+											</div>
+											<div class="col-xs-2">
+												Interruptable
+											</div>
+											<div class="col-xs-2">
+												<button th:id="'interruptJob_' + ${group} + '_' + ${jobKey.getName()}" th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+													class="interruptJob btn btn-xs btn-danger">Interrupt</button>
+												<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+													th:remove="tag"></span>
+											</div>
+											<div class="col-xs-2">
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="icon" th:text="${group}"></div>
+								
+								<div class="container-fluid collapse" th:id="'triggersOf_' + ${jobKey.getName()}">
+								
+								
+									<div class="row row-header">
+										<div class="col-xs-2">TriggerName</div>
+										<div class="col-xs-2">Cron Expression</div>
+										<div class="col-xs-2">Previous Fire Time</div>
+										<div class="col-xs-2">Next Fire Time</div>
+										<div class="col-xs-1">State</div>
+										<div class="col-xs-1">Interr.</div>
+										<div class="col-xs-1">Change</div>
+										<div class="col-xs-1">Remove</div>
+									</div>
+									
+									<div class="row text-center" th:each="trigger, triggerIter : ${@adminToolQuartzService.getTriggers(jobKey)}">
+										<div class="col-xs-2 text-left">
+											<span th:text="${#objects.nullSafe(trigger.getKey().getName(), 'N/A')}" th:remove="tag"></span>
+											<button th:if="${trigger.getDescription() != null}"
+												class="btn btn-xs btn-default pull-right" 
+												data-toggle="tooltip" data-placement="top" th:title="${trigger.getDescription()}">
+												<i class="fa fa-info-circle"></i>
+											</button>
+										</div>
+										<div class="col-xs-2" th:text="${@adminToolQuartzService.getCronExpression(trigger, 'N/A')}">
+										</div>
+										<div class="col-xs-2">
+											<span th:if="${trigger.getPreviousFireTime() != null}" th:text="${#dates.format(trigger.getPreviousFireTime(), 'dd.MM.yyyy HH:mm')}" 
+												th:remove="tag"></span>
+											<span th:unless="${trigger.getPreviousFireTime() != null}" th:remove="tag">N/A</span>
+										</div>
+										<div class="col-xs-2">
+											<span th:if="${trigger.getNextFireTime() != null}" th:text="${#dates.format(trigger.getNextFireTime(), 'dd.MM.yyyy HH:mm')}" 
+												th:remove="tag"></span>
+											<span th:unless="${trigger.getNextFireTime() != null}" th:remove="tag">N/A</span>
+										</div>
+										<div class="col-xs-1">
+											<button th:class="'changeTriggerState btn btn-xs' + ${@adminToolQuartzService.isPaused(trigger) ? ' btn-warning' : ' btn-success'}"
+												th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
+												th:text="${@adminToolQuartzService.isPaused(trigger) ? 'resume' : 'running'}">
+											</button>
+										</div>
+										<div class="col-xs-1">
+											<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}" 
+												th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+												class="interruptTrigger btn btn-xs btn-danger"><i class="fa fa-stop-circle-o"></i></button>
+											<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+												th:remove="tag"></span>
+										</div>
+										<div class="col-xs-1">
+											<button class="changeTrigger btn btn-xs btn-primary"
+												th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+												<i class="fa fa-wrench"></i>
+											</button>
+										</div>
+										<div class="col-xs-1">
+											<button class="removeTrigger btn btn-xs btn-danger"
+												th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+												<i class="fa fa-trash"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+								
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-3 no-padding">
+											<a class="small-box-footer-custom" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}" data-toggle="collapse" aria-expanded="false"
+												data-th-attr="data-target='#triggersOf_' + ${jobKey.getName()}"
+												th:attr="aria-controls='triggersOf_' + ${jobKey.getName()}">Show Triggers&nbsp;
+												(<th:block th:text="${@adminToolQuartzService.getTriggers(jobKey).size()}"></th:block>)&nbsp;&nbsp;<i class="fa fa-bars"></i>
+											</a>
+										</div>
+										<div class="col-xs-3 no-padding">
+											<a class="changeJob small-box-footer-custom" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+											th:id="'changeJob_' + ${group} + '_' + ${jobKey.getName()}"> Edit Job&nbsp;&nbsp;<i class="fa fa-pencil-square-o"></i></a>
+										</div>
+										<div class="col-xs-3 no-padding">
+											<a class="executeJob small-box-footer-custom" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+											 th:id="'executeJob_' + ${group} + '_' + ${jobKey.getName()}"> Fire now&nbsp;&nbsp;<i class="fa fa-play"></i></a>
+										</div>
+										<div class="col-xs-3 no-padding">
+											<a class="addTrigger small-box-footer-custom" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+											th:id="'addTrigger_' + ${group} + '_' + ${jobKey.getName()}"> Add Trigger&nbsp;&nbsp;<i class="fa fa-plus"></i></a>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						
+						<!-- /* end of jobIter */ -->
+						</th:block>
+						
+					<!-- /* end of groupIter */ -->
+					</th:block>
+				</div>
+				
+			</div>
+				
+			<!--/* Change trigger and Job modal */-->
+			<div th:replace="admintool/quartz/fragments/quartzModals :: editJobTriggerModal">
+			</div>
+		
+			<div th:replace="admintool/quartz/fragments/quartzModals :: confirmModal">
+			</div>
+		
+		</section>
+	</div>
+</body>
+</html>
+

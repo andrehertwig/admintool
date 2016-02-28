@@ -16,6 +16,8 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers.CalendarDeserializer;
+
 import de.chandre.admintool.jobs.InterruptableSampleJob;
 import de.chandre.admintool.jobs.SimpleCronJob;
 import de.chandre.admintool.jobs.SimpleJob;
@@ -32,19 +34,19 @@ public class QuartzConfig
 	
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail() {
-		return createJobDetail(SimpleJob.class, null);
+		return createJobDetail(SimpleJob.class, null, "Just a Simple Job");
 	}
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail3() {
-		return createJobDetail(SimpleJob.class, "Simple");
+		return createJobDetail(SimpleJob.class, "Simple" , null);
 	}
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail4() {
-		return createJobDetail(InterruptableSampleJob.class, "Simple");
+		return createJobDetail(InterruptableSampleJob.class, "Simple", "Interruptable job to demonstrate the functionality");
 	}
 	@Bean
 	public JobDetailFactoryBean simpleCronJobDetail() {
-		return createJobDetail(SimpleCronJob.class, "Cron");
+		return createJobDetail(SimpleCronJob.class, "Cron", "Cron job example job detail");
 	}
 	
 	@Bean(name="simpleJobTrigger1")
@@ -61,7 +63,7 @@ public class QuartzConfig
 	}
 	@Bean(name="simpleJobTrigger4")
 	public SimpleTriggerFactoryBean createSimpleTrigger4(@Qualifier("simpleJobDetail4") JobDetail jobDetail) {
-		return createSimpleTrigger(jobDetail, "Simple", "Simple trigger 3", 5000L, 300000L);
+		return createSimpleTrigger(jobDetail, "Simple", null, 5000L, 300000L);
 	}
 	
 	private static SimpleTriggerFactoryBean createSimpleTrigger(JobDetail jobDetail,String group, String description,
@@ -89,15 +91,16 @@ public class QuartzConfig
 	}
 	@Bean(name="simpleCronTrigger2")
 	public CronTriggerFactoryBean createSimpleCronTrigger2(@Qualifier("simpleCronJobDetail") JobDetail jobDetail) {
-	    return createCronTrigger(jobDetail, "Cron", "SimpleCronTrigger 2", "0 0 0/1 1/1 * ? *", 5000L);
+	    return createCronTrigger(jobDetail, "Cron", null, "0 0 0/1 1/1 * ? *", 5000L);
 	}
 	
-	private static JobDetailFactoryBean createJobDetail(Class<?> jobClass, String group) {
+	private static JobDetailFactoryBean createJobDetail(Class<?> jobClass, String group, String description) {
 		JobDetailFactoryBean detailFactoryBean = new JobDetailFactoryBean();
 		detailFactoryBean.setJobClass(jobClass);
 		if (null != group) {
 			detailFactoryBean.setGroup(group);
 		}
+		detailFactoryBean.setDescription(description);
 		return detailFactoryBean;
 	}
 	

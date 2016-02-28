@@ -39,6 +39,7 @@ public class InterruptableSampleJob implements Job, InterruptableJob
 	@Override
 	public void interrupt() throws UnableToInterruptJobException {
 		if (null != thread) {
+			LOGGER.info("interrupting job");
 			thread.interrupt();
 		}
 	}

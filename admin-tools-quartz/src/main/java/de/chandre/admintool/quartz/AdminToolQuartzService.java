@@ -1,12 +1,17 @@
 package de.chandre.admintool.quartz;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.CalendarIntervalTrigger;
 import org.quartz.CronTrigger;
+import org.quartz.DailyTimeIntervalTrigger;
 import org.quartz.InterruptableJob;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -14,6 +19,7 @@ import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerMetaData;
+import org.quartz.SimpleTrigger;
 import org.quartz.StatefulJob;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
@@ -21,7 +27,10 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import de.chandre.admintool.quartz.JobTriggerTA.TriggerType;
 
 /**
  * the quart service for thymeleaf functions and actions
@@ -32,6 +41,8 @@ import org.springframework.util.StringUtils;
 public class AdminToolQuartzService
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzService.class);
+	
+	private static final String MISFIRE_PREFIX = "MISFIRE_INSTRUCTION_";
 	
 	@Autowired
 	private Scheduler scheduler;
@@ -135,6 +146,11 @@ public class AdminToolQuartzService
 		return scheduler.getJobKeys(GroupMatcher.jobGroupEquals(group));
 	}
 	
+	public String getJobDescription(JobKey jobKey) throws SchedulerException {
+		return scheduler.getJobDetail(jobKey).getDescription();
+	}
+	
+	
 	/**
 	 * 
 	 * @param jobKey
@@ -142,7 +158,17 @@ public class AdminToolQuartzService
 	 * @throws SchedulerException
 	 */
 	public List<? extends Trigger> getTriggers(JobKey jobKey) throws SchedulerException {
-		return scheduler.getTriggersOfJob(jobKey);
+		List<Trigger> triggers = new ArrayList<>();
+		if (!CollectionUtils.isEmpty(scheduler.getTriggersOfJob(jobKey))) {
+			triggers.addAll(scheduler.getTriggersOfJob(jobKey));
+			Collections.sort(triggers, new Comparator<Trigger>() {
+				@Override
+				public int compare(Trigger o1, Trigger o2) {
+					return o1.getKey().compareTo(o2.getKey());
+				}
+			});
+		}
+		return triggers;
 	}
 	
 	/**
@@ -152,7 +178,6 @@ public class AdminToolQuartzService
 	 * @throws SchedulerException
 	 */
 	public int getCurrentlyExecutingAmount(JobKey jobKey) throws SchedulerException {
-		
 		List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
 		JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 		int numInstances = 0;
@@ -170,15 +195,29 @@ public class AdminToolQuartzService
 	/**
 	 * 
 	 * @param jobKey
-	 * @return if job is in paused state
+	 * @return true if all triggers of job are in paused state
 	 * @throws SchedulerException
 	 */
 	public boolean isPaused(JobKey jobKey) throws SchedulerException {
-		List<? extends Trigger> triggers = getTriggers(jobKey);
-		if (triggers!= null && triggers.size() == 1) {
-		    return scheduler.getTriggerState(triggers.get(0).getKey()) == TriggerState.PAUSED;
+		List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+		boolean result = true; 
+		if (null != triggers && triggers.size() > 0) {
+			for (Trigger trigger : triggers) {
+				result = result && scheduler.getTriggerState(trigger.getKey()) == TriggerState.PAUSED;
+			}
+			return result;
 		}
 		return false;
+	}
+	
+	/**
+	 * 
+	 * @param trigger
+	 * @return if trigger is paused
+	 * @throws SchedulerException
+	 */
+	public boolean isPaused(Trigger trigger) throws SchedulerException {
+		return scheduler.getTriggerState(trigger.getKey()) == TriggerState.PAUSED;
 	}
 	
 	/**
@@ -234,18 +273,26 @@ public class AdminToolQuartzService
 		}
 	}
 	
-	protected void changeTriggerState(String groupName, String jobName, String triggerName) throws SchedulerException {
-		List<? extends Trigger> triggers = scheduler.getTriggersOfJob(new JobKey(jobName, groupName));
-		Trigger triggerFound = null;
-		// because don't know when the trigger comes, we have to find it first
-		for (Trigger trigger : triggers) {
-			if (!StringUtils.isEmpty(trigger.getKey().getName()) && !StringUtils.isEmpty(triggerName) 
-					&& trigger.getKey().getName().equals(triggerName)) {
-				triggerFound = trigger;
-				break;
+	protected void interruptTrigger(String groupName, String jobName, String triggerName) throws SchedulerException {
+		JobKey jobKey = new JobKey(jobName, groupName);
+		if (isInteruptable(jobKey)) {
+			List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
+			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+			Trigger triggerFound = findTrigger(groupName, jobName, triggerName);
+			for (JobExecutionContext jobExecutionContext : executingJobs) {
+				if (jobExecutionContext.getJobDetail().getKey().equals(jobDetail.getKey()) 
+						&& jobExecutionContext.getTrigger().getKey().equals(triggerFound.getKey())) {
+					if (LOGGER.isDebugEnabled())
+						LOGGER.debug(String.format("interrupting jobTrigger (%s, %s, %s)", jobDetail.getKey().getGroup(),
+								jobDetail.getKey().getName(), triggerFound.getKey().getName()));
+					((InterruptableJob) jobExecutionContext.getJobInstance()).interrupt();
+				}
 			}
 		}
-		
+	}
+	
+	protected void changeTriggerState(String groupName, String jobName, String triggerName) throws SchedulerException {
+		Trigger triggerFound = findTrigger(groupName, jobName, triggerName);
 		if (null != triggerFound) {
 			// pause only the one trigger of job
 			changeTriggerState(triggerFound);
@@ -255,11 +302,27 @@ public class AdminToolQuartzService
 		} else {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug(String.format("pausing all triggers for group: %s, job: %s", groupName, jobName));
+			List<? extends Trigger> triggers = scheduler.getTriggersOfJob(new JobKey(jobName, groupName));
 			for (Trigger trigger : triggers) {
 				// pause all triggers of job
 				changeTriggerState(trigger);
 			}
 		}
+	}
+	
+	private Trigger findTrigger(String groupName, String jobName, String triggerName) throws SchedulerException {
+		List<? extends Trigger> triggers = scheduler.getTriggersOfJob(new JobKey(jobName, groupName));
+		Trigger triggerFound = null;
+		// because don't know when the trigger comes, we have to find it first
+		if (!StringUtils.isEmpty(triggerName)) {
+			for (Trigger trigger : triggers) {
+				if (!StringUtils.isEmpty(trigger.getKey().getName()) && trigger.getKey().getName().equals(triggerName)) {
+					triggerFound = trigger;
+					break;
+				}
+			}
+		}
+		return triggerFound;
 	}
 	
 	private void changeTriggerState(Trigger trigger) throws SchedulerException {
@@ -272,5 +335,121 @@ public class AdminToolQuartzService
 	
 	protected void triggerJob(String groupName, String jobName) throws SchedulerException {
 		scheduler.triggerJob(new JobKey(jobName, groupName));
+	}
+	
+	private JobDetail findJob(String groupName, String jobName) throws SchedulerException {
+		return scheduler.getJobDetail(new JobKey(jobName, groupName));
+	}
+	
+	
+	protected boolean removeTrigger(String groupName, String jobName, String triggerName) throws SchedulerException {
+		Trigger triggerFound = findTrigger(groupName, jobName, triggerName);
+		if (null != triggerFound) {
+			return scheduler.unscheduleJob(triggerFound.getKey());
+		}
+		return false;
+	}
+	
+	
+	protected JobTriggerTA getTriggerInfo(String groupName, String jobName, String triggerName) throws SchedulerException {
+		JobDetail detail = findJob(groupName, jobName);
+		
+		JobTriggerTA jobTrigger = new JobTriggerTA();
+		jobTrigger.setJobGroup(groupName);
+		jobTrigger.setJobName(jobName);
+		jobTrigger.setDescription(detail.getDescription());
+		
+		if (null == triggerName) {
+			return jobTrigger;
+		}
+		Trigger trigger = findTrigger(groupName, jobName, triggerName);
+		jobTrigger.setTriggerName(triggerName);
+		jobTrigger.setTriggerGroup(trigger.getKey().getGroup());
+		jobTrigger.setTriggerDescription(trigger.getDescription());
+		
+		jobTrigger.setMisfireInstruction(trigger.getMisfireInstruction());
+		jobTrigger.setPriority(trigger.getPriority());
+		jobTrigger.setCalendarName(trigger.getCalendarName());
+		jobTrigger.setStartTime(trigger.getStartTime());
+		
+		if (isCronTrigger(trigger)) {
+			addSimilarMisfireInstructionSet(jobTrigger, null, TriggerType.CRON);
+			jobTrigger.setCronExpression(((CronTrigger)trigger).getCronExpression());
+			jobTrigger.setTimeZone(((CronTrigger)trigger).getTimeZone());
+		} else if (trigger instanceof SimpleTrigger) {
+			addSimpleMisfireInstructionSet(jobTrigger, null);
+			jobTrigger.setRepeatCount(((SimpleTrigger)trigger).getRepeatCount());
+			jobTrigger.setRepeatInterval(((SimpleTrigger)trigger).getRepeatInterval());
+		} else if (trigger instanceof CalendarIntervalTrigger) {
+			addSimilarMisfireInstructionSet(jobTrigger, null, TriggerType.CALENDAR);
+			jobTrigger.setRepeatInterval(((CalendarIntervalTrigger)trigger).getRepeatInterval());
+			jobTrigger.setRepeatIntervalUnit(((CalendarIntervalTrigger)trigger).getRepeatIntervalUnit());
+		} else if (trigger instanceof DailyTimeIntervalTrigger) {
+			addSimilarMisfireInstructionSet(jobTrigger, null, TriggerType.DAILY);
+			jobTrigger.setRepeatInterval(((DailyTimeIntervalTrigger)trigger).getRepeatInterval());
+			jobTrigger.setRepeatIntervalUnit(((DailyTimeIntervalTrigger)trigger).getRepeatIntervalUnit());
+			jobTrigger.setRepeatCount(((DailyTimeIntervalTrigger)trigger).getRepeatCount());
+		}
+		
+		addGlobalMisfireInstructionSet(jobTrigger, null);
+		
+		return jobTrigger;
+	}
+	
+	protected Collection<String> getCalendarNames() throws SchedulerException {
+		return scheduler.getCalendarNames();
+	}
+
+	protected Collection<JobTriggerTA> getMisfireInstructionSets() {
+		List<JobTriggerTA> instructionSets = new ArrayList<>();
+		
+		addSimilarMisfireInstructionSet(null, instructionSets, TriggerType.CRON);
+		addSimpleMisfireInstructionSet(null, instructionSets);
+		addSimilarMisfireInstructionSet(null, instructionSets, TriggerType.CALENDAR);
+		addSimilarMisfireInstructionSet(null, instructionSets, TriggerType.DAILY);
+		
+		addGlobalMisfireInstructionSet(null, instructionSets);
+		
+		return instructionSets;
+	}
+	
+	private void addGlobalMisfireInstructionSet(JobTriggerTA jobTrigger, List<JobTriggerTA> instructionSets) {
+		if (null != instructionSets) {
+			for (JobTriggerTA trigger : instructionSets) {
+				trigger.addMisfireInstructions("IGNORE_MISFIRE_POLICY", Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY);
+				trigger.addMisfireInstructions("SMART_POLICY", Trigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+			}
+		} else {
+			jobTrigger.addMisfireInstructions("IGNORE_MISFIRE_POLICY", Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY);
+			jobTrigger.addMisfireInstructions("SMART_POLICY", Trigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+		}
+	}
+	
+	private void addSimpleMisfireInstructionSet(JobTriggerTA jobTrigger, List<JobTriggerTA> instructionSets) {
+		if (null == jobTrigger) {
+			jobTrigger = new JobTriggerTA();
+		}
+		jobTrigger.setType(TriggerType.SIMPLE);
+		jobTrigger.addMisfireInstructions("FIRE_NOW", SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+		jobTrigger.addMisfireInstructions("RESCHEDULE_NEXT_WITH_EXISTING_COUNT", SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT);
+		jobTrigger.addMisfireInstructions("RESCHEDULE_NEXT_WITH_REMAINING_COUNT", SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
+		jobTrigger.addMisfireInstructions("RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT", SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT);
+		jobTrigger.addMisfireInstructions("RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT", SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT);
+		if (null != instructionSets) {
+			instructionSets.add(jobTrigger);
+		}
+		
+	}
+	
+	private void addSimilarMisfireInstructionSet(JobTriggerTA jobTrigger, List<JobTriggerTA> instructionSets, TriggerType type) {
+		if (null == jobTrigger) {
+			jobTrigger = new JobTriggerTA();
+		}
+		jobTrigger.setType(type);
+		jobTrigger.addMisfireInstructions("DO_NOTHING", CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
+		jobTrigger.addMisfireInstructions("FIRE_ONCE_NOW", CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW);
+		if (null != instructionSets) {
+			instructionSets.add(jobTrigger);
+		}
 	}
 }

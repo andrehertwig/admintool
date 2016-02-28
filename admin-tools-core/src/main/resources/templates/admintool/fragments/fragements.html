@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body >
 	
-	<div th:remove="tag" th:fragment="submenuInclude (menuItem, withIcon)">
+	<th:block th:fragment="submenuInclude (menuItem, withIcon)">
 		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" >
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
@@ -10,12 +10,12 @@
 				<i class="fa fa-angle-left pull-right" th:if="${not #lists.isEmpty(menuItem.submenu)}"></i>
 			</a>
 			<ul class="treeview-menu" th:if="${not #lists.isEmpty(menuItem.submenu)}">
-				<li th:each="submenuItem,iterState : ${menuItem.submenu}" th:remove="tag">
-					<span th:replace="admintool/fragments/fragements :: submenuInclude (${submenuItem}, false)" />
-				</li>
+				<th:block th:each="submenuItem,iterState : ${menuItem.submenu}">
+					<th:block th:include="admintool/fragments/fragements :: submenuInclude (${submenuItem}, false)" />
+				</th:block>
 			</ul>
 		</li>
-	</div>
+	</th:block>
 	
 	<ol class="breadcrumb" th:fragment="breadcrumb">
 		<li th:each="menuItem, iterState : ${@adminToolMenuUtils.getBreadcrumbList(activeMenu)}">

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="de">
 	
-	<meta th:include="admintool/includes/header.inc" th:remove="tag"/>
+	<th:block th:include="admintool/includes/header.inc" />
 
 </head>
 
@@ -26,11 +26,11 @@
 					
 					<ul class="nav navbar-nav">
 					
-						<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag" >
-							<li th:each="notification,iterState : ${adminComponent.notificationTemplates}" th:remove="tag" >
+						<th:block th:each="adminComponent,iterState : ${@adminTool.components}">
+							<th:block th:each="notification,iterState : ${adminComponent.notificationTemplates}">
 								<li th:if="{null != notification}" th:replace="'admintool/' + ${notification}"></li>
-							</li>
-						</div>
+							</th:block>
+						</th:block>
 					
 					
 						<!-- User Account Menu -->
@@ -61,11 +61,11 @@
 				</form>
 				<!-- /.search form -->
 				
-				 <ul class="sidebar-menu">
+				<ul class="sidebar-menu">
 					<li class="header">MAINMENU</li>
-					<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
-						<span th:replace="admintool/fragments/fragements :: submenuInclude (${adminComponent.mainMenu}, true)" />
-					</div>
+					<th:block th:each="adminComponent,iterState : ${@adminTool.components}">
+						<th:block th:include="admintool/fragments/fragements :: submenuInclude (${adminComponent.mainMenu}, true)" />
+					</th:block>
 				</ul>
 				 <!-- -->
 				
@@ -77,9 +77,8 @@
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
 		
-			<div th:replace="${contentPage}">
-				
-			</div>
+			<th:block th:include="${contentPage} :: #template-content" />
+			
 		</div>
 		<!-- /.content-wrapper -->
 
@@ -96,7 +95,9 @@
 		<div class="control-sidebar-bg"></div>
 	</div>
 	<!-- ./wrapper -->
-
+	
+	<th:block th:include="admintool/includes/js.inc" />
+	
 </body>
 
 </html>

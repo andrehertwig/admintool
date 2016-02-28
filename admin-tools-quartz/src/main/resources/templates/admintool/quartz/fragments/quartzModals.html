@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>	
+	<!--/* Change trigger and Job modal */-->
+	<div th:fragment="editJobTriggerModal" class="modal fade" id="jobModal" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="jobModalLabel">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row form-group job">
+						<div class="col-xs-4">JobGroup &amp; JobName</div>
+						<div class="col-xs-4">
+							<input type="text" class="form-control" id="jobGroup" th:disabled="true" value="" />
+						</div>
+						<div class="col-xs-4">
+							<input type="text" class="form-control" id="jobName" th:disabled="true" value="" />
+						</div>
+					</div>
+					<div class="row form-group job edit_trigger edit_job">
+						<div class="col-xs-4"><label for="description">Job Description</label></div>
+						<div class="col-xs-8">
+							<textarea id="description" name="description" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="row form-group trigger">
+						<div class="col-xs-4">TriggerGroup &amp; TriggerName</div>
+						<div class="col-xs-4">
+							<input type="text" class="form-control" id="triggerGroup" th:disabled="true" value="" />
+						</div>
+						<div class="col-xs-4">
+							<input type="text" class="form-control" id="triggerName" value="" />
+						</div>
+					</div>
+					<div class="row form-group trigger">
+						<div class="col-xs-4"><label for="triggerDescription">Trigger Description</label></div>
+						<div class="col-xs-8">
+							<textarea id="triggerDescription" name="triggerDescription" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="row form-group trigger edit_trigger">
+						<div class="col-xs-4"><label for="triggerType">Trigger Type</label></div>
+						<div class="col-xs-8">
+							<input type="text" class="form-control" id="triggerType" name="triggerType" th:disabled="true" value="" />
+						</div>
+					</div>
+					<div class="row form-group trigger new_trigger">
+						<div class="col-xs-4"><label for="triggerTypeList">Trigger Type</label></div>
+						<div class="col-xs-8">
+							<select class="form-control" id="triggerTypeList" name="triggerTypeList">
+								<option value="CRON">Cron Trigger</option>
+								<option value="SIMPLE">Simple Trigger</option>
+								<option value="CALENDAR">Calendar Trigger</option>
+								<option value="DAILY">Daily Interval Trigger</option>
+							</select>
+						</div>
+					</div>
+					<div class="row form-group cron trigger">
+						<div class="col-xs-4"><label for="cronExpression">Cron Expression</label></div>
+						<div class="col-xs-8">
+							<input type="text" class="form-control" id="cronExpression" name="cronExpression" value="" />
+						</div>
+					</div>
+					<div class="row form-group cron trigger">
+						<div class="col-xs-4"><label for="timeZone">Time Zone</label></div>
+						<div class="col-xs-8">
+							<input type="text" class="form-control" id="timeZone" name="timeZone" value="" />
+						</div>
+					</div>
+					
+					<div class="row form-group simple daily trigger">
+						<div class="col-xs-4"><label for="repeatCount">Repeat Count</label></div>
+						<div class="col-xs-8">
+							<input type="text" class="form-control" id="repeatCount" name="repeatCount" value="" placeholder="-1"/>
+						</div>
+					</div>
+					<div class="row form-group simple daily calendar trigger">
+						<div class="col-xs-4"><label for="repeatInterval">Repeat Interval</label></div>
+						<div class="col-xs-8">
+							<input type="text" class="form-control" id="repeatInterval" name="repeatInterval" value="" />
+						</div>
+					</div>
+					
+					<div class="row form-group daily calendar trigger">
+						<div class="col-xs-4"><label for="repeatIntervalUnit">Repeat Interval Unit</label></div>
+						<div class="col-xs-8">
+							<select class="form-control" id="repeatIntervalUnit" name="repeatIntervalUnit">
+							
+							</select>
+						</div>
+					</div>
+					
+					<div class="row form-group trigger">
+						<div class="col-xs-4"><label for="calendarName">Calendars</label></div>
+						<div class="col-xs-8">
+							<select class="form-control" id="calendarName" name="calendarName">
+							
+							</select>
+						</div>
+					</div>
+					<div class="row form-group trigger">
+						<div class="col-xs-4"><label for="misfireInstruction">Misfire Instruction</label></div>
+						<div class="col-xs-8">
+							<select class="form-control" id="misfireInstruction" name="misfireInstruction">
+							
+							</select>
+						</div>
+					</div>
+					
+					<div class="row form-group trigger">
+						<div class="col-xs-4"><label for="startDate">Start Date</label></div>
+						<div class="col-xs-4">
+							<div class="input-group">
+								<input type="datetime" class="form-control datepicker" id="startDate" name="startDate" value="" />
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="input-group bootstrap-timepicker timepicker">
+								<input class="form-control" type="text" id="startTime" name="startTime" value="" />
+								<div class="input-group-addon">
+									<i class="fa fa-clock-o"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="btn_save">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:fragment="confirmModal" class="modal fade modal-danger" tabindex="-1" role="dialog" id="confirmModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Remove Trigger</h4>
+				</div>
+				<div class="modal-body">
+					<p>Do you really want to delete the trigger?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-outline" id="btn_confirm">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+</body>
+</html>
+
