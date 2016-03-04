@@ -46,8 +46,6 @@ public class AdminToolQuartzLoader
 		
 		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig"));
 		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs"));
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs2", "Quartz-Jobs 2", "quartz/content/quartzJobs2"));
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs3", "Quartz-Jobs 3", "quartz/content/quartzJobs3"));
 		adminTool.addComponent(component);
 		return adminTool;
 	}

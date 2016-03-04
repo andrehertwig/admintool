@@ -1,0 +1,127 @@
+<th:block th:with="groups = ${@adminToolQuartzService.getJobGroups()}">
+	<div class="table-responsive">
+		<table class="table no-margin table-hover">
+					
+			<tbody>
+					
+				<th:block th:each="group, groupIter : ${groups}">
+	
+					<th:block th:each="jobKey, jobkeyIter : ${@adminToolQuartzService.getJobKeys(group)}">
+					
+						<tr th:class="${@adminToolQuartzService.isOnePaused(jobKey) ? 'paused' : ''}">
+							<td>
+								<div class="row">
+									<div class="col-xs-12" >
+										<div class="row">
+											 <div class="col-xs-8"><h5  th:text="${group} + ': ' + ${jobKey.getName()}"></h5></div>
+											 <div class="col-xs-2">
+											 	<i class="fa fa-refresh" title="actual running triggers"></i>
+												<span title="actual running triggers" th:text="${@adminToolQuartzService.getCurrentlyExecutingAmount(jobKey)}"></span>
+											 </div>
+										</div>
+										<div class="row">
+											<div class="col-xs-1"></div>
+											<div class="col-xs-8" >
+												<span th:if="${@adminToolQuartzService.getJobDescription(jobKey)} != null"
+													th:text="${@adminToolQuartzService.getJobDescription(jobKey)}"></span>
+												<span th:unless="${@adminToolQuartzService.getJobDescription(jobKey)} != null" class="text-muted">-- no description --</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td class="center-middle">
+								<a class="interruptJob text-danger" th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+						 		 th:id="'interruptJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-bolt fa-3x" title="Interrupt"></i></a>
+							</td>
+							<td class="center-middle">
+								<a class="text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}" data-toggle="collapse" aria-expanded="false"
+									data-th-attr="data-target='#triggersOf_' + ${jobKey.getName()}"
+									th:attr="aria-controls='triggersOf_' + ${jobKey.getName()}">
+									<i class="fa fa-bars fa-3x" th:title="${@adminToolQuartzService.getTriggers(jobKey).size()} + ' Trigger(s)'"></i>
+								</a>
+							</td>
+							<td class="center-middle">
+								<a class="changeJob text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+									th:id="'changeJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-pencil-square-o  fa-3x" title="Edit Job"></i></a>
+							</td>
+							<td class="center-middle">
+								<a class="executeJob text-primary" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+							 		th:id="'executeJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-play fa-3x" title="Fire now"></i></a>
+							</td>
+						</tr>
+						<tr class="collapse" th:id="'triggersOf_' + ${jobKey.getName()}">
+							<td colspan="4">
+								<div class="row">
+									<div class="hidden-xs col-md-1" ></div>
+									<div class="col-xs-12 col-md-11" >
+										<div class="row trigger-header">
+											<div class="col-xs-2">TriggerName</div>
+											<div class="col-xs-2">Cron Expression</div>
+											<div class="col-xs-2">Previous Fire Time</div>
+											<div class="col-xs-2">Next Fire Time</div>
+											<div class="col-xs-1">State</div>
+											<div class="col-xs-1">Interr.</div>
+											<div class="col-xs-1">Change</div>
+											<div class="col-xs-1">Remove</div>
+										</div>
+										
+										<div class="row text-center" th:each="trigger, triggerIter : ${@adminToolQuartzService.getTriggers(jobKey)}">
+											<div class="col-xs-2 text-left">
+												<button class="btn btn-xs btn-default pull-right" data-toggle="tooltip" data-placement="top" 
+													th:title="${trigger.getDescription()} != null ? ${trigger.getDescription()} : 'no trigger description available'"
+													th:text="${#objects.nullSafe(trigger.getKey().getName(), 'N/A')}" >
+												</button>
+											</div>
+											<div class="col-xs-2" th:text="${@adminToolQuartzService.getCronExpression(trigger, 'N/A')}">
+											</div>
+											<div class="col-xs-2">
+												<span th:if="${trigger.getPreviousFireTime() != null}" th:text="${#dates.format(trigger.getPreviousFireTime(), 'dd.MM.yyyy HH:mm')}" 
+													th:remove="tag"></span>
+												<span th:unless="${trigger.getPreviousFireTime() != null}" th:remove="tag">N/A</span>
+											</div>
+											<div class="col-xs-2">
+												<span th:if="${trigger.getNextFireTime() != null}" th:text="${#dates.format(trigger.getNextFireTime(), 'dd.MM.yyyy HH:mm')}" 
+													th:remove="tag"></span>
+												<span th:unless="${trigger.getNextFireTime() != null}" th:remove="tag">N/A</span>
+											</div>
+											<div class="col-xs-1">
+												<button th:class="'changeTriggerState btn btn-xs ' + ${@adminToolQuartzService.getTriggerStateCssClass(jobKey, trigger)}"
+													th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
+													th:text="${@adminToolQuartzService.getTriggerState(jobKey, trigger)}">
+												</button>
+											</div>
+											<div class="col-xs-1">
+												<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}" 
+													th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+													class="interruptTrigger btn btn-xs btn-danger"><i class="fa fa-stop-circle-o"></i></button>
+												<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
+													th:remove="tag"></span>
+											</div>
+											<div class="col-xs-1">
+												<button class="changeTrigger btn btn-xs btn-primary"
+													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+													<i class="fa fa-wrench"></i>
+												</button>
+											</div>
+											<div class="col-xs-1">
+												<button class="removeTrigger btn btn-xs btn-danger"
+													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+													<i class="fa fa-trash"></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+					<!--/* end of each=jobKey, jobkeyIter*/-->
+					</th:block>
+				<!--/* end of each=group, groupIter*/-->
+				</th:block>
+						
+			</tbody>
+		</table>
+	</div>
+</th:block>

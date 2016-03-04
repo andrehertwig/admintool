@@ -11,11 +11,13 @@ import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.chandre.admintool.core.controller.AbstractAdminController;
 import net.bull.javamelody.MonitoredWithSpring;
 
 /**
@@ -32,6 +34,13 @@ public class AdminToolQuartzController {
 
 	@Autowired
 	private AdminToolQuartzService quarzService;
+	
+	@RequestMapping(value = {"/quartzJobsInc",})
+	public String getJobs(ModelMap model, HttpServletRequest request) {
+		
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving quartz jobs include");
+		return "admintool/quartz/includes/quartzJobs.inc";
+	}
 
 	@RequestMapping(path = "/changeRunningState", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody

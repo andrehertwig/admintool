@@ -8,15 +8,12 @@ import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
-
-import com.fasterxml.jackson.databind.deser.std.DateDeserializers.CalendarDeserializer;
 
 import de.chandre.admintool.jobs.InterruptableSampleJob;
 import de.chandre.admintool.jobs.SimpleCronJob;

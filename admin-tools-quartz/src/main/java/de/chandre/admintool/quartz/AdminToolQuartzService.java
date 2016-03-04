@@ -212,12 +212,67 @@ public class AdminToolQuartzService
 	
 	/**
 	 * 
+	 * @param jobKey
+	 * @return true if all triggers of job are in paused state
+	 * @throws SchedulerException
+	 */
+	public boolean isOnePaused(JobKey jobKey) throws SchedulerException {
+		List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+		boolean result = false; 
+		if (null != triggers && triggers.size() > 0) {
+			for (Trigger trigger : triggers) {
+				result = result || scheduler.getTriggerState(trigger.getKey()) == TriggerState.PAUSED;
+			}
+			return result;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
 	 * @param trigger
 	 * @return if trigger is paused
 	 * @throws SchedulerException
 	 */
 	public boolean isPaused(Trigger trigger) throws SchedulerException {
 		return scheduler.getTriggerState(trigger.getKey()) == TriggerState.PAUSED;
+	}
+	
+	public String getTriggerStateCssClass(JobKey jobKey, Trigger trigger) throws SchedulerException {
+		if (isPaused(trigger)) {
+			return "btn-warning";
+		}
+		if (isCurrentlyRunning(jobKey, trigger)) {
+			return "btn-success";
+		}
+		return "btn-info";
+	}
+	
+	public String getTriggerState(JobKey jobKey, Trigger trigger) throws SchedulerException {
+		if (isPaused(trigger)) {
+			return "paused";
+		}
+		if (isCurrentlyRunning(jobKey, trigger)) {
+			return "running";
+		}
+		return "pending";
+	}
+	
+	public boolean isCurrentlyRunning(JobKey jobKey, Trigger trigger) throws SchedulerException {
+		List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
+		JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+		Trigger triggerFound = findTrigger(jobKey.getGroup(), jobKey.getName(), trigger.getKey().getName());
+		for (JobExecutionContext jobExecutionContext : executingJobs) {
+			JobDetail execJobDetail = jobExecutionContext.getJobDetail();
+			if (execJobDetail.getKey().equals(jobDetail.getKey())
+					&& jobExecutionContext.getTrigger().getKey().equals(triggerFound.getKey())) {
+				if (LOGGER.isTraceEnabled()) 
+					LOGGER.trace(String.format("found running trigger for jobkey: (%s, %s, %s)", 
+							jobKey.getGroup(), jobKey.getName(), trigger.getKey().getName()));
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

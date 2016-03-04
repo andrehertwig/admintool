@@ -21,12 +21,16 @@
 							<input type="text" class="form-control" id="jobName" th:disabled="true" value="" />
 						</div>
 					</div>
+					<div class="clearfix job">&nbsp;</div>
+					
 					<div class="row form-group job edit_trigger edit_job">
 						<div class="col-xs-4"><label for="description">Job Description</label></div>
 						<div class="col-xs-8">
 							<textarea id="description" name="description" class="form-control"></textarea>
 						</div>
 					</div>
+					<div class="clearfix job edit_trigger edit_job">&nbsp;</div>
+					
 					<div class="row form-group trigger">
 						<div class="col-xs-4">TriggerGroup &amp; TriggerName</div>
 						<div class="col-xs-4">
@@ -36,18 +40,24 @@
 							<input type="text" class="form-control" id="triggerName" value="" />
 						</div>
 					</div>
+					<div class="clearfix trigger">&nbsp;</div>
+					
 					<div class="row form-group trigger">
 						<div class="col-xs-4"><label for="triggerDescription">Trigger Description</label></div>
 						<div class="col-xs-8">
 							<textarea id="triggerDescription" name="triggerDescription" class="form-control"></textarea>
 						</div>
 					</div>
+					<div class="clearfix trigger">&nbsp;</div>
+					
 					<div class="row form-group trigger edit_trigger">
 						<div class="col-xs-4"><label for="triggerType">Trigger Type</label></div>
 						<div class="col-xs-8">
 							<input type="text" class="form-control" id="triggerType" name="triggerType" th:disabled="true" value="" />
 						</div>
 					</div>
+					<div class="clearfix trigger edit_trigger">&nbsp;</div>
+					
 					<div class="row form-group trigger new_trigger">
 						<div class="col-xs-4"><label for="triggerTypeList">Trigger Type</label></div>
 						<div class="col-xs-8">
@@ -59,18 +69,23 @@
 							</select>
 						</div>
 					</div>
+					<div class="clearfix trigger new_trigger">&nbsp;</div>
+					
 					<div class="row form-group cron trigger">
-						<div class="col-xs-4"><label for="cronExpression">Cron Expression</label></div>
+						<div class="col-xs-4"><label for="cronExpression">Cron Expression <i class=""></i></label></div>
 						<div class="col-xs-8">
 							<input type="text" class="form-control" id="cronExpression" name="cronExpression" value="" />
 						</div>
 					</div>
+					<div class="clearfix cron trigger">&nbsp;</div>
+					
 					<div class="row form-group cron trigger">
 						<div class="col-xs-4"><label for="timeZone">Time Zone</label></div>
 						<div class="col-xs-8">
 							<input type="text" class="form-control" id="timeZone" name="timeZone" value="" />
 						</div>
 					</div>
+					<div class="clearfix cron trigger">&nbsp;</div>
 					
 					<div class="row form-group simple daily trigger">
 						<div class="col-xs-4"><label for="repeatCount">Repeat Count</label></div>
@@ -78,12 +93,15 @@
 							<input type="text" class="form-control" id="repeatCount" name="repeatCount" value="" placeholder="-1"/>
 						</div>
 					</div>
+					<div class="clearfix simple daily trigger">&nbsp;</div>
+					
 					<div class="row form-group simple daily calendar trigger">
 						<div class="col-xs-4"><label for="repeatInterval">Repeat Interval</label></div>
 						<div class="col-xs-8">
 							<input type="text" class="form-control" id="repeatInterval" name="repeatInterval" value="" />
 						</div>
 					</div>
+					<div class="clearfix simple daily calendar trigger">&nbsp;</div>
 					
 					<div class="row form-group daily calendar trigger">
 						<div class="col-xs-4"><label for="repeatIntervalUnit">Repeat Interval Unit</label></div>
@@ -93,6 +111,7 @@
 							</select>
 						</div>
 					</div>
+					<div class="clearfix daily calendar trigger">&nbsp;</div>
 					
 					<div class="row form-group trigger">
 						<div class="col-xs-4"><label for="calendarName">Calendars</label></div>
@@ -102,6 +121,8 @@
 							</select>
 						</div>
 					</div>
+					<div class="clearfix trigger">&nbsp;</div>
+					
 					<div class="row form-group trigger">
 						<div class="col-xs-4"><label for="misfireInstruction">Misfire Instruction</label></div>
 						<div class="col-xs-8">
@@ -110,6 +131,7 @@
 							</select>
 						</div>
 					</div>
+					<div class="clearfix">&nbsp;</div>
 					
 					<div class="row form-group trigger">
 						<div class="col-xs-4"><label for="startDate">Start Date</label></div>

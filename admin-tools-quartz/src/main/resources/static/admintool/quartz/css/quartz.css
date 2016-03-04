@@ -33,6 +33,7 @@ a.small-box-footer-custom {
 	background-color: #ffa354 !important;
 }
 
+/*
 .btn-warning {
 	border-color: #a65109;
 	background-color: #ff841b;
@@ -51,4 +52,29 @@ a.small-box-footer-custom {
 .btn-success:hover {
 	border-color: #07820f;
 	background-color: #329638;
+}
+*/
+
+.row {
+	margin: 0;
+}
+h5 {
+	font-size: 16px;
+	font-weight: bold;
+}
+td.center-middle {
+	vertical-align: middle !important;
+	text-align: center;
+	width: 60px;
+}
+.action {
+	display: inline-block;
+}
+
+.trigger-header {
+	font-style: italic;
+	text-align: center;
+}
+.paused {
+	background: rgba(238, 162, 54, 0.1) none repeat scroll 0 0;
 }

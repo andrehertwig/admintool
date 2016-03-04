@@ -3,6 +3,7 @@ var calendarNames = null;
 var repeatIntervalUnits = null;
 var actualTrigger = null;
 var actualJob = null;
+var intervalId = null;
 
 window.onbeforeunload = closingCode;
 function closingCode() {
@@ -17,7 +18,12 @@ function closingCode() {
 $( document ).ready(function() {
 	
 	$('[data-toggle="tooltip"]').tooltip();
-	$('.datepicker').datepicker();
+	//http://bootstrap-datepicker.readthedocs.org/
+	$('.datepicker').datepicker({
+		format: 'dd.mm.yyyy',
+		startDate: new Date(),
+		todayHighlight: true
+	});
 	$('#startTime').timepicker({
 		showSeconds: true,
 		secondStep: 1,
@@ -38,13 +44,29 @@ $( document ).ready(function() {
 		});
 	}
 	
+	if ($("#quartzJobsInc").length > 0) {
+		initHandlers();
+		$('#reloadInclude').click(function() {reloadInclude();});
+	}
+	
+});
+
+function initHandlers() {
 	$('.changeTriggerState').each(function() {
 		var $el = $(this);
 		$el.click(function() {
 			doActionOnJob(this, '/admintool/quartz/changeTriggerState', function (result, $btn) {
 				if (result == 'true') {
-					switchClass($btn, 'btn-success', 'btn-warning');
-					$btn.text() == 'running' ? $btn.text('paused') : $btn.text('running');
+					if ($btn.text() == 'running') {
+						$btn.text('paused')
+						switchClass($btn, 'btn-success', 'btn-warning');
+					} else if($btn.text() == 'pending') {
+						$btn.text('paused')
+						switchClass($btn, 'btn-info', 'btn-warning');
+					} else {
+						$btn.text('pending')
+						switchClass($btn, 'btn-info', 'btn-warning');
+					}
 				}
 			});
 		});
@@ -54,7 +76,7 @@ $( document ).ready(function() {
 		$el.click(function() {
 			doActionOnJob(this, '/admintool/quartz/executeJob', function (result, $btn) {
 				if (result == 'true') {
-					location.reload();
+					reloadIncludeDelayed(500);
 				}
 			});
 		});
@@ -64,7 +86,7 @@ $( document ).ready(function() {
 		$el.click(function() {
 			doActionOnJob(this, '/admintool/quartz/interruptJob', function (result, $btn) {
 				if (result == 'true') {
-					location.reload();
+					reloadIncludeDelayed(500);
 				}
 			});
 		});
@@ -73,7 +95,7 @@ $( document ).ready(function() {
 		var $el = $(this);
 		$el.click(function() {
 			var btn = this;
-			$('#btn_confirm').unbind();
+			$('#btn_confirm').off();
 			$('#btn_confirm').click(function() {
 				doActionOnJob(btn, '/admintool/quartz/removeTrigger', function (result, $btn) {
 					if (result == 'true') {
@@ -117,7 +139,7 @@ $( document ).ready(function() {
 					 
 					switchVisibilityOnTrigger(trigger);
 					
-					$('#btn_save').unbind();
+					$('#btn_save').off();
 					$('#btn_save').click(function() {
 						save('changeTrigger');
 					});
@@ -183,7 +205,7 @@ $( document ).ready(function() {
 			sendRequest(buildParameterizedUrl('/admintool/quartz/getTriggerInfo', $btn), "GET", "json", function (trigger) {
 				if (trigger && null != trigger && 'null' != trigger) {
 					fillJobData(trigger);
-					$('#btn_save').unbind();
+					$('#btn_save').off();
 					$('#btn_save').click(function() {
 						save('editJob');
 					});
@@ -192,7 +214,29 @@ $( document ).ready(function() {
 			});
 		});
 	});//editJob
-});
+}
+
+function startPermanentReload() {
+	var intervalId = setInterval(function() {
+	    reloadInclude()
+	}, 15000);
+}
+function stopPermanentReload() {
+	clearInterval(intervalId);
+}
+
+function reloadIncludeDelayed(delay) {
+	setTimeout(reloadInclude, delay);
+}
+
+function reloadInclude() {
+	$('#reloadInclude').addClass('fa-spin');
+	sendRequest("/admintool/quartz/quartzJobsInc", "GET", "text", function(result) {
+		$("#quartzJobsInc").html(result);
+		initHandlers();
+		$('#reloadInclude').removeClass('fa-spin');
+	});
+}
 
 function save(type ) {
 	
