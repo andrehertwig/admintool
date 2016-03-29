@@ -28,23 +28,24 @@ public class AdminRootController extends AbstractAdminController
 	public String startPage(ModelMap model, HttpServletRequest request) {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving admin root page");
-		model.put("rootContext", AbstractAdminController.ROOTCONTEXT);
+		model.put("rootContext", request.getContextPath() + AbstractAdminController.ROOTCONTEXT);
 		model.put("contentPage", "admintool/content/start");
-		return "admintool/index";
+		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
 	}
 	
 	@RequestMapping(value = {"/**",})
 	public String subPage(ModelMap model, HttpServletRequest request) {
 		
 		addCommonContextVars(model, request);
-		return "admintool/index";
+		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
 	}
 	
 	@RequestMapping(value = {"/{lang}/**",})
 	public String subPageLang(ModelMap model, @PathVariable("lang") String language, 
 			HttpServletRequest request, HttpServletResponse response) {
+		
 		resolveLocale(language, request, response);
 		addCommonContextVars(model, request);
-		return "admintool/index";
+		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
 	}
 }

@@ -10,14 +10,14 @@
 	<packaging>pom</packaging>
 
 	<name>Admin tools</name>
-	<description>Collection of tools for maintain web applications</description>
+	<description>Collection of tools to maintain web applications</description>
 	
-	<url>https://www.chandre.de</url>
+	<url>https://github.com/andrehertwig/admintool</url>
 	<inceptionYear>2016</inceptionYear>
 
 	<developers>
 		<developer>
-			<id>adwohr</id>
+			<id>andrehertwig</id>
 			<name>André Hertwig</name>
 			<email>adwohr@users.noreply.github.com</email>
 			<url>https://github.com/adwohr</url>
@@ -31,21 +31,6 @@
 		</developer>
 	</developers>
 	
-	<contributors>
-		<contributor>
-			<name>André Hertwig</name>
-			<email>adwohr@users.noreply.github.com</email>
-			<url>https://github.com/adwohr</url>
-			<organization></organization>
-			<organizationUrl></organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</contributor>
-	</contributors>
-	
 	<licenses>
 		<license>
 			<name>MIT License</name>
@@ -54,16 +39,25 @@
 		</license>
 	</licenses>
 	
+	<scm>
+		<connection>scm:git:git@github.com:andrehertwig/admintool.git</connection>
+		<developerConnection>scm:git:git@github.com:andrehertwig/admintool.git</developerConnection>
+		<url>https://github.com/andrehertwig/admintool</url>
+		<tag>admintool-${project.version}</tag>
+	</scm>
+	
 	<modules>
 		<module>admin-tools-core</module>
 		<module>admin-tools-melody</module>
 		<module>admin-tools-jminix</module>
 		<module>admin-tools-log4j2</module>
-		<module>admin-tools-demo</module>
 		<module>admin-tools-quartz</module>
 		<!-- 
 		<module>admin-tools-dbbrowser</module>
 		<module>admin-tools-cluster</module> -->
+		
+		<module>admin-tools-demo</module>
+		<module>admin-tools-demo-war</module>
 	</modules>
 	
 	<properties>

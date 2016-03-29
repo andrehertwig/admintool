@@ -11,7 +11,7 @@
 		</section>
 		<section class="content">
 			<div class="fluidMedia">
-				<iframe th:src="${melodyPath}"></iframe>
+				<iframe th:src="${#httpServletRequest.getContextPath() + melodyPath}"></iframe>
 			</div>
 		</section>
 	</div>

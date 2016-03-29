@@ -10,7 +10,7 @@
 		</section>
 		<section class="content">
 			<div class="fluidMedia">
-				<iframe th:src="${jminixPath}"></iframe>
+				<iframe th:src="${#httpServletRequest.getContextPath() + jminixPath}"></iframe>
 			</div>
 		</section>
 	</div>

@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -27,7 +28,8 @@ public class AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AbstractAdminController.class);
 	
-	protected static final String ROOTCONTEXT = "/admintool";
+	protected static final String ROOTCONTEXT_NAME = "admintool";
+	protected static final String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
 	
 	@Autowired 
 	private AdminTool adminTool;
@@ -49,6 +51,7 @@ public class AbstractAdminController
 	{
 		LOGGER.debug(String.format("receiving request: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
 		String name = getMenuName(request);
+		LOGGER.debug("name=" +name);
 		
 		Optional<MenuEntry> menuentry = Optional.empty();
 		for (AdminComponent comp : adminTool.getComponents()) {
@@ -58,19 +61,22 @@ public class AbstractAdminController
 			}
 		}
 		if (menuentry.isPresent()) {
-			model.put("contentPage", "admintool/" + menuentry.get().getTarget());
+			model.put("contentPage", ROOTCONTEXT_NAME + "/" + menuentry.get().getTarget());
 			if (null != menuentry.get().getVariables()) {
 				model.putAll(menuentry.get().getVariables());
 			}
 			model.put("activeMenu", menuentry.get());
 		} else {
-			model.put("contentPage", "admintool/content/error404");
+			model.put("contentPage", ROOTCONTEXT_NAME + "/content/error404");
 		}
-		model.put("rootContext", AbstractAdminController.ROOTCONTEXT);
+		model.put("rootContext", request.getContextPath() + ROOTCONTEXT);
 	}
 	
 	private String getMenuName(HttpServletRequest request) {
-		String name = request.getRequestURI().replaceFirst(AbstractAdminController.ROOTCONTEXT, "");
+		String name = request.getRequestURI().replaceFirst(ROOTCONTEXT, "");
+		if (!StringUtils.isEmpty(request.getContextPath())) {
+			name = name.replaceFirst(request.getContextPath(), "");
+		}
 		if (name.startsWith("/")) {
 			name = name.substring(1, name.length());
 		}

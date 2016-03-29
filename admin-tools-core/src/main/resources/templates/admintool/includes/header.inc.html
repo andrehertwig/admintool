@@ -18,15 +18,16 @@
 	href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
 
 <link rel="stylesheet"
-	href="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/AdminLTE.min.css" />
+	href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/AdminLTE.min.css" />
 
 <link rel="stylesheet"
-	href="http://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/skins/skin-blue.min.css" />
+	href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/skins/skin-blue.min.css" />
 
-<link rel="stylesheet" href="/static/admintool/css/adminTool.css" />
+<link rel="stylesheet" th:href="${#httpServletRequest.getContextPath()} + '/static/admintool/css/adminTool.css'" />
 
 <div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
 	<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
-		<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" th:href="${cssPath}" />
+		<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" 
+			th:href="${#httpServletRequest.getContextPath() + cssPath}" />
 	</div>
 </div>
