@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
 <!-- /*
 <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -10,9 +11,13 @@
 
 <script th:src="${#httpServletRequest.getContextPath()} + '/static/admintool/js/adminTool.js'"></script>
 
-<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
-	<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
+<script th:each="jsPath,iterStateJS : ${@adminTool.globalJavaScripts}" 
+		th:src="${#httpServletRequest.getContextPath() + jsPath}"></script>
+
+<th:block th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
+	<th:block th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
 		<script th:each="jsPath,iterStateJS : ${adminComponent.additionalJS}" 
 			th:src="${#httpServletRequest.getContextPath() + jsPath}"></script>
-	</div>
-</div>		
+	</th:block>
+</th:block>	
+</html>

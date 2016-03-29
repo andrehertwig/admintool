@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta
@@ -25,9 +26,13 @@
 
 <link rel="stylesheet" th:href="${#httpServletRequest.getContextPath()} + '/static/admintool/css/adminTool.css'" />
 
-<div th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
-	<div th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
+<link th:each="cssPath,iterStateCSS : ${@adminTool.globalStyleSheets}" rel="stylesheet" 
+		th:href="${#httpServletRequest.getContextPath() + cssPath}" />
+
+<th:block th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
+	<th:block th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
 		<link th:each="cssPath,iterStateCSS : ${adminComponent.additionalCSS}" rel="stylesheet" 
 			th:href="${#httpServletRequest.getContextPath() + cssPath}" />
-	</div>
-</div>
+	</th:block>
+</th:block>
+</html>

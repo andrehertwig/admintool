@@ -1,45 +1,50 @@
 package de.chandre.admintool.core;
 
 import java.util.Set;
-import java.util.TreeSet;
-
-import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.component.AdminComponent;
 
-/**
- * the admin tool<br>
- * 
- * create a new {@link AdminComponent} and use {@link AdminTool#addComponent(AdminComponent)} to get it displayed
- * 
- * @author Andre
- *
- */
-@Component
-public class AdminTool
-{
-	private Set<AdminComponent> components = new TreeSet<>();
-
-	/**
-	 * @return the components
-	 */
-	public Set<AdminComponent> getComponents() {
-		return components;
-	}
+public interface AdminTool {
 	
 	/**
-	 * @param components the components to set
+	 * 
+	 * @return
 	 */
-	public void addComponent(AdminComponent components) {
-		this.components.add(components);
-	}
+	public Set<AdminComponent> getComponents();
 	
-
 	/**
-	 * @param components the components to set
+	 * 
+	 * @param components
 	 */
-	public void addComponents(Set<AdminComponent> components) {
-		this.components.addAll(components);
-	}
+	public void addComponent(AdminComponent components);
 	
+	/**
+	 * 
+	 * @param components
+	 */
+	public void addComponents(Set<AdminComponent> components);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<String> getGlobalJavaScripts();
+	
+	/**
+	 * 
+	 * @param globalJavaScript
+	 */
+	public void addGlobalJavaScript(String globalJavaScript);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<String> getGlobalStyleSheets();
+	
+	/**
+	 * 
+	 * @param globalStyleSheet
+	 */
+	public void addGlobalStyleSheet(String globalStyleSheet);
 }
