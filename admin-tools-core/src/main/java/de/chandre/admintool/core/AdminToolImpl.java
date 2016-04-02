@@ -47,6 +47,9 @@ public class AdminToolImpl implements AdminTool
 		this.components.addAll(components);
 	}
 
+	public void setComponents(Set<AdminComponent> components) {
+		this.components =components;
+	}
 	
 	public Set<String> getGlobalJavaScripts() {
 		return globalJavaScripts;
