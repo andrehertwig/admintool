@@ -24,6 +24,8 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/css/skins/skin-blue.min.css" />
 
+<link rel="stylesheet" th:href="${#httpServletRequest.getContextPath()} + '/static/admintool/css/awesome-bootstrap-checkbox.css'" />
+
 <link rel="stylesheet" th:href="${#httpServletRequest.getContextPath()} + '/static/admintool/css/adminTool.css'" />
 
 <link th:each="cssPath,iterStateCSS : ${@adminTool.globalStyleSheets}" rel="stylesheet" 

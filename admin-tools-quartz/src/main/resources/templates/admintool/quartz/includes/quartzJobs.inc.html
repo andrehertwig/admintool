@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
 <th:block th:with="groups = ${@adminToolQuartzService.getJobGroups()}">
 	<div class="table-responsive">
 		<table class="table no-margin table-hover">
@@ -40,6 +41,10 @@
 									th:attr="aria-controls='triggersOf_' + ${jobKey.getName()}">
 									<i class="fa fa-bars fa-3x" th:title="${@adminToolQuartzService.getTriggers(jobKey).size()} + ' Trigger(s)'"></i>
 								</a>
+							</td>
+							<td class="center-middle">
+								<a class="addTrigger text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
+									th:id="'addTrigger_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-plus fa-3x" title="Add Trigger"></i></a>
 							</td>
 							<td class="center-middle">
 								<a class="changeJob text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
@@ -87,12 +92,12 @@
 											</div>
 											<div class="col-xs-1">
 												<button th:class="'changeTriggerState btn btn-xs ' + ${@adminToolQuartzService.getTriggerStateCssClass(jobKey, trigger)}"
-													th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
+													th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
 													th:text="${@adminToolQuartzService.getTriggerState(jobKey, trigger)}">
 												</button>
 											</div>
 											<div class="col-xs-1">
-												<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}" 
+												<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}" 
 													th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
 													class="interruptTrigger btn btn-xs btn-danger"><i class="fa fa-stop-circle-o"></i></button>
 												<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
@@ -100,13 +105,13 @@
 											</div>
 											<div class="col-xs-1">
 												<button class="changeTrigger btn btn-xs btn-primary"
-													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
 													<i class="fa fa-wrench"></i>
 												</button>
 											</div>
 											<div class="col-xs-1">
 												<button class="removeTrigger btn btn-xs btn-danger"
-													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getName()}">
+													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
 													<i class="fa fa-trash"></i>
 												</button>
 											</div>
@@ -125,3 +130,4 @@
 		</table>
 	</div>
 </th:block>
+</html>

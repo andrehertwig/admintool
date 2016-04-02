@@ -3,6 +3,7 @@ package de.chandre.admintool.quartz;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -16,17 +17,17 @@ import org.quartz.DateBuilder.IntervalUnit;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class JobTriggerTA implements Serializable
+public class JobTriggerTO implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	public enum TriggerType {
-		CRON, SIMPLE, CALENDAR, DAILY, MUTABLE
+		CRON, SIMPLE, CALENDAR, DAILY
 	}
 	
 	private static List<TriggerType> types = Arrays.asList(TriggerType.values());
 	
-	private TriggerType type;
+	private TriggerType triggerType;
 	
 	private String jobGroup;
 	private String jobName;
@@ -49,12 +50,13 @@ public class JobTriggerTA implements Serializable
 	private TimeZone timeZone;
 	
 	//for simple and daily
-	private int repeatCount;
+	private Integer repeatCount;
 	//also for calendar
-	private long repeatInterval;
+	private Long repeatInterval;
 	
 	//for calendar 
 	private IntervalUnit repeatIntervalUnit;
+	private Map<String, IntervalUnit> repeatIntervalUnits;
 	
 	private String originalJobGroup;
 	private String originalJobName;
@@ -65,12 +67,12 @@ public class JobTriggerTA implements Serializable
 		return types;
 	}
 
-	public TriggerType getType() {
-		return type;
+	public TriggerType getTriggerType() {
+		return triggerType;
 	}
 
-	public void setType(TriggerType type) {
-		this.type = type;
+	public void setTriggerType(TriggerType type) {
+		this.triggerType = type;
 	}
 
 	public String getJobGroup() {
@@ -192,19 +194,19 @@ public class JobTriggerTA implements Serializable
 		this.timeZone = timeZone;
 	}
 
-	public int getRepeatCount() {
+	public Integer getRepeatCount() {
 		return repeatCount;
 	}
 
-	public void setRepeatCount(int repeatCount) {
+	public void setRepeatCount(Integer repeatCount) {
 		this.repeatCount = repeatCount;
 	}
 
-	public long getRepeatInterval() {
+	public Long getRepeatInterval() {
 		return repeatInterval;
 	}
 
-	public void setRepeatInterval(long repeatInterval) {
+	public void setRepeatInterval(Long repeatInterval) {
 		this.repeatInterval = repeatInterval;
 	}
 
@@ -216,6 +218,23 @@ public class JobTriggerTA implements Serializable
 		this.repeatIntervalUnit = repeatIntervalUnit;
 	}
 
+	public Map<String, IntervalUnit> getRepeatIntervalUnits() {
+		return repeatIntervalUnits;
+	}
+
+	public void setRepeatIntervalUnits(Map<String, IntervalUnit> repeatIntervalUnits) {
+		this.repeatIntervalUnits = repeatIntervalUnits;
+	}
+	
+	public void addRepeatIntervalUnits(String name, IntervalUnit repeatIntervalUnit) {
+		if (null == this.repeatIntervalUnits) {
+			this.repeatIntervalUnits = new LinkedHashMap<>();
+		}
+		this.repeatIntervalUnits.put(name, repeatIntervalUnit);
+	}
+	
+	
+	
 	public String getOriginalJobGroup() {
 		return originalJobGroup;
 	}
@@ -247,4 +266,24 @@ public class JobTriggerTA implements Serializable
 	public void setOriginalTriggerGroup(String originalTriggerGroup) {
 		this.originalTriggerGroup = originalTriggerGroup;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("JobTriggerTO [triggerType=").append(triggerType).append(", jobGroup=").append(jobGroup)
+				.append(", jobName=").append(jobName).append(", description=").append(description)
+				.append(", triggerName=").append(triggerName).append(", triggerGroup=").append(triggerGroup)
+				.append(", triggerDescription=").append(triggerDescription).append(", calendarName=")
+				.append(calendarName).append(", startTime=").append(startTime).append(", startDelay=")
+				.append(startDelay).append(", priority=").append(priority).append(", misfireInstruction=")
+				.append(misfireInstruction).append(", misfireInstructions=").append(misfireInstructions)
+				.append(", cronExpression=").append(cronExpression).append(", timeZone=").append(timeZone)
+				.append(", repeatCount=").append(repeatCount).append(", repeatInterval=").append(repeatInterval)
+				.append(", repeatIntervalUnit=").append(repeatIntervalUnit).append(", repeatIntervalUnits=")
+				.append(repeatIntervalUnits).append(", originalJobGroup=").append(originalJobGroup)
+				.append(", originalJobName=").append(originalJobName).append(", originalTriggerName=")
+				.append(originalTriggerName).append(", originalTriggerGroup=").append(originalTriggerGroup).append("]");
+		return builder.toString();
+	}
+	
 }

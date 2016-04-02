@@ -12,146 +12,181 @@
 					<h4 class="modal-title" id="jobModalLabel">Modal title</h4>
 				</div>
 				<div class="modal-body">
-					<div class="row form-group job">
-						<div class="col-xs-4">JobGroup &amp; JobName</div>
-						<div class="col-xs-4">
-							<input type="text" class="form-control" id="jobGroup" th:disabled="true" value="" />
-						</div>
-						<div class="col-xs-4">
-							<input type="text" class="form-control" id="jobName" th:disabled="true" value="" />
-						</div>
-					</div>
-					<div class="clearfix job">&nbsp;</div>
-					
-					<div class="row form-group job edit_trigger edit_job">
-						<div class="col-xs-4"><label for="description">Job Description</label></div>
-						<div class="col-xs-8">
-							<textarea id="description" name="description" class="form-control"></textarea>
-						</div>
-					</div>
-					<div class="clearfix job edit_trigger edit_job">&nbsp;</div>
-					
-					<div class="row form-group trigger">
-						<div class="col-xs-4">TriggerGroup &amp; TriggerName</div>
-						<div class="col-xs-4">
-							<input type="text" class="form-control" id="triggerGroup" th:disabled="true" value="" />
-						</div>
-						<div class="col-xs-4">
-							<input type="text" class="form-control" id="triggerName" value="" />
-						</div>
-					</div>
-					<div class="clearfix trigger">&nbsp;</div>
-					
-					<div class="row form-group trigger">
-						<div class="col-xs-4"><label for="triggerDescription">Trigger Description</label></div>
-						<div class="col-xs-8">
-							<textarea id="triggerDescription" name="triggerDescription" class="form-control"></textarea>
-						</div>
-					</div>
-					<div class="clearfix trigger">&nbsp;</div>
-					
-					<div class="row form-group trigger edit_trigger">
-						<div class="col-xs-4"><label for="triggerType">Trigger Type</label></div>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="triggerType" name="triggerType" th:disabled="true" value="" />
-						</div>
-					</div>
-					<div class="clearfix trigger edit_trigger">&nbsp;</div>
-					
-					<div class="row form-group trigger new_trigger">
-						<div class="col-xs-4"><label for="triggerTypeList">Trigger Type</label></div>
-						<div class="col-xs-8">
-							<select class="form-control" id="triggerTypeList" name="triggerTypeList">
-								<option value="CRON">Cron Trigger</option>
-								<option value="SIMPLE">Simple Trigger</option>
-								<option value="CALENDAR">Calendar Trigger</option>
-								<option value="DAILY">Daily Interval Trigger</option>
-							</select>
-						</div>
-					</div>
-					<div class="clearfix trigger new_trigger">&nbsp;</div>
-					
-					<div class="row form-group cron trigger">
-						<div class="col-xs-4"><label for="cronExpression">Cron Expression <i class=""></i></label></div>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="cronExpression" name="cronExpression" value="" />
-						</div>
-					</div>
-					<div class="clearfix cron trigger">&nbsp;</div>
-					
-					<div class="row form-group cron trigger">
-						<div class="col-xs-4"><label for="timeZone">Time Zone</label></div>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="timeZone" name="timeZone" value="" />
-						</div>
-					</div>
-					<div class="clearfix cron trigger">&nbsp;</div>
-					
-					<div class="row form-group simple daily trigger">
-						<div class="col-xs-4"><label for="repeatCount">Repeat Count</label></div>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="repeatCount" name="repeatCount" value="" placeholder="-1"/>
-						</div>
-					</div>
-					<div class="clearfix simple daily trigger">&nbsp;</div>
-					
-					<div class="row form-group simple daily calendar trigger">
-						<div class="col-xs-4"><label for="repeatInterval">Repeat Interval</label></div>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="repeatInterval" name="repeatInterval" value="" />
-						</div>
-					</div>
-					<div class="clearfix simple daily calendar trigger">&nbsp;</div>
-					
-					<div class="row form-group daily calendar trigger">
-						<div class="col-xs-4"><label for="repeatIntervalUnit">Repeat Interval Unit</label></div>
-						<div class="col-xs-8">
-							<select class="form-control" id="repeatIntervalUnit" name="repeatIntervalUnit">
-							
-							</select>
-						</div>
-					</div>
-					<div class="clearfix daily calendar trigger">&nbsp;</div>
-					
-					<div class="row form-group trigger">
-						<div class="col-xs-4"><label for="calendarName">Calendars</label></div>
-						<div class="col-xs-8">
-							<select class="form-control" id="calendarName" name="calendarName">
-							
-							</select>
-						</div>
-					</div>
-					<div class="clearfix trigger">&nbsp;</div>
-					
-					<div class="row form-group trigger">
-						<div class="col-xs-4"><label for="misfireInstruction">Misfire Instruction</label></div>
-						<div class="col-xs-8">
-							<select class="form-control" id="misfireInstruction" name="misfireInstruction">
-							
-							</select>
-						</div>
-					</div>
-					<div class="clearfix">&nbsp;</div>
-					
-					<div class="row form-group trigger">
-						<div class="col-xs-4"><label for="startDate">Start Date</label></div>
-						<div class="col-xs-4">
-							<div class="input-group">
-								<input type="datetime" class="form-control datepicker" id="startDate" name="startDate" value="" />
-								<div class="input-group-addon">
-									<i class="fa fa-calendar"></i>
-								</div>
+				
+					<form id="jobTriggerForm">
+						<div class="row form-group job">
+							<div class="col-xs-4"><label>JobGroup &amp; JobName</label></div>
+							<div class="col-xs-4">
+								<input type="text" class="form-control" id="jobGroup" value="" required="required" maxlength="200" />
+							</div>
+							<div class="col-xs-4">
+								<input type="text" class="form-control" id="jobName" value="" required="required" maxlength="200" />
 							</div>
 						</div>
-						<div class="col-xs-4">
-							<div class="input-group bootstrap-timepicker timepicker">
-								<input class="form-control" type="text" id="startTime" name="startTime" value="" />
-								<div class="input-group-addon">
-									<i class="fa fa-clock-o"></i>
-								</div>
+						<div class="clearfix job">&nbsp;</div>
+						
+						<div class="row form-group job edit_job">
+							<div class="col-xs-4"><label for="description">Job Description</label></div>
+							<div class="col-xs-8">
+								<textarea id="description" name="description" class="form-control notRequired" maxlength="250"
+									placeholder="Give your job a description"></textarea>
 							</div>
 						</div>
-					</div>
+						<div class="clearfix job edit_job">&nbsp;</div>
+						
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label>TriggerGroup &amp; TriggerName</label></div>
+							<div class="col-xs-4">
+								<input type="text" class="form-control" id="triggerGroup" value="" required="required" maxlength="200"/>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" class="form-control" id="triggerName" value="" required="required" maxlength="200"/>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label for="triggerDescription">Trigger Description</label></div>
+							<div class="col-xs-8">
+								<textarea id="triggerDescription" name="triggerDescription" class="form-control notRequired"
+									maxlength="250" placeholder="Give your trigger a description"></textarea>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						
+						<!-- /**
+						<div class="row form-group trigger edit_trigger">
+							<div class="col-xs-4"><label for="triggerType">Trigger Type</label></div>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="triggerType" name="triggerType" th:disabled="true" value="" />
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						**/ -->
+						
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label for="triggerTypeList">Trigger Type</label></div>
+							<div class="col-xs-8">
+								<select class="form-control" id="triggerTypeList" name="triggerTypeList" >
+									<!-- /** **/ -->
+									<option value="CRON">Cron Trigger</option>
+									<option value="SIMPLE">Simple Trigger</option>
+									<option value="CALENDAR">Calendar Trigger</option>
+									<option value="DAILY">Daily Interval Trigger</option>
+									
+								</select>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						
+						<div class="row form-group cron trigger">
+							<div class="col-xs-4"><label for="cronExpression">Cron Expression</label>
+								 <p class="help-block"><a href="http://www.cronmaker.com/" target="blank">Cron-Maker</a></p>
+							</div>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" id="cronExpression" name="cronExpression" value="" maxlength="120"/>
+							</div>
+						</div>
+						<div class="clearfix cron trigger">&nbsp;</div>
+						
+						<div class="row form-group cron trigger">
+							<div class="col-xs-4"><label for="timeZone">Time Zone</label></div>
+							<div class="col-xs-8">
+								<select class="form-control notRequired" id="timeZone" name="timeZone">
+								</select>
+							</div>
+						</div>
+						<div class="clearfix cron trigger">&nbsp;</div>
+						
+						<div class="row form-group simple daily trigger">
+							<div class="col-xs-4"><label for="repeatCount">Repeat Count</label></div>
+							<div class="col-xs-8">
+								<input type="number" class="form-control" id="repeatCount" name="repeatCount" value="" placeholder="-1" 
+									maxlength="10" pattern="^[0-9]{1,10}$" min="-1" max="2147483647"/>
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="clearfix simple daily trigger">&nbsp;</div>
+						
+						<div class="row form-group simple daily calendar trigger">
+							<div class="col-xs-4"><label for="repeatInterval">Repeat Interval / Unit</label></div>
+							<div class="col-xs-4">
+								<input type="number" class="form-control" id="repeatInterval" name="repeatInterval" value=""
+									maxlength="10" pattern="^[0-9]{1,10}$" min="0" max="2147483647" />
+								<div class="help-block with-errors"></div>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control" id="repeatIntervalUnit" name="repeatIntervalUnit">
+									<option value="MILLISECOND">Millisecond</option>
+									<option value="SECOND">Second</option>
+									<option value="MINUTE">Minute</option>
+									<option value="HOUR">Hour</option>
+									<option value="DAY">Day</option>
+									<option value="WEEK">Week</option>
+									<option value="MONTH">Month</option>
+									<option value="YEAR">Year</option>
+								</select>
+							</div>
+						</div>
+						<div class="clearfix simple daily calendar trigger">&nbsp;</div>
+						
+						<!-- /**
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label for="calendarName">Calendars</label></div>
+							<div class="col-xs-8">
+								<select class="form-control" id="calendarName" name="calendarName">
+								
+								</select>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						**/ -->
+						
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label for="misfireInstruction">Misfire Instruction</label></div>
+							<div class="col-xs-8">
+								<select class="form-control" id="misfireInstruction" name="misfireInstruction"
+									 required="required" >
+								
+								</select>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						
+						<div class="row form-group trigger">
+							<div class="col-xs-4"><label for="priority">Priority</label></div>
+							<div class="col-xs-8">
+								<input type="datetime" class="form-control" id="priority" name="priority" value="" maxlength="10"
+									required="required" pattern="^[0-9]{1,10}$" />
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="clearfix trigger">&nbsp;</div>
+						
+						<div class="row  trigger">
+							<div class="col-xs-4"><label for="startDate">Start Date</label></div>
+							<div class="col-xs-4 form-group">
+								<div class="input-group">
+									<input type="datetime" class="form-control datepicker" id="startDate" name="startDate" value=""
+										 required="required" maxlength="10" pattern="^[0-9]{2}\.[0-9]{2}\.201[0-9]$" />
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+								</div>
+								<div class="help-block with-errors"></div>
+							</div>
+							<div class="col-xs-4 form-group">
+								<div class="input-group bootstrap-timepicker timepicker">
+									<input class="form-control" type="text" id="startTime" name="startTime" value=""
+										 required="required" maxlength="10" pattern="^[0-2]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1}$" />
+									<div class="input-group-addon">
+										<i class="fa fa-clock-o"></i>
+									</div>
+								</div>
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+					</form>
 					
 				</div>
 				<div class="modal-footer">

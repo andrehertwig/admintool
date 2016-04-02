@@ -22,38 +22,46 @@
 	<Loggers>
 		<Logger name="de.chandre" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.springframework" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.springframework.boot" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.springframework.web" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.springframework.core" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.thymeleaf" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.hibernate" level="warn" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="org.quartz" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		
-		<!-- 
+		<!-- -->
 		<Logger name="*" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
-		 -->
+		 
 		<Root level="info">
 			<AppenderRef ref="Console"/>
-			<!-- <AppenderRef ref="RollingFile"/> -->
+			<AppenderRef ref="RollingFile"/>
 		</Root>
 	</Loggers>
 </Configuration>

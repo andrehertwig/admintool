@@ -2,6 +2,7 @@ package de.chandre.admintool.quartz;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,12 +13,13 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.chandre.admintool.core.controller.AbstractAdminController;
 import net.bull.javamelody.MonitoredWithSpring;
 
 /**
@@ -53,9 +55,9 @@ public class AdminToolQuartzController {
 		return quarzService.isSchedulerRunning();
 	}
 
-	@RequestMapping(path = "/executeJob", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/executeJob/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean executeJob(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
+	public boolean executeJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
 			HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving triggerJob request for group: %s, job: %s", groupName, jobName));
@@ -67,30 +69,42 @@ public class AdminToolQuartzController {
 		return true;
 	}
 
-	@RequestMapping(path = "/changeTriggerState", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/changeTriggerState/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean changeJobState(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
-			@RequestParam(name = "triggerName", required = false) String triggerName, HttpServletRequest request) {
+	public boolean changeJobState(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+		return changeJobState(groupName, jobName, null, null, request);
+	}
+	
+	@RequestMapping(path = "/changeTriggerState/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public boolean changeJobState(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving changeJobState request for group: %s, job: %s, trigger: %s", groupName,
 					jobName, triggerName));
 		try {
-			quarzService.changeTriggerState(groupName, jobName, triggerName);
+			quarzService.changeTriggerState(groupName, jobName, triggerGroup, triggerName);
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
-
-	@RequestMapping(path = "/interruptJob", method = { RequestMethod.GET, RequestMethod.POST })
+	
+	@RequestMapping(path = "/interruptJob/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean interruptJob(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
-			@RequestParam(name = "triggerName", required = false) String triggerName, HttpServletRequest request) {
+	public boolean interruptJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+		return interruptJob(groupName, jobName, null, null, request);
+	}
+
+	@RequestMapping(path = "/interruptJob/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public boolean interruptJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving interruptJob request for group: %s, job: %s", groupName, jobName));
 		try {
 			if (null != triggerName) {
-				quarzService.interruptTrigger(groupName, jobName, triggerName);
+				quarzService.interruptTrigger(groupName, jobName, triggerGroup, triggerName);
 			} else {
 				quarzService.interruptJob(groupName, jobName);
 			}
@@ -101,41 +115,75 @@ public class AdminToolQuartzController {
 		return true;
 	}
 	
-	@RequestMapping(path = "/removeTrigger", method = { RequestMethod.GET, RequestMethod.POST })
+	
+	@RequestMapping(path = "/removeTrigger/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean removeTrigger(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
-			@RequestParam(name = "triggerName") String triggerName, HttpServletRequest request) {
+	public boolean removeTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+		return removeTrigger(groupName, jobName, null, null, request);
+	}
+	
+	@RequestMapping(path = "/removeTrigger/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public boolean removeTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving removeTrigger request for group: %s, job: %s, trigger: %s", groupName,
 					jobName, triggerName));
 		try {
-			return quarzService.removeTrigger(groupName, jobName, triggerName);
+			return quarzService.removeTrigger(groupName, jobName, triggerGroup, triggerName);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return false;
 		}
 	}
 	
-	@RequestMapping(path = "/getTriggerInfo", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody
-	public JobTriggerTA getTriggerInfo(@RequestParam("groupName") String groupName, @RequestParam("jobName") String jobName,
-			@RequestParam(name = "triggerName", required=false) String triggerName, HttpServletRequest request) {
+	
+	public JobTriggerTO getJobTriggerInfo(String groupName, String jobName, String triggerGroup, String triggerName, 
+			String methodName, HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug(String.format("receiving getTriggerInfo request for group: %s, job: %s, trigger: %s", groupName,
+			LOGGER.debug(String.format("receiving %s request for group: %s, job: %s, trigger: %s", methodName, groupName,
 					jobName, triggerName));
 		try {
-			return quarzService.getTriggerInfo(groupName, jobName, triggerName);
+			return quarzService.getTriggerInfo(groupName, jobName, triggerGroup, triggerName);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return null;
 		}
 	}
 	
-	@RequestMapping(path = "/getMisfireInstructions", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/getTriggerInfo/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public Collection<JobTriggerTA> getMisfireInstructions(HttpServletRequest request) {
+	public JobTriggerTO getJobInfo(@PathVariable("jobGroup") String jobGroup, @PathVariable("jobName") String jobName,
+			HttpServletRequest request) {
+		return getJobTriggerInfo(jobGroup, jobName, null, null, "getJobInfo", request);
+	}
+	
+	@RequestMapping(path = "/getTriggerInfo/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public JobTriggerTO getTriggerInfo(@PathVariable("jobGroup") String jobGroup, @PathVariable("jobName") String jobName,
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
+		return getJobTriggerInfo(jobGroup, jobName, triggerGroup, triggerName, "getTriggerInfo", request);
+	}
+	
+	@RequestMapping(path = "/getDefaultTimeZone", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String getDefaultTimeZone(HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getDefaultTimeZone request");
+		return TimeZone.getDefault().getID();
+	}
+	
+	@RequestMapping(path = "/getTimeZones", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String[] getTimeZones(HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getTimeZones request");
+		return TimeZone.getAvailableIDs();
+	}
+	
+	@RequestMapping(path = "/getInstructionSets", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Collection<JobTriggerTO> getMisfireInstructions(HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getMisfireInstructions request");
-		return quarzService.getMisfireInstructionSets();
+		return quarzService.getInstructionSets();
 	}
 	
 	@RequestMapping(path = "/getCalendarNames", method = { RequestMethod.GET, RequestMethod.POST })
@@ -155,6 +203,45 @@ public class AdminToolQuartzController {
 	public Collection<IntervalUnit> getIntervalUnits(HttpServletRequest request) {
 		if (LOGGER.isDebugEnabled()) LOGGER.debug("receiving getCalendarNames request");
 		return Arrays.asList(IntervalUnit.values());
+	}
+	
+	@RequestMapping(path = "/changeTrigger", method = { RequestMethod.POST })
+	@ResponseBody
+	public boolean changeTrigger(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving changeTrigger request: %s", triggerTO));
+		try {
+			return quarzService.changeTrigger(triggerTO, false);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	@RequestMapping(path = "/addTrigger", method = { RequestMethod.POST })
+	@ResponseBody
+	public boolean addTrigger(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving addTrigger request: %s", triggerTO));
+		try {
+			return quarzService.changeTrigger(triggerTO, true);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	@RequestMapping(path = "/changeJob", method = { RequestMethod.POST })
+	@ResponseBody
+	public boolean changeJob(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving changeJob request: %s", triggerTO));
+		try {
+			return quarzService.changeJob(triggerTO);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
 	}
 	
 }

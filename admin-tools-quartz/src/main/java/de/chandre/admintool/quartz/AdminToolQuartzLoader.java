@@ -37,6 +37,7 @@ public class AdminToolQuartzLoader
 		component.addAdditionalJS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.js");
 		component.addAdditionalCSS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.css");
 		
+		component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js");
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Quartz");
