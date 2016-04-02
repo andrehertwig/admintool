@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>Admin tools</name>
-	<description>Collection of tools to maintain web applications</description>
+	<description>Collection of tools to maintain spring boot web applications</description>
 	
 	<url>https://github.com/andrehertwig/admintool</url>
 	<inceptionYear>2016</inceptionYear>
@@ -20,7 +20,7 @@
 			<id>andrehertwig</id>
 			<name>André Hertwig</name>
 			<email>adwohr@users.noreply.github.com</email>
-			<url>https://github.com/adwohr</url>
+			<url>https://github.com/andrehertwig</url>
 			<organization></organization>
 			<organizationUrl></organizationUrl>
 			<roles>
