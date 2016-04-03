@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -54,12 +55,14 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	/**
 	 * @param datasourceNames the datasourceNames to set
 	 */
+	@Override
 	public void setDatasources(Map<String, DataSource> datasources) {
 		if (LOGGER.isDebugEnabled()) 
 			LOGGER.debug("receiving " + (null != datasources ? datasources.size() : "null") + " datasources");
 		this.datasources = datasources;
 	}
 
+	@Override
 	public List<String> getDatasourceNames() {
 		if (null == datasources) {
 			this.datasources = applicationContext.getBeansOfType(DataSource.class);
@@ -80,7 +83,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			throw new IllegalArgumentException("no datasource with name '" + datasourceName + "' found");
 		}
 		Connection c = ds.getConnection();
-		if (!isDMLAllowed()) {
+		if (!isDMLAllowed() && null != vars) {
 			if (LOGGER.isDebugEnabled()) 
 				LOGGER.debug("DML is not allowed. Set autoCommit to false and readOnly to true.");
 			vars.setOrgAutoCommitState(c.getAutoCommit());
@@ -93,7 +96,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	
 	@Override
 	public void closeConnection(Connection c, ConnectionVars vars) {
-		if (!isDMLAllowed() && c != null) {
+		if (!isDMLAllowed() && c != null && null != vars) {
 			try {
 				c.rollback();
 				c.setAutoCommit(vars.isOrgAutoCommitState());
@@ -111,6 +114,40 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@Override
+	public QueryResultTO getMetadata(String datasourceName) {
+		
+		QueryResultTO resultTO = new QueryResultTO();
+		Connection c = null;
+		try {
+			c = getConnection(datasourceName, null);
+			DatabaseMetaData metadata = c.getMetaData();
+			
+			ResultSet resSet = metadata.getTables(null, null, null, null);
+			StatementTO statementTO = new StatementTO();
+			statementTO.setShowClobs(true);
+			
+			iterateResult(resSet, resultTO, statementTO);
+			
+			resultTO.addMetadata("databaseProductVersion", metadata.getDatabaseProductVersion());
+			resultTO.addMetadata("driverVersion", metadata.getDriverVersion());
+			resultTO.addMetadata("driverName", metadata.getDriverName());
+			
+		} catch (Exception e) {
+			resultTO.setExceptionMessage(e.getMessage());
+			resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
+			resultTO.setExceptionTrace(printException(e));
+			
+		} finally {
+			closeConnection(c, null);
+		}
+		
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(resultTO);
+		}
+		return resultTO;
 	}
 	
 	@Override
@@ -134,63 +171,18 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	        	ResultSet resSet = null;
 	        	resSet = st.executeQuery(strQuery);
 	        	
-	        	if (resSet != null && !resSet.isClosed()) {
-	        		ResultSetMetaData metaData = resSet.getMetaData();
-				    int cols = metaData.getColumnCount();
-				    Map<Integer, Integer> type = new HashMap<Integer, Integer>();
-				    
-				    List<String> columnsNames = new ArrayList<>();
-				    
-				    for (int i = 1; i < (cols+1); i++)
-				    {
-				    	columnsNames.add(metaData.getColumnName(i));
-				    	type.put(i, metaData.getColumnType(i));
-				    }
-				   
-				    List<List<String>> tableResult = new ArrayList<>();
-				    
-			        while (resSet.next())
-				    {
-			        	List<String> row = new ArrayList<>();
-			        	for (int i = 1; i < (cols+1); i++)
-			    	    {
-			            	if (type.get(i) != null && type.get(i) == Types.BLOB) {
-			            		if (statementTO.isShowBlobs()) {
-			            			row.add(String.valueOf(new String(resSet.getBytes(i))));
-				                } else {
-				                	row.add(String.valueOf(resSet.getObject(i)));
-				                }
-			            	} else if (type.get(i) != null && type.get(i) == Types.CLOB) {
-			            		row.add(getClobString(resSet.getClob(i), 
-			            				(statementTO.getClobEncoding() != null ? statementTO.getClobEncoding() : DEFAULT_CLOB_ENCODING)));
-			            	} else {
-			            		row.add(String.valueOf(resSet.getObject(i)));
-			            	}
-			    	    }
-			        	tableResult.add(row);
-				    }
-			        
-			        resultTO.setSqlWarnings(null != resSet.getWarnings() ? resSet.getWarnings().toString() : null);
-			        
-			        resultTO.setAffectedRows(tableResult.size());
-			        resultTO.setColumnsNames(columnsNames);
-			        resultTO.setTableResult(tableResult);
-	        	} else {
-	        		resultTO.setSqlWarnings("resultSet was " + (null != resSet ? "closed already" : "null"));
-	        	}
-		        resultTO.setSelect(true);
+	        	iterateResult(resSet, resultTO, statementTO);
 		        
 	        } else {
 	        	resultTO.setAffectedRows(st.executeUpdate(strQuery));
 	        	resultTO.setSelect(false);
 	        }
-	        
 		} catch (Exception e) {
 			resultTO.setExceptionMessage(e.getMessage());
 			resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
 			resultTO.setExceptionTrace(printException(e));
-		}
-		finally {
+			
+		} finally {
 			closeConnection(c, vars);
 		}
 		
@@ -199,6 +191,66 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		}
 		
 		return resultTO;
+	}
+	
+	private void iterateResult(ResultSet resSet, QueryResultTO resultTO, StatementTO statementTO) {
+		
+		try {
+			if (resSet != null && !resSet.isClosed()) {
+	    		ResultSetMetaData metaData = resSet.getMetaData();
+			    int cols = metaData.getColumnCount();
+			    Map<Integer, Integer> type = new HashMap<Integer, Integer>();
+			    
+			    List<String> columnsNames = new ArrayList<>();
+			    
+			    for (int i = 1; i < (cols+1); i++)
+			    {
+			    	columnsNames.add(metaData.getColumnName(i));
+			    	type.put(i, metaData.getColumnType(i));
+			    }
+			   
+			    List<List<String>> tableResult = new ArrayList<>();
+			    
+		        while (resSet.next())
+			    {
+		        	List<String> row = new ArrayList<>();
+		        	for (int i = 1; i < (cols+1); i++)
+		    	    {
+		            	if (type.get(i) != null && type.get(i) == Types.BLOB) {
+		            		if (statementTO.isShowBlobs()) {
+		            			row.add(String.valueOf(new String(resSet.getBytes(i))));
+			                } else {
+			                	row.add(String.valueOf(resSet.getObject(i)));
+			                }
+		            	} else if (type.get(i) != null && type.get(i) == Types.CLOB) {
+		            		if (statementTO.isShowClobs()) {
+		            			row.add(getClobString(resSet.getClob(i), 
+			            				(statementTO.getClobEncoding() != null ? statementTO.getClobEncoding() : DEFAULT_CLOB_ENCODING)));
+		            		} else {
+		            			row.add("CLOB content");
+		            		}
+		            	} else {
+		            		row.add(String.valueOf(resSet.getObject(i)));
+		            	}
+		    	    }
+		        	tableResult.add(row);
+			    }
+		        
+		        resultTO.setSqlWarnings(null != resSet.getWarnings() ? resSet.getWarnings().toString() : null);
+		        
+		        resultTO.setAffectedRows(tableResult.size());
+		        resultTO.setColumnsNames(columnsNames);
+		        resultTO.setTableResult(tableResult);
+	    	} else {
+	    		resultTO.setSqlWarnings("resultSet was " + (null != resSet ? "closed already" : "null"));
+	    	}
+	        resultTO.setSelect(true);
+	        
+		} catch (Exception e) {
+			resultTO.setExceptionMessage(e.getMessage());
+			resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
+			resultTO.setExceptionTrace(printException(e));
+		}
 	}
 	
 
@@ -273,5 +325,10 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	            closeable.close();
 	        } catch (Exception ignore) {}
 	    }
+	}
+	
+	@Override
+	public String getTab(StatementTO statementTO, String id) {
+		return null != statementTO ? (id + "_" + String.valueOf(statementTO.getTab())) : (id + "_1");
 	}
 }

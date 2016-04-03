@@ -7,15 +7,17 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.AbstractAdminToolLoader;
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
  * @author Andre
  */
 @Component
-public class AdminToolDBBrowserLoader
+public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserLoader.class);
 	
@@ -27,9 +29,22 @@ public class AdminToolDBBrowserLoader
 	{
 		LOGGER.info("adding database browser to admin tool");
 		
-		AdminComponent component = new AdminComponent();
+		boolean relative = shouldCDNsUsed();
+		String commonPrefix = getWebjarsPrefixUri();
+		
+		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("DB Browser");
-		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js");
+		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js", true);
+		
+		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/lib/codemirror.js", relative);
+		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/mode/sql/sql.js", relative);
+		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/addon/hint/show-hint.js", relative);
+		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/addon/hint/sql-hint.js", relative);
+		
+		component.addAdditionalCSS(commonPrefix + "codemirror/5.13.2/lib/codemirror.css", relative);
+		component.addAdditionalCSS(commonPrefix + "codemirror/5.13.2/addon/hint/show-hint.css", relative);
+		
+		component.addAdditionalCSS("/static/admintool/dbbrowser/css/dbbrowser.css", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("DB Browser");

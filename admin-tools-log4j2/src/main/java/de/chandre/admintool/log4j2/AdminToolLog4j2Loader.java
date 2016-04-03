@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
@@ -27,9 +28,9 @@ public class AdminToolLog4j2Loader
 	{
 		LOGGER.info("adding Log4j Console to admin tool");
 		
-		AdminComponent component = new AdminComponent();
-		component.addAdditionalCSS("/static/admintool/css/log4j2.css");
-		component.addAdditionalJS("/static/admintool/js/log4j2.js");
+		AdminComponent component = new AdminComponentImpl();
+		component.addAdditionalCSS("/static/admintool/css/log4j2.css", true);
+		component.addAdditionalJS("/static/admintool/js/log4j2.js", true);
 		component.setDisplayName("Log4j2 Console");
 		
 		MenuEntry mainMenu = new MenuEntry();

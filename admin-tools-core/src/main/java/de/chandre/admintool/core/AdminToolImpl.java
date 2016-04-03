@@ -1,6 +1,7 @@
 package de.chandre.admintool.core;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,8 +22,8 @@ public class AdminToolImpl implements AdminTool
 {
 	private Set<AdminComponent> components = new TreeSet<>();
 	
-	private Set<String> globalJavaScripts = new LinkedHashSet<>();
-	private Set<String> globalStyleSheets = new LinkedHashSet<>();
+	private Map<String, Boolean> globalJavaScripts = new LinkedHashMap<>();
+	private Map<String, Boolean> globalStyleSheets = new LinkedHashMap<>();
 	
 
 	/**
@@ -51,27 +52,27 @@ public class AdminToolImpl implements AdminTool
 		this.components =components;
 	}
 	
-	public Set<String> getGlobalJavaScripts() {
+	public Map<String, Boolean> getGlobalJavaScripts() {
 		return globalJavaScripts;
 	}
 
-	public void setGlobalJavaScripts(Set<String> globalJavaScripts) {
+	public void setGlobalJavaScripts(Map<String, Boolean> globalJavaScripts) {
 		this.globalJavaScripts = globalJavaScripts;
 	}
 	
-	public void addGlobalJavaScript(String globalJavaScript) {
-		this.globalJavaScripts.add(globalJavaScript);
+	public void addGlobalJavaScript(String globalJavaScript, boolean local) {
+		this.globalJavaScripts.put(globalJavaScript, local);
 	}
 
-	public Set<String> getGlobalStyleSheets() {
+	public Map<String, Boolean> getGlobalStyleSheets() {
 		return globalStyleSheets;
 	}
 
-	public void setGlobalStyleSheet(Set<String> globalStyleSheets) {
+	public void setGlobalStyleSheet(Map<String, Boolean> globalStyleSheets) {
 		this.globalStyleSheets = globalStyleSheets;
 	}
 	
-	public void addGlobalStyleSheet(String globalStyleSheet) {
-		this.globalStyleSheets.add(globalStyleSheet);
+	public void addGlobalStyleSheet(String globalStyleSheet, boolean local) {
+		this.globalStyleSheets.put(globalStyleSheet, local);
 	}
 }

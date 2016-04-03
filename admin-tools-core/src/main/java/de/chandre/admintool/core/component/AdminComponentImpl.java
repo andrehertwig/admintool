@@ -1,5 +1,7 @@
 package de.chandre.admintool.core.component;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,29 +11,57 @@ import java.util.Map;
  * @author Andre
  *
  */
-public interface AdminComponent extends Comparable<AdminComponent>
+public class AdminComponentImpl implements AdminComponent
 {
+	private String displayName;
+	
+	private MenuEntry mainMenu;
+	
+	private List<String> notificationTemplates = new ArrayList<>(0);
+	
+	private Map<String, Boolean> additionalCSS = new LinkedHashMap<>(1);
+	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
+
 	/**
 	 * @return the displayName
 	 */
-	public String getDisplayName();
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
 
 	/**
 	 * @param displayName the displayName to set
 	 */
-	public void setDisplayName(String displayName);
+	@Override
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 	/**
 	 * @return the mainMenu
 	 */
-	public MenuEntry getMainMenu();
+	@Override
+	public MenuEntry getMainMenu() {
+		return mainMenu;
+	}
+
 	/**
 	 * @param mainMenu the mainMenu to set
 	 */
-	public void setMainMenu(MenuEntry mainMenu);
+	@Override
+	public void setMainMenu(MenuEntry mainMenu) {
+		this.mainMenu = mainMenu;
+	}
+
 	/**
 	 * @return the notificationTemplates
 	 */
-	public List<String> getNotificationTemplates();
+	@Override
+	public List<String> getNotificationTemplates() {
+		return notificationTemplates;
+	}
+
 	/**
 	 * path to notification template shown in the top right menu<br>
 	 * should start with a "li" tag. eg:<br>
@@ -42,7 +72,11 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * 
 	 * @param notificationTemplates the notificationTemplates to set
 	 */
-	public void setNotificationTemplates(List<String> notificationTemplates);
+	@Override
+	public void setNotificationTemplates(List<String> notificationTemplates) {
+		this.notificationTemplates = notificationTemplates;
+	}
+
 	/**
 	 * path to notification template shown in the top right menu<br>
 	 * should start with a "li" tag. eg:<br>
@@ -53,18 +87,30 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * 
 	 * @param notificationTemplate the template path to notification template
 	 */
-	public void addNotificationTemplate(String notificationTemplate);
+	@Override
+	public void addNotificationTemplate(String notificationTemplate) {
+		this.notificationTemplates.add(notificationTemplate);
+	}
+
 	/**
 	 * @return the additionalCSS
 	 */
-	public Map<String, Boolean> getAdditionalCSS();
+	@Override
+	public Map<String, Boolean> getAdditionalCSS() {
+		return additionalCSS;
+	}
+
 	/**
 	 *  map with paths to CSS.<br>
 	 * 
 	 * @param additionalCSS the additionalCSS to set
 	 * @see #addAdditionalCSS(String, boolean)
 	 */
-	public void setAdditionalCSS(Map<String, Boolean> additionalCSS);
+	@Override
+	public void setAdditionalCSS(Map<String, Boolean> additionalCSS) {
+		this.additionalCSS = additionalCSS;
+	}
+	
 	/**
 	 * path to CSS.<br>
 	 * Example:<br>
@@ -74,17 +120,29 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 *  </code>
 	 * @param additionalCSS the additionalCSS to set
 	 */
-	public void addAdditionalCSS(String additionalCSS, boolean relative);
+	@Override
+	public void addAdditionalCSS(String additionalCSS, boolean relative) {
+		this.additionalCSS.put(additionalCSS, relative);
+	}
+
 	/**
 	 * @return the additionalJS
 	 */
-	public Map<String, Boolean> getAdditionalJS();
+	@Override
+	public Map<String, Boolean> getAdditionalJS() {
+		return additionalJS;
+	}
+
 	/**
 	 * map with path to additional JavaScript files. <br>
 	 * @param additionalJS the additionalJS to set
 	 * @see #addAdditionalJS(String, boolean)
 	 */
-	public void setAdditionalJS(Map<String, Boolean> additionalJS);
+	@Override
+	public void setAdditionalJS(Map<String, Boolean> additionalJS) {
+		this.additionalJS = additionalJS;
+	}
+	
 	/**
 	 * path to additional JavaScript files.<br>
 	 * Example:<br>
@@ -94,5 +152,13 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 *  </code>
 	 * @param additionalJS the additionalJS to set
 	 */
-	public void addAdditionalJS(String additionalJS, boolean relative);
+	@Override
+	public void addAdditionalJS(String additionalJS, boolean relative) {
+		this.additionalJS.put(additionalJS, relative);
+	}
+	
+	@Override
+	public int compareTo(AdminComponent o) {
+		return displayName.compareTo(o.getDisplayName());
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
 import net.bull.javamelody.MonitoredWithSpring;
 
@@ -33,7 +34,7 @@ public class DemoController
 	@PostConstruct
 	private void createDemo()
 	{
-		AdminComponent component = new AdminComponent();
+		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("Demo-App-Component");
 		component.addNotificationTemplate("notifications/notification");
 		

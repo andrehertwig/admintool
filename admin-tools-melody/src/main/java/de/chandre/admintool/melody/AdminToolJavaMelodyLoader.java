@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
@@ -31,9 +32,9 @@ public class AdminToolJavaMelodyLoader
 	{
 		LOGGER.info("adding JavaMelody view to admin tool");
 		
-		AdminComponent component = new AdminComponent();
+		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("JavaMelody");
-		component.addAdditionalCSS("/static/admintool/melody.css");
+		component.addAdditionalCSS("/static/admintool/melody.css", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("JavaMelody");

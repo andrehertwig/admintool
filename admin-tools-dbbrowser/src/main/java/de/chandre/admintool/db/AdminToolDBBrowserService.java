@@ -3,6 +3,9 @@ package de.chandre.admintool.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
 
 /**
  * data source service interface
@@ -11,6 +14,12 @@ import java.util.List;
  */
 public interface AdminToolDBBrowserService 
 {
+	/**
+	 * 
+	 * @param datasources
+	 */
+	void setDatasources(Map<String, DataSource> datasources);
+	
 	/**
 	 * @return all data sources associated with spring context
 	 */
@@ -33,6 +42,13 @@ public interface AdminToolDBBrowserService
 	 * @param vars
 	 */
 	void closeConnection(Connection c, ConnectionVars vars);
+	
+	/**
+	 * 
+	 * @param datasourceName
+	 * @return some datasource metdata
+	 */
+	QueryResultTO getMetadata(String datasourceName);
 
 	/**
 	 * queries database with specified statementTO and returns the QueryResultTO
@@ -41,4 +57,12 @@ public interface AdminToolDBBrowserService
 	 * @return
 	 */
 	QueryResultTO queryDatabase(StatementTO statementTO);
+
+	/**
+	 * 
+	 * @param statementTO
+	 * @param id html id value for element
+	 * @return id_statementTO.tab or id_1 as default
+	 */
+	String getTab(StatementTO statementTO, String id);
 }

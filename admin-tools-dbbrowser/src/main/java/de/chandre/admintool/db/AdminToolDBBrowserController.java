@@ -8,9 +8,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import de.chandre.admintool.core.controller.AbstractAdminController;
 
 /**
  * REST controller for dbbrowser
@@ -19,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/admintool/dbbrowser")
-public class AdminToolDBBrowserController 
+public class AdminToolDBBrowserController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserController.class);
 	
@@ -32,6 +37,26 @@ public class AdminToolDBBrowserController
 		if (LOGGER.isDebugEnabled()) 
 			LOGGER.debug("receiving getDatasourceNames request");
 		return dbBrowserService.getDatasourceNames();
+	}
+	
+	@RequestMapping(path = "/getMetaData/{datasourceName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public QueryResultTO getMetaData(@PathVariable("datasourceName") String datasourceName, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("receiving getMetaData request");
+		return dbBrowserService.getMetadata(datasourceName);
+	}
+	
+	@RequestMapping(path = "/executeQuery", method = {RequestMethod.POST })
+	public String executeQuery(@RequestBody StatementTO statementTO, ModelMap model, HttpServletRequest request) {
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("receiving executeQuery request");
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("with object: " + statementTO.toString());
+		
+		model.put("statementTO", statementTO);
+		model.put("queryResultTO", dbBrowserService.queryDatabase(statementTO));
+		return AbstractAdminController.ROOTCONTEXT_NAME + "/dbbrowser/includes/tabInclude";
 	}
 
 	/**

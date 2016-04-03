@@ -1,7 +1,9 @@
 package de.chandre.admintool.db;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,6 +27,8 @@ public class QueryResultTO implements Serializable
 	
 	private List<String> columnsNames;
 	private List<List<String>> tableResult;
+	
+	private Map<String, Object> metadata;
 	
 	private String sqlWarnings;
 	
@@ -110,6 +114,27 @@ public class QueryResultTO implements Serializable
 	}
 
 	/**
+	 * @return the metadata
+	 */
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	/**
+	 * @param metadata the metadata to set
+	 */
+	public void setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+	}
+	
+	public void addMetadata(String key, Object value) {
+		if (null == this.metadata) {
+			this.metadata = new HashMap<>();
+		}
+		this.metadata.put(key, value);
+	}
+
+	/**
 	 * @return the sqlWarnings
 	 */
 	public String getSqlWarnings() {
@@ -165,14 +190,18 @@ public class QueryResultTO implements Serializable
 		this.exceptionTrace = exceptionTrace;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("QueryResultTO [statement=").append(statement).append(", affectedRows=").append(affectedRows)
 				.append(", select=").append(select).append(", columnsNames=").append(columnsNames)
-				.append(", tableResult=").append(tableResult).append(", sqlWarnings=").append(sqlWarnings)
-				.append(", exceptionmessage=").append(exceptionMessage).append(", exceptioncause=")
-				.append(exceptionCause).append(", exceptionTrace=").append(exceptionTrace).append("]");
+				.append(", tableResult=").append(tableResult).append(", metadata=").append(metadata)
+				.append(", sqlWarnings=").append(sqlWarnings).append(", exceptionMessage=").append(exceptionMessage)
+				.append(", exceptionCause=").append(exceptionCause).append(", exceptionTrace=").append(exceptionTrace)
+				.append("]");
 		return builder.toString();
 	}
 }

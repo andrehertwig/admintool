@@ -1,0 +1,167 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+
+<div class="tabContent" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'tabInclude')}">
+
+
+	<div class="box">
+		<div class="box-header"><h3 class="box-title">Query</h3></div>
+		<div class="box-body no-padding">
+			<div class="row">
+				<div class="form-group col-md-4 col-xs-12">
+					<div class="row">
+						<div class="col-xs-8">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'showClobs')}">Show CLOBs:</label>
+						</div>
+						<div class="col-xs-4">
+							<input type="checkbox" class="form-control" value="1" name="showClobs"
+								th:id="${@adminToolDBBrowserService.getTab(statementTO, 'showClobs')}"
+								th:checked="${statementTO != null and statementTO.isShowClobs()}" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-4 col-xs-12">
+					<div class="row">
+						<div class="col-xs-6">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'clobEncoding')}">Encoding  (for CLOBs):</label>
+						</div>
+						<div class="col-xs-6">
+							<select name="clobEncoding" class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'clobEncoding')}" >
+								<option th:each="encoding, iterState : ${@adminToolDBBrowserConfig.getClobEncodings()}" 
+									th:value="${encoding}" th:text="${encoding}" 
+									th:selected="${statementTO != null and encoding.equals(statementTO.getClobEncoding())}">
+								</option>
+							</select> 
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-4 col-xs-12">
+					<div class="row">
+						<div class="col-xs-8">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'showBlobs')}">Show BLOBs:</label>
+						</div>
+						<div class="col-xs-4">
+							<input type="checkbox" class="form-control" name="showBlobs" value="1"
+								th:id="${@adminToolDBBrowserService.getTab(statementTO, 'showBlobs')}"
+								th:checked="${statementTO != null and statementTO.isShowBlobs()}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-4 col-xs-12">
+					<div class="row">
+						<div class="col-xs-6">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'datasourceName')}">Database Connection:</label>
+						</div>
+						<div class="col-xs-6">
+							<select name="datasourceName" class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'datasourceName')}">
+								<option th:each="datasource, iterState : ${@adminToolDBBrowserService.getDatasourceNames()}" 
+									th:value="${datasource}" th:text="${datasource}"
+									th:selected="${statementTO != null and datasource.equals(statementTO.getDatasourceName())}"></option>
+							</select> 
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-4 col-xs-12">
+					<div class="row">
+						<div class="col-xs-6">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'maxResults')}">Max Results:</label>
+						</div>
+						<div class="col-xs-6">
+							<input type="number" name="maxResults" maxlength="10" placeholder="maximum result rows" class="form-control"
+								th:id="${@adminToolDBBrowserService.getTab(statementTO, 'maxResults')}"
+								th:value="${statementTO != null ? statementTO.getMaxResults() : 100}"/>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-4 col-xs-12">
+					<button class="btn btn-primary" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'execute')}">Execute</button>
+				</div>
+			</div>
+			
+			<div class="row form-group" th:if="${@adminToolDBBrowserConfig.exampleStatements != null}">
+				<div class="col-xs-3 col-md-1">
+					<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">Examples:</label>
+				</div>
+				<div class="col-xs-9 col-md-11">
+					<select name="examples" class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">
+						
+					</select> 
+				</div>
+			</div>
+			
+			<div class="row form-group">
+				<div class="col-xs-12">
+					<textarea rows="2" name="statement" class="form-control" placeholder="SQL-Satement"
+						th:id="${@adminToolDBBrowserService.getTab(statementTO, 'statement')}"
+						th:text="${statementTO != null ? statementTO.statement : ''}"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end box -->
+	
+	
+	<div class="box">
+		<div class="box-header"><h3 class="box-title">Result</h3></div>
+		<div class="box-body no-padding">
+			<th:block th:if="${queryResultTO != null}">
+			
+				<div class="row" th:if="${null != queryResultTO.sqlWarnings}">
+					<div class="col-xs-2 col-md-1"><label>SQL-Warning</label></div>
+					<div class="col-xs-10 col-md-11" th:text="{queryResultTO.sqlWarnings}"></div>
+				</div>
+				
+				<th:block th:if="${(not queryResultTO.isSelect()) and (null == queryResultTO.exceptionMessage)}">
+					<div class="row">
+						<div class="col-xs-2 col-md-1"><label>ResultCount</label></div>
+						<div class="col-xs-10 col-md-11" th:text="${queryResultTO.affectedRows}"></div>
+					</div>
+				</th:block>
+				
+				<th:block th:if="${queryResultTO.isSelect() and null == queryResultTO.exceptionMessage}">
+					<div class="row">
+						<div class="col-xs-2 col-md-1"><label>ResultCount</label></div>
+						<div class="col-xs-10 col-md-11" th:text="${queryResultTO.affectedRows}"></div>
+					</div>
+					<div class="table-responsive">
+						<table class="table no-margin">
+							<thead>
+								<tr>
+									<th></th>
+									<th th:each="colName, colIterState : ${queryResultTO.getColumnsNames()}" th:text="${colName}">ColName</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="row, rowIterState : ${queryResultTO.getTableResult()}">
+									<td th:text="${rowIterState.count}"></td>
+									<td  th:each="cell, rowIterState : ${row}" th:text="${cell}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+				</th:block>
+				
+				<th:block th:if="${null != queryResultTO.exceptionMessage}">
+					<div class="row">
+						<div class="col-xs-2 col-md-1"><label>Message</label></div>
+						<div class="col-xs-10 col-md-11" th:text="${queryResultTO.exceptionMessage}"></div>
+					</div>
+					<div class="row">
+						<div class="col-xs-2 col-md-1"><label>Cause</label></div>
+						<div class="col-xs-10 col-md-11" th:text="${queryResultTO.exceptionCause}"></div>
+					</div>
+					<div class="row">
+						<div class="col-xs-2 col-md-1"><label>Stacktrace</label></div>
+						<div class="col-xs-10 col-md-11"><pre th:text="${queryResultTO.exceptionTrace}"></pre></div>
+					</div>
+				</th:block>
+			
+			</th:block>
+		</div>
+	</div>
+	
+</div>
+
+</html>

@@ -2,24 +2,27 @@
 <!-- /*
 <script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
- */ -->
+
   
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/js/app.min.js"></script>
-<!-- /*
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
- */ -->
  
 <script th:src="${#httpServletRequest.getContextPath()} + '/static/admintool/js/adminTool.js'"></script>
+ */ -->
+ 
+<th:block th:each="jsPathEntry,iterStateJS : ${@adminTool.globalJavaScripts}">
+	<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
+	<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
+</th:block>
 
-<script th:each="jsPath,iterStateJS : ${@adminTool.globalJavaScripts}" 
-		th:src="${#httpServletRequest.getContextPath() + jsPath}"></script>
 
 <th:block th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
 	<th:block th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
-		<script th:each="jsPath,iterStateJS : ${adminComponent.additionalJS}" 
-			th:src="${#httpServletRequest.getContextPath() + jsPath}"></script>
+		<th:block th:each="jsPathEntry,iterStateJS : ${adminComponent.additionalJS}">
+			<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
+			<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
+		</th:block>
 	</th:block>
 </th:block>	
 </html>

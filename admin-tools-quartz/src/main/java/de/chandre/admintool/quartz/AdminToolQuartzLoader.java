@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
@@ -27,17 +28,12 @@ public class AdminToolQuartzLoader
 	{
 		LOGGER.info("adding Quartz view to admin tool");
 		
-		AdminComponent component = new AdminComponent();
+		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("Quartz");
-		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css");
-		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js");
+		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css", true);
+		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js", true);
 		
-		component.addAdditionalJS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/datepicker/bootstrap-datepicker.js");
-		component.addAdditionalCSS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/datepicker/datepicker3.css");
-		component.addAdditionalJS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.js");
-		component.addAdditionalCSS("https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/timepicker/bootstrap-timepicker.min.css");
-		
-		component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js");
+		component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Quartz");

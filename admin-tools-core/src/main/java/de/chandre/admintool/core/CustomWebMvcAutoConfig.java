@@ -15,7 +15,13 @@ public class CustomWebMvcAutoConfig extends WebMvcAutoConfiguration.WebMvcAutoCo
 {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+		if (!registry.hasMappingForPattern("/static/**")) {
+			registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+		}
+		if (!registry.hasMappingForPattern("/webjars/**")) {
+			registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+		}
+		
 		super.addResourceHandlers(registry);
 	}
 }
