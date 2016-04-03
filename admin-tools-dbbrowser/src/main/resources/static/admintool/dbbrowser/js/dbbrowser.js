@@ -62,7 +62,7 @@ function executeQuery(number) {
 		$tabContent.html(data);
 		initCheckboxes($tabContent);
 		initTab(tabNumber);
-		initCodeMirror('statement' , tabId, 'text/x-sql');
+//		initCodeMirror('statement' , tabNumber, 'text/x-sql');
 		
 		div = null;
 	});
