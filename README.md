@@ -9,6 +9,7 @@
 * `quartz`: 
   * dashboard for configuration with possibility to deactivate the scheduler
   * dashboard for configured jobs with possibility to pause/resume or fire them (not implemented yet: change jobs)
+* `dbbrowser`: database browser to access the datasources associated with spring
 * `demo`: simple spring boot web application for showcase
 
 ## Requirements
