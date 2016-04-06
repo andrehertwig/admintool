@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,9 +32,17 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 	@Autowired
 	private AdminToolDBBrowserService dbBrowserService;
 	
+	@Autowired
+	private AdminToolDBBrowserConfig configuration;
+	
+	@Autowired
+	private AdminToolDBBrowserExampleLoader exampleLoader;
+	
 	@RequestMapping(path = "/getDatasourceNames", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public List<String> getDatasourceNames(HttpServletRequest request) {
+		if(!configuration.isEnabled()) return null;
+		
 		if (LOGGER.isDebugEnabled()) 
 			LOGGER.debug("receiving getDatasourceNames request");
 		return dbBrowserService.getDatasourceNames();
@@ -42,13 +51,27 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 	@RequestMapping(path = "/getMetaData/{datasourceName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public QueryResultTO getMetaData(@PathVariable("datasourceName") String datasourceName, HttpServletRequest request) {
+		if(!configuration.isEnabled()) return null;
+		
 		if (LOGGER.isDebugEnabled()) 
 			LOGGER.debug("receiving getMetaData request");
 		return dbBrowserService.getMetadata(datasourceName);
 	}
 	
+	@RequestMapping(path = "/getExamples", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String getExamples(HttpServletRequest request) {
+		if(!configuration.isEnabled()) return null;
+		
+		if (LOGGER.isDebugEnabled()) 
+			LOGGER.debug("receiving getDatasourceNames request");
+		return new JSONObject(exampleLoader.getExamples()).toString();
+	}
+	
 	@RequestMapping(path = "/executeQuery", method = {RequestMethod.POST })
 	public String executeQuery(@RequestBody StatementTO statementTO, ModelMap model, HttpServletRequest request) {
+		if(!configuration.isEnabled()) return null;
+		
 		if (LOGGER.isDebugEnabled()) 
 			LOGGER.debug("receiving executeQuery request");
 		if (LOGGER.isTraceEnabled())

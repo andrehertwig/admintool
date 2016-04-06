@@ -23,16 +23,17 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserConfig.class);
 	
+	@Value("${admintool.dbbrowser.enabled:true}")
+	private boolean enabled;
+	
 	@Value("${admintool.dbbrowser.dmlAllowed:false}")
 	private boolean dmlAllowed;
-	
-	@Value("${admintool.dbbrowser.dmlBackdoorAllowed:false}")
-	private boolean dmlBackdoorAllowed;
 	
 	@Value("${admintool.dbbrowser.clobEncodings:}")
 	private List<String> clobEncodings = new ArrayList<>();
 	
-	private ExampleStatements exampleStatements;
+	@Value("${admintool.dbbrowser.codeMirrorVersion:5.13.2}")
+	private String codeMirrorVersion;
 
 	@PostConstruct
 	public void setDefaults() {
@@ -48,6 +49,20 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	}
 	
 	/**
+	 * @return the enabled
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	/**
 	 * @return the dmlAllowed
 	 */
 	public boolean isDmlAllowed() {
@@ -60,21 +75,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	public void setDmlAllowed(boolean dmlAllowed) {
 		this.dmlAllowed = dmlAllowed;
 	}
-
-	/**
-	 * @return the dmlBackdoorAllowed
-	 */
-	public boolean isDmlBackdoorAllowed() {
-		return dmlBackdoorAllowed;
-	}
-
-	/**
-	 * @param dmlBackdoorAllowed the dmlBackdoorAllowed to set
-	 */
-	public void setDmlBackdoorAllowed(boolean dmlBackdoorAllowed) {
-		this.dmlBackdoorAllowed = dmlBackdoorAllowed;
-	}
-
+	
 	/**
 	 * @return the clobEncodings
 	 */
@@ -90,16 +91,17 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	}
 
 	/**
-	 * @return the exampleStatements
+	 * @return the codeMirrorVersion
 	 */
-	public ExampleStatements getExampleStatements() {
-		return exampleStatements;
+	public String getCodeMirrorVersion() {
+		return codeMirrorVersion;
 	}
 
 	/**
-	 * @param exampleStatements the exampleStatements to set
+	 * @param codeMirrorVersion the codeMirrorVersion to set
 	 */
-	public void setExampleStatements(ExampleStatements exampleStatements) {
-		this.exampleStatements = exampleStatements;
+	public void setCodeMirrorVersion(String codeMirrorVersion) {
+		this.codeMirrorVersion = codeMirrorVersion;
 	}
+	
 }

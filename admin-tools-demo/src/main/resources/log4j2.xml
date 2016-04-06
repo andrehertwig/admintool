@@ -7,7 +7,7 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss.SSS} %X{sessionId} [%t] %-5level %logger{36} - %msg%n"/>
 		</Console>
-		<RollingFile name="RollingFile" fileName="${filename}" filePattern="${sys:app.logdir}/${filename}-%d{MM-dd-yyyy}-%i.log.gz">
+		<RollingFile name="RollingFile" fileName="${sys:app.logdir}/${filename}" filePattern="${sys:app.logdir}/${filename}-%d{MM-dd-yyyy}-%i.log.gz">
 			<PatternLayout>
 				<pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} %X{sessionId} [%t] %-5level %logger{36} : %msg%n</pattern>
 			</PatternLayout>
@@ -15,7 +15,7 @@
 			 -->
 			<Policies>
 				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="250 MB"/>
+				<SizeBasedTriggeringPolicy size="250MB"/>
 			</Policies>
 		</RollingFile>
 	</Appenders>

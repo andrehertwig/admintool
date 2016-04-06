@@ -1,3 +1,74 @@
+//adminTool plugin
+(function($, window, document, undefined ) {
+	
+	var AdminTool = function(elem, settings) {
+		this.elem = elem;
+	    this.$elem = $(elem);
+	    this.options = settings;
+	    
+	    this.plugins = {};
+	    
+	    this._init();
+	}
+	AdminTool.prototype = {
+			
+		constructor: AdminTool,
+		
+		_init: function() {
+			this.$elem.data( "admintool.root" , this );
+		},
+		
+		addPlugin: function(name, plugin) {
+			this.plugins[name] = plugin;
+		},
+		
+		reloadPage: function() {
+			location.reload();
+		},
+		sendRequest: function (query, callback) {
+			$.ajax({
+				url: query.url,
+				dataType: query.dataType || 'json',
+				type: query.requestType || 'GET',
+				data: query.data || null,
+				contentType: query.contentType || 'application/json; charset=UTF-8',
+				error: function( xhr, status, errorThrown ) {
+			        alert( "Sorry, there was a problem!" );
+			        if (console) {
+			        	console.log( "Error: " + errorThrown );
+				        console.log( "Status: " + status );
+				        console.dir( xhr );
+			        }
+				}
+			}).done(function (data) {
+				callback(data, query);
+			});
+		}
+	
+	};
+	
+	$.fn.admintool = function( option ) {
+		var args = Array.apply(null, arguments);
+	    args.shift();
+	    
+		return this.each(function () {
+			 var $this = $(this),
+		        data = $this.data('admintool.root'),
+		        options = typeof option === 'object' && option;
+			 
+			 if (!data) {
+				 return new AdminTool(this, options);
+			 }
+			 if (typeof option === 'string') {
+		        data[option].apply(data, args);
+		     }
+	    });
+	};
+	
+	$.fn.admintool.Constructor = AdminTool;
+	
+})(jQuery, window, document);
+
 $( document ).ready(function() {
 	if($('#reloadPage').length > 0) {
 		$('#reloadPage').click(function () {

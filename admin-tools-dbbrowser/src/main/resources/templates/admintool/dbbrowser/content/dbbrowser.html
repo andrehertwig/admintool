@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-	<div id="template-content">
+	<div id="template-content" >
 		<section class="content-header">
 			<h1>
 				Database Browser
@@ -9,16 +9,19 @@
 			<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 		</section>
 
-		<section class="content">
+		<section class="content" id="dbBrowser">
 			
 			<div class="nav-tabs-custom">
-				<ul class="nav nav-tabs">
+				<ul class="nav nav-tabs" id="tabNav">
 					<li class="active">
 						<a data-toggle="tab" href="#tab_1" aria-expanded="true">Tab 1</a>
 					</li>
+					<li id="tabNavAdd">
+						<a id="addTab"><i class="fa fa-plus-square fa-2x"></i></a>
+					</li>
 				</ul>
 				
-				<div class="tab-content">
+				<div class="tab-content" id="tabContent">
 					<div id="tab_1" class="tab-pane active">
 						<th:block th:include="admintool/dbbrowser/includes/tabInclude"></th:block>
 					</div>

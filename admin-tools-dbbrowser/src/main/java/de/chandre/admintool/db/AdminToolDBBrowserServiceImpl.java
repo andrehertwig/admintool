@@ -41,7 +41,11 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserServiceImpl.class);
 	
-	private static final String DEFAULT_CLOB_ENCODING = "UTF-8";  
+	private static final String DEFAULT_CLOB_ENCODING = "UTF-8";
+	
+	private static final String META_KEY_DB_VERSION = "databaseProductVersion";
+	private static final String META_KEY_DRIVER_VERSION = "driverVersion";
+	private static final String META_KEY_DRIVER_NAME = "driverName";
 	
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -51,6 +55,9 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	
 	@Autowired
 	private Map<String, DataSource> datasources;
+	
+	@Autowired
+	private AdminToolDBBrowserExampleLoader exampleLoader;
 	
 	/**
 	 * @param datasourceNames the datasourceNames to set
@@ -73,7 +80,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	}
 	
 	protected boolean isDMLAllowed() {
-		return configuration.isDmlAllowed() || configuration.isDmlBackdoorAllowed();
+		return configuration.isDmlAllowed();
 	}
 	
 	@Override
@@ -118,7 +125,8 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	
 	@Override
 	public QueryResultTO getMetadata(String datasourceName) {
-		
+		if(!configuration.isEnabled()) return null;
+
 		QueryResultTO resultTO = new QueryResultTO();
 		Connection c = null;
 		try {
@@ -131,9 +139,9 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			
 			iterateResult(resSet, resultTO, statementTO);
 			
-			resultTO.addMetadata("databaseProductVersion", metadata.getDatabaseProductVersion());
-			resultTO.addMetadata("driverVersion", metadata.getDriverVersion());
-			resultTO.addMetadata("driverName", metadata.getDriverName());
+			resultTO.addMetadata(META_KEY_DB_VERSION, metadata.getDatabaseProductVersion());
+			resultTO.addMetadata(META_KEY_DRIVER_VERSION, metadata.getDriverVersion());
+			resultTO.addMetadata(META_KEY_DRIVER_NAME, metadata.getDriverName());
 			
 		} catch (Exception e) {
 			resultTO.setExceptionMessage(e.getMessage());
@@ -152,6 +160,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	
 	@Override
 	public QueryResultTO queryDatabase(StatementTO statementTO) {
+		if(!configuration.isEnabled()) return null;
 		
 		ConnectionVars vars = new ConnectionVars();
 		QueryResultTO resultTO = new QueryResultTO(statementTO);
@@ -193,7 +202,13 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		return resultTO;
 	}
 	
-	private void iterateResult(ResultSet resSet, QueryResultTO resultTO, StatementTO statementTO) {
+	/**
+	 * iterates the resultSet and fills resultTO
+	 * @param resSet
+	 * @param resultTO
+	 * @param statementTO
+	 */
+	protected void iterateResult(ResultSet resSet, QueryResultTO resultTO, StatementTO statementTO) {
 		
 		try {
 			if (resSet != null && !resSet.isClosed()) {
@@ -331,4 +346,17 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	public String getTab(StatementTO statementTO, String id) {
 		return null != statementTO ? (id + "_" + String.valueOf(statementTO.getTab())) : (id + "_1");
 	}
+	
+	@Override
+	public Map<String, List<ExampleStatement>> getExamplesForDatasource(StatementTO statementTO) {
+		if (null == exampleLoader.getExamples() || exampleLoader.getExamples().isEmpty()) {
+			return null;
+		}
+		String dataSourceName = this.datasources.keySet().iterator().next();
+		if (null != statementTO) {
+			dataSourceName = statementTO.getDatasourceName();
+		}
+		return exampleLoader.getExamples().get(dataSourceName);
+	}
+	
 }

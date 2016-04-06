@@ -62,7 +62,14 @@ public interface AdminToolDBBrowserService
 	 * 
 	 * @param statementTO
 	 * @param id html id value for element
-	 * @return id_statementTO.tab or id_1 as default
+	 * @return <i>id</i>_statementTO.tab or <i>id</i>_1 as default
 	 */
 	String getTab(StatementTO statementTO, String id);
+
+	/**
+	 * returns the clusters of examples for vendor. if statementTO is null first data source will be used.
+	 * @param statementTO
+	 * @return
+	 */
+	Map<String, List<ExampleStatement>> getExamplesForDatasource(StatementTO statementTO);
 }

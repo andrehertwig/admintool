@@ -2,9 +2,8 @@
 
 <div class="tabContent" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'tabInclude')}">
 
-
 	<div class="box">
-		<div class="box-header"><h3 class="box-title">Query</h3></div>
+		<div class="box-header"><h3 class="box-title">Query</h3><span class="dbInfo" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'dbInfo')}"></span></div>
 		<div class="box-body no-padding">
 			<div class="row">
 				<div class="form-group col-md-4 col-xs-12">
@@ -79,12 +78,16 @@
 				</div>
 			</div>
 			
-			<div class="row form-group" th:if="${@adminToolDBBrowserConfig.exampleStatements != null}">
+			<div class="row form-group" th:with="exampleMap = ${@adminToolDBBrowserService.getExamplesForDatasource(statementTO)}">
 				<div class="col-xs-3 col-md-1">
 					<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">Examples:</label>
 				</div>
 				<div class="col-xs-9 col-md-11">
 					<select name="examples" class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">
+						<option value="" class="emptyOption">Choose Example</option>
+						<optgroup th:each="cluster, iterState : ${exampleMap}" th:label="${cluster.getKey()}">
+							<option th:each="sql, iterState2 : ${cluster.getValue()}" th:value="${sql.statement}" th:text="${sql.description}"></option>
+						</optgroup>
 						
 					</select> 
 				</div>

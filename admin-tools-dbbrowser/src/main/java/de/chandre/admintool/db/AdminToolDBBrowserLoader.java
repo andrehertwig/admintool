@@ -24,9 +24,16 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
+	@Autowired
+	private AdminToolDBBrowserConfig config;
+	
 	@PostConstruct
 	public AdminTool configureAdminTool()
 	{
+		if(!config.isEnabled()) {
+			LOGGER.info(" admin tool's database browser deactivated");
+			return adminTool;
+		}
 		LOGGER.info("adding database browser to admin tool");
 		
 		boolean relative = shouldCDNsUsed();
@@ -36,13 +43,17 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.setDisplayName("DB Browser");
 		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js", true);
 		
-		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/lib/codemirror.js", relative);
-		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/mode/sql/sql.js", relative);
-		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/addon/hint/show-hint.js", relative);
-		component.addAdditionalJS(commonPrefix + "codemirror/5.13.2/addon/hint/sql-hint.js", relative);
+		String codeMirrorPrefix = commonPrefix + "codemirror/" + config.getCodeMirrorVersion() + "/";
 		
-		component.addAdditionalCSS(commonPrefix + "codemirror/5.13.2/lib/codemirror.css", relative);
-		component.addAdditionalCSS(commonPrefix + "codemirror/5.13.2/addon/hint/show-hint.css", relative);
+		component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
+		component.addAdditionalJS(codeMirrorPrefix + "mode/sql/sql.js", relative);
+		component.addAdditionalJS(codeMirrorPrefix + "addon/edit/matchbrackets.js", relative);
+		
+		component.addAdditionalJS(codeMirrorPrefix + "addon/hint/show-hint.js", relative);
+		component.addAdditionalJS(codeMirrorPrefix + "addon/hint/sql-hint.js", relative);
+		
+		component.addAdditionalCSS(codeMirrorPrefix + "lib/codemirror.css", relative);
+		component.addAdditionalCSS(codeMirrorPrefix + "addon/hint/show-hint.css", relative);
 		
 		component.addAdditionalCSS("/static/admintool/dbbrowser/css/dbbrowser.css", true);
 		
