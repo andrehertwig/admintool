@@ -22,6 +22,8 @@ public class SimpleJob implements Job
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+    	LOGGER.info("<div>I'm div</div> ");
+    	LOGGER.info("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root>I'm a XML</root>");
     	LOGGER.info("finished executing job: %s", jobExecutionContext.getJobDetail().getKey().getName());
 	}
 }

@@ -47,9 +47,6 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	private static final String META_KEY_DRIVER_VERSION = "driverVersion";
 	private static final String META_KEY_DRIVER_NAME = "driverName";
 	
-	private static final String XML = "?xml";
-	private static final String PREFORMATTED = "<xmp>%s</xmp>";
-	
 	@Autowired
 	private ApplicationContext applicationContext;
 	
@@ -205,13 +202,6 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		return resultTO;
 	}
 	
-	private String escapeXML(String res, boolean escapeXML) {
-		if (null != res && res.contains(XML) && escapeXML) {
-			return String.format(PREFORMATTED, res);
-		}
-		return res;
-	}
-	
 	/**
 	 * iterates the resultSet and fills resultTO
 	 * @param resSet
@@ -249,12 +239,12 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			                }
 		            	} else if (type.get(i) != null && type.get(i) == Types.CLOB) {
 		            		if (statementTO.isShowClobs()) {
-		            			row.add(escapeXML(getClobString(resSet.getClob(i), clobEncoding ), true));
+		            			row.add(getClobString(resSet.getClob(i), clobEncoding ));
 		            		} else {
 		            			row.add("CLOB content");
 		            		}
 		            	} else {
-		            		row.add(escapeXML(String.valueOf(resSet.getObject(i)), true));
+		            		row.add(String.valueOf(resSet.getObject(i)));
 		            	}
 		    	    }
 		        	tableResult.add(row);
