@@ -6,24 +6,36 @@ $( document ).ready(function() {
 	sendRequest("/admintool/log4j2/getLevelCss?prefix=" + prefix, "GET", "json", function(data) {
 		leveCss = data;
 	});
-	$('.changeLogger').each(function() {
-		 var $el = $(this);
-		 $el.click(function(){
-			 changeLogLevel(this);
-		 });
-	 });
-	$('#removeCustomLogger').click(function(){
+	if($('#parentLoggers').length > 0) {
+		$('#loggers').DataTable();
+	}
+	if($('#loggers').length > 0) {
+			$('#parentLoggers').DataTable({"initComplete": function(settings, json) {
+				initEvents();
+		  	}
+		});
+	}
+	$('.removeCustomLogger').click(function(){
 		sendRequest("/admintool/log4j2/removeCustomLoggers", "POST", "text", function(data) {
 			location.reload();
 		});
 	});
 });
 
+function initEvents() {
+	$('.changeLogger').each(function() {
+		 var $el = $(this);
+		 $el.click(function(){
+			 changeLogLevel(this);
+		 });
+	 });
+}
+
 function changeLogLevel(link) {
 	var $link = $(link);
 	var level = $link.html();
-	var $tr = $($link.parent().parent().parent());
-	var name = $($tr.children('.logname')).text();
+	var $tr = $($link.parent().parent());
+	var name = $tr.find('.logname').text();
 	var serviceUrl = "/admintool/log4j2/changeLevel?loggerName=" + name + "&level=" + level;
 	if ($tr.hasClass('parent')) {
 		serviceUrl += "&parent=true";

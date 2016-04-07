@@ -21,13 +21,13 @@
 						<i class="fa fa-bug"></i> Parent Loggers <span
 							th:text="' ('+ ${parentLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right" id="removeCustomLogger">Remove
+					<button class="btn btn-default pull-right removeCustomLogger">Remove
 						Custom Parent Loggers</button>
 				</div>
 				<div class="box-body">
 
 					<div class="table-responsive">
-						<table class="table no-margin">
+						<table class="table no-margin table-hover" id="parentLoggers">
 							<thead>
 								<tr>
 									<th>Name</th>
@@ -66,13 +66,13 @@
 						<i class="fa fa-bug"></i> All Loggers <span
 							th:text="' ('+ ${allLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right" id="removeCustomLogger">Remove
+					<button class="btn btn-default pull-right removeCustomLogger">Remove
 						Custom Loggers</button>
 				</div>
 				<div class="box-body">
 
 					<div class="table-responsive">
-						<table class="table no-margin">
+						<table class="table no-margin table-hover" id="loggers">
 							<thead>
 								<tr>
 									<th>Name</th>
