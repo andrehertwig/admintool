@@ -28,3 +28,7 @@ span.dbInfo {
 i.fa-trash {
 	cursor: pointer;
 }
+
+document {
+	overflow: scroll;
+}

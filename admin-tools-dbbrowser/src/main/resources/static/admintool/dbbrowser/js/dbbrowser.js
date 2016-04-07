@@ -1,3 +1,4 @@
+
 (function( $, window, document, undefined ) {
 	
 	var Tab = function(_root, selector, number) {
@@ -8,6 +9,17 @@
 	    
 	    this.cm = null;
 	    
+	    this.supportedVendors = {
+    		'oracle' : 'text/x-plsql', 
+    		'mysql'	 : 'text/x-mysql', 
+    		'mssql'  : 'text/x-mssql', 
+    		'postgre': 'text/x-pgsql', 
+            'maria'  : 'text/x-mariadb', 
+            'cass'   : 'text/x-cassandra', 
+            'hive'   : 'text/x-hive', 
+            'default': 'text/x-sql'
+	    };
+	    
 	    this._init();
 	};
 	
@@ -16,7 +28,7 @@
 			
 		_init: function() {
 			this.initCheckboxes();
-			this.initCodeMirror('text/x-sql');
+			this.initCodeMirror();
 			this.initFunctions();
 			setTimeout(function(my){my.showDBInfo();}, 3000, this);
 			return this;
@@ -33,7 +45,7 @@
 		
 		initFunctions: function() {
 			this.deactivateBindings();
-			$("#execute_" + this.number).on({'click': $.proxy(this.root.executeQuery, this)});
+			$("#execute_" + this.number).on({'click': $.proxy(this.executeQuery, this)});
 			$("#examples_" + this.number).on({'change': $.proxy(this.applyExample, this)});
 			$("#datasourceName_" + this.number).on({'change': $.proxy(this.changeDataSource, this)});
 		},
@@ -42,11 +54,11 @@
 			$("#execute_" + this.number).off();
 			$("#examples_" + this.number).off();
 			$("#datasourceName_" + this.number).off();
-			$('removeTab_' + this.number).off();
+			$('#removeTab_' + this.number).off();
 		},
 		
 		initAddTab: function() {
-			this.root.executeQuery(this);
+			this.executeQuery(this);
 		},
 		
 		removeMe: function() {
@@ -91,26 +103,51 @@
 			this.cm.getDoc().setValue($(event.target).val());
 		},
 		
-		queryDone: function(data) {
+		executeQuery: function(event) {
+			var $tab = this;
+			if (event instanceof Tab) {
+				var $tab = event;
+			}
+			var query = {
+				tab : $tab.number,
+				datasourceName : $('#datasourceName_' + $tab.number).val() || $tab.root.datasourceNames[0],
+				clobEncoding :  $('#clobEncoding_' + $tab.number).val(),
+				showClobs :  $('#showClobs_' + $tab.number).prop("checked"),
+				showBlobs :  $('#showBlobs_' + $tab.number).prop("checked"),
+				maxResults :  $('#maxResults_' + $tab.number).val() || 100,
+				statement :  (null == $tab.cm ? '' : $tab.cm.doc.getValue())
+			};
+			
+			$tab.root.admintool.sendRequest({url: '/admintool/dbbrowser/executeQuery', data: JSON.stringify(query),
+				dataType: "text", requestType: 'POST', my: $tab, st: query.statement}, function (result, query) {
+					query.my.queryDone(result, query.st);
+			});
+		},
+		
+		queryDone: function(data, statement) {
 			var $tabContent = $("#tabPane_" + this.number);
 			$tabContent.html(data);
 			this.$elem = $(this.selector);
 			this.initCheckboxes();
 			this.initFunctions();
 			this.showDBInfo();
-			this.initCodeMirror('text/x-sql');
+			this.initCodeMirror();
+			
+			this.cm.doc.setValue(statement);
 			
 			var rem = $('#removeTab_' + this.number);
 			if (rem.length > 0) {
 				rem.on({'click': $.proxy(this.removeMe, this)})
 			}
+			
+			$('#resultTable_' + this.number).DataTable();
 		},
 		
-		initCodeMirror: function(mode) {
+		initCodeMirror: function() {
 			if ($("#statement_" + this.number).length > 0) {
 				//TODO: set the regarding driver vendor
 				this.cm = CodeMirror.fromTextArea(document.getElementById("statement_" + this.number), {
-					mode: mode,
+					mode: this.supportedVendors['default'],
 			        lineNumbers: true,
 			        indentWithTabs: true,
 			        smartIndent: true,
@@ -126,6 +163,7 @@
 //					    }}
 				});
 			}
+			setTimeout(function(my){my.setSqlMode();}, 500, this);
 		},
 
 		refreshCodeMirror: function () {
@@ -139,6 +177,36 @@
 				if (myInfo !== undefined && null != myInfo) 
 					$('#dbInfo_' + this.number).text(myInfo.metadata.driverName + ' | ' + myInfo.metadata.databaseProductVersion);
 			}
+		},
+		
+		setSqlMode: function(dsn) {
+			var datasourceName = dsn || $('#datasourceName_' + this.number).val();
+			var mymime = null; 
+			if (this.root.metaData.hasOwnProperty(datasourceName)) {
+				var myInfo = this.root.metaData[datasourceName];
+				if (myInfo !== undefined && null != myInfo) {
+					var driverName = myInfo.metadata.driverName;
+					for (var vendorName in this.supportedVendors) {
+						var mime = this.supportedVendors[vendorName];
+						if(this.contains(driverName, vendorName)) {
+							mymime = mime;
+							break;
+						}
+					}
+				}
+			}
+			var info = CodeMirror.findModeByMIME(null != mymime ? mymime : this.supportedVendors['default']);
+			//console.log('using: ' + info.mode +  ': ' + info.mime);
+			this.cm.setOption("mode", info.mime);
+		    CodeMirror.autoLoadMode(this.cm, info.mode);
+		    this.refreshCodeMirror();
+		},
+		
+		contains: function(str, search){
+			if (str.toLowerCase().indexOf(search) != -1) {
+				return true;
+			}
+			return false
 		}
 	};
 	
@@ -205,27 +273,6 @@
 				}
 			}
 			this.tabs.splice(i, 1);
-		},
-		
-		executeQuery: function(event) {
-			var $tab = this;
-			if (event instanceof Tab) {
-				var $tab = event;
-			}
-			var query = {
-				tab : $tab.number,
-				datasourceName : $('#datasourceName_' + $tab.number).val() || $tab.root.datasourceNames[0],
-				clobEncoding :  $('#clobEncoding_' + $tab.number).val(),
-				showClobs :  $('#showClobs_' + $tab.number).prop("checked"),
-				showBlobs :  $('#showBlobs_' + $tab.number).prop("checked"),
-				maxResults :  $('#maxResults_' + $tab.number).val() || 100,
-				statement :  (null == $tab.cm ? '' : $tab.cm.doc.getValue())
-			};
-			
-			$tab.root.admintool.sendRequest({url: '/admintool/dbbrowser/executeQuery', data: JSON.stringify(query),
-				dataType: "text", requestType: 'POST', my: $tab}, function (result, query) {
-					query.my.queryDone(result);
-			});
 		},
 		
 		getStaticObjects: function() {

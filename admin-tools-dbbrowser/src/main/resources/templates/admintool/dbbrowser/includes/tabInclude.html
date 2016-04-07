@@ -131,9 +131,10 @@
 						<div class="col-xs-2 col-md-1"><label>ResultCount</label></div>
 						<div class="col-xs-10 col-md-11" th:text="${queryResultTO.affectedRows}"></div>
 					</div>
-					<div class="table-responsive">
-						<table class="table no-margin">
-							<thead>
+					<!--  -->
+					<div class="table-responsive" >
+						<table th:id="${@adminToolDBBrowserService.getTab(statementTO, 'resultTable')}" class="table  table-bordered table-hover">
+							<thead data-spy="affix">
 								<tr>
 									<th></th>
 									<th th:each="colName, colIterState : ${queryResultTO.getColumnsNames()}" th:text="${colName}">ColName</th>

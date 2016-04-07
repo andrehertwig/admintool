@@ -39,5 +39,12 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/iCheck/icheck.min.js", relative);
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "plugins/iCheck/minimal/minimal.css", relative);
 		
+		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/datatables/jquery.dataTables.min.js", relative);
+		adminTool.addGlobalStyleSheet(adminLtePrefix + "plugins/datatables/jquery.dataTables.min.css", relative);
+//		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/datatables/dataTables.bootstrap.min.js", relative);
+//		adminTool.addGlobalStyleSheet(adminLtePrefix + "plugins/datatables/dataTables.bootstrap.css", relative);
+		
+		
+		
 	}
 }
