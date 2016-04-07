@@ -3,7 +3,11 @@
 <div class="tabContent" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'tabInclude')}">
 
 	<div class="box">
-		<div class="box-header"><h3 class="box-title">Query</h3><span class="dbInfo" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'dbInfo')}"></span></div>
+		<div class="box-header"><h3 class="box-title">Query</h3>
+			<span class="dbInfo" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'dbInfo')}"></span>
+			<i th:if="${statementTO != null and statementTO.getTab() gt 1}" class="fa fa-trash pull-left" 
+				th:id="${@adminToolDBBrowserService.getTab(statementTO, 'removeTab')}"></i>
+		</div>
 		<div class="box-body no-padding">
 			<div class="row">
 				<div class="form-group col-md-4 col-xs-12">

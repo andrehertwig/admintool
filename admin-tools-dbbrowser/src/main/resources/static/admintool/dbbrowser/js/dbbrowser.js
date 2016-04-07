@@ -29,10 +29,11 @@ var codeMirrors = {};
 		},
 		
 		initCheckboxes: function() {
+			this.$elem.find('input').iCheck('destroy');
 			this.$elem.find('input').iCheck({
 				checkboxClass: 'icheckbox_minimal',
 				radioClass: 'iradio_minimal',
-//					increaseArea: '20%' // optional
+	//					increaseArea: '20%' // optional
 			});
 		},
 		
@@ -81,6 +82,7 @@ var codeMirrors = {};
 		queryDone: function(data) {
 			var $tabContent = $("#tab_" + this.number);
 			$tabContent.html(data);
+			this.$elem = $(this.selector);
 			this.initCheckboxes();
 			this.initFunctions();
 			this.showDBInfo();
@@ -165,7 +167,8 @@ var codeMirrors = {};
 			this.tabs[newNumber] = new Tab(this, "#tabInclude_"+ newNumber, newNumber);
 			
 			$('#tabContent').append('<div id="tab_'+newNumber+'" class="tab-pane">');
-			$('#tabNavAdd').before('<li><a data-toggle="tab" href="#tab_'+newNumber+'" aria-expanded="true">Tab '+newNumber+'</a></li>');
+			$('#tabNavAdd').before('<li><a data-toggle="tab" href="#tab_'+newNumber+
+					'" aria-expanded="true">Tab '+newNumber+'</a></li>');
 			
 			this.tabs[newNumber].initAddTab();
 		},
