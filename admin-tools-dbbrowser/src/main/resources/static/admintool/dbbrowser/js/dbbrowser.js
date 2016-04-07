@@ -1,9 +1,3 @@
-var datasourceNames = null;
-var examples = null;
-var metaData = {};
-var codeMirrors = {};
-
-
 (function( $, window, document, undefined ) {
 	
 	var Tab = function(_root, selector, number) {
@@ -38,18 +32,36 @@ var codeMirrors = {};
 		},
 		
 		initFunctions: function() {
-			$("#execute_" + this.number).off();
+			this.deactivateBindings();
 			$("#execute_" + this.number).on({'click': $.proxy(this.root.executeQuery, this)});
-			
-			$("#examples_" + this.number).off();
 			$("#examples_" + this.number).on({'change': $.proxy(this.applyExample, this)});
-			
-			$("#datasourceName_" + this.number).off();
 			$("#datasourceName_" + this.number).on({'change': $.proxy(this.changeDataSource, this)});
+		},
+		
+		deactivateBindings: function() {
+			$("#execute_" + this.number).off();
+			$("#examples_" + this.number).off();
+			$("#datasourceName_" + this.number).off();
+			$('removeTab_' + this.number).off();
 		},
 		
 		initAddTab: function() {
 			this.root.executeQuery(this);
+		},
+		
+		removeMe: function() {
+			if (this.number == 1) {
+				return;
+			}
+			this.$elem.find('input').iCheck('destroy');
+			this.deactivateBindings();
+			this.cm.setValue("");
+			this.cm.clearHistory();
+			this.cm.toTextArea();
+			delete this.cm;
+			$('#tab_' + this.number).remove();
+			$('#tabPane_' + this.number).remove();
+			this.root.removeTab(this.number);
 		},
 		
 		changeDataSource: function (event) {
@@ -80,13 +92,18 @@ var codeMirrors = {};
 		},
 		
 		queryDone: function(data) {
-			var $tabContent = $("#tab_" + this.number);
+			var $tabContent = $("#tabPane_" + this.number);
 			$tabContent.html(data);
 			this.$elem = $(this.selector);
 			this.initCheckboxes();
 			this.initFunctions();
 			this.showDBInfo();
 			this.initCodeMirror('text/x-sql');
+			
+			var rem = $('#removeTab_' + this.number);
+			if (rem.length > 0) {
+				rem.on({'click': $.proxy(this.removeMe, this)})
+			}
 		},
 		
 		initCodeMirror: function(mode) {
@@ -131,7 +148,7 @@ var codeMirrors = {};
 	    this.options = settings;
 	    this.admintool = $('#admintool').data("admintool.root");
 	    
-	    this.tabs = {};
+	    this.tabs = [];
 	    this.datasourceNames = null;
 	    this.examples = null;
 	    this.metaData = {};
@@ -158,23 +175,36 @@ var codeMirrors = {};
 		},
 		
 		_addNewTab: function(event) {
-			
 			var newNumber = -1;
-			for (key in this.tabs) {
-				newNumber = Math.max(newNumber, key);
+			for(var i = 0, len = this.tabs.length; i < len; i++) {
+				newNumber = Math.max(newNumber, this.tabs[i].number);
 			}
 			newNumber++;
-			this.tabs[newNumber] = new Tab(this, "#tabInclude_"+ newNumber, newNumber);
+			var newTab = new Tab(this, "#tabInclude_"+ newNumber, newNumber);
+			this.tabs.push(newTab); 
 			
-			$('#tabContent').append('<div id="tab_'+newNumber+'" class="tab-pane">');
-			$('#tabNavAdd').before('<li><a data-toggle="tab" href="#tab_'+newNumber+
+			$('#tabContent').append('<div id="tabPane_'+newNumber+'" class="tab-pane">');
+			$('#tabNavAdd').before('<li id="tab_'+newNumber+'"><a data-toggle="tab" href="#tabPane_'+newNumber+
 					'" aria-expanded="true">Tab '+newNumber+'</a></li>');
 			
-			this.tabs[newNumber].initAddTab();
+			newTab.initAddTab();
 		},
 		
 		addTab: function (selector, number) {
-			this.tabs[number] = new Tab(this, selector, number);
+			this.tabs.push(new Tab(this, selector, number));
+		},
+		
+		removeTab: function(number){
+			if (number == 1) {
+				return;
+			}
+			var i = 0;
+			for(var len = this.tabs.length; i < len; i++) {
+				if (number == this.tabs[i].number) {
+					break;
+				}
+			}
+			this.tabs.splice(i, 1);
 		},
 		
 		executeQuery: function(event) {
