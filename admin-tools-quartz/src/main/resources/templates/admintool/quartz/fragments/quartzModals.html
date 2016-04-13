@@ -163,7 +163,7 @@
 						</div>
 						<div class="clearfix trigger">&nbsp;</div>
 						
-						<div class="row  trigger">
+						<div class="row trigger">
 							<div class="col-xs-4"><label for="startDate">Start Date</label></div>
 							<div class="col-xs-4 form-group">
 								<div class="input-group">
@@ -186,16 +186,74 @@
 								<div class="help-block with-errors"></div>
 							</div>
 						</div>
+						
+						<div class="row trigger">
+						
+						</div>
 					</form>
 					
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="btn_editJobData">Edit Job Data</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary" id="btn_save">Save changes</button>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<div th:fragment="editJobDataModal" class="modal fade" id="jobDataModal" tabindex="-1" role="dialog" aria-labelledby="jobDataModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="jobDataModalLabel">Edit Job Data</h4>
+				</div>
+				<div class="modal-body">
+				
+					<form id="jobDataForm">
+						<div class="row">
+							<div class="col-xs-3"><label>Key</label></div>
+							<div class="col-xs-4"><label>Value</label></div>
+							<div class="col-xs-3"><label>Type</label></div>
+							<div class="col-xs-2">
+								<button class="addJobData btn btn-xs btn-success" id="addJobData">
+									<i class="fa fa-plus"></i>
+								</button>
+							</div>
+						</div>
+						<div class="clearfix">&nbsp;</div>
+						<div class="row form-group first">
+							<div class="col-xs-3">
+								<input type="text" class="form-control jobDataKey" id="jobDataKey_1" value="" required="required" maxlength="200" />
+							</div>
+							<div class="col-xs-4">
+								<input type="text" class="form-control" id="jobDataValue_1" value="" required="required" maxlength="200" />
+							</div>
+							<div class="col-xs-3">
+								<select class="form-control" id="jobDataType_1">
+									<option value="string">String</option>
+									<option value="boolean">Boolean</option>
+									<option value="number">Number</option>
+								</select>
+							</div>
+							<div class="col-xs-2">
+								<button class="removeJobData btn btn-xs btn-default" id="removeJobData_1">
+									<i class="fa fa-trash fa-2x"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 	<div th:fragment="confirmModal" class="modal fade modal-danger" tabindex="-1" role="dialog" id="confirmModal">
 		<div class="modal-dialog">

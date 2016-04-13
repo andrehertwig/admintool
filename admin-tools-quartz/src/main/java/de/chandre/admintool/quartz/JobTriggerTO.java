@@ -15,6 +15,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.quartz.DateBuilder.IntervalUnit;
 
+/**
+ * 
+ * @author Andre
+ *
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class JobTriggerTO implements Serializable
@@ -57,6 +62,8 @@ public class JobTriggerTO implements Serializable
 	//for calendar 
 	private IntervalUnit repeatIntervalUnit;
 	private Map<String, IntervalUnit> repeatIntervalUnits;
+	
+	private Map<String, Object> jobData;
 	
 	private String originalJobGroup;
 	private String originalJobName;
@@ -233,8 +240,20 @@ public class JobTriggerTO implements Serializable
 		this.repeatIntervalUnits.put(name, repeatIntervalUnit);
 	}
 	
-	
-	
+	/**
+	 * @return the jobData
+	 */
+	public Map<String, Object> getJobData() {
+		return jobData;
+	}
+
+	/**
+	 * @param jobData the jobData to set
+	 */
+	public void setJobData(Map<String, Object> jobData) {
+		this.jobData = jobData;
+	}
+
 	public String getOriginalJobGroup() {
 		return originalJobGroup;
 	}
@@ -267,6 +286,9 @@ public class JobTriggerTO implements Serializable
 		this.originalTriggerGroup = originalTriggerGroup;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -280,9 +302,10 @@ public class JobTriggerTO implements Serializable
 				.append(", cronExpression=").append(cronExpression).append(", timeZone=").append(timeZone)
 				.append(", repeatCount=").append(repeatCount).append(", repeatInterval=").append(repeatInterval)
 				.append(", repeatIntervalUnit=").append(repeatIntervalUnit).append(", repeatIntervalUnits=")
-				.append(repeatIntervalUnits).append(", originalJobGroup=").append(originalJobGroup)
-				.append(", originalJobName=").append(originalJobName).append(", originalTriggerName=")
-				.append(originalTriggerName).append(", originalTriggerGroup=").append(originalTriggerGroup).append("]");
+				.append(repeatIntervalUnits).append(", jobData=").append(jobData).append(", originalJobGroup=")
+				.append(originalJobGroup).append(", originalJobName=").append(originalJobName)
+				.append(", originalTriggerName=").append(originalTriggerName).append(", originalTriggerGroup=")
+				.append(originalTriggerGroup).append("]");
 		return builder.toString();
 	}
 	

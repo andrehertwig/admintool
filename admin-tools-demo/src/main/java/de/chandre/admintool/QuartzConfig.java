@@ -1,6 +1,8 @@
 package de.chandre.admintool;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
@@ -31,19 +33,27 @@ public class QuartzConfig
 	
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail() {
-		return createJobDetail(SimpleJob.class, null, "Just a Simple Job");
+		return createJobDetail(SimpleJob.class, null, "Just a Simple Job", null);
 	}
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail3() {
-		return createJobDetail(SimpleJob.class, "Simple" , null);
+		return createJobDetail(SimpleJob.class, "Simple" , null, null);
 	}
 	@Bean
 	public JobDetailFactoryBean simpleJobDetail4() {
-		return createJobDetail(InterruptableSampleJob.class, "Simple", "Interruptable job to demonstrate the functionality");
+		Map<String, Object> jobData = new HashMap<>();
+		jobData.put("detail1", "anotherStringValue");
+		jobData.put("detail2", Boolean.FALSE);
+		jobData.put("detail3", Integer.valueOf(21));
+		return createJobDetail(InterruptableSampleJob.class, "Simple", "Interruptable job to demonstrate the functionality", jobData);
 	}
 	@Bean
 	public JobDetailFactoryBean simpleCronJobDetail() {
-		return createJobDetail(SimpleCronJob.class, "Cron", "Cron job example job detail");
+		Map<String, Object> jobData = new HashMap<>();
+		jobData.put("detail1", "stringValue");
+		jobData.put("detail2", Boolean.TRUE);
+		jobData.put("detail3", Integer.valueOf(42));
+		return createJobDetail(SimpleCronJob.class, "Cron", "Cron job example job detail", jobData);
 	}
 	
 	@Bean(name="simpleJobTrigger1")
@@ -84,25 +94,35 @@ public class QuartzConfig
 	
 	@Bean(name="simpleCronTrigger1")
 	public CronTriggerFactoryBean createSimpleCronTrigger(@Qualifier("simpleCronJobDetail") JobDetail jobDetail) {
-	    return createCronTrigger(jobDetail, "Cron", "SimpleCronTrigger 1", "0 0/5 * 1/1 * ? *", 5000L);
+		
+		Map<String, Object> jobData = new HashMap<>();
+		jobData.put("key1", "stringValue");
+		jobData.put("key2", Boolean.TRUE);
+		jobData.put("key3", Integer.valueOf(42));
+	    return createCronTrigger(jobDetail, "Cron", "SimpleCronTrigger 1", "0 0/5 * 1/1 * ? *", 5000L, jobData);
 	}
 	@Bean(name="simpleCronTrigger2")
 	public CronTriggerFactoryBean createSimpleCronTrigger2(@Qualifier("simpleCronJobDetail") JobDetail jobDetail) {
-	    return createCronTrigger(jobDetail, "Cron", null, "0 0 0/1 1/1 * ? *", 5000L);
+	    return createCronTrigger(jobDetail, "Cron", null, "0 0 0/1 1/1 * ? *", 5000L, null);
 	}
 	
-	private static JobDetailFactoryBean createJobDetail(Class<?> jobClass, String group, String description) {
+	private static JobDetailFactoryBean createJobDetail(Class<?> jobClass, String group, String description, 
+			Map<String, ?> jobDataAsMap) {
 		JobDetailFactoryBean detailFactoryBean = new JobDetailFactoryBean();
 		detailFactoryBean.setJobClass(jobClass);
 		if (null != group) {
 			detailFactoryBean.setGroup(group);
 		}
 		detailFactoryBean.setDescription(description);
+		if (null != jobDataAsMap) {
+			detailFactoryBean.setJobDataAsMap(jobDataAsMap);
+		}
+		
 		return detailFactoryBean;
 	}
 	
 	private static CronTriggerFactoryBean createCronTrigger(JobDetail jobDetail, String group, String description,
-			String cronExpression, long startDelay) {
+			String cronExpression, long startDelay, Map<String, ?> jobDataAsMap) {
 		CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
 		factoryBean.setJobDetail(jobDetail);
 		factoryBean.setGroup(group);
@@ -110,6 +130,9 @@ public class QuartzConfig
 		factoryBean.setCronExpression(cronExpression);
 		factoryBean.setDescription(description);
 		factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
+		if (null != jobDataAsMap) {
+			factoryBean.setJobDataAsMap(jobDataAsMap);
+		}
 		return factoryBean;
 	}
 	

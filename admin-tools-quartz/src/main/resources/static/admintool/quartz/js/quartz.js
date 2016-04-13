@@ -174,6 +174,9 @@ function initHandlers() {
 					});
 					$('#jobModalLabel').html('Change Trigger');
 					reloadValidator('jobTriggerForm');
+					
+					initJobDataJobData(trigger);
+					
 					$('#jobModal').modal('show');
 				}
 			});
@@ -218,6 +221,8 @@ function initHandlers() {
 					
 					getByID('jobModalLabel').html('Add Trigger');
 					
+					initJobDataJobData(null);
+					
 					getByID('btn_save').off();
 					getByID('btn_save').click(function() {
 						save('addTrigger');
@@ -242,6 +247,9 @@ function initHandlers() {
 				if (trigger && null != trigger && 'null' != trigger) {
 					fillJobData(trigger);
 					disableJobFields(false);
+					
+					initJobDataJobData(trigger);
+					
 					$('#btn_save').off();
 					$('#btn_save').click(function() {
 						save('changeJob');
@@ -253,6 +261,84 @@ function initHandlers() {
 			});
 		});
 	});//editJob
+}
+
+function clearJobDataInput() {
+	$('#jobDataForm').find('.form-control').each(function() {
+		var $elem = $(this);
+		var number = ($elem.attr('id').split('_'))[1];
+		if (number != 1) {
+			removeJobDataInput($elem);
+		} else {
+			$elem.val('');
+		}
+	});
+	var first = true; 
+	$('#jobDataForm').find('.clearfix').each(function() {
+		if(!first) {
+			$(this).remove();
+		}
+		first = false;
+	});
+}
+
+function initJobDataJobData(trigger) {
+	clearJobDataInput();
+	if (null != trigger && null != trigger.jobData) {
+		var replaceFirst = true;
+		for (jobDataKey in trigger.jobData) {
+			addJobDataInput(jobDataKey, trigger.jobData[jobDataKey], (typeof trigger.jobData[jobDataKey]), replaceFirst);
+			replaceFirst = false;
+		}
+	}
+	
+	getByID('btn_editJobData').off();
+	$('#btn_editJobData').click(function() {
+		$('#jobDataModal').modal('show');
+	});
+	
+	getByID('addJobData').off();
+	$('#addJobData').click(function() {
+		addJobDataInput(null, null, null, false);
+	});
+}
+
+function addJobDataInput(jobDataKey, jobDataValue, jobDataType, replaceFirst) {
+	var length = $('.form-group ').length;
+	var $clone = $('#jobDataForm div.first').clone();
+	$clone.find('.form-control').each(function() {
+		var my = $(this);
+		var id = my.attr('id').replace('_1', '');
+		var number = replaceFirst ? 1 : (length + 1);
+		my.attr('id', id + '_' + number);
+		
+		if (null != jobDataKey && id == 'jobDataKey') {
+			my.val(jobDataKey);
+		}
+		if (null != jobDataValue && id == 'jobDataValue') {
+			my.val(jobDataValue);
+		}
+		if (null != jobDataType && id == 'jobDataType') {
+			my.val(jobDataType);
+		}
+	});
+	if (replaceFirst) {
+		$('#jobDataForm div.first').replaceWith($clone);
+	} else {
+		$('<div class="clearfix">&nbsp;</div>').appendTo('#jobDataForm');
+		$clone.removeClass('first');
+		$clone.appendTo('#jobDataForm');
+	}
+	
+	$clone.find('.removeJobData').click(function() {
+		removeJobDataInput($(this));
+	});
+}
+function removeJobDataInput($elem) {
+	var $formGroup = $elem.parent().parent();
+	if ($formGroup && $formGroup.hasClass('row') && $formGroup.hasClass('form-group')) {
+		$formGroup.remove();
+	}
 }
 
 function disableJobFields(disable) {
@@ -346,6 +432,30 @@ function save(type) {
 		
 		triggerModel.startTime = new Date(getByID('startDate').val().replace(dateReplacePattern,'$3-$2-$1') 
 				+ 'T' + getByID('startTime').val());
+	}
+	
+	var jobData = {}
+	var $jobDataKeyFields = $('#jobDataModal').find('.jobDataKey');
+	if ($jobDataKeyFields.length > 0) {
+		$jobDataKeyFields.each(function() {
+			var key = $(this);
+			var number = (key.attr('id').split('_'))[1];
+			var value = $('#jobDataValue_' + number);
+			var type = $('#jobDataType_' + number).val();
+			if (key.val() && key.val().trim() != '' && value.val() && value.val().trim() != '') {
+				var val = value.val();
+				if (type == 'boolean') {
+					val = value.val() == 'true';
+				} else if (type == 'number') {
+					val = parseFloat(value.val());
+				}
+				jobData[key.val()] = val;
+			}
+		});
+	}
+	//EcmaScript-5 
+	if (Object.keys(jobData).length > 0) {
+		triggerModel.jobData = jobData;
 	}
 	
 	var org = null;

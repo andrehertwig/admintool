@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -438,6 +439,8 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 		triggerTO.setJobName(jobName);
 		triggerTO.setDescription(detail.getDescription());
 		
+		triggerTO.setJobData(detail.getJobDataMap());
+		
 		if (null == triggerName) {
 			return triggerTO;
 		}
@@ -469,6 +472,8 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 			triggerTO.setRepeatIntervalUnit(((DailyTimeIntervalTrigger)trigger).getRepeatIntervalUnit());
 			triggerTO.setRepeatCount(((DailyTimeIntervalTrigger)trigger).getRepeatCount());
 		}
+		
+		triggerTO.setJobData(trigger.getJobDataMap());
 		
 		addGlobalMisfireInstructionSet(triggerTO, null);
 		
@@ -578,6 +583,28 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 				.withIdentity(nvl(triggerTO.getJobName(), triggerTO.getOriginalJobName()),
 						nvl(triggerTO.getJobGroup(), triggerTO.getOriginalJobGroup()))
 				.withDescription(triggerTO.getDescription());
+		
+		//Builder don't have an interface :-/ so code duplication with triggers
+		if (null != triggerTO.getJobData() && !triggerTO.getJobData().isEmpty()) {
+			for (Entry<String, Object> entry : triggerTO.getJobData().entrySet()) {
+				if (String.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (String)entry.getValue());
+				} else if (Boolean.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Boolean)entry.getValue());
+				} else if (Integer.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Integer)entry.getValue());
+				} else if (Long.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Long)entry.getValue());
+				} else if (Double.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Double)entry.getValue());
+				} else if (Float.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Float)entry.getValue());
+				}
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("jobDataEntry: " + entry.getKey() +", val: "+ entry.getValue() + ", class: " + entry.getValue().getClass());
+			}
+		}
+		
 		scheduler.addJob(builder.build(), true, true);
 		return true;
 	}
@@ -726,6 +753,29 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 			default:
 				break;
 		}
+		
+		if (null != triggerTO.getJobData() && !triggerTO.getJobData().isEmpty()) {
+			for (Entry<String, Object> entry : triggerTO.getJobData().entrySet()) {
+				if (String.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (String)entry.getValue());
+				} else if (Boolean.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Boolean)entry.getValue());
+				} else if (Integer.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Integer)entry.getValue());
+				} else if (Long.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Long)entry.getValue());
+				} else if (Double.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Double)entry.getValue());
+				} else if (Float.class.isAssignableFrom(entry.getValue().getClass())) {
+					builder.usingJobData(entry.getKey(), (Float)entry.getValue());
+				}
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("jobDataEntry: " + entry.getKey() +", val: "+ entry.getValue() + ", class: " + entry.getValue().getClass());
+			}
+		}
+//		else if (null != trigger && null != trigger.getJobDataMap() && !trigger.getJobDataMap().isEmpty()) {
+//			builder.usingJobData(trigger.getJobDataMap());
+//		}
 		
 		builder.withSchedule(schedule);
 		
