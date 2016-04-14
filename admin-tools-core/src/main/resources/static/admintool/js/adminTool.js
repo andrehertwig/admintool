@@ -33,7 +33,7 @@
 				data: query.data || null,
 				contentType: query.contentType || 'application/json; charset=UTF-8',
 				error: function( xhr, status, errorThrown ) {
-			        alert( "Sorry, there was a problem!" );
+					$('#admintoolError').modal();
 			        if (console) {
 			        	console.log( "Error: " + errorThrown );
 				        console.log( "Status: " + status );
@@ -90,6 +90,14 @@ function sendRequest(serviceUrl, requestType, dataType, callback) {
 		url: serviceUrl,
 		dataType: dataType,
 		type: requestType,
+		error: function( xhr, status, errorThrown ) {
+			$('#admintoolError').modal();
+	        if (console) {
+	        	console.log( "Error: " + errorThrown );
+		        console.log( "Status: " + status );
+		        console.dir( xhr );
+	        }
+		}
 	}).done(function (data) {
 		callback(data);
 	});

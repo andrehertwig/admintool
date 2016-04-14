@@ -475,7 +475,7 @@ function save(type) {
 		type: 'POST',
 		contentType:'application/json; charset=UTF-8' ,
 		error: function( xhr, status, errorThrown ) {
-	        alert( "Sorry, there was a problem!" );
+			$('#admintoolError').modal();
 	        if (console) {
 	        	console.log( "Error: " + errorThrown );
 		        console.log( "Status: " + status );
@@ -486,6 +486,8 @@ function save(type) {
 		if ('true' === data) {
 			reloadInclude();
 			$('#jobModal').modal('hide');
+		} else {
+			$('#admintoolError').modal();
 		}
 	});
 }
