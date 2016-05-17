@@ -14,7 +14,7 @@
 
 ## Requirements
 * Java 8
-* Maven 3.x.x
+* Maven 3.2.x+
 
 ## Based on
 * [Spring Boot ](http://projects.spring.io/spring-boot/)
@@ -26,3 +26,8 @@
 2. execute maven or import to IDE
 3. run the Demo
 4. go to localhost:8090/ or localhost:8090/admintool
+
+Some URLs are secured
+* `/monitoring`: operator/operator or admin/admin (also within the adminTool)
+* `/jmx/`: operator/operator or admin/admin (also within the adminTool)
+* `/admintool/dbbrowser`: admin/admin (within the adminTool)

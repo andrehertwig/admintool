@@ -19,7 +19,7 @@
 		<developer>
 			<id>andrehertwig</id>
 			<name>André Hertwig</name>
-			<email>adwohr@users.noreply.github.com</email>
+			<email>andrehertwig@users.noreply.github.com</email>
 			<url>https://github.com/andrehertwig</url>
 			<organization></organization>
 			<organizationUrl></organizationUrl>
@@ -53,10 +53,10 @@
 		<module>admin-tools-log4j2</module>
 		<module>admin-tools-quartz</module>
 		<module>admin-tools-dbbrowser</module>
-		<!-- 
 		<module>admin-tools-filebrowser</module>
-		<module>admin-tools-cluster</module> -->
-		
+		<!-- 
+		<module>admin-tools-cluster</module> 
+		-->
 		<module>admin-tools-demo</module>
 		<module>admin-tools-demo-war</module>
 	</modules>
@@ -68,13 +68,13 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		
 		<maven-site-plugin.version>3.4</maven-site-plugin.version>
 		<site.skipDeploy>true</site.skipDeploy>
 		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 		<skip.unit.tests>false</skip.unit.tests>
-		<jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.7.6.201602180812</jacoco-maven-plugin.version>
 		
 		<commons-lang.version>3.4</commons-lang.version>
 		<commons-collections.version>4.1</commons-collections.version>
@@ -83,7 +83,7 @@
 		
 		<org.json.version>20151123</org.json.version>
 		
-		<spring-boot.version>1.3.3.RELEASE</spring-boot.version>
+		<spring-boot.version>1.3.5.RELEASE</spring-boot.version>
 		
 		<thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
 		<thymeleaf-extras-conditionalcomments.version>2.1.1.RELEASE</thymeleaf-extras-conditionalcomments.version>
@@ -207,6 +207,33 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
 			</plugin>
+			
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+				 <version>1.6</version>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <stagingProfileId>19375019933d12</stagingProfileId>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
 		</plugins>
 	</pluginManagement>
 
