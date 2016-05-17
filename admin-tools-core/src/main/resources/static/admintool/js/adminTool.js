@@ -26,8 +26,9 @@
 			location.reload();
 		},
 		sendRequest: function (query, callback) {
+			var context = $('#webContext').attr('href');
 			$.ajax({
-				url: query.url,
+				url: context + query.url,
 				dataType: query.dataType || 'json',
 				type: query.requestType || 'GET',
 				data: query.data || null,
@@ -86,8 +87,9 @@ $( document ).ready(function() {
  * @param callback
  */
 function sendRequest(serviceUrl, requestType, dataType, callback) {
+	var context = $('#webContext').attr('href');
 	$.ajax({
-		url: serviceUrl,
+		url: context + serviceUrl,
 		dataType: dataType,
 		type: requestType,
 		error: function( xhr, status, errorThrown ) {

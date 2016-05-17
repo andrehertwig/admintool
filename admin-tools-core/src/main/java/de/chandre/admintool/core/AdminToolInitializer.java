@@ -14,7 +14,7 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 	@PostConstruct
 	public void init() {
 		
-		boolean relative = shouldCDNsUsed();
+		boolean relative = !shouldCDNsUsed();
 		String adminLtePrefix = getAdminLTEPrefixUri();
 		String commonPrefix = getWebjarsPrefixUri();
 

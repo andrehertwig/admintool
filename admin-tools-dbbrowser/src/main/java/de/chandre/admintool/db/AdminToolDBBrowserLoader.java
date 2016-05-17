@@ -36,7 +36,7 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		}
 		LOGGER.info("adding database browser to admin tool");
 		
-		boolean relative = shouldCDNsUsed();
+		boolean relative = !shouldCDNsUsed();
 		String commonPrefix = getWebjarsPrefixUri();
 		
 		AdminComponent component = new AdminComponentImpl();
