@@ -40,9 +40,9 @@ function changeLogLevel(link) {
 	if ($tr.hasClass('parent')) {
 		serviceUrl += "&parent=true";
 	}
-	
+	var context = $('#webContext').attr('href');
 	$.ajax({
-		url: serviceUrl,
+		url: context + serviceUrl,
 		dataType: "text",
 		type: 'POST',
 		error: function( xhr, status, errorThrown ) {
