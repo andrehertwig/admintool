@@ -39,6 +39,11 @@
 		</license>
 	</licenses>
 	
+	<issueManagement>
+		<system>GITHUB</system>
+		<url>https://github.com/andrehertwig/admintool/issues</url>
+	</issueManagement>
+	
 	<scm>
 		<connection>scm:git:git@github.com:andrehertwig/admintool.git</connection>
 		<developerConnection>scm:git:git@github.com:andrehertwig/admintool.git</developerConnection>
@@ -46,22 +51,119 @@
 		<tag>admintool-${project.version}</tag>
 	</scm>
 	
-	<modules>
-		<module>admin-tools-core</module>
-		<module>admin-tools-melody</module>
-		<module>admin-tools-jminix</module>
-		<module>admin-tools-log4j2</module>
-		<module>admin-tools-quartz</module>
-		<module>admin-tools-dbbrowser</module>
-		<module>admin-tools-filebrowser</module>
-		<!-- 
-		<module>admin-tools-cluster</module> 
-		-->
-		<module>admin-tools-demo</module>
-		<module>admin-tools-demo-war</module>
-	</modules>
+	<profiles>
+	
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>admin-tools-core</module>
+				<module>admin-tools-melody</module>
+				<module>admin-tools-jminix</module>
+				<module>admin-tools-log4j2</module>
+				<module>admin-tools-quartz</module>
+				<module>admin-tools-dbbrowser</module>
+				<!-- 
+				<module>admin-tools-filebrowser</module>
+				<module>admin-tools-cluster</module> 
+				-->
+				<module>admin-tools-demo</module>
+				<module>admin-tools-demo-war</module>
+			</modules>
+		</profile>
+		
+		<profile>
+			<id>release</id>
+			<modules>
+				<module>admin-tools-core</module>
+				<module>admin-tools-melody</module>
+				<module>admin-tools-jminix</module>
+				<module>admin-tools-log4j2</module>
+				<module>admin-tools-quartz</module>
+				<module>admin-tools-dbbrowser</module>
+				<!-- 
+				<module>admin-tools-filebrowser</module>
+				<module>admin-tools-cluster</module> 
+				-->
+			</modules>
+			
+			<distributionManagement>
+				<repository>
+					<id>oss.sonatype.org.staging</id>
+					<name>Sonatype Staging Repository</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+				</repository>
+			</distributionManagement>
+			
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>oss.sonatype.org.staging</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<stagingProfileId>${staging.id}</stagingProfileId>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<version>1.6</version>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	
+	</profiles>
+
 	
 	<properties>
+	
+		<staging.id></staging.id>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<!-- java compiler version -->
@@ -182,16 +284,12 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -207,39 +305,10 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
 			</plugin>
-			
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-				 <version>1.6</version>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-			<plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <stagingProfileId>19375019933d12</stagingProfileId>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
 		</plugins>
 	</pluginManagement>
 
-	<plugins>
-
-	</plugins>
+	
 </build>
 
 

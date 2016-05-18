@@ -40,6 +40,10 @@
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
+		<Logger name="org.springframework.security" level="debug" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
 		<Logger name="org.thymeleaf" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
