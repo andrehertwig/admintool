@@ -113,7 +113,6 @@
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<version>1.6</version>
 						<artifactId>maven-gpg-plugin</artifactId>
 						<executions>
 							<execution>
@@ -152,6 +151,14 @@
 						<configuration>
 							<additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>versions-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
 					</plugin>
 				</plugins>
 			</build>
@@ -304,6 +311,26 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>1.6</version>
+				<artifactId>maven-gpg-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.9.4</version>
+				<configuration>
+					<tag>${project.artifactId}-${project.version}</tag>
+					<connectionType>connection</connectionType>
+				</configuration>
 			</plugin>
 		</plugins>
 	</pluginManagement>
