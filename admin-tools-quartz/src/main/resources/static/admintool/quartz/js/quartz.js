@@ -467,9 +467,9 @@ function save(type) {
 		triggerModel.originalTriggerGroup = idAr[3];
 		triggerModel.originalTriggerName = idAr[4];
 	}
-	
+	var context = $('#webContext').attr('href');
 	$.ajax({
-		url: '/admintool/quartz/' + type,
+		url: context + '/admintool/quartz/' + type,
 		data: JSON.stringify(triggerModel),
 		dataType: "text",
 		type: 'POST',
