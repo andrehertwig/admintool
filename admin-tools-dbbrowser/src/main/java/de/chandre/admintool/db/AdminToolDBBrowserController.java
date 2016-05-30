@@ -24,7 +24,7 @@ import de.chandre.admintool.core.controller.AbstractAdminController;
  *
  */
 @Controller
-@RequestMapping("/admintool/dbbrowser")
+@RequestMapping(AbstractAdminController.ROOTCONTEXT + "/dbbrowser")
 public class AdminToolDBBrowserController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserController.class);

@@ -3,7 +3,7 @@ package de.chandre.admintool.db;
 import java.io.Serializable;
 
 /**
- * 
+ * Example statements for DatabaseBrowser
  * @author Andre
  *
  */
@@ -14,6 +14,26 @@ public class ExampleStatement implements Serializable
 	private String statement;
 	private String description;
 	
+	/**
+	 * Creates a new ExampleStatement
+	 */
+	public ExampleStatement() {
+	}
+	
+	/**
+	 * Creates a new ExampleStatement instance using fields
+	 * 
+	 * @param statement
+	 * @param description
+	 */
+	public ExampleStatement(String statement, String description) {
+		super();
+		this.statement = statement;
+		this.description = description;
+	}
+
+
+
 	/**
 	 * @return the statement
 	 */

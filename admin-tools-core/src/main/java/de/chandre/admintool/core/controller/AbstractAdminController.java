@@ -29,7 +29,7 @@ public class AbstractAdminController
 	private static final Log LOGGER = LogFactory.getLog(AbstractAdminController.class);
 	
 	protected static final String ROOTCONTEXT_NAME = "admintool";
-	protected static final String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
+	public static final String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
 	
 	@Autowired 
 	private AdminTool adminTool;
@@ -49,8 +49,29 @@ public class AbstractAdminController
 	 */
 	protected void addCommonContextVars(ModelMap model, HttpServletRequest request) 
 	{
+		addCommonContextVars(model, request, null);
+	}
+	
+	/**
+	 * sets common context variables and will override the template name.<br>
+	 * this method can be used if you want your special request mappings should resolve a other template 
+	 * <ul>
+	 * 	<li>contentPage</li>
+	 * 	<li>activeMenuName</li>
+	 * 	<li>activeMenu</li>
+	 * 	<li>rootContext</li>
+	 * 	<li></li>
+	 * </ul>
+	 * 
+	 * 
+	 * @param model
+	 * @param request
+	 * @param overrideName
+	 */
+	protected void addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName) 
+	{
 		LOGGER.debug(String.format("receiving request: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
-		String name = getMenuName(request);
+		final String name = getMenuName(request, overrideName);
 		LOGGER.debug("name=" +name);
 		
 		Optional<MenuEntry> menuentry = Optional.empty();
@@ -72,7 +93,10 @@ public class AbstractAdminController
 		model.put("rootContext", request.getContextPath() + ROOTCONTEXT);
 	}
 	
-	private String getMenuName(HttpServletRequest request) {
+	private String getMenuName(HttpServletRequest request, String overrideName) {
+		if (!StringUtils.isEmpty(overrideName)) {
+			return overrideName;
+		}
 		String name = request.getRequestURI().replaceFirst(ROOTCONTEXT, "");
 		if (!StringUtils.isEmpty(request.getContextPath())) {
 			name = name.replaceFirst(request.getContextPath(), "");

@@ -15,7 +15,6 @@ import de.chandre.admintool.core.component.MenuEntry;
 import de.chandre.admintool.db.AdminToolDBBrowserExampleLoader;
 import de.chandre.admintool.db.ExampleStatement;
 import de.chandre.admintool.db.ExampleStatements;
-import de.chandre.admintool.db.Vendor;
 import net.bull.javamelody.MonitoredWithSpring;
 
 /**
@@ -69,14 +68,8 @@ public class DemoController
 		
 		ExampleStatements statements = new ExampleStatements();
 		statements.setDatasourceName("dataSource");
-		ExampleStatement st1 = new ExampleStatement();
-		st1.setDescription("Select all from Logging table");
-		st1.setStatement("SELECT * from LOGGING");
-		statements.addExample("Common Tables", st1);
-		ExampleStatement st2 = new ExampleStatement();
-		st2.setDescription("Show Flyway migrations");
-		st2.setStatement("SELECT * from SCHEMA_VERSION");
-		statements.addExample("Maintenance", st2);
+		statements.addExample("Common Tables", new ExampleStatement("SELECT * from LOGGING", "Select all from Logging table"));
+		statements.addExample("Maintenance", new ExampleStatement("SELECT * from SCHEMA_VERSION", "Show Flyway migrations"));
 		
 		exampleLoader.addExamples(statements);
 	}

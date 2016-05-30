@@ -59,6 +59,16 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	@Autowired
 	private AdminToolDBBrowserExampleLoader exampleLoader;
 	
+	
+	
+	/**
+	 * @return the datasources
+	 */
+	@Override
+	public Map<String, DataSource> getDatasources() {
+		return datasources;
+	}
+
 	/**
 	 * @param datasourceNames the datasourceNames to set
 	 */

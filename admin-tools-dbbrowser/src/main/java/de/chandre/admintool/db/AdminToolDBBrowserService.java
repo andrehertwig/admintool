@@ -8,14 +8,22 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 /**
- * data source service interface
+ * database browser service interface
+ * 
  * @author Andre
  *
  */
 public interface AdminToolDBBrowserService 
 {
 	/**
-	 * 
+	 * returns the configured data sources<br>
+	 * could be used to add data sources manually
+	 * @return Map&lt;"dataSourceName", DataSource&gt;
+	 */
+	Map<String, DataSource> getDatasources();
+	
+	/**
+	 * to override the configured data sources
 	 * @param datasources
 	 */
 	void setDatasources(Map<String, DataSource> datasources);
@@ -72,4 +80,5 @@ public interface AdminToolDBBrowserService
 	 * @return
 	 */
 	Map<String, List<ExampleStatement>> getExamplesForDatasource(StatementTO statementTO);
+
 }
