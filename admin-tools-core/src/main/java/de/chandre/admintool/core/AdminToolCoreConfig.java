@@ -1,5 +1,7 @@
 package de.chandre.admintool.core;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component("adminToolConfig")
 public class AdminToolCoreConfig implements AdminToolConfig
 {
+	private static final Log LOGGER = LogFactory.getLog(AdminToolCoreConfig.class);
+	
 	@Value("${admintool.core.useCDN:true}")
 	private boolean useCDNs;
 	
@@ -47,5 +51,21 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	 */
 	public void setAdminLTECdnVersion(String adminLTECdnVersion) {
 		this.adminLTECdnVersion = adminLTECdnVersion;
+	}
+
+	@Override
+	public void printConfig() {
+		LOGGER.debug(toString());
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolCoreConfig [useCDNs=").append(useCDNs).append(", adminLTECdnVersion=")
+				.append(adminLTECdnVersion).append("]");
+		return builder.toString();
 	}
 }

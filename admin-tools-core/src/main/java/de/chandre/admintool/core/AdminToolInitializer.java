@@ -19,7 +19,7 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 		String commonPrefix = getWebjarsPrefixUri();
 
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "bootstrap/css/bootstrap.min.css", relative);
-		adminTool.addGlobalStyleSheet(commonPrefix + "font-awesome/4.5.0/css/font-awesome.min.css", relative);
+		adminTool.addGlobalStyleSheet(commonPrefix + "font-awesome/4.6.2/css/font-awesome.min.css", relative);
 		adminTool.addGlobalStyleSheet(commonPrefix + "ionicons/2.0.1/css/ionicons.min.css", relative);	
 		
 		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/jQuery/jQuery-2.2.0.min.js", relative);

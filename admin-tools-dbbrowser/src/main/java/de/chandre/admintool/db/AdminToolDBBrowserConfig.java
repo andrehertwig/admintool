@@ -29,7 +29,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.dmlAllowed:false}")
 	private boolean dmlAllowed;
 	
-	@Value("${admintool.dbbrowser.clobEncodings:}")
+	@Value("#{'${admintool.dbbrowser.clobEncodings:}'.split(';')}")
 	private List<String> clobEncodings = new ArrayList<>();
 	
 	@Value("${admintool.dbbrowser.codeMirrorVersion:5.13.2}")
@@ -46,6 +46,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("clob encoding is empty: " + clobEncodings.isEmpty() + ", size: " + clobEncodings.size());
+		printConfig();
 	}
 	
 	/**
@@ -102,6 +103,23 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	 */
 	public void setCodeMirrorVersion(String codeMirrorVersion) {
 		this.codeMirrorVersion = codeMirrorVersion;
+	}
+
+	@Override
+	public void printConfig() {
+		LOGGER.debug(toString());
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolDBBrowserConfig [enabled=").append(enabled).append(", dmlAllowed=").append(dmlAllowed)
+				.append(", clobEncodings=").append(clobEncodings).append(", codeMirrorVersion=")
+				.append(codeMirrorVersion).append("]");
+		return builder.toString();
 	}
 	
 }

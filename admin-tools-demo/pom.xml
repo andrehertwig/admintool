@@ -54,6 +54,11 @@
 			<artifactId>admin-tools-dbbrowser</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>de.chandre.admin-tools</groupId>
+			<artifactId>admin-tools-filebrowser</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		
 		
 		<!-- Spring Framework -->
