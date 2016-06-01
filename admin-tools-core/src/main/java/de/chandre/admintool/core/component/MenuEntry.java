@@ -22,6 +22,7 @@ public class MenuEntry implements Serializable
 	private String displayName;
 	private String resouceMessageKey;
 	private String target;
+	private boolean hide;
 	
 	private MenuEntry parent;
 	private List<MenuEntry> submenu = new LinkedList<>();
@@ -31,6 +32,7 @@ public class MenuEntry implements Serializable
 	
 	public MenuEntry() {
 		super();
+		this.hide = false;
 	}
 	
 	/**
@@ -44,9 +46,8 @@ public class MenuEntry implements Serializable
 		this.name = name;
 		this.displayName = displayName;
 		this.target = target;
+		this.hide = false;
 	}
-
-
 
 	/**
 	 * the link mapping 
@@ -122,6 +123,22 @@ public class MenuEntry implements Serializable
 	 */
 	public void setTarget(String target) {
 		this.target = target;
+	}
+
+	/**
+	 * if set to true this menu entry will be hidden, but still requestable
+	 * @return the hide
+	 */
+	public boolean isHide() {
+		return hide;
+	}
+
+	/**
+	 * if set to true this menu entry will be hidden, but still requestable
+	 * @param hide the hide to set
+	 */
+	public void setHide(boolean hide) {
+		this.hide = hide;
 	}
 
 	/**

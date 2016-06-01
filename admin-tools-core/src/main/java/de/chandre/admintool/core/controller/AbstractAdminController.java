@@ -49,7 +49,7 @@ public class AbstractAdminController
 	 */
 	protected void addCommonContextVars(ModelMap model, HttpServletRequest request) 
 	{
-		addCommonContextVars(model, request, null);
+		addCommonContextVars(model, request, null, null);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class AbstractAdminController
 	 * @param request
 	 * @param overrideName
 	 */
-	protected void addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName) 
+	protected void addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName, String overrideTarget) 
 	{
 		LOGGER.debug(String.format("receiving request: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
 		final String name = getMenuName(request, overrideName);
@@ -82,7 +82,7 @@ public class AbstractAdminController
 			}
 		}
 		if (menuentry.isPresent()) {
-			model.put("contentPage", ROOTCONTEXT_NAME + "/" + menuentry.get().getTarget());
+			model.put("contentPage", ROOTCONTEXT_NAME + "/" + (StringUtils.isEmpty(overrideTarget) ? menuentry.get().getTarget() : overrideTarget));
 			if (null != menuentry.get().getVariables()) {
 				model.putAll(menuentry.get().getVariables());
 			}

@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.AbstractAdminToolLoader;
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentImpl;
@@ -16,7 +17,7 @@ import de.chandre.admintool.core.component.MenuEntry;
  * @author Andre
  */
 @Component
-public class AdminToolQuartzLoader
+public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzLoader.class);
 	
@@ -24,8 +25,12 @@ public class AdminToolQuartzLoader
 	private AdminTool adminTool;
 	
 	@PostConstruct
-	public AdminTool configureAdminTool()
+	public void configureAdminTool()
 	{
+		if(!coreConfig.isEnabled()) {
+			LOGGER.info("admin tool's quartz management is deactivated");
+			return;
+		}
 		LOGGER.info("adding Quartz view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
@@ -44,6 +49,5 @@ public class AdminToolQuartzLoader
 		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig"));
 		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs"));
 		adminTool.addComponent(component);
-		return adminTool;
 	}
 }

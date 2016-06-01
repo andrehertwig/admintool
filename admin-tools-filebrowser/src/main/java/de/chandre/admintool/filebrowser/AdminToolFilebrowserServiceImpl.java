@@ -45,7 +45,7 @@ import org.springframework.util.StringUtils;
  * @since 1.0.1
  */
 @Service("adminToolFilebrowserService")
-public class AdminToolFilebrowserServiceImpl implements AdminToolFilebrowserService {
+public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService implements AdminToolFilebrowserService {
 
 	private static final Log LOGGER = LogFactory.getLog(AdminToolFilebrowserServiceImpl.class);
 	
@@ -219,6 +219,9 @@ public class AdminToolFilebrowserServiceImpl implements AdminToolFilebrowserServ
 		}
 		if (file.isDirectory()) {
 			return "DIR";
+		}
+		if (file.getName().lastIndexOf('.') == -1) {
+			return "";
 		}
 		return file.getName().substring(file.getName().lastIndexOf('.'), file.getName().length());
 	}
@@ -424,21 +427,6 @@ public class AdminToolFilebrowserServiceImpl implements AdminToolFilebrowserServ
 	 * @throws IOException
 	 */
 	protected boolean isAllowed(File path, boolean write) throws IOException {
-		try {
-			if (config.isReadOnly() && write) return false;
-			if (config.isRestrictedBrowsing()) {
-				if (null != config.getRestrictedPaths() && null != path) {
-					for (String restricedPath : config.getRestrictedPaths()) {
-						if(path.getCanonicalPath().startsWith(restricedPath)) {
-							return config.isRestrictedBrowsingIsWhitelist();
-						}
-					}
-				}
-				return !config.isRestrictedBrowsingIsWhitelist();
-			}
-		} catch (IOException e) {
-			throw new IOException("Could not check if path '" + path.getAbsolutePath() + "' is allowed ", e);
-		}
-		return true;
+		return isAllowed(path, write, config.isReadOnly());
 	}
 }

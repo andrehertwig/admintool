@@ -19,6 +19,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolFilebrowserConfig.class);
 	
+	@Value("${admintool.filebrowser.enabled:true}")
+	private boolean enabled;
+	
 	@Value("${admintool.filebrowser.startDir:}")
 	private String startDir;
 	
@@ -51,6 +54,11 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	
 	@Value("${admintool.filebrowser.zipTempDir:'sys:java.io.tmpdir'}")
 	private String zipTempDir;
+	
+	@Override
+	public boolean isEnabled() {
+		return this.enabled;
+	}
 	
 	/**
 	 * @return the startDir
@@ -139,7 +147,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Override
 	@PostConstruct
 	public void printConfig() {
-		LOGGER.info(toString());
+		LOGGER.debug(toString());
 	}
 
 	/* (non-Javadoc)
@@ -148,13 +156,14 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolFilebrowserConfig [forbiddenDrives=").append(forbiddenDrives).append(", readOnly=")
-				.append(readOnly).append(", restrictedBrowsing=").append(restrictedBrowsing)
-				.append(", restrictedBrowsingIsWhitelist=").append(restrictedBrowsingIsWhitelist)
-				.append(", restrictedPaths=").append(restrictedPaths).append(", sizeDivisorMultiplicator=")
-				.append(sizeDivisorMultiplicator).append(", fileSizeDisplayScale=").append(fileSizeDisplayScale)
-				.append(", zipUseTempFile=").append(zipUseTempFile).append(", zipCompessionLevel=")
-				.append(zipCompessionLevel).append(", zipTempDir=").append(zipTempDir).append("]");
+		builder.append("AdminToolFilebrowserConfig [enabled=").append(enabled).append(", startDir=").append(startDir)
+				.append(", forbiddenDrives=").append(forbiddenDrives).append(", readOnly=").append(readOnly)
+				.append(", restrictedBrowsing=").append(restrictedBrowsing).append(", restrictedBrowsingIsWhitelist=")
+				.append(restrictedBrowsingIsWhitelist).append(", restrictedPaths=").append(restrictedPaths)
+				.append(", sizeDivisorMultiplicator=").append(sizeDivisorMultiplicator)
+				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")
+				.append(zipUseTempFile).append(", zipCompessionLevel=").append(zipCompessionLevel)
+				.append(", zipTempDir=").append(zipTempDir).append("]");
 		return builder.toString();
 	}
 }

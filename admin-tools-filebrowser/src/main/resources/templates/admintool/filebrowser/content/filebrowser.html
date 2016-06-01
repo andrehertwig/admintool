@@ -19,7 +19,7 @@
 						<button class="close" aria-hidden="true" data-dismiss="alert"
 							type="button">×</button>
 						<h4>
-							<i class="icon fa fa-warning"></i> An Exception has been occured!
+							<i class="icon fa fa-warning"></i> An Exception has been occurred!
 						</h4>
 						<span th:text="${exceptionMessage}"></span>
 					</div>
@@ -31,10 +31,7 @@
 								<a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${dir.getAbsolutePath()}" 
 									th:text="${@adminToolFilebrowserService.getDirOrRootName(dir)}"></a><span>/</span>
 							</th:block>
-							
-							<!-- /** <span th:text="${currentDir}"></span> **/ -->
 						</h3>
-						
 					</div>
 	
 					<div class="box-body">
@@ -44,25 +41,25 @@
 									<tr>
 										<td></td>
 										<th>
-											<a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${currentDir} + '&amp;sortCol=1&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Name</a>
+											<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir} + '&amp;sortCol=1&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Name</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).NAME.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(1, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${currentDir} + '&amp;sortCol=2&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Size</a>
+											<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir} + '&amp;sortCol=2&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Size</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).SIZE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(2, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${currentDir} + '&amp;sortCol=3&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Type</a>
+											<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir} + '&amp;sortCol=3&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Type</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).TYPE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(3, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${currentDir} + '&amp;sortCol=4&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Date</a>
+											<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir} + '&amp;sortCol=4&amp;sortAsc=' + ${null != sortAsc ? !sortAsc : true}">Date</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).DATE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(4, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
@@ -75,7 +72,7 @@
 								
 									<tr th:each="rootDir, colIterState : ${@adminToolFilebrowserService.getRootDirs()}">
 										<td></td>
-										<td><a th:text="'[' + ${rootDir} + ']'" th:href="${rootContext} + '/filebrowser/dir?dir=' + ${rootDir}"></a></td>
+										<td><a th:text="'[' + ${rootDir} + ']'" th:href="${rootContext} + '/filebrowser?dir=' + ${rootDir}"></a></td>
 										<td></td>
 										<td></td>
 										<td></td>
@@ -84,7 +81,7 @@
 								
 									<tr th:with="parentDir=${@adminToolFilebrowserService.getParent(currentDir)}">
 										<td></td>
-										<td><a th:href="${rootContext} + '/filebrowser/dir?dir=' + ${parentDir}">[..]</a></td>
+										<td><a th:href="${rootContext} + '/filebrowser?dir=' + ${parentDir}">[..]</a></td>
 										<td></td>
 										<td></td>
 										<td></td>
@@ -96,7 +93,7 @@
 									
 									<tr th:each="directory, colIterState : ${@adminToolFilebrowserService.getDirectories(currentDir, sortCol, sortAsc)}">
 										<td><input type="checkbox" name="selectedFile" th:value="${directory.getAbsolutePath()}"/></td>
-										<td><a th:text="'[' + ${directory.getName()} + ']'" th:href="${rootContext} + '/filebrowser/dir?dir=' + ${directory.getAbsolutePath()}"></a></td>
+										<td><a th:text="'[' + ${directory.getName()} + ']'" th:href="${rootContext} + '/filebrowser?dir=' + ${directory.getAbsolutePath()}"></a></td>
 										<td></td>
 										<td th:text="${@adminToolFilebrowserService.getFileType(directory)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(directory), 'dd.MMM.yyyy HH:mm:ss')}"></td>
@@ -112,7 +109,10 @@
 										<td th:text="${@adminToolFilebrowserService.getFileSize(file)}"></td>
 										<td th:text="${@adminToolFilebrowserService.getFileType(file)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(file), 'dd.MMM.yyyy HH:mm:ss')}"></td>
-										<td></td>
+										<td> 
+											<a th:if="${@adminToolFileviewerService.isExtensionAllowedAndReadable(file)}" 
+												th:href="${rootContext} + '/fileviewer/show?file=' + ${file.getAbsolutePath()}">Show</a>
+										</td>
 									</tr>
 									
 								</tbody>

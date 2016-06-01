@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+<body>
+	<div id="template-content">
+		<section class="content-header">
+			<h1>
+				Fileviewer <span class="small">[<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir}">back to Filebrowser</a>]</span>
+			</h1>
+			<ol class="breadcrumb"
+				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+
+		<section class="content">
+		
+			<span id="cmVersion" class="invisible" th:text="${@adminToolFileviewerConfig.getCodeMirrorVersion()}"></span>
+			<span id="fileExtension" class="invisible" th:text="${@adminToolFileviewerService.getExtension(currentFile)}"></span>
+			<span id="readOnly" class="invisible" th:text="${@adminToolFileviewerConfig.isReadOnly()}"></span>
+
+			<form name="fileViewForm" id="fileViewForm" th:action="${rootContext} + '/fileviewer/show'" method="post">
+				<div class="box box-info">
+
+					<div th:if="${exceptionMessage != null}" class="alert alert-danger alert-dismissible">
+						<button class="close" aria-hidden="true" data-dismiss="alert"
+							type="button">×</button>
+						<h4>
+							<i class="icon fa fa-warning"></i> An Exception has been occurred!
+						</h4>
+						<span th:text="${exceptionMessage}"></span>
+					</div>
+
+					<div class="box-header with-border">
+						<h3 class="box-title">
+							<i class="fa fa-folder-open"></i>
+							<span th:text="${currentFile.getAbsolutePath()}"></span>
+						</h3>
+					</div>
+	
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-2 col-xs-3">Encoding</div>
+							<div class="col-md-4 col-xs-6">
+								<select class="form-control" name="encoding">
+									<option th:each="encoding, iterState : ${@adminToolFileviewerConfig.getEncodings()}"
+										th:text="${encoding}" th:value="${encoding}" th:selected="${selEncoding.equals(encoding)}"></option>
+								</select>
+								<input type="hidden" name="file" th:value="${currentFile.getAbsolutePath()}"/>
+							</div>
+							<div class="col-md-2 col-xs-3"><button name="reload" type="submit" class="btn btn-default">reload</button></div>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<form name="fileViewForm" id="fileViewForm" th:action="${rootContext} + '/fileviewer/update'" method="post">
+				<div class="box box-info">
+
+					<div class="box-header with-border">
+						<div class="row" id="permissions">
+							<div th:class="'col-md-3 col-xs-3 text-center' + ${!currentFile.isHidden() ? ' bg-success' : ' bg-danger'}"
+								th:text="${currentFile.isHidden() ? 'invisble' : 'visible'}"></div>
+							<div th:class="'col-md-3 col-xs-3 text-center' + ${currentFile.canRead() ? ' bg-success' : ' bg-danger'}"
+								th:text="${currentFile.canRead() ? 'readable' : 'unreadable'}"></div>
+							<div th:class="'col-md-3 col-xs-3 text-center' + ${currentFile.canWrite() ? ' bg-success' : ' bg-danger'}"
+								th:text="${currentFile.canWrite() ? 'writeable' : 'unwriteable'}"></div>
+							<div th:class="'col-md-3 col-xs-3 text-center' + ${@adminToolFileviewerConfig.isReadOnly() ? ' bg-success' : ' bg-danger'}"
+								th:text="${@adminToolFileviewerConfig.isReadOnly() ? 'DML disallowed' : 'DML allowed'}"></div>
+						</div>
+					</div>
+	
+					<div class="box-body" id="fileviewer">
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+							
+								<textarea name="fileContent" id="fileContent" class="form-control" 
+									th:text="${@adminToolFileviewerService.readFileToString(currentFile, selEncoding)}"></textarea>
+									
+								<input type="hidden" name="file" th:value="${currentFile.getAbsolutePath()}"/>
+							</div>
+						</div>
+					</div>
+					
+					<div class="box-footer clearfix" >
+						<div class="row" th:if="${@adminToolFileviewerService.isChangeable(currentFile)}">
+							<div class="col-md-4 col-xs-4">
+								<select class="form-control" name="encoding">
+									<option th:each="encoding, iterState : ${@adminToolFileviewerConfig.getEncodings()}"
+										th:text="${encoding}" th:value="${encoding}" th:selected="${selEncoding.equals(encoding)}"></option>
+								</select>
+							</div>
+							<div class="col-md-6 col-xs-6"></div>
+							<div class="col-md-2 col-xs-2">
+								<button  name="save" type="submit" class="btn btn-default">Save changes</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</section>
+	</div>
+</body>
+</html>
+
+

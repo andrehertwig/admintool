@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.AbstractAdminToolLoader;
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentImpl;
@@ -17,7 +18,7 @@ import de.chandre.admintool.core.component.MenuEntry;
  * @author Andre
  */
 @Component
-public class AdminToolJminixLoader
+public class AdminToolJminixLoader extends AbstractAdminToolLoader
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolJminixLoader.class);
 	
@@ -28,8 +29,13 @@ public class AdminToolJminixLoader
 	private String jminixPath;
 	
 	@PostConstruct
-	public AdminTool configureAdminTool()
+	public void configureAdminTool()
 	{
+		if(!coreConfig.isEnabled()) {
+			LOGGER.info("admin tool's jminix browser integation is deactivated");
+			return;
+		}
+		
 		LOGGER.info("adding JMX Console to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
@@ -44,6 +50,5 @@ public class AdminToolJminixLoader
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
-		return adminTool;
 	}
 }

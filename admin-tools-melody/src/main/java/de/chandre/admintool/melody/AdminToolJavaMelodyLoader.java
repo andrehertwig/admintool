@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.AbstractAdminToolLoader;
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentImpl;
@@ -17,7 +18,7 @@ import de.chandre.admintool.core.component.MenuEntry;
  * @author Andre
  */
 @Component
-public class AdminToolJavaMelodyLoader
+public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolJavaMelodyLoader.class);
 	
@@ -28,8 +29,12 @@ public class AdminToolJavaMelodyLoader
 	private String melodyPath;
 	
 	@PostConstruct
-	public AdminTool configureAdminTool()
+	public void configureAdminTool()
 	{
+		if(!coreConfig.isEnabled()) {
+			LOGGER.info("admin tool's javaMelody view integration is deactivated");
+			return;
+		}
 		LOGGER.info("adding JavaMelody view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
@@ -44,6 +49,5 @@ public class AdminToolJavaMelodyLoader
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
-		return adminTool;
 	}
 }

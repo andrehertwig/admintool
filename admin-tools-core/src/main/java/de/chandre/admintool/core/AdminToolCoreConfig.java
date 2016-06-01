@@ -15,11 +15,19 @@ public class AdminToolCoreConfig implements AdminToolConfig
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolCoreConfig.class);
 	
+	@Value("${admintool.core.enabled:true}")
+	private boolean enabled;
+	
 	@Value("${admintool.core.useCDN:true}")
 	private boolean useCDNs;
 	
 	@Value("${admintool.core.adminLTE.cdn.version:2.3.3}")
 	private String adminLTECdnVersion;
+	
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
 
 	/** 
 	 * if set to false webJars included in in packaging will be used. useful for workplaces with not Internet access
@@ -64,8 +72,8 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolCoreConfig [useCDNs=").append(useCDNs).append(", adminLTECdnVersion=")
-				.append(adminLTECdnVersion).append("]");
+		builder.append("AdminToolCoreConfig [enabled=").append(enabled).append(", useCDNs=").append(useCDNs)
+				.append(", adminLTECdnVersion=").append(adminLTECdnVersion).append("]");
 		return builder.toString();
 	}
 }

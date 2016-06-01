@@ -14,4 +14,10 @@ public interface AdminToolConfig
 	 * should print the configuration to log
 	 */
 	public void printConfig();
+	
+	/**
+	 * should return if component is active or deactivated
+	 * @return
+	 */
+	public boolean isEnabled();
 }

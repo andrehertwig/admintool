@@ -25,14 +25,14 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 	private AdminTool adminTool;
 	
 	@Autowired
-	private AdminToolDBBrowserConfig config;
+	private AdminToolDBBrowserConfig dbBroserConfig;
 	
 	@PostConstruct
-	public AdminTool configureAdminTool()
+	public void configureAdminTool()
 	{
-		if(!config.isEnabled()) {
-			LOGGER.info(" admin tool's database browser deactivated");
-			return adminTool;
+		if(!coreConfig.isEnabled() || !dbBroserConfig.isEnabled()) {
+			LOGGER.info("admin tool's database browser deactivated");
+			return;
 		}
 		LOGGER.info("adding database browser to admin tool");
 		
@@ -43,7 +43,7 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.setDisplayName("DB Browser");
 		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js", true);
 		
-		String codeMirrorPrefix = commonPrefix + "codemirror/" + config.getCodeMirrorVersion() + "/";
+		String codeMirrorPrefix = commonPrefix + "codemirror/" + dbBroserConfig.getCodeMirrorVersion() + "/";
 		
 		component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
 		component.addAdditionalJS(codeMirrorPrefix + "mode/meta.js", relative);
@@ -66,6 +66,5 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
-		return adminTool;
 	}
 }

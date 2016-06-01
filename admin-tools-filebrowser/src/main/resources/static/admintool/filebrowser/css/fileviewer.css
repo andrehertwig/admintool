@@ -1,0 +1,8 @@
+.CodeMirror {
+  border: 1px solid #eee;
+  height: auto;
+}
+#permissions {
+	width: 98%;
+	margin: 0 auto;
+}
