@@ -38,6 +38,8 @@
 ## Configurations
 
 ### Filebrowser
+	
+```ini
 
 	# to deactivate the functionality
 	admintool.filebrowser.enabled=true
@@ -79,8 +81,13 @@
 	# if prefix 'env:' -> resolving as (Spring) environment variable
 	# if no prefix present application assumes that's a full qualified path to temp directory
 	admintool.filebrowser.zipTempDir=sys:java.io.tmpdir
-	
+		
+```
+
 ### Fileviewer
+
+	
+```ini
 
 	# to deactivate the functionality
 	admintool.fileviewer.enabled=true
@@ -102,4 +109,5 @@
 	
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.fileviewer.codeMirrorAddLibs=addon/edit/matchbrackets.js
-	
+		
+```

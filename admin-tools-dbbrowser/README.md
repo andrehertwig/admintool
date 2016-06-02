@@ -67,6 +67,8 @@ Manually adding DataSources
 
 ## Configurations
 
+```ini
+
 	# to deactivate the functionality
 	admintool.dbbrowser.enabled=true
 	
@@ -82,3 +84,5 @@ Manually adding DataSources
 	#since 1.0.1
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js
+	
+```

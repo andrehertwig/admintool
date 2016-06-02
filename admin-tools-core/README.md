@@ -27,6 +27,7 @@
 ```
 
 ## Configurations
+```ini
 
 	# to deactivate the functionality
 	admintool.core.enabled=true
@@ -36,4 +37,5 @@
 	
 	# version of adminLTE i CDN is used
 	admintool.core.adminLTE.cdn.version=2.3.3
-
+	
+```
