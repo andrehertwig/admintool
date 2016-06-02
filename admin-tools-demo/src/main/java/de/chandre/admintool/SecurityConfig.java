@@ -51,6 +51,7 @@ public class SecurityConfig
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
+				.csrf().disable()
 				.authorizeRequests()
 					.antMatchers("/admintool/dbbrowser").hasAnyRole("ADMIN")
 					.antMatchers("/admintool/dbbrowser/**").hasAnyRole("ADMIN")

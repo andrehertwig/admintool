@@ -6,16 +6,41 @@
 * `sorting`: sort result part of table by name, size, date and type
 * `downloading`: download files
 * `zipping`: download one ore more files/folders as compressed zip
+* `file viewer`: 
+  * additional functionality to show files
+  * syntax highlighting for different file types
+  * change and save editable files   
 
+## Introduced with
+* admin-tools-core:1.0.1
 
 ## Requirements, Dependencies
-* admin-tools-core:1.0.1
 * commons-io
+* codemirror
 
 ## Usage
 
+**No artifact deployed right now** 
+
+```xml
+<dependency>
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools-core</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+</dependency>
+<dependency>
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools-filebrowser</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+</dependency>
+```
+
 ## Configurations
 
+### Filebrowser
+
+	# to deactivate the functionality
+	admintool.filebrowser.enabled=true
 	
 	#Directory where to start
 	admintool.filebrowser.startDir=x:\\logs
@@ -54,4 +79,27 @@
 	# if prefix 'env:' -> resolving as (Spring) environment variable
 	# if no prefix present application assumes that's a full qualified path to temp directory
 	admintool.filebrowser.zipTempDir=sys:java.io.tmpdir
+	
+### Fileviewer
+
+	# to deactivate the functionality
+	admintool.fileviewer.enabled=true
+	
+	# semicolon separated list of selectable encodings to load files
+	admintool.fileviewer.encodings=UTF-8;ISO-8859-1
+	
+	# default encoding to read files 
+	admintool.fileviewer.defaultEncoding=UTF-8
+	
+	# if file manipulation should be allowed
+	admintool.fileviewer.readOnly=true
+	
+	# semicolon separated list of allowed file extensions to show in file viewer
+	admintool.fileviewer.allowedExtensions=txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;log;md;sh;bat;cmd
+	
+	# codeMirror version (if CDN is used this could maybe changed)
+	admintool.fileviewer.codeMirrorVersion=5.13.2
+	
+	# semicolon separated list of additional codeMirror libs to load 
+	admintool.fileviewer.codeMirrorAddLibs=addon/edit/matchbrackets.js
 	

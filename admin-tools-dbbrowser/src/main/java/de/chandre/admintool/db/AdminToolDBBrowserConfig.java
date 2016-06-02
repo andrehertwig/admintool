@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.AdminToolConfig;
 
@@ -29,25 +28,14 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.dmlAllowed:false}")
 	private boolean dmlAllowed;
 	
-	@Value("#{'${admintool.dbbrowser.clobEncodings:}'.split(';')}")
+	@Value("#{'${admintool.dbbrowser.clobEncodings:UTF-8;ISO-8859-1}'.split(';')}")
 	private List<String> clobEncodings = new ArrayList<>();
 	
 	@Value("${admintool.dbbrowser.codeMirrorVersion:5.13.2}")
 	private String codeMirrorVersion;
-
-	@PostConstruct
-	public void setDefaults() {
-		if (clobEncodings.isEmpty()
-				|| (clobEncodings.size() == 1 && StringUtils.isEmpty(clobEncodings.iterator().next()))) {
-			LOGGER.info("using default clob encoding configuration");
-			clobEncodings = new ArrayList<>();
-			clobEncodings.add("UTF-8");
-			clobEncodings.add("ISO-8859-1");
-		}
-		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("clob encoding is empty: " + clobEncodings.isEmpty() + ", size: " + clobEncodings.size());
-		printConfig();
-	}
+	
+	@Value("#{'${admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")
+	private List<String> codeMirrorAddLibs = new ArrayList<>();
 	
 	/**
 	 * @return the enabled
@@ -105,7 +93,22 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		this.codeMirrorVersion = codeMirrorVersion;
 	}
 
+	/**
+	 * @return the codeMirrorAddLibs
+	 */
+	public List<String> getCodeMirrorAddLibs() {
+		return codeMirrorAddLibs;
+	}
+
+	/**
+	 * @param codeMirrorAddLibs the codeMirrorAddLibs to set
+	 */
+	public void setCodeMirrorAddLibs(List<String> codeMirrorAddLibs) {
+		this.codeMirrorAddLibs = codeMirrorAddLibs;
+	}
+
 	@Override
+	@PostConstruct
 	public void printConfig() {
 		LOGGER.debug(toString());
 	}

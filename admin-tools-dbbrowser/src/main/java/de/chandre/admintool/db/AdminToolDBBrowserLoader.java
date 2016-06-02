@@ -48,7 +48,13 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
 		component.addAdditionalJS(codeMirrorPrefix + "mode/meta.js", relative);
 		component.addAdditionalJS(codeMirrorPrefix + "mode/sql/sql.js", relative);
-		component.addAdditionalJS(codeMirrorPrefix + "addon/edit/matchbrackets.js", relative);
+		
+		if (null != dbBroserConfig.getCodeMirrorAddLibs()) {
+			dbBroserConfig.getCodeMirrorAddLibs().forEach(libpath -> {
+				component.addAdditionalJS(codeMirrorPrefix + libpath, relative);
+			});
+		}
+		
 		component.addAdditionalJS(codeMirrorPrefix + "addon/mode/loadmode.js", relative);
 		
 		component.addAdditionalJS(codeMirrorPrefix + "addon/hint/show-hint.js", relative);
