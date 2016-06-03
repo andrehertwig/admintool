@@ -20,6 +20,14 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 */
 	Set<String> getRootDirs();
+	
+	/**
+	 * returns if the currentDir starts with rootDir  
+	 * @param rootDir
+	 * @param currentDir
+	 * @return
+	 */
+	boolean isRootActive(String rootDir, String currentDir);
 
 	/**
 	 * returns the parent of directory
@@ -66,21 +74,24 @@ public interface AdminToolFilebrowserService {
 	 * @see #downloadFile(String, HttpServletResponse, String)
 	 * @param filePath
 	 * @param response
+	 * @param if content-disposition: attachment should be set to header
 	 * @throws DownloadNotAllowedException
 	 * @throws GenericFilebrowserException
 	 */
-	void downloadFile(String filePath, HttpServletResponse response) throws DownloadNotAllowedException, GenericFilebrowserException;
+	void downloadFile(String filePath, HttpServletResponse response, boolean asAttachment)
+			throws DownloadNotAllowedException, GenericFilebrowserException;
 
 	/**
 	 * put's the file to servlet output stream
 	 * @param filePath
 	 * @param response
 	 * @param alternativeFileName 
+	 * @param if content-disposition: attachment should be set to header
 	 * @throws DownloadNotAllowedException
 	 * @throws GenericFilebrowserException
 	 */
 
-	void downloadFile(String filePath, HttpServletResponse response, String alternativeFileName)
+	void downloadFile(String filePath, HttpServletResponse response, String alternativeFileName, boolean asAttachment)
 			throws DownloadNotAllowedException, GenericFilebrowserException;
 	
 	/**

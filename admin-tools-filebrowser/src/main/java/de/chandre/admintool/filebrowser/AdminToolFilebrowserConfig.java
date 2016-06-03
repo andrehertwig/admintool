@@ -55,6 +55,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.zipTempDir:'sys:java.io.tmpdir'}")
 	private String zipTempDir;
 	
+	@Value("${admintool.filebrowser.downloadAllowed:true}")
+	private boolean downloadAllowed;
+	
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
@@ -144,6 +147,13 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 		return zipCompessionLevel;
 	}
 	
+	/**
+	 * @return the downloadAllowed
+	 */
+	public boolean isDownloadAllowed() {
+		return downloadAllowed;
+	}
+
 	@Override
 	@PostConstruct
 	public void printConfig() {
@@ -163,7 +173,8 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(", sizeDivisorMultiplicator=").append(sizeDivisorMultiplicator)
 				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")
 				.append(zipUseTempFile).append(", zipCompessionLevel=").append(zipCompessionLevel)
-				.append(", zipTempDir=").append(zipTempDir).append("]");
+				.append(", zipTempDir=").append(zipTempDir).append(", downloadAllowed=").append(downloadAllowed)
+				.append("]");
 		return builder.toString();
 	}
 }

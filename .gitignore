@@ -4,3 +4,5 @@
 .factorypath
 target/
 *.log
+*.log.gz
+*.versionsBackup

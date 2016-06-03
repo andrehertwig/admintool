@@ -41,5 +41,16 @@ public abstract class AbstractFileBrowserService {
 		}
 		return true;
 	}
+	
+	public String getExtension(File file) {
+		return getExtension(file.getName());
+	}
+	
+	public String getExtension(String fileName) {
+		if (fileName.lastIndexOf('.') > -1) {
+			return (fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length())).toLowerCase();
+		}
+		return null;
+	}
 
 }

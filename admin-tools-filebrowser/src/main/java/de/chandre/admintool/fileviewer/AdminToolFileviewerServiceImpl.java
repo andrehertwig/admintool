@@ -50,15 +50,6 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	}
 	
 	@Override
-	public String getExtension(File file) {
-		String fileName = file.getName();
-		if (fileName.lastIndexOf('.') > -1) {
-			return (fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length())).toLowerCase();
-		}
-		return null;
-	}
-	
-	@Override
 	public boolean isChangeable(File file) {
 		if (!config.isReadOnly() && file.canWrite()) {
 			return true;

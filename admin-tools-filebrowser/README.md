@@ -41,7 +41,7 @@
 	
 ```ini
 
-	# to deactivate the functionality
+	# to deactivate the admin component at all
 	admintool.filebrowser.enabled=true
 	
 	#Directory where to start
@@ -81,6 +81,9 @@
 	# if prefix 'env:' -> resolving as (Spring) environment variable
 	# if no prefix present application assumes that's a full qualified path to temp directory
 	admintool.filebrowser.zipTempDir=sys:java.io.tmpdir
+	
+	# to deactivate download functionality
+	admintool.filebrowser.downloadAllowed=true
 		
 ```
 
@@ -89,7 +92,7 @@
 	
 ```ini
 
-	# to deactivate the functionality
+	# to deactivate the file view functionality
 	admintool.fileviewer.enabled=true
 	
 	# semicolon separated list of selectable encodings to load files

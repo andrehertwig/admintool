@@ -33,6 +33,19 @@
 							</th:block>
 						</h3>
 					</div>
+					
+					<div class="box-header with-border">
+						<div class="row text-center">
+							<div class="col-md-1 col-xs-2">Roots: </div>
+							<div class="col-md-11 col-xs-10 text-center">
+								<a th:each="rootDir, colIterState : ${@adminToolFilebrowserService.getRootDirs()}"
+									th:class="'btn btn-sm btn-primary' + ${@adminToolFilebrowserService.isRootActive(rootDir, currentDir) ? ' active' : ''}"
+									th:href="${rootContext} + '/filebrowser?dir=' + ${rootDir}"
+									th:text="'[' + ${rootDir} + ']'">
+								</a>
+							</div>
+						</div>
+					</div>
 	
 					<div class="box-body">
 						<div class="table-responsive">
@@ -70,15 +83,6 @@
 								</thead>
 								<tbody>
 								
-									<tr th:each="rootDir, colIterState : ${@adminToolFilebrowserService.getRootDirs()}">
-										<td></td>
-										<td><a th:text="'[' + ${rootDir} + ']'" th:href="${rootContext} + '/filebrowser?dir=' + ${rootDir}"></a></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-								
 									<tr th:with="parentDir=${@adminToolFilebrowserService.getParent(currentDir)}">
 										<td></td>
 										<td><a th:href="${rootContext} + '/filebrowser?dir=' + ${parentDir}">[..]</a></td>
@@ -109,8 +113,17 @@
 										<td th:text="${@adminToolFilebrowserService.getFileSize(file)}"></td>
 										<td th:text="${@adminToolFilebrowserService.getFileType(file)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(file), 'dd.MMM.yyyy HH:mm:ss')}"></td>
-										<td> 
-											<a th:if="${@adminToolFileviewerService.isExtensionAllowedAndReadable(file)}" 
+										<td class="text-center"> 
+											<a class="btn btn-xs btn-primary" 
+												th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
+												th:href="${rootContext} + '/filebrowser/download?file=' + ${file.getAbsolutePath()}">Download</a>
+												
+											<a class="btn btn-xs btn-primary" 
+												th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
+												th:href="${rootContext} + '/filebrowser/zip?selectedFile=' + ${file.getAbsolutePath()}">Zip</a>
+												
+											<a  class="btn btn-xs btn-primary"
+												th:if="${@adminToolFileviewerService.isExtensionAllowedAndReadable(file)}" 
 												th:href="${rootContext} + '/fileviewer/show?file=' + ${file.getAbsolutePath()}">Show</a>
 										</td>
 									</tr>
@@ -122,6 +135,7 @@
 					<div class="box-footer clearfix">
 						<button name="download" type="submit" class="btn btn-default">Download selected files as ZIP</button>
 					</div>
+					
 					
 					
 				</div>

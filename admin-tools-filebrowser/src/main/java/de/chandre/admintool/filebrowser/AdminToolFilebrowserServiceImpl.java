@@ -73,6 +73,14 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	}
 	
 	@Override
+	public boolean isRootActive(String rootDir, String currentDir) {
+		if (!StringUtils.isEmpty(currentDir) && currentDir.toLowerCase().startsWith(rootDir.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public String getParent(String dir) throws IOException {
 		File file = new File(dir);
 		if (null != file.getParent() && isAllowed(file.getParentFile(), false)) {
@@ -177,11 +185,12 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public List<File> getBreadcrumb(String currentDir) {
+		if (null == currentDir) {
+			return Collections.emptyList();
+		}
 		List<File> result = new ArrayList<>();
 		File file = new File(currentDir);
 		getParentsRecursive(file, result);
-		
-		//Collections.rotate(result, 1);
 		return result;
 	}
 	
@@ -223,7 +232,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 		if (file.getName().lastIndexOf('.') == -1) {
 			return "";
 		}
-		return file.getName().substring(file.getName().lastIndexOf('.'), file.getName().length());
+		return getExtension(file);
 	}
 	
 	@Override
@@ -271,21 +280,29 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	 * @param size (optional) size/length of content
 	 * @param response the servlet response
 	 */
-	protected void prepareDownloadResponse(String fileName, Long size, HttpServletResponse response) {
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+	protected void prepareDownloadResponse(String fileName, Long size, HttpServletResponse response, boolean asAttachment) {
+		
+		String mimeType = MimeTypes.getMimeType(getExtension(fileName));
+		LOGGER.info("following mimeType:" + mimeType);
+		if (asAttachment || null == mimeType) {
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+		} else {
+			response.setContentType(mimeType);
+			response.setHeader("Content-Disposition", "inline;filename=\"" + fileName + "\"");
+		}
 		if (null != size) {
 			response.setContentLength(size.intValue());
 		}
 	}
 	
 	@Override
-	public void downloadFile(String filePath, HttpServletResponse response) throws DownloadNotAllowedException, GenericFilebrowserException {
-		downloadFile(filePath, response, null);
+	public void downloadFile(String filePath, HttpServletResponse response, boolean asAttachment) throws DownloadNotAllowedException, GenericFilebrowserException {
+		downloadFile(filePath, response, null, asAttachment);
 	}
 	
 	@Override
-	public void downloadFile(String filePath, HttpServletResponse response, String alternativeFileName) throws DownloadNotAllowedException, GenericFilebrowserException {
+	public void downloadFile(String filePath, HttpServletResponse response, String alternativeFileName, boolean asAttachment) throws DownloadNotAllowedException, GenericFilebrowserException {
 		File file = new File(filePath);
 		try {
 			if (!isAllowed(file, false)) {
@@ -296,7 +313,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 		}
 		
 		prepareDownloadResponse(StringUtils.isEmpty(alternativeFileName) ? file.getName() : alternativeFileName, 
-				Long.valueOf(file.length()), response);
+				Long.valueOf(file.length()), response, asAttachment);
 		
 		InputStream in = null;
 		BufferedInputStream fileInput = null;
@@ -349,7 +366,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			
 			if (null == out) {
 				tempFile = null;
-				prepareDownloadResponse("rename_me.zip", null, response);
+				prepareDownloadResponse("rename_me.zip", null, response, true);
 				out = response.getOutputStream();
 			}
 			
@@ -398,7 +415,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			
 			if (null != tempFile && config.isZipUseTempFile()) {
 				IOUtils.closeQuietly(out);
-				downloadFile(tempFile.getAbsolutePath(), response, "rename_me.zip");
+				downloadFile(tempFile.getAbsolutePath(), response, "rename_me.zip", true);
 			}
 			
 		} catch (Exception e) {
