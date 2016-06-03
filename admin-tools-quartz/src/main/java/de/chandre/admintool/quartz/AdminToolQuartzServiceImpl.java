@@ -59,6 +59,9 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	@Autowired
 	private SchedulerFactoryBean schedulerFactory;
 	
+	@Autowired
+	private AdminToolQuartzConfig config;
+	
 	private String prevGroup;
 	private String prevJob;
 	
@@ -75,6 +78,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public void stopScheduler() {
+		if (!config.isStopSchedulerAllowed()) {
+			LOGGER.warn("not allowed to stop the scheduler");
+			return;
+		}
 		if(LOGGER.isDebugEnabled()) LOGGER.debug("stopping scheduler factory");
 		schedulerFactory.stop();
 	}
@@ -320,6 +327,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public void interruptJob(String jobGroup, String jobName) throws SchedulerException {
+		if (!config.isInterruptJobAllowed()) {
+			LOGGER.warn("not allowed to interrupt any job");
+			return;
+		}
 		JobKey jobKey = new JobKey(jobName, jobGroup);
 		if (isInteruptable(jobKey)) {
 			List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
@@ -341,6 +352,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public void interruptTrigger(String jobGroup, String jobName, final String triggerGroup, final String triggerName) throws SchedulerException {
+		if (!config.isInterruptTriggerAllowed()) {
+			LOGGER.warn("not allowed to interrupt any trigger");
+			return;
+		}
 		JobKey jobKey = new JobKey(jobName, jobGroup);
 		if (isInteruptable(jobKey)) {
 			List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
@@ -363,6 +378,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public void changeTriggerState(String groupName, String jobName, final String triggerGroup, final String triggerName) throws SchedulerException {
+		if (!config.isChangetTriggerStateAllowed()) {
+			LOGGER.warn("not allowed to change any trigger state");
+			return;
+		}
 		Trigger triggerFound = findTrigger(groupName, jobName, triggerGroup, triggerName);
 		if (null != triggerFound) {
 			// pause only the one trigger of job
@@ -408,6 +427,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public void triggerJob(String groupName, String jobName) throws SchedulerException {
+		if (!config.isExecuteJobAllowed()) {
+			LOGGER.warn("not allowed to execute any job");
+			return;
+		}
 		scheduler.triggerJob(new JobKey(jobName, groupName));
 	}
 	
@@ -420,6 +443,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public boolean removeTrigger(String groupName, String jobName, final String triggerGroup, final String triggerName) throws SchedulerException {
+		if (!config.isRemoveTriggerAllowed()) {
+			LOGGER.warn("not allowed to remove any trigger");
+			return false;
+		}
 		Trigger triggerFound = findTrigger(groupName, jobName, triggerGroup, triggerName);
 		if (null != triggerFound) {
 			return scheduler.unscheduleJob(triggerFound.getKey());
@@ -575,6 +602,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public boolean changeJob(JobTriggerTO triggerTO) throws SchedulerException {
+		if (!config.isChangeJobInfoAllowed()) {
+			LOGGER.warn("not allowed to change any job info");
+			return false;
+		}
 		JobDetail detail = findJob(triggerTO.getOriginalJobGroup(), triggerTO.getOriginalJobName());
 		if (null == detail) {
 			return false;
@@ -614,6 +645,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public boolean changeTrigger(JobTriggerTO triggerTO, boolean add) throws SchedulerException {
+		if (!config.isChangeTriggerAllowed()) {
+			LOGGER.warn("not allowed to change any trigger");
+			return false;
+		}
 		JobDetail detail = findJob(triggerTO.getOriginalJobGroup(), triggerTO.getOriginalJobName());
 		if (null == detail) {
 			return false;

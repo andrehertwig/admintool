@@ -31,7 +31,7 @@
 									</div>
 								</div>
 							</td>
-							<td class="center-middle">
+							<td class="center-middle" th:if="${@adminToolQuartzConfig.isInterruptJobAllowed()}">
 								<a class="interruptJob text-danger" th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
 						 		 th:id="'interruptJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-bolt fa-3x" title="Interrupt"></i></a>
 							</td>
@@ -42,15 +42,15 @@
 									<i class="fa fa-bars fa-3x" th:title="${@adminToolQuartzService.getTriggers(jobKey).size()} + ' Trigger(s)'"></i>
 								</a>
 							</td>
-							<td class="center-middle">
+							<td class="center-middle" th:if="${@adminToolQuartzConfig.isAddTriggerAllowed()}">
 								<a class="addTrigger text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
 									th:id="'addTrigger_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-plus fa-3x" title="Add Trigger"></i></a>
 							</td>
-							<td class="center-middle">
+							<td class="center-middle" th:if="${@adminToolQuartzConfig.isChangeJobInfoAllowed()}">
 								<a class="changeJob text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
 									th:id="'changeJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-pencil-square-o  fa-3x" title="Edit Job"></i></a>
 							</td>
-							<td class="center-middle">
+							<td class="center-middle" th:if="${@adminToolQuartzConfig.isExecuteJobAllowed()}">
 								<a class="executeJob text-primary" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
 							 		th:id="'executeJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-play fa-3x" title="Fire now"></i></a>
 							</td>
@@ -65,10 +65,10 @@
 											<div class="col-xs-2">Cron Expression</div>
 											<div class="col-xs-2">Previous Fire Time</div>
 											<div class="col-xs-2">Next Fire Time</div>
-											<div class="col-xs-1">State</div>
-											<div class="col-xs-1">Interr.</div>
-											<div class="col-xs-1">Change</div>
-											<div class="col-xs-1">Remove</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}">State</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}">Interr.</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}">Change</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}">Remove</div>
 										</div>
 										
 										<div class="row text-center" th:each="trigger, triggerIter : ${@adminToolQuartzService.getTriggers(jobKey)}">
@@ -90,26 +90,26 @@
 													th:remove="tag"></span>
 												<span th:unless="${trigger.getNextFireTime() != null}" th:remove="tag">N/A</span>
 											</div>
-											<div class="col-xs-1">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}">
 												<button th:class="'changeTriggerState btn btn-xs ' + ${@adminToolQuartzService.getTriggerStateCssClass(jobKey, trigger)}"
 													th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
 													th:text="${@adminToolQuartzService.getTriggerState(jobKey, trigger)}">
 												</button>
 											</div>
-											<div class="col-xs-1">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}">
 												<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}" 
 													th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
 													class="interruptTrigger btn btn-xs btn-danger"><i class="fa fa-stop-circle-o"></i></button>
 												<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
 													th:remove="tag"></span>
 											</div>
-											<div class="col-xs-1">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}">
 												<button class="changeTrigger btn btn-xs btn-primary"
 													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
 													<i class="fa fa-wrench"></i>
 												</button>
 											</div>
-											<div class="col-xs-1">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}">
 												<button class="removeTrigger btn btn-xs btn-danger"
 													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
 													<i class="fa fa-trash"></i>

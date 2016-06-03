@@ -24,10 +24,13 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
+	@Autowired
+	private AdminToolQuartzConfig config;
+	
 	@PostConstruct
 	public void configureAdminTool()
 	{
-		if(!coreConfig.isEnabled()) {
+		if(!config.isEnabled() || !coreConfig.isEnabled()) {
 			LOGGER.info("admin tool's quartz management is deactivated");
 			return;
 		}
@@ -37,7 +40,6 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		component.setDisplayName("Quartz");
 		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css", true);
 		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js", true);
-		
 		component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
