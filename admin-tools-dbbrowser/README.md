@@ -6,8 +6,8 @@
 ## Features
 * `query`: query databases
 * `assistance`: syntax highlighting and code completion
-* `tabbed browsing` it's possible to create more SQL query tabs
-* `examples`: create examples which could be loaded 
+* `tabbed browsing`: it's possible to create more SQL query tabs
+* `examples`: create data source specific sql examples which could be selected within the frontend 
 
 Result will be displayed via jquery.datatables 
 
@@ -48,7 +48,7 @@ Manually adding DataSources
 
 ```
 
-Manually adding DataSources
+Creating SQL Examples 
 
 ```java
 
@@ -69,7 +69,7 @@ Manually adding DataSources
 
 ```ini
 
-	# to deactivate the functionality
+	# to deactivate the admin component at all
 	admintool.dbbrowser.enabled=true
 	
 	# if data manipulation is allowed 
