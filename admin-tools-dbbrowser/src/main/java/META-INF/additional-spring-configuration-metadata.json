@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "admintool.dbbrowser.enabled",
+    "type": "java.lang.Boolean",
+    "description": "A description for 'admintool.dbbrowser.hideMenuItem'"
+  },
+  {
+    "name": "admintool.dbbrowser.clobEncodings",
+    "type": "java.util.ArrayList",
+    "description": "A description for 'admintool.dbbrowser.clobEncodings'"
+  },
+  {
+    "name": "admintool.dbbrowser.hideMenuItem",
+    "type": "java.lang.Boolean",
+    "description": "A description for 'admintool.dbbrowser.hideMenuItem'"
+  },
+  {
+    "name": "admintool.dbbrowser.dmlAllowed",
+    "type": "java.lang.Boolean",
+    "description": "A description for 'admintool.dbbrowser.hideMenuItem'"
+  },
+  {
+    "name": "admintool.dbbrowser.codeMirrorVersion",
+    "type": "java.lang.String",
+    "description": "A description for 'admintool.dbbrowser.clobEncodings'"
+  },
+  {
+    "name": "admintool.dbbrowser.codeMirrorAddLibs",
+    "type": "java.util.ArrayList",
+    "description": "A description for 'admintool.dbbrowser.clobEncodings'"
+  }
+]}

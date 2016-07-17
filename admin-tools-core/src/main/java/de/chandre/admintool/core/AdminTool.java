@@ -5,7 +5,25 @@ import java.util.Set;
 
 import de.chandre.admintool.core.component.AdminComponent;
 
+/**
+ * AdminTool core interface to get and add components.<br>
+ * a component represents a main menu entry with possible sub menu entries<br>
+ * it's also possible to add custom java scripts and css
+ * 
+ * @author Andre
+ *
+ */
 public interface AdminTool {
+	
+	/**
+	 * name of admintool.
+	 */
+	String ROOTCONTEXT_NAME = "admintool";
+	
+	/**
+	 * root context path with a leading slash
+	 */
+	String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
 	
 	/**
 	 * 

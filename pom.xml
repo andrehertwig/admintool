@@ -60,6 +60,7 @@
 			</activation>
 			<modules>
 				<module>admin-tools-core</module>
+				
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>
@@ -67,6 +68,7 @@
 				<module>admin-tools-dbbrowser</module>
 				<module>admin-tools-filebrowser</module>
 				<!-- 
+				<module>admin-tools-core-security</module>
 				<module>admin-tools-cluster</module> 
 				-->
 				<module>admin-tools-demo</module>
@@ -78,13 +80,15 @@
 			<id>release</id>
 			<modules>
 				<module>admin-tools-core</module>
+				
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>
 				<module>admin-tools-quartz</module>
 				<module>admin-tools-dbbrowser</module>
-				<!-- 
 				<module>admin-tools-filebrowser</module>
+				<!-- 
+				<module>admin-tools-core-security</module>
 				<module>admin-tools-cluster</module> 
 				-->
 			</modules>
@@ -191,9 +195,10 @@
 		
 		<org.json.version>20151123</org.json.version>
 		
-		<spring-boot.version>1.3.5.RELEASE</spring-boot.version>
+		<spring-boot.version>1.3.6.RELEASE</spring-boot.version>
 		
-		<thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
+		<thymeleaf.version>2.1.5.RELEASE</thymeleaf.version>
+		<thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 		<thymeleaf-extras-conditionalcomments.version>2.1.1.RELEASE</thymeleaf-extras-conditionalcomments.version>
 		<thymeleaf-layout-dialect.version>1.3.3</thymeleaf-layout-dialect.version>
 		
@@ -268,6 +273,12 @@
 				<groupId>nz.net.ultraq.thymeleaf</groupId>
 				<artifactId>thymeleaf-layout-dialect</artifactId>
 				<version>${thymeleaf-layout-dialect.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.thymeleaf.extras</groupId>
+				<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+				<version>${thymeleaf-extras-springsecurity4.version}</version>
+				<optional>true</optional>
 			</dependency>
 			
 		</dependencies>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.controller.AbstractAdminController;
 import de.chandre.admintool.filebrowser.AdminToolFilebrowserLoader;
 import de.chandre.admintool.filebrowser.GenericFilebrowserException;
@@ -25,7 +26,7 @@ import de.chandre.admintool.filebrowser.GenericFilebrowserException;
  * @since 1.0.1
  */
 @Controller
-@RequestMapping(AbstractAdminController.ROOTCONTEXT + "/fileviewer")
+@RequestMapping(AdminTool.ROOTCONTEXT + "/fileviewer")
 public class AdminToolFileviewerController extends AbstractAdminController {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolFileviewerController.class);
@@ -52,7 +53,7 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 		model.put("currentFile", currentFile);
 		model.put("selEncoding", StringUtils.isEmpty(encoding) ? fileviewerConfig.getDefaultEncoding() : encoding);
 		
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
 	@RequestMapping(value = {"/update",}, method={RequestMethod.POST})
@@ -68,7 +69,7 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 		
 		filebrowserService.writeStringToFile(currentFile, encoding, fileContent);
 		
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
 }

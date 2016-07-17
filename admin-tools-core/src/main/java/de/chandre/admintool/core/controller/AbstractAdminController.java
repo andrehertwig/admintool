@@ -28,9 +28,6 @@ public class AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AbstractAdminController.class);
 	
-	protected static final String ROOTCONTEXT_NAME = "admintool";
-	public static final String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
-	
 	@Autowired 
 	private AdminTool adminTool;
 	
@@ -82,22 +79,22 @@ public class AbstractAdminController
 			}
 		}
 		if (menuentry.isPresent()) {
-			model.put("contentPage", ROOTCONTEXT_NAME + "/" + (StringUtils.isEmpty(overrideTarget) ? menuentry.get().getTarget() : overrideTarget));
+			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/" + (StringUtils.isEmpty(overrideTarget) ? menuentry.get().getTarget() : overrideTarget));
 			if (null != menuentry.get().getVariables()) {
 				model.putAll(menuentry.get().getVariables());
 			}
 			model.put("activeMenu", menuentry.get());
 		} else {
-			model.put("contentPage", ROOTCONTEXT_NAME + "/content/error404");
+			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/content/error404");
 		}
-		model.put("rootContext", request.getContextPath() + ROOTCONTEXT);
+		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
 	}
 	
 	private String getMenuName(HttpServletRequest request, String overrideName) {
 		if (!StringUtils.isEmpty(overrideName)) {
 			return overrideName;
 		}
-		String name = request.getRequestURI().replaceFirst(ROOTCONTEXT, "");
+		String name = request.getRequestURI().replaceFirst(AdminTool.ROOTCONTEXT, "");
 		if (!StringUtils.isEmpty(request.getContextPath())) {
 			name = name.replaceFirst(request.getContextPath(), "");
 		}

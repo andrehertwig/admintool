@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import de.chandre.admintool.core.AdminTool;
+
 
 @EnableWebSecurity
 public class SecurityConfig
@@ -53,11 +55,11 @@ public class SecurityConfig
 			http
 				.csrf().disable()
 				.authorizeRequests()
-					.antMatchers("/admintool/dbbrowser").hasAnyRole("ADMIN")
-					.antMatchers("/admintool/dbbrowser/**").hasAnyRole("ADMIN")
-					.antMatchers("/admintool").permitAll()
-					.antMatchers("/admintool/**").permitAll()
-				.and().formLogin()
+					.antMatchers(AdminTool.ROOTCONTEXT + "/dbbrowser").hasAnyRole("ADMIN")
+					.antMatchers(AdminTool.ROOTCONTEXT + "/dbbrowser/**").hasAnyRole("ADMIN")
+					.antMatchers(AdminTool.ROOTCONTEXT).permitAll()
+					.antMatchers(AdminTool.ROOTCONTEXT + "/**").permitAll()
+				.and().formLogin().loginPage(AdminTool.ROOTCONTEXT + "/login").permitAll()
 			;
 		}
 		

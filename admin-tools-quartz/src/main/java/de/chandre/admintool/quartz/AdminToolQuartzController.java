@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.chandre.admintool.core.AdminTool;
 import net.bull.javamelody.MonitoredWithSpring;
 
 /**
@@ -28,7 +29,7 @@ import net.bull.javamelody.MonitoredWithSpring;
  *
  */
 @Controller
-@RequestMapping("/admintool/quartz")
+@RequestMapping(AdminTool.ROOTCONTEXT + "/quartz")
 @MonitoredWithSpring
 public class AdminToolQuartzController {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzService.class);
@@ -40,7 +41,7 @@ public class AdminToolQuartzController {
 	public String getJobs(ModelMap model, HttpServletRequest request) {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving quartz jobs include");
-		return "admintool/quartz/includes/quartzJobs.inc";
+		return AdminTool.ROOTCONTEXT_NAME + "/quartz/includes/quartzJobs.inc";
 	}
 
 	@RequestMapping(path = "/changeRunningState", method = { RequestMethod.GET, RequestMethod.POST })

@@ -46,6 +46,7 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("Quartz");
 		mainMenu.setName("quartz");
 		mainMenu.setTarget("content/quartz");
+		mainMenu.setHide(config.isHideMenuItem());
 		component.setMainMenu(mainMenu);
 		
 		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig"));

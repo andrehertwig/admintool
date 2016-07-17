@@ -19,6 +19,9 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	@Value("${admintool.quartz.enabled:true}")
 	private boolean enabled;
 	
+	@Value("${admintool.quartz.hideMenuItem:false}")
+	private boolean hideMenuItem;
+	
 	@Value("${admintool.quartz.stopSchedulerAllowed:true}")
 	private boolean stopSchedulerAllowed;
 	
@@ -46,6 +49,20 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	@Value("${admintool.quartz.removeTriggerAllowed:true}")
 	private boolean removeTriggerAllowed;
 	
+	/**
+	 * @return the hideMenuItem
+	 */
+	public boolean isHideMenuItem() {
+		return hideMenuItem;
+	}
+
+	/**
+	 * @param hideMenuItem the hideMenuItem to set
+	 */
+	public void setHideMenuItem(boolean hideMenuItem) {
+		this.hideMenuItem = hideMenuItem;
+	}
+
 	/**
 	 * @return the stopSchedulerAllowed
 	 */
@@ -196,11 +213,11 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolQuartzConfig [enabled=").append(enabled).append(", stopSchedulerAllowed=")
-				.append(stopSchedulerAllowed).append(", executeJobAllowed=").append(executeJobAllowed)
-				.append(", interruptJobAllowed=").append(interruptJobAllowed).append(", changeJobInfoAllowed=")
-				.append(changeJobInfoAllowed).append(", changeTriggerAllowed=").append(changeTriggerAllowed)
-				.append(", changetTriggerStateAllowed=").append(changetTriggerStateAllowed)
+		builder.append("AdminToolQuartzConfig [enabled=").append(enabled).append(", hideMenuItem=").append(hideMenuItem)
+				.append(", stopSchedulerAllowed=").append(stopSchedulerAllowed).append(", executeJobAllowed=")
+				.append(executeJobAllowed).append(", interruptJobAllowed=").append(interruptJobAllowed)
+				.append(", changeJobInfoAllowed=").append(changeJobInfoAllowed).append(", changeTriggerAllowed=")
+				.append(changeTriggerAllowed).append(", changetTriggerStateAllowed=").append(changetTriggerStateAllowed)
 				.append(", interruptTriggerAllowed=").append(interruptTriggerAllowed).append(", addTriggerAllowed=")
 				.append(addTriggerAllowed).append(", removeTriggerAllowed=").append(removeTriggerAllowed).append("]");
 		return builder.toString();

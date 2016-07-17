@@ -8,10 +8,5 @@
     "name": "jminix.urlMappings",
     "type": "java.lang.String",
     "description": "A description for 'jminix.urlMappings'"
-  },
-  {
-    "name": "admintool.dbbrowser.clobEncodings",
-    "type": "java.util.ArrayList",
-    "description": "A description for 'admintool.dbbrowser.clobEncodings'"
   }
 ]}

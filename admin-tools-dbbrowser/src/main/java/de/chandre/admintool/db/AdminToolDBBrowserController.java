@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.controller.AbstractAdminController;
 
 /**
@@ -24,7 +25,7 @@ import de.chandre.admintool.core.controller.AbstractAdminController;
  *
  */
 @Controller
-@RequestMapping(AbstractAdminController.ROOTCONTEXT + "/dbbrowser")
+@RequestMapping(AdminTool.ROOTCONTEXT + "/dbbrowser")
 public class AdminToolDBBrowserController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserController.class);
@@ -79,7 +80,7 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 		
 		model.put("statementTO", statementTO);
 		model.put("queryResultTO", dbBrowserService.queryDatabase(statementTO));
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/dbbrowser/includes/tabInclude";
+		return AdminTool.ROOTCONTEXT_NAME + "/dbbrowser/includes/tabInclude";
 	}
 
 	/**

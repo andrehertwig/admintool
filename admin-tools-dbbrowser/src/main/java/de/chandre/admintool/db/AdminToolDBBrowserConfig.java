@@ -25,6 +25,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.enabled:true}")
 	private boolean enabled;
 	
+	@Value("${admintool.dbbrowser.hideMenuItem:false}")
+	private boolean hideMenuItem;
+	
 	@Value("${admintool.dbbrowser.dmlAllowed:false}")
 	private boolean dmlAllowed;
 	
@@ -49,6 +52,20 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * @return the hideMenuItem
+	 */
+	public boolean isHideMenuItem() {
+		return hideMenuItem;
+	}
+
+	/**
+	 * @param hideMenuItem the hideMenuItem to set
+	 */
+	public void setHideMenuItem(boolean hideMenuItem) {
+		this.hideMenuItem = hideMenuItem;
 	}
 
 	/**
@@ -119,9 +136,10 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolDBBrowserConfig [enabled=").append(enabled).append(", dmlAllowed=").append(dmlAllowed)
-				.append(", clobEncodings=").append(clobEncodings).append(", codeMirrorVersion=")
-				.append(codeMirrorVersion).append("]");
+		builder.append("AdminToolDBBrowserConfig [enabled=").append(enabled).append(", hideMenuItem=")
+				.append(hideMenuItem).append(", dmlAllowed=").append(dmlAllowed).append(", clobEncodings=")
+				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
+				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append("]");
 		return builder.toString();
 	}
 	

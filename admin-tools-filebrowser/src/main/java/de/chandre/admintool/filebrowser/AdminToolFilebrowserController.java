@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.controller.AbstractAdminController;
 
 /**
@@ -27,7 +28,7 @@ import de.chandre.admintool.core.controller.AbstractAdminController;
  * @since 1.0.1
  */
 @Controller
-@RequestMapping(AbstractAdminController.ROOTCONTEXT + "/filebrowser")
+@RequestMapping(AdminTool.ROOTCONTEXT + "/filebrowser")
 public class AdminToolFilebrowserController extends AbstractAdminController {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolFilebrowserController.class);
@@ -49,7 +50,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		model.put("currentDir", currentDir);
 		model.put("sortCol", SortColumn.fromIndex(sortCol));
 		model.put("sortAsc", sortType);
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
 	@RequestMapping(value = {"/file",})
@@ -86,7 +87,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	public ModelAndView handleException(Exception exception, HttpServletRequest request) {
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());
 		
-		ModelAndView mv = new ModelAndView(AbstractAdminController.ROOTCONTEXT_NAME + "/index");
+		ModelAndView mv = new ModelAndView(AdminTool.ROOTCONTEXT_NAME + "/index");
 		addCommonContextVars(mv.getModelMap(), request, "filebrowser", null);
 		
 		String lastFile = request.getParameter("file");

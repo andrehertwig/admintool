@@ -44,6 +44,9 @@
 	# to deactivate the admin component at all
 	admintool.filebrowser.enabled=true
 	
+	# to hide the menu item in GUI, but still callable
+	admintool.filebrowser.hideMenuItem=false
+	
 	#Directory where to start
 	admintool.filebrowser.startDir=x:\\logs
 	

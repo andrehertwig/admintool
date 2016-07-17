@@ -24,6 +24,11 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.adminLTE.cdn.version:2.3.3}")
 	private String adminLTECdnVersion;
 	
+	@Value("${admintool.core.showStacktraceOnErrorPage:true}")
+	private boolean showStacktraceOnErrorPage;
+	
+	
+	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
@@ -61,6 +66,20 @@ public class AdminToolCoreConfig implements AdminToolConfig
 		this.adminLTECdnVersion = adminLTECdnVersion;
 	}
 
+	/**
+	 * @return the showStacktraceOnErrorPage
+	 */
+	public boolean isShowStacktraceOnErrorPage() {
+		return showStacktraceOnErrorPage;
+	}
+
+	/**
+	 * @param showStacktraceOnErrorPage the showStacktraceOnErrorPage to set
+	 */
+	public void setShowStacktraceOnErrorPage(boolean showStacktraceOnErrorPage) {
+		this.showStacktraceOnErrorPage = showStacktraceOnErrorPage;
+	}
+
 	@Override
 	public void printConfig() {
 		LOGGER.debug(toString());
@@ -73,7 +92,8 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AdminToolCoreConfig [enabled=").append(enabled).append(", useCDNs=").append(useCDNs)
-				.append(", adminLTECdnVersion=").append(adminLTECdnVersion).append("]");
+				.append(", adminLTECdnVersion=").append(adminLTECdnVersion).append(", showStacktraceOnErrorPage=")
+				.append(showStacktraceOnErrorPage).append("]");
 		return builder.toString();
 	}
 }

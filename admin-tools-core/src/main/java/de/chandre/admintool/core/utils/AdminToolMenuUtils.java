@@ -1,16 +1,21 @@
 package de.chandre.admintool.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.MenuEntry;
 
@@ -22,6 +27,24 @@ import de.chandre.admintool.core.component.MenuEntry;
  */
 @Service("adminToolMenuUtils")
 public class AdminToolMenuUtils {
+	
+	@Autowired
+	private AdminTool adminTool;
+	
+	public List<AdminComponent> getComponents() {
+		List<AdminComponent> result = new ArrayList<>();
+		
+		for (AdminComponent adminComponent : adminTool.getComponents()) {
+			Stream<MenuEntry> nonHiddenMenues = adminComponent.getMainMenu().flattened().filter(me -> !me.isHide());
+			if (nonHiddenMenues.count() == 0L) {
+				continue;
+			}
+			result.add(adminComponent);
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * checks {@link #isActiveInMenuTree(String, MenuEntry)} and if the
 	 * actualEntry has sub entries and returns the html class name

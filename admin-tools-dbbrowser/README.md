@@ -72,6 +72,9 @@ Creating SQL Examples
 	# to deactivate the admin component at all
 	admintool.dbbrowser.enabled=true
 	
+	# to hide the menu item in GUI, but still callable
+	admintool.dbbrowser.hideMenuItem=false
+	
 	# if data manipulation is allowed 
 	admintool.dbbrowser.dmlAllowed=false
 	

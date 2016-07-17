@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="template-content">
+		<section class="content-header">
+			<h1>
+				<span th:text="${httpStatus}"></span> <small th:text="${httpStatusMessage}">Error</small>
+			</h1>
+			<ol class="breadcrumb"
+				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+		<section class="content">
+
+			<h3>There was an unexpected error</h3>
+			<div th:if="${exceptionMessage != null}" class="alert alert-danger alert-dismissible">
+				<button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+				<h4>
+					<i class="icon fa fa-warning"></i> An Exception has been occurred!
+				</h4>
+				<span th:text="${exceptionMessage}"></span>
+				<pre th:if="${showStacktrace}" th:text="${stacktrace}"></pre>
+			</div>
+
+		</section>
+	</div>
+</body>
+</html>

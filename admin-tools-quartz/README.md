@@ -39,6 +39,9 @@ _since 1.0.1_
 	# to deactivate the admin component at all
 	admintool.quartz.enabled=true
 	
+	# to hide the menu item in GUI, but still callable
+	admintool.quartz.hideMenuItem=false
+	
 	# to deactivate stopping the scheduler
 	admintool.quartz.stopSchedulerAllowed=true
 	

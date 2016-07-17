@@ -77,6 +77,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("Filebrowser");
 		mainMenu.setName("filebrowser");
 		mainMenu.setTarget(TARGET_FILEBROWSER);
+		mainMenu.setHide(filebrowserConfig.isHideMenuItem());
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);

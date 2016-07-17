@@ -22,6 +22,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.enabled:true}")
 	private boolean enabled;
 	
+	@Value("${admintool.filebrowser.hideMenuItem:false}")
+	private boolean hideMenuItem;
+	
 	@Value("${admintool.filebrowser.startDir:}")
 	private String startDir;
 	
@@ -63,6 +66,13 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 		return this.enabled;
 	}
 	
+	/**
+	 * @return the hideMenuItem
+	 */
+	public boolean isHideMenuItem() {
+		return hideMenuItem;
+	}
+
 	/**
 	 * @return the startDir
 	 */
@@ -166,9 +176,10 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolFilebrowserConfig [enabled=").append(enabled).append(", startDir=").append(startDir)
-				.append(", forbiddenDrives=").append(forbiddenDrives).append(", readOnly=").append(readOnly)
-				.append(", restrictedBrowsing=").append(restrictedBrowsing).append(", restrictedBrowsingIsWhitelist=")
+		builder.append("AdminToolFilebrowserConfig [enabled=").append(enabled).append(", hideMenuItem=")
+				.append(hideMenuItem).append(", startDir=").append(startDir).append(", forbiddenDrives=")
+				.append(forbiddenDrives).append(", readOnly=").append(readOnly).append(", restrictedBrowsing=")
+				.append(restrictedBrowsing).append(", restrictedBrowsingIsWhitelist=")
 				.append(restrictedBrowsingIsWhitelist).append(", restrictedPaths=").append(restrictedPaths)
 				.append(", sizeDivisorMultiplicator=").append(sizeDivisorMultiplicator)
 				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")

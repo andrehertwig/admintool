@@ -5,11 +5,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import de.chandre.admintool.core.AdminTool;
+import de.chandre.admintool.core.AdminToolCoreConfig;
+import de.chandre.admintool.core.utils.ExceptionUtils;
 import net.bull.javamelody.MonitoredWithSpring;
 
 /**
@@ -18,34 +24,58 @@ import net.bull.javamelody.MonitoredWithSpring;
  *
  */
 @Controller
-@RequestMapping(AbstractAdminController.ROOTCONTEXT)
+@RequestMapping(AdminTool.ROOTCONTEXT)
 @MonitoredWithSpring
 public class AdminRootController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminRootController.class);
 	
-	@RequestMapping(value = {"", "/",})
+	@Autowired
+	private AdminToolCoreConfig conig;
+	
+	@RequestMapping(value = {"", "/"})
 	public String startPage(ModelMap model, HttpServletRequest request) {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving admin root page");
-		model.put("rootContext", request.getContextPath() + AbstractAdminController.ROOTCONTEXT);
+		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
 		model.put("contentPage", "admintool/content/start");
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
-	@RequestMapping(value = {"/**",})
+	@RequestMapping(value = {"/**"})
 	public String subPage(ModelMap model, HttpServletRequest request) {
 		
 		addCommonContextVars(model, request);
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
-	@RequestMapping(value = {"/{lang}/**",})
+	@RequestMapping(value = {"/{lang}/**"})
 	public String subPageLang(ModelMap model, @PathVariable("lang") String language, 
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		resolveLocale(language, request, response);
 		addCommonContextVars(model, request);
-		return AbstractAdminController.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/index";
+	}
+	
+	@RequestMapping(value = {"/login","/login/**"})
+	public String login(ModelMap model, HttpServletRequest request) {
+		addCommonContextVars(model, request);
+		return AdminTool.ROOTCONTEXT_NAME + "/login";
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleException(Exception exception, HttpServletRequest request) {
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());
+		
+		ModelAndView mv = new ModelAndView(AdminTool.ROOTCONTEXT_NAME + "/content/error");
+		mv.getModelMap().put("exceptionMessage", exception.getMessage());
+//		mv.getModelMap().put("httpStatus", response.getStatus());
+//		HttpStatus status = HttpStatus.valueOf(response.getStatus());
+//		mv.getModelMap().put("httpStatusMessage", status != null ? status.getReasonPhrase() : "");
+		
+		mv.getModelMap().put("showStacktrace", conig.isShowStacktraceOnErrorPage());
+		mv.getModelMap().put("stacktrace", ExceptionUtils.printException(exception));
+		return mv;
 	}
 }

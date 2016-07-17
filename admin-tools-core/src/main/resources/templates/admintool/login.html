@@ -21,29 +21,11 @@
 
 			<!-- Header Navbar -->
 			<nav class="navbar navbar-static-top" role="navigation">
-				<!-- Sidebar toggle button-->
-				<a href="#" class="sidebar-toggle" data-toggle="offcanvas"
-					role="button"> <span class="sr-only">Toggle navigation</span>
-				</a>
 				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
 					
 					<ul class="nav navbar-nav">
-					
-						<th:block th:each="adminComponent,iterState : ${@adminTool.components}">
-							<th:block th:each="notification,iterState : ${adminComponent.notificationTemplates}">
-								<li th:if="{null != notification}" th:replace="'admintool/' + ${notification}"></li>
-							</th:block>
-						</th:block>
-					
-					
-						<!-- User Account Menu -->
-						<li class="dropdown user user-menu" th:replace="admintool/includes/dropdownUserMenu.inc">
-							
-						</li>
-						<!-- Control Sidebar Toggle Button -->
-						<li><a href="#" data-toggle="control-sidebar"><i
-								class="fa fa-gears"></i></a></li>
+						
 					</ul>
 				</div>
 			</nav>
@@ -54,35 +36,38 @@
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 
-				<!-- Sidebar user panel (optional) -->
-				<div class="user-panel" th:replace="admintool/includes/leftUserPanel.inc">
-					
-				</div>
-
-				<!-- search form (Optional) -->
-				<form action="#" method="get" class="sidebar-form" th:replace="admintool/includes/searchForm.inc">
-					
-				</form>
-				<!-- /.search form -->
-				
-				<ul class="sidebar-menu">
-					<li class="header">MAINMENU</li>
-					<th:block th:each="adminComponent,iterState : ${@adminToolMenuUtils.components}">
-						<th:block th:include="admintool/fragments/fragements :: submenuInclude (${adminComponent.mainMenu}, true)" />
-					</th:block>
-				</ul>
-				 <!-- -->
-				
-				<!-- /.sidebar-menu -->
 			</section>
 			<!-- /.sidebar -->
 		</aside>
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
-		
-			<th:block th:include="${contentPage} :: #template-content" />
-			
+
+			<div class="login-box">
+				<div class="login-logo">
+					<a href="../../index2.html"><b>Admin</b>Tool</a>
+				</div>
+				<div class="login-box-body">
+					<form method="post" th:action="@{login}">
+						<div class="form-group has-feedback">
+							<input name="username" class="form-control" type="text" placeholder="Username" />
+							<span class="glyphicon glyphicon-user form-control-feedback"></span>
+						</div>
+						<div class="form-group has-feedback">
+							<input name="password" class="form-control" type="password" placeholder="Password" />
+							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+						</div>
+						<div class="row">
+							<div class="col-xs-8"></div>
+							<div class="col-xs-4">
+								<button class="btn btn-primary btn-block btn-flat" type="submit">Sign In</button>
+							</div>
+						</div>
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					</form>
+				</div>
+			</div>
+
 		</div>
 		<!-- /.content-wrapper -->
 		
