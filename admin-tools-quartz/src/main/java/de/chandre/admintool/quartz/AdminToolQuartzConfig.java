@@ -1,5 +1,8 @@
 package de.chandre.admintool.quartz;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +51,12 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	
 	@Value("${admintool.quartz.removeTriggerAllowed:true}")
 	private boolean removeTriggerAllowed;
+	
+	@Value("#{'${admintool.quartz.securityRoles.config:}'.split(';')}")
+	private Set<String> securityRolesConfig = new HashSet<>();
+	
+	@Value("#{'${admintool.quartz.securityRoles.jobs:}'.split(';')}")
+	private Set<String> securityRolesJobs = new HashSet<>();
 	
 	/**
 	 * @return the hideMenuItem
@@ -197,6 +206,20 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 		this.enabled = enabled;
 	}
 
+	/**
+	 * @return the securityRolesConfig
+	 */
+	public Set<String> getSecurityRolesConfig() {
+		return securityRolesConfig;
+	}
+
+	/**
+	 * @return the securityRolesJobs
+	 */
+	public Set<String> getSecurityRolesJobs() {
+		return securityRolesJobs;
+	}
+
 	@Override
 	public void printConfig() {
 		LOGGER.debug(this.toString());
@@ -219,7 +242,9 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 				.append(", changeJobInfoAllowed=").append(changeJobInfoAllowed).append(", changeTriggerAllowed=")
 				.append(changeTriggerAllowed).append(", changetTriggerStateAllowed=").append(changetTriggerStateAllowed)
 				.append(", interruptTriggerAllowed=").append(interruptTriggerAllowed).append(", addTriggerAllowed=")
-				.append(addTriggerAllowed).append(", removeTriggerAllowed=").append(removeTriggerAllowed).append("]");
+				.append(addTriggerAllowed).append(", removeTriggerAllowed=").append(removeTriggerAllowed)
+				.append(", securityRolesConfig=").append(securityRolesConfig).append(", securityRolesJobs=")
+				.append(securityRolesJobs).append("]");
 		return builder.toString();
 	}
 	

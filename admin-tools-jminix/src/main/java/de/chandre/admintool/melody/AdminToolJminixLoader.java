@@ -1,5 +1,8 @@
 package de.chandre.admintool.melody;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
@@ -25,8 +28,11 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
-	@Value("${adminTool.jminixPath:/jmx/}")
+	@Value("${adminTool.jminix.path:/jmx/}")
 	private String jminixPath;
+	
+	@Value("#{'${admintool.jminix.securityRoles:}'.split(';')}")
+	private Set<String> securityRoles = new HashSet<>();
 	
 	@PostConstruct
 	public void configureAdminTool()
@@ -39,6 +45,7 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		LOGGER.info("adding JMX Console to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.getSecurityRoles().addAll(securityRoles);
 		component.setDisplayName("JMX Console");
 		component.addAdditionalCSS("/static/admintool/jminix.css", true);
 		
@@ -50,5 +57,12 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
+	}
+	
+	/**
+	 * @return the securityRoles
+	 */
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
 	}
 }

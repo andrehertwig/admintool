@@ -1,5 +1,7 @@
 package de.chandre.admintool.quartz;
 
+import java.util.HashSet;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
@@ -25,18 +27,23 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 	private AdminTool adminTool;
 	
 	@Autowired
-	private AdminToolQuartzConfig config;
+	private AdminToolQuartzConfig quartzConfig;
 	
 	@PostConstruct
 	public void configureAdminTool()
 	{
-		if(!config.isEnabled() || !coreConfig.isEnabled()) {
+		if(!quartzConfig.isEnabled() || !coreConfig.isEnabled()) {
 			LOGGER.info("admin tool's quartz management is deactivated");
 			return;
 		}
 		LOGGER.info("adding Quartz view to admin tool");
 		
+		HashSet<String> allRoles = new HashSet<>();
+		allRoles.addAll(quartzConfig.getSecurityRolesConfig());
+		allRoles.addAll(quartzConfig.getSecurityRolesJobs());
+		
 		AdminComponent component = new AdminComponentImpl();
+		component.getSecurityRoles().addAll(allRoles);
 		component.setDisplayName("Quartz");
 		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css", true);
 		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js", true);
@@ -46,11 +53,14 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("Quartz");
 		mainMenu.setName("quartz");
 		mainMenu.setTarget("content/quartz");
-		mainMenu.setHide(config.isHideMenuItem());
+		mainMenu.setHide(quartzConfig.isHideMenuItem());
+		mainMenu.setSecurityRoles(allRoles);
 		component.setMainMenu(mainMenu);
 		
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig"));
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs"));
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig",
+				quartzConfig.getSecurityRolesConfig()));
+		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs",
+				quartzConfig.getSecurityRolesJobs()));
 		adminTool.addComponent(component);
 	}
 }

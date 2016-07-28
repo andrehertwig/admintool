@@ -60,7 +60,7 @@
 			</activation>
 			<modules>
 				<module>admin-tools-core</module>
-				
+				<module>admin-tools-core-security</module>
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>
@@ -68,7 +68,7 @@
 				<module>admin-tools-dbbrowser</module>
 				<module>admin-tools-filebrowser</module>
 				<!-- 
-				<module>admin-tools-core-security</module>
+				
 				<module>admin-tools-cluster</module> 
 				-->
 				<module>admin-tools-demo</module>
@@ -278,7 +278,6 @@
 				<groupId>org.thymeleaf.extras</groupId>
 				<artifactId>thymeleaf-extras-springsecurity4</artifactId>
 				<version>${thymeleaf-extras-springsecurity4.version}</version>
-				<optional>true</optional>
 			</dependency>
 			
 		</dependencies>

@@ -46,6 +46,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		
 		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("Filebrowser");
+		component.getSecurityRoles().addAll(filebrowserConfig.getSecurityRoles());
 		
 		if (fileviewerConfig.isEnabled()) {
 			boolean relative = !shouldCDNsUsed();
@@ -78,6 +79,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		mainMenu.setName("filebrowser");
 		mainMenu.setTarget(TARGET_FILEBROWSER);
 		mainMenu.setHide(filebrowserConfig.isHideMenuItem());
+		
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);

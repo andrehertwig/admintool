@@ -1,5 +1,8 @@
 package de.chandre.admintool.melody;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
@@ -25,8 +28,11 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
-	@Value("${adminTool.melodyPath:/monitoring}")
+	@Value("${adminTool.melody.path:/monitoring}")
 	private String melodyPath;
+	
+	@Value("#{'${admintool.melody.securityRoles:}'.split(';')}")
+	private Set<String> securityRoles = new HashSet<>();
 	
 	@PostConstruct
 	public void configureAdminTool()
@@ -38,6 +44,7 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 		LOGGER.info("adding JavaMelody view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.getSecurityRoles().addAll(securityRoles);
 		component.setDisplayName("JavaMelody");
 		component.addAdditionalCSS("/static/admintool/melody.css", true);
 		
@@ -49,5 +56,12 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
+	}
+	
+	/**
+	 * @return the securityRoles
+	 */
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
 	}
 }

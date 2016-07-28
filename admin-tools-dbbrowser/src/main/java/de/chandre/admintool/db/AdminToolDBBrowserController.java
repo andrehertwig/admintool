@@ -3,6 +3,7 @@ package de.chandre.admintool.db;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +42,7 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 	
 	@RequestMapping(path = "/getDatasourceNames", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public List<String> getDatasourceNames(HttpServletRequest request) {
+	public List<String> getDatasourceNames(HttpServletRequest request, HttpServletResponse response) {
 		if(!configuration.isEnabled()) return null;
 		
 		if (LOGGER.isDebugEnabled()) 

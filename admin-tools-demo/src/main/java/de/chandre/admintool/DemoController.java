@@ -43,7 +43,10 @@ public class DemoController
 		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("Demo-App-Component");
 		component.addNotificationTemplate("notifications/notification");
+		component.addSecurityRole("ROLE_ANONYMOUS");
+		component.addSecurityRole("ROLE_ADMIN");
 		
+
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Demo-App-Component");
 		mainMenu.setName("demo");

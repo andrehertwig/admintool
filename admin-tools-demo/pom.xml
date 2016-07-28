@@ -27,6 +27,13 @@
 		<dependency>
 			<groupId>de.chandre.admin-tools</groupId>
 			<artifactId>admin-tools-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!--  -->
+		<dependency>
+			<groupId>de.chandre.admin-tools</groupId>
+			<artifactId>admin-tools-core-security</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

@@ -1,7 +1,9 @@
 package de.chandre.admintool.db;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -39,6 +41,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	
 	@Value("#{'${admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")
 	private List<String> codeMirrorAddLibs = new ArrayList<>();
+	
+	@Value("#{'${admintool.dbbrowser.securityRoles:}'.split(';')}")
+	private Set<String> securityRoles = new HashSet<>();
 	
 	/**
 	 * @return the enabled
@@ -124,6 +129,20 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		this.codeMirrorAddLibs = codeMirrorAddLibs;
 	}
 
+	/**
+	 * @return the securityRoles
+	 */
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
+	}
+
+	/**
+	 * @param securityRoles the securityRoles to set
+	 */
+	public void setSecurityRoles(Set<String> securityRoles) {
+		this.securityRoles = securityRoles;
+	}
+
 	@Override
 	@PostConstruct
 	public void printConfig() {
@@ -139,7 +158,8 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		builder.append("AdminToolDBBrowserConfig [enabled=").append(enabled).append(", hideMenuItem=")
 				.append(hideMenuItem).append(", dmlAllowed=").append(dmlAllowed).append(", clobEncodings=")
 				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
-				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append("]");
+				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append(", securityRoles=")
+				.append(securityRoles).append("]");
 		return builder.toString();
 	}
 	

@@ -19,9 +19,9 @@ public class SecurityConfig
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 			.inMemoryAuthentication()
-				.withUser("user").password("user").roles("USER").and()
+				//.withUser("user").password("user").roles("USER").and()
 				.withUser("operator").password("operator").roles("OPERATOR").and()
-				.withUser("admin").password("admin").roles("ADMIN", "USER", "OPERATOR");
+				.withUser("admin").password("admin").roles("ADMIN", "OPERATOR");
 	}
 	
 	@Configuration
@@ -59,7 +59,16 @@ public class SecurityConfig
 					.antMatchers(AdminTool.ROOTCONTEXT + "/dbbrowser/**").hasAnyRole("ADMIN")
 					.antMatchers(AdminTool.ROOTCONTEXT).permitAll()
 					.antMatchers(AdminTool.ROOTCONTEXT + "/**").permitAll()
-				.and().formLogin().loginPage(AdminTool.ROOTCONTEXT + "/login").permitAll()
+				.and()
+					.formLogin()
+						.loginPage(AdminTool.ROOTCONTEXT + "/login")
+						.defaultSuccessUrl(AdminTool.ROOTCONTEXT, false)
+						.permitAll()
+				.and()
+					.logout()
+						.logoutUrl(AdminTool.ROOTCONTEXT + "/logout")
+						.logoutSuccessUrl(AdminTool.ROOTCONTEXT)
+						.invalidateHttpSession(true)
 			;
 		}
 		

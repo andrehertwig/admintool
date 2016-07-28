@@ -2,7 +2,9 @@ package de.chandre.admintool.filebrowser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -60,6 +62,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	
 	@Value("${admintool.filebrowser.downloadAllowed:true}")
 	private boolean downloadAllowed;
+	
+	@Value("#{'${admintool.filebrowser.securityRoles:}'.split(';')}")
+	private Set<String> securityRoles = new HashSet<>();
 	
 	@Override
 	public boolean isEnabled() {
@@ -164,6 +169,13 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 		return downloadAllowed;
 	}
 
+	/**
+	 * @return the securityRoles
+	 */
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
+	}
+
 	@Override
 	@PostConstruct
 	public void printConfig() {
@@ -185,7 +197,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")
 				.append(zipUseTempFile).append(", zipCompessionLevel=").append(zipCompessionLevel)
 				.append(", zipTempDir=").append(zipTempDir).append(", downloadAllowed=").append(downloadAllowed)
-				.append("]");
+				.append(", securityRoles=").append(securityRoles).append("]");
 		return builder.toString();
 	}
 }
