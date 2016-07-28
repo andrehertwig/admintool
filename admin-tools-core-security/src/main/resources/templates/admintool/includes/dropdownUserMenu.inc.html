@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+<li class="dropdown user user-menu">
+	
+	<a th:if="${@templateUserService.isAnonymous()}" class="dropdown-toggle" th:href="${rootContext} + '/login'">Sign in</a>
+
+	<a th:if="${!@templateUserService.isAnonymous()}" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true" th:text="${@templateUserService.getUserName()}">User</a>
+	<ul th:if="${!@templateUserService.isAnonymous()}" class="dropdown-menu">
+		<li class="user-header">
+			<p th:text="${@templateUserService.getUserName()}"></p>
+		</li>
+		<li class="user-body"></li>
+		<li class="user-footer">
+			<div class="pull-right">
+				<a class="btn btn-default btn-flat" th:href="${rootContext} + '/logout'">Sign out</a>
+			</div>
+		</li>
+	</ul>
+</li>
+</html>

@@ -2,6 +2,7 @@ package de.chandre.admintool.core.component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A admin component<br>
@@ -14,24 +15,28 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	/**
 	 * @return the displayName
 	 */
-	public String getDisplayName();
+	String getDisplayName();
 
 	/**
 	 * @param displayName the displayName to set
 	 */
-	public void setDisplayName(String displayName);
+	void setDisplayName(String displayName);
+	
 	/**
 	 * @return the mainMenu
 	 */
-	public MenuEntry getMainMenu();
+	MenuEntry getMainMenu();
+	
 	/**
 	 * @param mainMenu the mainMenu to set
 	 */
-	public void setMainMenu(MenuEntry mainMenu);
+	void setMainMenu(MenuEntry mainMenu);
+	
 	/**
 	 * @return the notificationTemplates
 	 */
-	public List<String> getNotificationTemplates();
+	List<String> getNotificationTemplates();
+	
 	/**
 	 * path to notification template shown in the top right menu<br>
 	 * should start with a "li" tag. eg:<br>
@@ -42,7 +47,8 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * 
 	 * @param notificationTemplates the notificationTemplates to set
 	 */
-	public void setNotificationTemplates(List<String> notificationTemplates);
+	void setNotificationTemplates(List<String> notificationTemplates);
+	
 	/**
 	 * path to notification template shown in the top right menu<br>
 	 * should start with a "li" tag. eg:<br>
@@ -53,18 +59,21 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * 
 	 * @param notificationTemplate the template path to notification template
 	 */
-	public void addNotificationTemplate(String notificationTemplate);
+	void addNotificationTemplate(String notificationTemplate);
+	
 	/**
 	 * @return the additionalCSS
 	 */
-	public Map<String, Boolean> getAdditionalCSS();
+	Map<String, Boolean> getAdditionalCSS();
+	
 	/**
 	 *  map with paths to CSS.<br>
 	 * 
 	 * @param additionalCSS the additionalCSS to set
 	 * @see #addAdditionalCSS(String, boolean)
 	 */
-	public void setAdditionalCSS(Map<String, Boolean> additionalCSS);
+	void setAdditionalCSS(Map<String, Boolean> additionalCSS);
+	
 	/**
 	 * path to CSS.<br>
 	 * Example:<br>
@@ -74,17 +83,20 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 *  </code>
 	 * @param additionalCSS the additionalCSS to set
 	 */
-	public void addAdditionalCSS(String additionalCSS, boolean relative);
+	void addAdditionalCSS(String additionalCSS, boolean relative);
+	
 	/**
 	 * @return the additionalJS
 	 */
-	public Map<String, Boolean> getAdditionalJS();
+	Map<String, Boolean> getAdditionalJS();
+	
 	/**
 	 * map with path to additional JavaScript files. <br>
 	 * @param additionalJS the additionalJS to set
 	 * @see #addAdditionalJS(String, boolean)
 	 */
-	public void setAdditionalJS(Map<String, Boolean> additionalJS);
+	void setAdditionalJS(Map<String, Boolean> additionalJS);
+	
 	/**
 	 * path to additional JavaScript files.<br>
 	 * Example:<br>
@@ -94,5 +106,21 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 *  </code>
 	 * @param additionalJS the additionalJS to set
 	 */
-	public void addAdditionalJS(String additionalJS, boolean relative);
+	void addAdditionalJS(String additionalJS, boolean relative);
+	
+	/**
+	 * should return a list of roles which should be able to access this component 
+	 * @return
+	 * @since 1.0.1
+	 */
+	Set<String> getSecurityRoles();
+
+	/**
+	 * security role like "ROLE_USER" or for anonymous "ROLE_ANONYMOUS" validated with spring security<br>
+	 * requires: admin-tool-core-security<br>
+	 * only for displaying or hiding menu entries
+	 * @param securityRole
+	 * @since 1.0.1
+	 */
+	void addSecurityRole(String securityRole);
 }

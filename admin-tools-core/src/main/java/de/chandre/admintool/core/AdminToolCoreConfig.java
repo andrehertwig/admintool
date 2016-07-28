@@ -24,6 +24,10 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.adminLTE.cdn.version:2.3.3}")
 	private String adminLTECdnVersion;
 	
+	@Value("${admintool.core.fontAwsome.cdn.version:4.6.3}")
+	private String fontAwsomeCdnVersion;
+	
+	
 	@Value("${admintool.core.showStacktraceOnErrorPage:true}")
 	private boolean showStacktraceOnErrorPage;
 	
@@ -64,6 +68,24 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	 */
 	public void setAdminLTECdnVersion(String adminLTECdnVersion) {
 		this.adminLTECdnVersion = adminLTECdnVersion;
+	}
+
+	/**
+	 * the version to use of fontAwsome in CDN of http://www.webjars.org/
+	 * @since 1.0.1
+	 * @return the fontAwsomeCdnVersion
+	 */
+	public String getFontAwsomeCdnVersion() {
+		return fontAwsomeCdnVersion;
+	}
+
+	/**
+	 * the version to use of fontAwsome in CDN of http://www.webjars.org/
+	 * @since 1.0.1
+	 * @param fontAwsomeCdnVersion the fontAwsomeCdnVersion to set
+	 */
+	public void setFontAwsomeCdnVersion(String fontAwsomeCdnVersion) {
+		this.fontAwsomeCdnVersion = fontAwsomeCdnVersion;
 	}
 
 	/**

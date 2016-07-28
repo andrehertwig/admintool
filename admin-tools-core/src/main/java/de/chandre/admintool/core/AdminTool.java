@@ -88,4 +88,12 @@ public interface AdminTool {
 	 * @param relative if url is relative (not absolute) and pointing to the server
 	 */
 	public void addGlobalStyleSheet(String globalStyleSheet, boolean relative);
+
+	/**
+	 * searches for a menuEntry with specified name
+	 * @since 1.0.1
+	 * @param menuName
+	 * @return null or MenuEntrySearchResult
+	 */
+	MenuEntrySearchResult searchComponent(String menuName);
 }

@@ -1,6 +1,8 @@
 package de.chandre.admintool.core.controller;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +18,10 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import de.chandre.admintool.core.AdminTool;
+import de.chandre.admintool.core.MenuEntrySearchResult;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.MenuEntry;
+import de.chandre.admintool.core.utils.AdminToolMenuUtils;
 
 /**
  * general methods for admintool controllers
@@ -28,8 +32,14 @@ public class AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AbstractAdminController.class);
 	
+	private static final String COMPONENT = "component";
+	private static final String MENUITEM = "item";
+	
 	@Autowired 
 	private AdminTool adminTool;
+
+	@Autowired 
+	private AdminToolMenuUtils menuUtils;
 	
 	/**
 	 * sets common context variables<br>
@@ -68,41 +78,97 @@ public class AbstractAdminController
 	protected void addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName, String overrideTarget) 
 	{
 		LOGGER.debug(String.format("receiving request: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
-		final String name = getMenuName(request, overrideName);
-		LOGGER.debug("name=" +name);
+		final String name = menuUtils.getMenuName(request, overrideName);
 		
-		Optional<MenuEntry> menuentry = Optional.empty();
-		for (AdminComponent comp : adminTool.getComponents()) {
-			menuentry = comp.getMainMenu().flattened().filter(entry -> null != entry.getName() && entry.getName().equals(name)).findFirst();
-			if (menuentry.isPresent()) {
-				break;
+		MenuEntrySearchResult result = adminTool.searchComponent(name);
+		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
+		
+		if (null != result) {
+			LOGGER.trace("Component found: " + String.valueOf(null != result.getComponent()) +
+					" | menu found: " + String.valueOf(result.getMenuEntry()));
+			
+			model.put(MenuEntrySearchResult.NAME, result);
+			
+			MenuEntry entry = result.getMenuEntry();
+//			//check security
+//			if (!isAllowed(model, result.getComponent(), entry)) {
+//				return;
+//			}
+			//set alternative target
+			String targetPage = (StringUtils.isEmpty(overrideTarget) ? entry.getTarget() : overrideTarget);
+			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/" + targetPage);
+			if (null != entry.getVariables()) {
+				model.putAll(entry.getVariables());
 			}
-		}
-		if (menuentry.isPresent()) {
-			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/" + (StringUtils.isEmpty(overrideTarget) ? menuentry.get().getTarget() : overrideTarget));
-			if (null != menuentry.get().getVariables()) {
-				model.putAll(menuentry.get().getVariables());
-			}
-			model.put("activeMenu", menuentry.get());
+			model.put("activeMenu", entry);
 		} else {
 			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/content/error404");
 		}
-		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
 	}
 	
-	private String getMenuName(HttpServletRequest request, String overrideName) {
-		if (!StringUtils.isEmpty(overrideName)) {
-			return overrideName;
-		}
-		String name = request.getRequestURI().replaceFirst(AdminTool.ROOTCONTEXT, "");
-		if (!StringUtils.isEmpty(request.getContextPath())) {
-			name = name.replaceFirst(request.getContextPath(), "");
-		}
-		if (name.startsWith("/")) {
-			name = name.substring(1, name.length());
-		}
-		return name;
-	}
+//	
+//	protected boolean checkForPath(ModelMap model, HttpServletRequest request, String overrideName, HttpServletResponse response) {
+//		LOGGER.debug(String.format("checking request accessibility: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
+//		final String name = menuUtils.getMenuName(request, overrideName);
+//		
+//		Map<String, Object> result = new HashMap<>();
+//		searchComponent(name, result);
+//		AdminComponent component = (AdminComponent) result.get(COMPONENT);
+//		Optional<MenuEntry> menuentry = (Optional<MenuEntry>) result.get(MENUITEM);
+//		LOGGER.trace("Component found: " + String.valueOf(null != component) + " | menu found: " + String.valueOf(menuentry.isPresent()));
+//		
+//		if (menuentry.isPresent()) {
+//			MenuEntry entry = menuentry.get();
+//			//check security
+//			if (!isAllowed(model, component, entry)) {
+//				response.setStatus(401);
+//				return false;
+//			}
+//			return true;
+//		}
+//		return false;
+//	}
+//	
+//	private void searchComponent(final String name, Map<String, Object> result) {
+//		LOGGER.debug("search for component=" + name);
+//		Optional<MenuEntry> menuentry = Optional.empty();
+//		for (AdminComponent comp : adminTool.getComponents()) {
+//			menuentry = comp.getMainMenu().flattened().filter(entry -> null != entry.getName() && entry.getName().equals(name)).findFirst();
+//			result.put(MENUITEM, menuentry);
+//			if (menuentry.isPresent()) {
+//				result.put(COMPONENT, comp);
+//				break;
+//			}
+//		}
+//		if (null == result.get(COMPONENT) && name.lastIndexOf('/') != -1) {
+//			searchComponent(name.substring(0, name.lastIndexOf('/')), result);
+//		}
+//	}
+	
+//	/**
+//	 * checks if access to component and entry are allowed
+//	 * @param model (optional)
+//	 * @param component
+//	 * @param entry (optional)
+//	 * @return
+//	 */
+//	protected boolean isAllowed(ModelMap model, AdminComponent component, MenuEntry entry) {
+//		boolean allowed = true;
+//		if (!menuUtils.isPermitted(component)) {
+//			allowed = false;
+//		}
+//		if (null != entry && !menuUtils.isPermitted(entry)) {
+//			allowed = false;
+//		}
+//		if (!allowed && null != model) {
+//			model.put("httpStatus", 401);
+//			model.put("httpStatusMessage", "You are not authorized to request this page");
+//			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/content/error");
+//		}
+//		return allowed;
+//	}
+	
+	
 	
 	/**
 	 * manually resolve of locale ... to request. useful for path variables

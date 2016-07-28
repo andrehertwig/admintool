@@ -55,9 +55,7 @@
 			<section class="sidebar">
 
 				<!-- Sidebar user panel (optional) -->
-				<div class="user-panel" th:replace="admintool/includes/leftUserPanel.inc">
-					
-				</div>
+				<div class="user-panel" th:replace="admintool/includes/leftUserPanel.inc"></div>
 
 				<!-- search form (Optional) -->
 				<form action="#" method="get" class="sidebar-form" th:replace="admintool/includes/searchForm.inc">
@@ -65,13 +63,9 @@
 				</form>
 				<!-- /.search form -->
 				
-				<ul class="sidebar-menu">
-					<li class="header">MAINMENU</li>
-					<th:block th:each="adminComponent,iterState : ${@adminToolMenuUtils.components}">
-						<th:block th:include="admintool/fragments/fragements :: submenuInclude (${adminComponent.mainMenu}, true)" />
-					</th:block>
-				</ul>
-				 <!-- -->
+				<!-- main menu -->
+				<div class="user-panel" th:replace="admintool/includes/menu.inc"></div>
+				<!-- /.main menu -->
 				
 				<!-- /.sidebar-menu -->
 			</section>

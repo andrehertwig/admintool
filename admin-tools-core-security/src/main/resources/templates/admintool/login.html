@@ -48,19 +48,26 @@
 					<a href="../../index2.html"><b>Admin</b>Tool</a>
 				</div>
 				<div class="login-box-body">
+				
+					<div th:if="${error}" class="alert alert-danger alert-dismissible">
+						<button class="close" aria-hidden="true" data-dismiss="alert" type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
+						<h4><i class="icon fa fa-warning"></i> Error</h4>
+						User name and/or password incorrect
+					</div>
+				
 					<form method="post" th:action="@{login}">
 						<div class="form-group has-feedback">
-							<input name="username" class="form-control" type="text" placeholder="Username" />
+							<input name="username" class="form-control" type="text" placeholder="Username" autofocus="autofocus" tabindex="1"/>
 							<span class="glyphicon glyphicon-user form-control-feedback"></span>
 						</div>
 						<div class="form-group has-feedback">
-							<input name="password" class="form-control" type="password" placeholder="Password" />
+							<input name="password" class="form-control" type="password" placeholder="Password" tabindex="2"/>
 							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 						</div>
 						<div class="row">
 							<div class="col-xs-8"></div>
 							<div class="col-xs-4">
-								<button class="btn btn-primary btn-block btn-flat" type="submit">Sign In</button>
+								<button class="btn btn-primary btn-block btn-flat" type="submit" tabindex="3">Sign In</button>
 							</div>
 						</div>
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

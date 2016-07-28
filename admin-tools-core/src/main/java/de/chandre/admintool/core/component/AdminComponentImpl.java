@@ -1,9 +1,11 @@
 package de.chandre.admintool.core.component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A admin component<br>
@@ -21,6 +23,8 @@ public class AdminComponentImpl implements AdminComponent
 	
 	private Map<String, Boolean> additionalCSS = new LinkedHashMap<>(1);
 	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
+	
+	private Set<String> securityRoles = new HashSet<>();
 
 	/**
 	 * @return the displayName
@@ -51,6 +55,7 @@ public class AdminComponentImpl implements AdminComponent
 	 */
 	@Override
 	public void setMainMenu(MenuEntry mainMenu) {
+		mainMenu.setComponent(this);
 		this.mainMenu = mainMenu;
 	}
 
@@ -161,4 +166,31 @@ public class AdminComponentImpl implements AdminComponent
 	public int compareTo(AdminComponent o) {
 		return displayName.compareTo(o.getDisplayName());
 	}
+
+	/**
+	 * @since 1.0.1
+	 * @return the securityRoles
+	 */
+	@Override
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
+	}
+
+	/**
+	 * @since 1.0.1
+	 * @param securityRoles the securityRoles to set
+	 */
+	public void setSecurityRoles(Set<String> securityRoles) {
+		this.securityRoles = securityRoles;
+	}
+
+	/**
+	 * @since 1.0.1
+	 * @param securityRole
+	 */
+	@Override
+	public void addSecurityRole(String securityRole) {
+		this.securityRoles.add(securityRole);
+	}
+	
 }

@@ -5,11 +5,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +31,12 @@ import de.chandre.admintool.core.component.MenuEntry;
 @Service("adminToolMenuUtils")
 public class AdminToolMenuUtils {
 	
+	private static final Log LOGGER = LogFactory.getLog(AdminToolMenuUtils.class);
+	
+	private static final String DEAULT_BC_SEP = " &gt ";
+	private static final String CSS_TREEVIEW = "treeview";
+	private static final String CSS_ACTIVE = " active";
+	
 	@Autowired
 	private AdminTool adminTool;
 	
@@ -37,12 +46,33 @@ public class AdminToolMenuUtils {
 		for (AdminComponent adminComponent : adminTool.getComponents()) {
 			Stream<MenuEntry> nonHiddenMenues = adminComponent.getMainMenu().flattened().filter(me -> !me.isHide());
 			if (nonHiddenMenues.count() == 0L) {
+				LOGGER.trace("all menu entries hidden for component: " + adminComponent.getDisplayName());
+				//do not return this menu item, because all entries are hidden
 				continue;
 			}
 			result.add(adminComponent);
 		}
-		
 		return result;
+	}
+	
+	/**
+	 * retuns the menu name for given requestUrl or the overrideName if set.
+	 * @param request
+	 * @param overrideName (optional)
+	 * @return
+	 */
+	public String getMenuName(HttpServletRequest request, String overrideName) {
+		if (!StringUtils.isEmpty(overrideName)) {
+			return overrideName;
+		}
+		String name = request.getRequestURI().replaceFirst(AdminTool.ROOTCONTEXT, "");
+		if (!StringUtils.isEmpty(request.getContextPath())) {
+			name = name.replaceFirst(request.getContextPath(), "");
+		}
+		if (name.startsWith("/")) {
+			name = name.substring(1, name.length());
+		}
+		return name;
 	}
 	
 	/**
@@ -58,9 +88,9 @@ public class AdminToolMenuUtils {
 	public String getListItemClass(MenuEntry activeMenu, MenuEntry actualEntry) {
 		StringBuilder sb = new StringBuilder();
 		if (!CollectionUtils.isEmpty(actualEntry.getSubmenu()))
-			sb.append("treeview");
+			sb.append(CSS_TREEVIEW);
 		if (isActiveInMenuTree(activeMenu, actualEntry))
-			sb.append(" active");
+			sb.append(CSS_ACTIVE);
 		return sb.toString().trim();
 	}
 
@@ -87,7 +117,7 @@ public class AdminToolMenuUtils {
 		StringBuilder result = new StringBuilder();
 		final String sep;
 		if (StringUtils.isEmpty(separator)) {
-			sep =  " > ";
+			sep =  DEAULT_BC_SEP;
 		} else {
 			sep = separator;
 		}

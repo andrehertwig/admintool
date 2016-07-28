@@ -2,10 +2,15 @@ package de.chandre.admintool.core.component;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
+
+import org.springframework.util.CollectionUtils;
 
 /**
  * Menu entry for left main menu<br>
@@ -24,8 +29,11 @@ public class MenuEntry implements Serializable
 	private String target;
 	private boolean hide;
 	
+	private AdminComponent component;
 	private MenuEntry parent;
 	private List<MenuEntry> submenu = new LinkedList<>();
+	
+	private Set<String> securityRoles = new HashSet<>();
 	
 	private Map<String, Object> variables = new HashMap<>();
 
@@ -47,6 +55,30 @@ public class MenuEntry implements Serializable
 		this.displayName = displayName;
 		this.target = target;
 		this.hide = false;
+	}
+	
+	/**
+	 * @since 1.0.1
+	 * @param name - the link mapping 
+	 * @param displayName - the display name
+	 * @param target -  the template path. see {@link #setTarget(String)}
+	 * @param securityRoles - Set of roles to check against the current user for displaying/hiding menu entries in the frontend
+	 */
+	public MenuEntry(String name, String displayName, String target, Set<String> securityRoles) {
+		super();
+		this.name = name;
+		this.displayName = displayName;
+		this.target = target;
+		this.hide = false;
+		this.securityRoles = securityRoles;
+	}
+	
+	void setComponent(AdminComponent component) {
+		this.component = component;
+	}
+	
+	AdminComponent getComponent() {
+		return this.component;
 	}
 
 	/**
@@ -204,6 +236,54 @@ public class MenuEntry implements Serializable
 		return Stream.concat(
                 Stream.of(this),
                 Stream.of(parent).flatMap(MenuEntry::reverseFlattened));
+	}
+	
+	/**
+	 * the effective roles reverse recursive to component if not set at this object or anywhere within the tree<br>
+	 * first menu entry or component with roles will return it.
+	 * @return
+	 * @since 1.0.1
+	 */
+	public Set<String> getAffectedSecurityRoles() {
+		if (CollectionUtils.isEmpty(securityRoles)) {
+			Stream<MenuEntry> parents = reverseFlattened();
+			Iterator<MenuEntry> entry = parents.iterator();
+			while (entry.hasNext()) {
+				MenuEntry menuEntry = (MenuEntry) entry.next();
+				if (!CollectionUtils.isEmpty(menuEntry.getSecurityRoles())) {
+					return menuEntry.getSecurityRoles();
+				}
+				//root?
+				if (null != menuEntry.getComponent()) {
+					return menuEntry.getComponent().getSecurityRoles();
+				}
+			}
+		}
+		return securityRoles;
+	}
+	
+	/**
+	 * @return the securityRoles
+	 * @since 1.0.1
+	 */
+	public Set<String> getSecurityRoles() {
+		return securityRoles;
+	}
+
+	/**
+	 * @param securityRoles the securityRoles to set
+	 * @since 1.0.1
+	 */
+	public void setSecurityRoles(Set<String> securityRoles) {
+		this.securityRoles = securityRoles;
+	}
+	
+	/**
+	 * @param securityRole the securityRoles to set
+	 * @since 1.0.1
+	 */
+	public void addSecurityRole(String securityRole) {
+		this.securityRoles.add(securityRole);
 	}
 
 	/**

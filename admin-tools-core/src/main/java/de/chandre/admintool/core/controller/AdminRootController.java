@@ -58,12 +58,6 @@ public class AdminRootController extends AbstractAdminController
 		return AdminTool.ROOTCONTEXT_NAME + "/index";
 	}
 	
-	@RequestMapping(value = {"/login","/login/**"})
-	public String login(ModelMap model, HttpServletRequest request) {
-		addCommonContextVars(model, request);
-		return AdminTool.ROOTCONTEXT_NAME + "/login";
-	}
-	
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleException(Exception exception, HttpServletRequest request) {
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());

@@ -1,0 +1,10 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+
+	<ul class="sidebar-menu">
+		<li class="header">MAINMENU</li>
+		<th:block th:each="adminComponent,iterState : ${@adminToolMenuUtils.getComponents()}">
+			<th:block th:include="admintool/fragments/secFragements :: submenuIncludeSec (${adminComponent.mainMenu}, true)" />
+		</th:block>
+	</ul>
+
+</html>
