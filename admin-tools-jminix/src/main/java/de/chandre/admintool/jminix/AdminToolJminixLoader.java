@@ -1,4 +1,4 @@
-package de.chandre.admintool.melody;
+package de.chandre.admintool.jminix;
 
 import java.util.HashSet;
 import java.util.Set;
