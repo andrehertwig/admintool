@@ -35,7 +35,7 @@
 	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
 	admintool.properties.securityRoles=
 	
-	# integer value. useb by default comparator to order components
+	# integer value. used by default comparator to order components
 	admintool.properties.componentPosition=
 	
 ```

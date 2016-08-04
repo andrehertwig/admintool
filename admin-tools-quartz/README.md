@@ -69,4 +69,13 @@ _since 1.0.1_
 	# to deactivate removing triggers
 	admintool.quartz.removeTriggerAllowed=true
 	
+	#since 1.0.1
+	# for own implementation or requires admin-tools-core-security
+	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
+	admintool.quartz.securityRoles=
+	
+	#since 1.0.1
+	# integer value. used by default comparator to order components
+	admintool.quartz.componentPosition=
+	
 ```

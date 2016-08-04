@@ -88,4 +88,13 @@ Creating SQL Examples
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js
 	
+	#since 1.0.1
+	# for own implementation or requires admin-tools-core-security
+	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
+	admintool.dbbrowser.securityRoles=
+	
+	#since 1.0.1
+	# integer value. used by default comparator to order components
+	admintool.dbbrowser.componentPosition=
+	
 ```

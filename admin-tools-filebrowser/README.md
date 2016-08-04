@@ -87,6 +87,15 @@
 	
 	# to deactivate download functionality
 	admintool.filebrowser.downloadAllowed=true
+	
+	#since 1.0.1
+	# for own implementation or requires admin-tools-core-security
+	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
+	admintool.filebrowser.securityRoles=
+	
+	#since 1.0.1
+	# integer value. used by default comparator to order components
+	admintool.filebrowser.componentPosition=
 		
 ```
 

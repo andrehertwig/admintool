@@ -27,7 +27,6 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.fontAwsome.cdn.version:4.6.3}")
 	private String fontAwsomeCdnVersion;
 	
-	
 	@Value("${admintool.core.showStacktraceOnErrorPage:true}")
 	private boolean showStacktraceOnErrorPage;
 	

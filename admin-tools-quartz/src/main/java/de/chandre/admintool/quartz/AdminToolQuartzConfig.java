@@ -12,7 +12,7 @@ import de.chandre.admintool.core.AdminToolConfig;
 
 /**
  * @author Andre
- * @since 1.0.0
+ * @since 1.0.1
  */
 @Component("adminToolQuartzConfig")
 public class AdminToolQuartzConfig implements AdminToolConfig

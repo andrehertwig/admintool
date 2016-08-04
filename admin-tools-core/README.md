@@ -35,7 +35,13 @@
 	# if CDN for external java script libs should be used
 	admintool.core.useCDN=true
 	
-	# version of adminLTE i CDN is used
+	# version of adminLTE if CDN is used. for managed webjars this version should be used.
 	admintool.core.adminLTE.cdn.version=2.3.3
+	
+	# version of fontAwsome if CDN is used. for managed webjars this version should be used.
+	admintool.core.fontAwsome.cdn.version=4.6.3
+	
+	# if the stacktrace should be shown on error pages
+	admintool.core.showStacktraceOnErrorPage=true
 	
 ```
