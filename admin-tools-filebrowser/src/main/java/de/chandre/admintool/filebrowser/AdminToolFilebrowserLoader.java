@@ -45,6 +45,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		LOGGER.info("adding Filebrowser view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(filebrowserConfig.getComponentPosition());
 		component.setDisplayName("Filebrowser");
 		component.getSecurityRoles().addAll(filebrowserConfig.getSecurityRoles());
 		

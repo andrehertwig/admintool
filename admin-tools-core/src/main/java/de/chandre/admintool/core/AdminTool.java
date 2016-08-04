@@ -1,5 +1,6 @@
 package de.chandre.admintool.core;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +25,14 @@ public interface AdminTool {
 	 * root context path with a leading slash
 	 */
 	String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
+	
+	/**
+	 * to set a custom comparator for ordering components.
+	 * 
+	 * @since 1.0.1
+	 * @param comparator own comparator or null. if null the default compare implementation of AdminComponent will be used
+	 */
+	void setComponentComparator(Comparator<AdminComponent> comparator);
 	
 	/**
 	 * 

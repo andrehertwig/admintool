@@ -25,6 +25,8 @@ public class AdminComponentImpl implements AdminComponent
 	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
 	
 	private Set<String> securityRoles = new HashSet<>();
+	
+	private Integer position;
 
 	/**
 	 * @return the displayName
@@ -161,11 +163,6 @@ public class AdminComponentImpl implements AdminComponent
 	public void addAdditionalJS(String additionalJS, boolean relative) {
 		this.additionalJS.put(additionalJS, relative);
 	}
-	
-	@Override
-	public int compareTo(AdminComponent o) {
-		return displayName.compareTo(o.getDisplayName());
-	}
 
 	/**
 	 * @since 1.0.1
@@ -191,6 +188,43 @@ public class AdminComponentImpl implements AdminComponent
 	@Override
 	public void addSecurityRole(String securityRole) {
 		this.securityRoles.add(securityRole);
+	}
+
+	/**
+	 * @since 1.0.1
+	 * @return the position
+	 */
+	@Override
+	public Integer getPosition() {
+		return position;
+	}
+
+	/**
+	 * @since 1.0.1
+	 * @param position the position to set
+	 */
+	@Override
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+	
+	
+	@Override
+	public int compareTo(AdminComponent o) {
+		return displayName.compareTo(o.getDisplayName());
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminComponentImpl [displayName=").append(displayName).append(", mainMenu=").append(mainMenu)
+				.append(", notificationTemplates=").append(notificationTemplates).append(", additionalCSS=")
+				.append(additionalCSS).append(", additionalJS=").append(additionalJS).append(", securityRoles=")
+				.append(securityRoles).append(", position=").append(position).append("]");
+		return builder.toString();
 	}
 	
 }

@@ -34,6 +34,9 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 	@Value("#{'${admintool.melody.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
+	@Value("${admintool.melody.componentPosition:}")
+	private Integer componentPosition;
+	
 	@PostConstruct
 	public void configureAdminTool()
 	{
@@ -42,8 +45,10 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 			return;
 		}
 		LOGGER.info("adding JavaMelody view to admin tool");
+		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(componentPosition);
 		component.getSecurityRoles().addAll(securityRoles);
 		component.setDisplayName("JavaMelody");
 		component.addAdditionalCSS("/static/admintool/melody.css", true);
@@ -63,5 +68,44 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 	 */
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
+	}
+
+	/**
+	 * @return the melodyPath
+	 */
+	public String getMelodyPath() {
+		return melodyPath;
+	}
+
+	/**
+	 * @param melodyPath the melodyPath to set
+	 */
+	public void setMelodyPath(String melodyPath) {
+		this.melodyPath = melodyPath;
+	}
+
+	/**
+	 * @return the componentPosition
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolJavaMelodyLoader [melodyPath=").append(melodyPath).append(", securityRoles=")
+				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
+		return builder.toString();
 	}
 }

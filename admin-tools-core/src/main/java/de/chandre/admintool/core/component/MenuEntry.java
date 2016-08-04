@@ -310,5 +310,18 @@ public class MenuEntry implements Serializable
 	public void addVariable(String key, Object variable) {
 		this.variables.put(key, variable);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("MenuEntry [name=").append(name).append(", displayName=").append(displayName)
+				.append(", resouceMessageKey=").append(resouceMessageKey).append(", target=").append(target)
+				.append(", hide=").append(hide).append(", submenu=").append(submenu).append(", securityRoles=")
+				.append(securityRoles).append(", variables=").append(variables).append("]");
+		return builder.toString();
+	}
 	
 }

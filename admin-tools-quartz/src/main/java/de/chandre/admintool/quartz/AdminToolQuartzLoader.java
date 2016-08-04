@@ -43,6 +43,7 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		allRoles.addAll(quartzConfig.getSecurityRolesJobs());
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(quartzConfig.getComponentPosition());
 		component.getSecurityRoles().addAll(allRoles);
 		component.setDisplayName("Quartz");
 		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css", true);

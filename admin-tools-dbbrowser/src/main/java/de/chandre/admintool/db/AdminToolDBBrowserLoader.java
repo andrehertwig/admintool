@@ -40,6 +40,7 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		String commonPrefix = getWebjarsPrefixUri();
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(dbBroserConfig.getComponentPosition());
 		component.getSecurityRoles().addAll(dbBroserConfig.getSecurityRoles());
 		
 		component.setDisplayName("DB Browser");

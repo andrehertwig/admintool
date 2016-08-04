@@ -1,5 +1,6 @@
 package de.chandre.admintool.core;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.component.AdminComponentComparator;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
@@ -26,11 +28,21 @@ public class AdminToolImpl implements AdminTool
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolImpl.class);
 	
-	private Set<AdminComponent> components = new TreeSet<>();
+	private Set<AdminComponent> components = new TreeSet<>(new AdminComponentComparator());
 	
 	private Map<String, Boolean> globalJavaScripts = new LinkedHashMap<>();
 	private Map<String, Boolean> globalStyleSheets = new LinkedHashMap<>();
 	
+	@Override
+	public void setComponentComparator(Comparator<AdminComponent> comparator) {
+		if (null == comparator) {
+			this.components = new TreeSet<>();
+		} else {
+			Set<AdminComponent> newComponents = new TreeSet<>(new AdminComponentComparator());
+			newComponents.addAll(this.components);
+			this.components = newComponents;
+		}
+	}
 
 	/**
 	 * @return the components
@@ -58,7 +70,7 @@ public class AdminToolImpl implements AdminTool
 	}
 
 	public void setComponents(Set<AdminComponent> components) {
-		this.components =components;
+		this.components = components;
 	}
 	
 	@Override

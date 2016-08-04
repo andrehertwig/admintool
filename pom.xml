@@ -67,28 +67,40 @@
 				<module>admin-tools-quartz</module>
 				<module>admin-tools-dbbrowser</module>
 				<module>admin-tools-filebrowser</module>
-				<!-- 
 				
+				<!-- 
+				<module>admin-tools-properties</module>
 				<module>admin-tools-cluster</module> 
 				-->
 				<module>admin-tools-demo</module>
 				<module>admin-tools-demo-war</module>
 			</modules>
+			<!--
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+			-->
 		</profile>
 		
 		<profile>
 			<id>release</id>
 			<modules>
 				<module>admin-tools-core</module>
-				
+				<module>admin-tools-core-security</module>
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>
 				<module>admin-tools-quartz</module>
 				<module>admin-tools-dbbrowser</module>
 				<module>admin-tools-filebrowser</module>
+				
 				<!-- 
-				<module>admin-tools-core-security</module>
+				<module>admin-tools-properties</module>
 				<module>admin-tools-cluster</module> 
 				-->
 			</modules>
@@ -182,6 +194,8 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		
+		<findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
+		
 		<maven-site-plugin.version>3.4</maven-site-plugin.version>
 		<site.skipDeploy>true</site.skipDeploy>
 		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
@@ -195,7 +209,7 @@
 		
 		<org.json.version>20151123</org.json.version>
 		
-		<spring-boot.version>1.3.6.RELEASE</spring-boot.version>
+		<spring-boot.version>1.3.7.RELEASE</spring-boot.version>
 		
 		<thymeleaf.version>2.1.5.RELEASE</thymeleaf.version>
 		<thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>
@@ -340,6 +354,45 @@
 					<tag>${project.artifactId}-${project.version}</tag>
 					<connectionType>connection</connectionType>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>${findbugs-maven-plugin.version}</version>
+				<configuration>
+	                <!--
+	                    Enables analysis which takes more memory but finds more bugs.
+	                    If you run out of memory, changes the value of the effort element
+	                    to 'Low'.
+	                -->
+	                <effort>Medium</effort>
+	                <!-- Build doesn't fail if problems are found -->
+	                <failOnError>false</failOnError>
+	                <!-- Reports all bugs (other values are medium and max) -->
+	                <threshold>Low</threshold>
+	                <!-- Produces XML report -->
+	                <xmlOutput>true</xmlOutput>
+					<findbugsXmlOutput>true</findbugsXmlOutput>
+					<!--
+					<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+					Configures the directory in which the XML report is created
+					<findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+					<excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+					-->
+	            </configuration>
+	            <executions>
+	                <!--
+	                    Ensures that FindBugs inspects source code when project is compiled.
+ -->
+	                <execution>
+	                    <id>analyze-compile</id>
+	                    <phase>compile</phase>
+	                    <goals>
+	                        <goal>check</goal>
+	                    </goals>
+	                </execution>
+
+	            </executions>
 			</plugin>
 		</plugins>
 	</pluginManagement>

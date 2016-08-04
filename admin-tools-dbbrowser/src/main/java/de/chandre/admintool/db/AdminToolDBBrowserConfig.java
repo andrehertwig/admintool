@@ -45,6 +45,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("#{'${admintool.dbbrowser.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
+	@Value("${admintool.dbbrowser.componentPosition:}")
+	private Integer componentPosition;
+	
 	/**
 	 * @return the enabled
 	 */
@@ -131,6 +134,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 
 	/**
 	 * @return the securityRoles
+	 * @since 1.0.1
 	 */
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
@@ -138,9 +142,26 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 
 	/**
 	 * @param securityRoles the securityRoles to set
+	 * @since 1.0.1
 	 */
 	public void setSecurityRoles(Set<String> securityRoles) {
 		this.securityRoles = securityRoles;
+	}
+
+	/**
+	 * @return the componentPosition
+	 * @since 1.0.1
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 * @since 1.0.1
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
 	}
 
 	@Override
@@ -159,7 +180,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 				.append(hideMenuItem).append(", dmlAllowed=").append(dmlAllowed).append(", clobEncodings=")
 				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
 				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append(", securityRoles=")
-				.append(securityRoles).append("]");
+				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
 		return builder.toString();
 	}
 	

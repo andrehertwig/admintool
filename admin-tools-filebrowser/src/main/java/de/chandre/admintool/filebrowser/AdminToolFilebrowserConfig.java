@@ -66,6 +66,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("#{'${admintool.filebrowser.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
+	@Value("${admintool.filebrowser.componentPosition:}")
+	private Integer componentPosition;
+	
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
@@ -171,9 +174,26 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 
 	/**
 	 * @return the securityRoles
+	 * @since 1.0.1
 	 */
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
+	}
+	
+	/**
+	 * @return the componentPosition
+	 * @since 1.0.1
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 * @since 1.0.1
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
 	}
 
 	@Override
@@ -197,7 +217,8 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")
 				.append(zipUseTempFile).append(", zipCompessionLevel=").append(zipCompessionLevel)
 				.append(", zipTempDir=").append(zipTempDir).append(", downloadAllowed=").append(downloadAllowed)
-				.append(", securityRoles=").append(securityRoles).append("]");
+				.append(", securityRoles=").append(securityRoles).append(", componentPosition=")
+				.append(componentPosition).append("]");
 		return builder.toString();
 	}
 }

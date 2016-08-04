@@ -123,4 +123,18 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * @since 1.0.1
 	 */
 	void addSecurityRole(String securityRole);
+
+	/**
+	 * position of component in menu. Initially set to {@link Integer#MAX_VALUE}
+	 * @return
+	 * @since 1.0.1
+	 */
+	Integer getPosition();
+
+	/**
+	 * position of component in menu. Initially set to {@link Integer#MAX_VALUE}
+	 * @param position
+	 * @since 1.0.1
+	 */
+	void setPosition(Integer position);
 }

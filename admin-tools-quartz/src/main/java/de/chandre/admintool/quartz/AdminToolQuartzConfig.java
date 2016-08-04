@@ -12,7 +12,7 @@ import de.chandre.admintool.core.AdminToolConfig;
 
 /**
  * @author Andre
- * @since 1.0.1
+ * @since 1.0.0
  */
 @Component("adminToolQuartzConfig")
 public class AdminToolQuartzConfig implements AdminToolConfig
@@ -57,6 +57,9 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	
 	@Value("#{'${admintool.quartz.securityRoles.jobs:}'.split(';')}")
 	private Set<String> securityRolesJobs = new HashSet<>();
+	
+	@Value("${admintool.quartz.componentPosition:}")
+	private Integer componentPosition;
 	
 	/**
 	 * @return the hideMenuItem
@@ -208,6 +211,7 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 
 	/**
 	 * @return the securityRolesConfig
+	 * @since 1.0.1
 	 */
 	public Set<String> getSecurityRolesConfig() {
 		return securityRolesConfig;
@@ -215,6 +219,7 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 
 	/**
 	 * @return the securityRolesJobs
+	 * @since 1.0.1
 	 */
 	public Set<String> getSecurityRolesJobs() {
 		return securityRolesJobs;
@@ -228,6 +233,22 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+	
+	/**
+	 * @return the componentPosition
+	 * @since 1.0.1
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 * @since 1.0.1
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
 	}
 
 	/* (non-Javadoc)
@@ -244,7 +265,7 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 				.append(", interruptTriggerAllowed=").append(interruptTriggerAllowed).append(", addTriggerAllowed=")
 				.append(addTriggerAllowed).append(", removeTriggerAllowed=").append(removeTriggerAllowed)
 				.append(", securityRolesConfig=").append(securityRolesConfig).append(", securityRolesJobs=")
-				.append(securityRolesJobs).append("]");
+				.append(securityRolesJobs).append(", componentPosition=").append(componentPosition).append("]");
 		return builder.toString();
 	}
 	

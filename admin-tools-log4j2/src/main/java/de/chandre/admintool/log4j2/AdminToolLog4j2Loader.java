@@ -31,6 +31,9 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 	@Value("#{'${admintool.log4j2.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
+	@Value("${admintool.log4j2.componentPosition:}")
+	private Integer componentPosition;
+	
 	@PostConstruct
 	public void configureAdminTool()
 	{
@@ -39,8 +42,10 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 			return;
 		}
 		LOGGER.info("adding Log4j Console to admin tool");
+		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(componentPosition);
 		component.getSecurityRoles().addAll(securityRoles);
 		component.addAdditionalCSS("/static/admintool/css/log4j2.css", true);
 		component.addAdditionalJS("/static/admintool/js/log4j2.js", true);
@@ -61,4 +66,30 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
 	}
+
+	/**
+	 * @return the componentPosition
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolLog4j2Loader [securityRoles=").append(securityRoles).append(", componentPosition=")
+				.append(componentPosition).append("]");
+		return builder.toString();
+	}
+	
 }

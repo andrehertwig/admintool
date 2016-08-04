@@ -34,6 +34,9 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 	@Value("#{'${admintool.jminix.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
+	@Value("${admintool.jminix.componentPosition:}")
+	private Integer componentPosition;
+	
 	@PostConstruct
 	public void configureAdminTool()
 	{
@@ -43,8 +46,10 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		}
 		
 		LOGGER.info("adding JMX Console to admin tool");
+		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
+		component.setPosition(componentPosition);
 		component.getSecurityRoles().addAll(securityRoles);
 		component.setDisplayName("JMX Console");
 		component.addAdditionalCSS("/static/admintool/jminix.css", true);
@@ -60,9 +65,48 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 	}
 	
 	/**
+	 * @return the jminixPath
+	 */
+	public String getJminixPath() {
+		return jminixPath;
+	}
+
+	/**
+	 * @param jminixPath the jminixPath to set
+	 */
+	public void setJminixPath(String jminixPath) {
+		this.jminixPath = jminixPath;
+	}
+
+	/**
+	 * @return the componentPosition
+	 */
+	public Integer getComponentPosition() {
+		return componentPosition;
+	}
+
+	/**
+	 * @param componentPosition the componentPosition to set
+	 */
+	public void setComponentPosition(Integer componentPosition) {
+		this.componentPosition = componentPosition;
+	}
+
+	/**
 	 * @return the securityRoles
 	 */
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolJminixLoader [jminixPath=").append(jminixPath).append(", securityRoles=")
+				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
+		return builder.toString();
 	}
 }
