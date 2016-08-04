@@ -3,6 +3,7 @@
 
 ## Existing things
 * [Core](admin-tools-core/): providing the core functionality
+* [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required in own project)
 * [Jminix integration](admin-tools-jminix/): simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required in own project)
 * [Log4j management](admin-tools-log4j2/): dashboard for all log4j2 loggers with the possibility to the log level at runtime
@@ -13,6 +14,7 @@
 * [File browser](admin-tools-filebrowser/): 
   * browsing and downloading (direct/zipped) files and directories 
   * showing and editing files 
+* [Property Visualization](admin-tools-properties) since 1.0.1: shows Git properties and Spring environment properties
 * [Spring Boot Demo application](admin-tools-demo/): simple spring boot web application for showcase
 
 ## Requirements

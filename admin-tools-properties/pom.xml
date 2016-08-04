@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>de.chandre.admin-tools</groupId>
+		<artifactId>admin-tools</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+    </parent>
+
+	<artifactId>admin-tools-properties</artifactId>
+	
+	<name>admin-tools properties visualizer</name>
+	<description>admin-tools properties visualizer</description>
+	
+	<packaging>jar</packaging>
+	
+	<properties>
+	</properties>
+	
+	<dependencies>
+		<!-- project dependencies -->
+		<dependency>
+			<groupId>de.chandre.admin-tools</groupId>
+			<artifactId>admin-tools-core</artifactId>
+		</dependency>
+	
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
