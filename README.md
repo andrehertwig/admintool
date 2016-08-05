@@ -1,7 +1,7 @@
 # Extendable Admin UI for Spring Boot Web Application
 > The purpose of this project is to provide an easy to integrate and extendable admin UI for Spring Boot web applications with a predefined stack of tools/dashboards which can be used out-of-the-box.
 
-## Existing things
+## Existing components
 * [Core](admin-tools-core/): providing the core functionality
 * [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required in own project)
@@ -41,15 +41,14 @@ Some URLs are secured
 
 ## Dependency and Configuration
 Include the dependencies to your dependency management. You can find it in [Maven Central](https://mvnrepository.com/artifact/de.chandre.admin-tools).
-
 ```xml
 
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
-	
+	...
 ```
 
 To get components scanned add the package to @ComponentScan
