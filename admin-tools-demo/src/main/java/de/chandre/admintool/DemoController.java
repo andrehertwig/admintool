@@ -54,18 +54,15 @@ public class DemoController
 		mainMenu.addVariable("message", "Welcome to your Dashboard");
 		component.setMainMenu(mainMenu);
 		
+		//adding sub menu entries
+		mainMenu.addSubmenuEntry(new MenuEntry("dashboard", "Dashboard", "content/dashboard"));
+		mainMenu.addSubmenuEntry(new MenuEntry("dashboard2", "Dashboard 2", "content/dashboard2"));
 		
-		MenuEntry submenu = new MenuEntry("dashboard", "Dashboard", "content/dashboard");
+		//adding a new sub menu tree
+		MenuEntry submenu = new MenuEntry("", "SubMulti", "");
+		submenu.addSubmenuEntry(new MenuEntry("dashboard3", "Dashboard 3", "content/dashboard3"));
+		submenu.addSubmenuEntry(new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4"));
 		mainMenu.addSubmenuEntry(submenu);
-		submenu = new MenuEntry("dashboard2", "Dashboard 2", "content/dashboard2");
-		mainMenu.addSubmenuEntry(submenu);
-		
-		submenu = new MenuEntry("", "SubMulti", "");
-		mainMenu.addSubmenuEntry(submenu);
-		MenuEntry susubmenu = new MenuEntry("dashboard3", "Dashboard 3", "content/dashboard3");
-		submenu.addSubmenuEntry(susubmenu);
-		susubmenu = new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4");
-		submenu.addSubmenuEntry(susubmenu);
 		
 		adminTool.addComponent(component);
 		
