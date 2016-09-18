@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,6 +169,21 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		return resultTO;
 	}
 	
+	private String prepareQuery(StatementTO statementTO){
+		String strQuery = statementTO.getStatement();
+		
+		if (statementTO.isBaseEncoded()) {
+			strQuery = new String(Base64.decodeBase64(strQuery));
+		}
+		
+		if (!strQuery.toLowerCase().contains("begin") && !strQuery.toLowerCase().contains("end;") && strQuery.endsWith(";"))
+	    {
+        	//if no PL-SQL statement trim the ";"
+	        strQuery = strQuery.substring(0, strQuery.length() -1);
+	    }
+		return strQuery;
+	}
+	
 	@Override
 	public QueryResultTO queryDatabase(StatementTO statementTO) {
 		if(!configuration.isEnabled()) return null;
@@ -180,11 +196,8 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			Statement st = c.createStatement();
 	        if (0 < statementTO.getMaxResults()) st.setMaxRows(statementTO.getMaxResults());
 	        
-	        String strQuery = statementTO.getStatement();
-	        if (!strQuery.toLowerCase().contains("begin") && !strQuery.toLowerCase().contains("end;") && strQuery.endsWith(";"))
-		    {
-		        strQuery = strQuery.substring(0, strQuery.length() -1);
-		    }
+	        String strQuery = prepareQuery(statementTO);
+	        
 			
 	        if (strQuery.toLowerCase().startsWith("select")) {
 	        	ResultSet resSet = null;

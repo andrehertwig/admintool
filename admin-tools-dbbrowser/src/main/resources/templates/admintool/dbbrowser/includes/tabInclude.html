@@ -78,16 +78,25 @@
 					</div>
 				</div>
 				<div class="form-group col-md-4 col-xs-12">
-					<button class="btn btn-primary" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'execute')}">Execute</button>
+					<div class="row">
+						<div class="col-xs-8">
+							<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'baseEncode')}" title="The query will be Base64 encoded.">Encode Query:</label>
+						</div>
+						<div class="col-xs-4">
+							<input type="checkbox" class="form-control" name="baseEncoded" value="1"
+								th:id="${@adminToolDBBrowserService.getTab(statementTO, 'baseEncoded')}"
+								th:checked="${statementTO != null and statementTO.isBaseEncoded()}" />
+						</div>
+					</div>
 				</div>
 			</div>
 			
 			<div class="row form-group" th:with="exampleMap = ${@adminToolDBBrowserService.getExamplesForDatasource(statementTO)}">
-				<div class="col-xs-3 col-md-1">
+				<div class="col-md-2 col-xs-2">
 					<label th:for="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">Examples:</label>
 				</div>
-				<div class="col-xs-9 col-md-11">
-					<select name="examples" class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">
+				<div class="col-md-8 col-xs-10">
+					<select class="form-control" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'examples')}">
 						<option value="" class="emptyOption">Choose Example</option>
 						<optgroup th:each="cluster, iterState : ${exampleMap}" th:label="${cluster.getKey()}">
 							<option th:each="sql, iterState2 : ${cluster.getValue()}" th:value="${sql.statement}" th:text="${sql.description}"></option>
@@ -95,10 +104,13 @@
 						
 					</select> 
 				</div>
+				<div class="col-md-2 col-xs-12">
+					<button class="btn btn-primary" th:id="${@adminToolDBBrowserService.getTab(statementTO, 'execute')}">Execute</button>
+				</div>
 			</div>
 			
 			<div class="row form-group">
-				<div class="col-xs-12">
+				<div class="form-group col-md-12 col-xs-12">
 					<textarea rows="2" name="statement" class="form-control" placeholder="SQL-Satement"
 						th:id="${@adminToolDBBrowserService.getTab(statementTO, 'statement')}"
 						th:text="${statementTO != null ? statementTO.statement : ''}"></textarea>

@@ -103,6 +103,21 @@
 			this.cm.getDoc().setValue($(event.target).val());
 		},
 		
+		isBaseEncoded: function($tab) {
+			return $('#baseEncoded_' + $tab.number).prop("checked");
+		},
+		
+		getStatement: function($tab) {
+			if (null == $tab.cm) {
+				return '';
+			}
+			var encode = this.isBaseEncoded($tab);
+			if (encode) {
+				return b64EncodeUnicode($tab.cm.doc.getValue());
+			}
+			return $tab.cm.doc.getValue();
+		},
+		
 		executeQuery: function(event) {
 			var $tab = this;
 			if (event instanceof Tab) {
@@ -114,8 +129,9 @@
 				clobEncoding :  $('#clobEncoding_' + $tab.number).val(),
 				showClobs :  $('#showClobs_' + $tab.number).prop("checked"),
 				showBlobs :  $('#showBlobs_' + $tab.number).prop("checked"),
+				baseEncoded :  $tab.isBaseEncoded($tab),
 				maxResults :  $('#maxResults_' + $tab.number).val() || 100,
-				statement :  (null == $tab.cm ? '' : $tab.cm.doc.getValue())
+				statement :  $tab.getStatement($tab)
 			};
 			
 			$tab.root.admintool.sendRequest({url: '/admintool/dbbrowser/executeQuery', data: JSON.stringify(query),
@@ -132,6 +148,10 @@
 			this.initFunctions();
 			this.showDBInfo();
 			this.initCodeMirror();
+			
+			if (this.isBaseEncoded(this)) {
+				statement = b64DecodeUnicode(statement);
+			}
 			
 			this.cm.doc.setValue(statement);
 			
@@ -328,3 +348,16 @@ $( document ).ready(function() {
 	$("#dbBrowser").dbBrowser();
 	$("#dbBrowser").dbBrowser('addTab', "#tabInclude_1", 1);
 });
+
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    }));
+}
+
+function b64DecodeUnicode(str) {
+    return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
