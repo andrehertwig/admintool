@@ -35,7 +35,7 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("${admintool.fileviewer.readOnly:true}")
 	private boolean readOnly;
 	
-	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;log;md;sh;bat;cmd}'.split(';')}")
+	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;json;yml;yaml;log;md;sh;bat;cmd}'.split(';')}")
 	private List<String> allowedExtensions = new ArrayList<>();
 	
 	@Value("${admintool.fileviewer.codeMirrorVersion:5.13.2}")
