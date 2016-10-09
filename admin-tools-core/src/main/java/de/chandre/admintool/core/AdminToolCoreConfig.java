@@ -30,7 +30,8 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.showStacktraceOnErrorPage:true}")
 	private boolean showStacktraceOnErrorPage;
 	
-	
+	@Value("${admintool.core.stripRootContext:}")
+	private String stripRootContext;
 	
 	@Override
 	public boolean isEnabled() {
@@ -99,6 +100,24 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	 */
 	public void setShowStacktraceOnErrorPage(boolean showStacktraceOnErrorPage) {
 		this.showStacktraceOnErrorPage = showStacktraceOnErrorPage;
+	}
+	
+	/**
+	 * a string value which is being removed from root context URI
+	 * @since 1.0.2
+	 * @return
+	 */
+	public String getStripRootContext() {
+		return stripRootContext;
+	}
+
+	/**
+	 * a string value which is being removed from root context URI
+	 * @since 1.0.2
+	 * @param stripRootContext
+	 */
+	public void setStripRootContext(String stripRootContext) {
+		this.stripRootContext = stripRootContext;
 	}
 
 	@Override

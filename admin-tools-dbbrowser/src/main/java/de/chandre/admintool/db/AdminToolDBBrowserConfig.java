@@ -51,6 +51,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	/**
 	 * @return the enabled
 	 */
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}

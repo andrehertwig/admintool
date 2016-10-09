@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
 <body>
-	<div id="template-content">
+	<div layout:fragment="content">
 		<section class="content-header">
 			<h1>
 				Fileviewer <span class="small">[<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir}">back to Filebrowser</a>]</span>

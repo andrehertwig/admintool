@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
 <body>
-	<div id="template-content">
+	<div layout:fragment="content">
 		<section class="content-header">
 			<h1>
 				Log4j Console <small>Configuration</small>
@@ -11,7 +11,7 @@
 		</section>
 
 
-		<section class="content">
+		<section class="content" id="log4jContent">
 
 			<div class="box box-info"
 				th:with="parentLoggers=${@adminToolLog4j2Util.getParentLoggers()}">

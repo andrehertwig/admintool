@@ -43,7 +43,7 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving file viewer page for file: " + file + ", encoding: " + encoding);
-		addCommonContextVars(model, request, "filebrowser", AdminToolFilebrowserLoader.TARGET_FILEVIEWER);
+		String templatePath = addCommonContextVars(model, request, "filebrowser", AdminToolFilebrowserLoader.TARGET_FILEVIEWER);
 		
 		File currentFile = new File(file);
 		model.put("currentDir", currentFile.getParent());
@@ -53,7 +53,7 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 		model.put("currentFile", currentFile);
 		model.put("selEncoding", StringUtils.isEmpty(encoding) ? fileviewerConfig.getDefaultEncoding() : encoding);
 		
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	
 	@RequestMapping(value = {"/update",}, method={RequestMethod.POST})
@@ -62,14 +62,14 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("updating file: " + file + ", encoding: " + encoding);
-		addCommonContextVars(model, request, "filebrowser", null);
+		String templatePath = addCommonContextVars(model, request, "filebrowser", null);
 		
 		File currentFile = new File(file);
 		model.put("currentDir", currentFile.getParent());
 		
 		filebrowserService.writeStringToFile(currentFile, encoding, fileContent);
 		
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	
 }

@@ -17,6 +17,10 @@ import de.chandre.admintool.core.component.AdminComponent;
 public interface AdminTool {
 	
 	/**
+	 * just a slash
+	 */
+	String SLASH = "/";
+	/**
 	 * name of admintool.
 	 */
 	String ROOTCONTEXT_NAME = "admintool";
@@ -24,7 +28,12 @@ public interface AdminTool {
 	/**
 	 * root context path with a leading slash
 	 */
-	String ROOTCONTEXT = "/" + ROOTCONTEXT_NAME;
+	String ROOTCONTEXT = SLASH + ROOTCONTEXT_NAME;
+	
+	/**
+	 * path to default error template: admintool/content/error
+	 */
+	String GENERIC_ERROR_TPL_PATH = ROOTCONTEXT_NAME + SLASH + "content" + SLASH + "error";
 	
 	/**
 	 * to set a custom comparator for ordering components.

@@ -46,11 +46,11 @@
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
-		<Logger name="org.springframework.security" level="debug" additivity="false">
+		<Logger name="org.springframework.security" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
-		<Logger name="org.springframework.security.web.access" level="debug" additivity="false">
+		<Logger name="org.springframework.security.web.access" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>

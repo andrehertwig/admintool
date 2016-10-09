@@ -261,6 +261,4 @@ public class AdminToolQuartzController {
 		this.quarzService = quarzService;
 	}
 	
-	
-	
 }

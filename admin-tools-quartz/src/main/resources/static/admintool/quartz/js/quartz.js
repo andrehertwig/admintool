@@ -43,7 +43,7 @@ $( document ).ready(function() {
 			var $btn = $(this);
 			sendRequest("/admintool/quartz/changeRunningState", "GET", "text", function(result) {
 				$btn.text(result);
-				switchClass($btn, 'btn-success', 'btn-danger');
+				$btn.switchClass('btn-success', 'btn-danger');
 			});
 		});
 	}
@@ -59,7 +59,7 @@ $( document ).ready(function() {
 			} else {
 				stopPermanentReload();
 			}
-			switchClass($('#autoreload'), 'text-success', 'text-danger');
+			$('#autoreload').switchClass('text-success', 'text-danger');
 		});
 	}
 	
@@ -86,13 +86,13 @@ function initHandlers() {
 				if (result == 'true') {
 					if ($btn.text() == 'running') {
 						$btn.text('paused')
-						switchClass($btn, 'btn-success', 'btn-warning');
+						$btn.switchClass('btn-success', 'btn-warning');
 					} else if($btn.text() == 'pending') {
 						$btn.text('paused')
-						switchClass($btn, 'btn-info', 'btn-warning');
+						$btn.switchClass('btn-info', 'btn-warning');
 					} else {
 						$btn.text('pending')
-						switchClass($btn, 'btn-info', 'btn-warning');
+						$btn.switchClass('btn-info', 'btn-warning');
 					}
 				}
 			});

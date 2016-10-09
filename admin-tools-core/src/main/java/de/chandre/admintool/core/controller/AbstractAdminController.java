@@ -1,6 +1,7 @@
 package de.chandre.admintool.core.controller;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import de.chandre.admintool.core.AdminTool;
+import de.chandre.admintool.core.AdminToolCoreConfig;
 import de.chandre.admintool.core.MenuEntrySearchResult;
 import de.chandre.admintool.core.component.MenuEntry;
 import de.chandre.admintool.core.utils.AdminToolMenuUtils;
@@ -34,6 +36,9 @@ public class AbstractAdminController
 	@Autowired 
 	private AdminToolMenuUtils menuUtils;
 	
+	@Autowired
+	private AdminToolCoreConfig coreConfig;
+	
 	/**
 	 * sets common context variables<br>
 	 * <ul>
@@ -46,10 +51,11 @@ public class AbstractAdminController
 	 * 
 	 * @param model
 	 * @param request
+	 * @return 
 	 */
-	protected void addCommonContextVars(ModelMap model, HttpServletRequest request) 
+	protected String addCommonContextVars(ModelMap model, HttpServletRequest request) 
 	{
-		addCommonContextVars(model, request, null, null);
+		return addCommonContextVars(model, request, null, null);
 	}
 	
 	/**
@@ -68,15 +74,15 @@ public class AbstractAdminController
 	 * @param request
 	 * @param overrideName
 	 */
-	protected void addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName, String overrideTarget) 
+	protected String addCommonContextVars(ModelMap model, HttpServletRequest request, String overrideName, String overrideTarget) 
 	{
 		LOGGER.debug(String.format("receiving request: ctxPath: %s, uri: %s", request.getContextPath(), request.getRequestURI()));
 		final String name = menuUtils.getMenuName(request, overrideName);
 		
 		//get menu entry by name
 		MenuEntrySearchResult result = adminTool.searchComponent(name);
-		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
-		
+		model.put("rootContext", getRootContext(request));
+		String targetTpl = "/content/error404";
 		if (null != result) {
 			LOGGER.trace("Component found: " + String.valueOf(null != result.getComponent()) +
 					" | menu found: " + String.valueOf(result.getMenuEntry()));
@@ -84,15 +90,23 @@ public class AbstractAdminController
 			model.put(MenuEntrySearchResult.NAME, result);
 			MenuEntry entry = result.getMenuEntry();
 			//set alternative target
-			String targetPage = (StringUtils.isEmpty(overrideTarget) ? entry.getTarget() : overrideTarget);
-			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/" + targetPage);
+			targetTpl = (StringUtils.isEmpty(overrideTarget) ? entry.getTarget() : overrideTarget);
+			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl);
 			if (null != entry.getVariables()) {
 				model.putAll(entry.getVariables());
 			}
 			model.put("activeMenu", entry);
 		} else {
-			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + "/content/error404");
+			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl);
 		}
+		return targetTpl;
+	}
+	
+	protected String getRootContext(HttpServletRequest request) {
+		if (StringUtils.isEmpty(coreConfig.getStripRootContext())) {
+			return request.getContextPath() + AdminTool.ROOTCONTEXT;
+		}
+		return request.getContextPath().replaceFirst(Pattern.quote(coreConfig.getStripRootContext()), "") + AdminTool.ROOTCONTEXT;
 	}
 	
 	/**

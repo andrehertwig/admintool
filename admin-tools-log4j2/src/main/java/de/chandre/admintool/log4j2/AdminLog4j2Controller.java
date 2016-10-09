@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,11 +32,18 @@ public class AdminLog4j2Controller
 	@Autowired
 	private AdminToolLog4j2Util log4jUtil;
 	
-	@RequestMapping(value = "/changeLevel", method = RequestMethod.POST)
+	@RequestMapping(value = "/changeLevel/{loggerName}/{level}", method = {RequestMethod.POST, RequestMethod.GET})
 	@ResponseBody
-	public String changeLevel(@RequestParam("loggerName") String loggerName,
-			@RequestParam("level") String level, @RequestParam(name="parent", required=false) boolean parent, 
+	public String changeLevel(@PathVariable("loggerName") String loggerName, @PathVariable("level") String level,
 			HttpServletRequest request)
+	{
+		return changeLevelParent(loggerName, level, false, request);
+	}
+	
+	@RequestMapping(value = "/changeLevel/{loggerName}/{level}/parent/{parent}", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public String changeLevelParent(@PathVariable("loggerName") String loggerName, @PathVariable("level") String level, 
+			@PathVariable("parent") boolean parent, HttpServletRequest request)
 	{
 		LOGGER.info(String.format("change %s to %s (parent: %s)", loggerName, level, parent));
 		try {
@@ -49,7 +57,7 @@ public class AdminLog4j2Controller
 		return "true";
 	}
 	
-	@RequestMapping(value = "/removeCustomLoggers", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeCustomLoggers", method = {RequestMethod.POST, RequestMethod.GET})
 	@ResponseBody
 	public String removeCustomLoggers() {
 		LOGGER.info(String.format("removing custom loggers"));
@@ -68,9 +76,9 @@ public class AdminLog4j2Controller
 		return res;
 	}
 	
-	@RequestMapping(value = "/getLevelCss", method = RequestMethod.GET)
+	@RequestMapping(value = "/getLevelCss/{prefix}", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, String> getLevelCssClass(@RequestParam("prefix") String prefix, HttpServletRequest request)
+	public Map<String, String> getLevelCssClass(@PathVariable("prefix") String prefix, HttpServletRequest request)
 	{
 		Map<String, String> css = new HashMap<>();
 		for (Level level : log4jUtil.getLevels()) {

@@ -31,6 +31,8 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolDBBrowserController.class);
 	
+	private static final String TAB_INCLUDE_TPL_PATH = "/dbbrowser/includes/tabInclude";
+	
 	@Autowired
 	private AdminToolDBBrowserService dbBrowserService;
 	
@@ -81,7 +83,7 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 		
 		model.put("statementTO", statementTO);
 		model.put("queryResultTO", dbBrowserService.queryDatabase(statementTO));
-		return AdminTool.ROOTCONTEXT_NAME + "/dbbrowser/includes/tabInclude";
+		return AdminTool.ROOTCONTEXT_NAME + TAB_INCLUDE_TPL_PATH;
 	}
 
 	/**

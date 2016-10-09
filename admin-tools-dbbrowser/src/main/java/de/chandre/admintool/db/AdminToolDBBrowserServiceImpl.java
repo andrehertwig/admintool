@@ -187,6 +187,9 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	@Override
 	public QueryResultTO queryDatabase(StatementTO statementTO) {
 		if(!configuration.isEnabled()) return null;
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(statementTO);
+		}
 		
 		ConnectionVars vars = new ConnectionVars();
 		QueryResultTO resultTO = new QueryResultTO(statementTO);
@@ -197,7 +200,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	        if (0 < statementTO.getMaxResults()) st.setMaxRows(statementTO.getMaxResults());
 	        
 	        String strQuery = prepareQuery(statementTO);
-	        
+	        LOGGER.trace("executing query: " + strQuery);
 			
 	        if (strQuery.toLowerCase().startsWith("select")) {
 	        	ResultSet resSet = null;

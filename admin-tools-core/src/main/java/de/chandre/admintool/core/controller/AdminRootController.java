@@ -39,14 +39,14 @@ public class AdminRootController extends AbstractAdminController
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving admin root page");
 		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
 		model.put("contentPage", "admintool/content/start");
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + "/content/start";
 	}
 	
 	@RequestMapping(value = {"/**"})
 	public String subPage(ModelMap model, HttpServletRequest request) {
 		
-		addCommonContextVars(model, request);
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		String targetTpl = addCommonContextVars(model, request);
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl;
 	}
 	
 	@RequestMapping(value = {"/{lang}/**"})
@@ -54,15 +54,15 @@ public class AdminRootController extends AbstractAdminController
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		resolveLocale(language, request, response);
-		addCommonContextVars(model, request);
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		String targetTpl = addCommonContextVars(model, request);
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl;
 	}
 	
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleException(Exception exception, HttpServletRequest request) {
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());
 		
-		ModelAndView mv = new ModelAndView(AdminTool.ROOTCONTEXT_NAME + "/content/error");
+		ModelAndView mv = new ModelAndView(AdminTool.GENERIC_ERROR_TPL_PATH);
 		mv.getModelMap().put("exceptionMessage", exception.getMessage());
 //		mv.getModelMap().put("httpStatus", response.getStatus());
 //		HttpStatus status = HttpStatus.valueOf(response.getStatus());

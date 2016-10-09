@@ -75,8 +75,11 @@
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
 		
-			<th:block th:include="${contentPage} :: #template-content" />
+			<div layout:fragment="content"></div>
 			
+			<!--/* 
+			<th:block th:include="${contentPage} :: #template-content" />
+			*/-->
 		</div>
 		<!-- /.content-wrapper -->
 		

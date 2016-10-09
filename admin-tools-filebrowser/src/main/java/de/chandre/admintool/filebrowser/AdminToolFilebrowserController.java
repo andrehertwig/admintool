@@ -46,11 +46,11 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 			ModelMap model, HttpServletRequest request) {
 		String currentDir = StringUtils.isEmpty(dirPath) ? filebrowserConfig.getStartDir().getAbsolutePath() : dirPath;
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("show directory: " + currentDir);
-		addCommonContextVars(model, request, "filebrowser", null);
+		String templatePath = addCommonContextVars(model, request, "filebrowser", null);
 		model.put("currentDir", currentDir);
 		model.put("sortCol", SortColumn.fromIndex(sortCol));
 		model.put("sortAsc", sortType);
-		return AdminTool.ROOTCONTEXT_NAME + "/index";
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	
 	@RequestMapping(value = {"/file",})
@@ -87,7 +87,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	public ModelAndView handleException(Exception exception, HttpServletRequest request) {
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());
 		
-		ModelAndView mv = new ModelAndView(AdminTool.ROOTCONTEXT_NAME + "/index");
+		ModelAndView mv = new ModelAndView(AdminTool.GENERIC_ERROR_TPL_PATH);
 		addCommonContextVars(mv.getModelMap(), request, "filebrowser", null);
 		
 		String lastFile = request.getParameter("file");
