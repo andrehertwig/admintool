@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.spi.StandardLevel;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ConcurrentReferenceHashMap;
 
 @Service("adminToolLog4j2Util")
 public class AdminToolLog4j2Util 
@@ -38,8 +40,8 @@ public class AdminToolLog4j2Util
 		}
 	};
 	
-	private List<String> customLoggers = new ArrayList<>();
-	private List<String> customParentLoggers = new ArrayList<>();
+	private Map<LoggerConfig, String> customLoggers = new ConcurrentReferenceHashMap<>();
+	private Map<LoggerConfig, String> customParentLoggers = new ConcurrentReferenceHashMap<>();
 	
 	public Collection<Logger> getParentLoggers() {
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
@@ -121,20 +123,34 @@ public class AdminToolLog4j2Util
 		if (null == loggerConfig) {
 			throw new IllegalArgumentException("no logger config found for: " + String.valueOf(loggerName));
 		}
-		if (!loggerConfig.getName().equals(loggerName)) {
+		if (customLoggers.containsValue(loggerName)) {
+			setLevelOnExistingCustomLogger(this.customLoggers, loggerName, level);
+		}
+		else if (customParentLoggers.containsValue(loggerName)) {
+			setLevelOnExistingCustomLogger(this.customParentLoggers, loggerName, level);
+		}
+		else if (!loggerConfig.getName().equals(loggerName)) {
 			LoggerConfig loggerConfigNew = new LoggerConfig();
 			loggerConfigNew.setLevel(level);
 		    config.addLogger(loggerName, loggerConfigNew);
 		    if (parent) {
-		    	customParentLoggers.add(loggerName);
+		    	customParentLoggers.put(loggerConfigNew, loggerName);
 		    } else {
-		    	customLoggers.add(loggerName);
+		    	customLoggers.put(loggerConfigNew, loggerName);
 		    }
 		}
 		else {
 			loggerConfig.setLevel(level);
 		}
 		ctx.updateLoggers();
+	}
+	
+	private void setLevelOnExistingCustomLogger(Map<LoggerConfig, String> customLoggers, String loggerName, Level level) {
+		for (Entry<LoggerConfig, String> entry : customLoggers.entrySet()) {
+			if (entry.getValue().equals(loggerName)) {
+				entry.getKey().setLevel(level);
+			}
+		}
 	}
 	
 	public void removeCustomLoggers() throws IllegalArgumentException
@@ -144,8 +160,8 @@ public class AdminToolLog4j2Util
 		}
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		Configuration config = ctx.getConfiguration();
-		for (String logger : customLoggers) {
-			config.removeLogger(logger);
+		for (Entry<LoggerConfig, String> entry : customLoggers.entrySet()) {
+			config.removeLogger(entry.getValue());
 		}
 		ctx.updateLoggers();
 		customLoggers.clear();
