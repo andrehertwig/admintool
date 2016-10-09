@@ -136,6 +136,31 @@ A content template must at least contain a block element with *id="template-cont
 
 The reason for this special id *id="template-content"* is that the index.html within the core module will include the content page content by this particular id `<th:block th:include="${contentPage} :: #template-content" />`. So all other HTML tags outside the block element with its special id will not be considered.
 
+#### Since 1.0.2-SNAPSHOT
+The template resolution has been restructured a bit. 
+Now the [Thymeleaf Layout dialect](http://www.thymeleaf.org/doc/articles/layouts.html#thymeleaf-layout-dialect) will be used.
+So a template should look like this:
+```html
+
+	<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+		<body>
+			<div layout:fragment="content">
+				<section class="content-header">
+					<h1>My Fabulous Component</h1>
+					<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+				</section>
+				<section class="content">
+					... my content ...
+				</section>
+			</div>
+		</body>
+	</html>
+
+```
+
+So it will be much easier to apply a custom layout.
+
 ### Template resolution 
 The Thymeleaf templates will be resolved in the *admintool* folder of configured template folder.
 e.g if configured Thymeleaf root template folder is *templates* all templates all own templates should be places within: 
