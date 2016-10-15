@@ -56,14 +56,26 @@
 
 					<div class="box-header with-border">
 						<div class="row" id="permissions">
-							<div th:class="'col-md-3 col-xs-3 text-center' + ${!currentFile.isHidden() ? ' bg-success' : ' bg-danger'}"
-								th:text="${currentFile.isHidden() ? 'invisble' : 'visible'}"></div>
-							<div th:class="'col-md-3 col-xs-3 text-center' + ${currentFile.canRead() ? ' bg-success' : ' bg-danger'}"
-								th:text="${currentFile.canRead() ? 'readable' : 'unreadable'}"></div>
-							<div th:class="'col-md-3 col-xs-3 text-center' + ${currentFile.canWrite() ? ' bg-success' : ' bg-danger'}"
-								th:text="${currentFile.canWrite() ? 'writeable' : 'unwriteable'}"></div>
-							<div th:class="'col-md-3 col-xs-3 text-center' + ${@adminToolFileviewerConfig.isReadOnly() ? ' bg-success' : ' bg-danger'}"
-								th:text="${@adminToolFileviewerConfig.isReadOnly() ? 'DML disallowed' : 'DML allowed'}"></div>
+							<div class="row">
+								<div class="col-md-2 col-xs-3 btn-sm" title="File attributes">Security states:</div>
+								<div class="col-md-10 col-xs-9">
+									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${!currentFile.isHidden() ? ' bg-success' : ' bg-danger'}"
+										th:text="${currentFile.isHidden() ? 'invisble' : 'visible'}"
+										title="if the file is marked as hidden"></div>
+									<div class="col-md-1 col-xs-1"></div>
+									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${currentFile.canRead() ? ' bg-success' : ' bg-danger'}"
+										th:text="${currentFile.canRead() ? 'readable' : 'unreadable'}"
+										title="if the file permission allows to it"></div>
+									<div class="col-md-1 col-xs-1"></div>
+									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${currentFile.canWrite() ? ' bg-success' : ' bg-danger'}"
+										th:text="${currentFile.canWrite() ? 'writeable' : 'read-only'}"
+										title="if the file is marked as read-only"></div>
+									<div class="col-md-1 col-xs-1"></div>
+									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${@adminToolFileviewerConfig.isReadOnly() ? ' bg-success' : ' bg-danger'}"
+										th:text="${@adminToolFileviewerConfig.isReadOnly() ? 'DM not allowed' : 'DM allowed'}"
+										title="this is a configured value, if data manipulation is allowed or not"></div>
+								</div>
+							</div>
 						</div>
 					</div>
 	
