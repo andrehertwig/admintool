@@ -259,11 +259,12 @@ $.extend(AdminTool.DBBrowser.prototype, {
 		var newTab = new DBTab(this, "#tabInclude_"+ newNumber, newNumber);
 		this.tabs.push(newTab); 
 		
-		$('#tabContent').append('<div id="tabPane_'+newNumber+'" class="tab-pane">');
+		$('#tabContent').append('<div id="tabPane_'+newNumber+'" class="tab-pane" role="tabpanel">');
 		$('#tabNavAdd').before('<li id="tab_'+newNumber+'"><a data-toggle="tab" href="#tabPane_'+newNumber+
-				'" aria-expanded="true">Tab '+newNumber+'</a></li>');
+				'" aria-expanded="true" role="tab">Tab '+newNumber+'</a></li>');
 		
 		newTab.initAddTab();
+		this.showTab(newNumber);
 	},
 	
 	addTab: function (selector, number) {
@@ -281,6 +282,12 @@ $.extend(AdminTool.DBBrowser.prototype, {
 			}
 		}
 		this.tabs.splice(i, 1);
+		//show previous (i is starting with 0, so no decrement required)
+		this.showTab(i);
+	},
+	
+	showTab: function(number) {
+		$('#tab_' + (number) + ' a').tab('show');
 	},
 	
 	getStaticObjects: function() {
