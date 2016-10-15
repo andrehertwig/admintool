@@ -1,6 +1,7 @@
 package de.chandre.admintool.core.component;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -241,7 +242,7 @@ public class MenuEntry implements Serializable
 	/**
 	 * the effective roles reverse recursive to component if not set at this object or anywhere within the tree<br>
 	 * first menu entry or component with roles will return it.
-	 * @return
+	 * @return a unmodifiable Set or empty Set
 	 * @since 1.0.1
 	 */
 	public Set<String> getAffectedSecurityRoles() {
@@ -251,15 +252,18 @@ public class MenuEntry implements Serializable
 			while (entry.hasNext()) {
 				MenuEntry menuEntry = (MenuEntry) entry.next();
 				if (!CollectionUtils.isEmpty(menuEntry.getSecurityRoles())) {
-					return menuEntry.getSecurityRoles();
+					return Collections.unmodifiableSet(menuEntry.getSecurityRoles());
 				}
 				//root?
 				if (null != menuEntry.getComponent()) {
-					return menuEntry.getComponent().getSecurityRoles();
+					if (null != menuEntry.getComponent().getSecurityRoles()) {
+						return Collections.unmodifiableSet(menuEntry.getComponent().getSecurityRoles());
+					}
 				}
 			}
+			return Collections.emptySet();
 		}
-		return securityRoles;
+		return Collections.unmodifiableSet(securityRoles);
 	}
 	
 	/**

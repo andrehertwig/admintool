@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service("adminToolInitializer")
 public class AdminToolInitializer extends AbstractAdminToolLoader
@@ -23,7 +24,12 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 				coreConfig.getFontAwsomeCdnVersion() + "/css/font-awesome.min.css", relative);
 		adminTool.addGlobalStyleSheet(commonPrefix + "ionicons/2.0.1/css/ionicons.min.css", relative);	
 		
-		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/jQuery/jQuery-2.2.0.min.js", relative);
+		if (StringUtils.isEmpty(coreConfig.getJqueryPath())) {
+			adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/jQuery/jquery-2.2.3.min.js", relative);
+		} else {
+			adminTool.addGlobalJavaScript(coreConfig.getJqueryPath(), relative);
+		}
+		
 		adminTool.addGlobalJavaScript(adminLtePrefix + "bootstrap/js/bootstrap.min.js", relative);
 		adminTool.addGlobalJavaScript(adminLtePrefix + "dist/js/app.min.js", relative);
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "dist/css/AdminLTE.min.css", relative);

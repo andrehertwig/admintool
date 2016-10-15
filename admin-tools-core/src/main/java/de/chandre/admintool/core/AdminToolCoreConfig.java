@@ -21,8 +21,11 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.useCDN:true}")
 	private boolean useCDNs;
 	
-	@Value("${admintool.core.adminLTE.cdn.version:2.3.3}")
+	@Value("${admintool.core.adminLTE.cdn.version:2.3.6}")
 	private String adminLTECdnVersion;
+	
+	@Value("${admintool.core.jquery.path:}")
+	private String jqueryPath;
 	
 	@Value("${admintool.core.fontAwsome.cdn.version:4.6.3}")
 	private String fontAwsomeCdnVersion;
@@ -68,6 +71,28 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	 */
 	public void setAdminLTECdnVersion(String adminLTECdnVersion) {
 		this.adminLTECdnVersion = adminLTECdnVersion;
+	}
+	
+	/**
+	 * Path (relative to own project or URL to CDN) for jQuery. 
+	 * Setting the jqueryPath is only required if using a different AdminLTE version than the configured one
+	 * and the (AdminLTE's) distributed version of jQuery or name has been changed
+	 * @return
+	 * @since 1.0.2
+	 */
+	public String getJqueryPath() {
+		return jqueryPath;
+	}
+
+	/**
+	 * Path (relative to own project or URL to CDN) for jQuery. 
+	 * Setting the jqueryPath is only required if using a different AdminLTE version than the configured one
+	 * and the (AdminLTE's) distributed version of jQuery or name has been changed
+	 * @param jqueryPath
+	 * @since 1.0.2
+	 */
+	public void setJqueryPath(String jqueryPath) {
+		this.jqueryPath = jqueryPath;
 	}
 
 	/**

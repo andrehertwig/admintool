@@ -100,7 +100,8 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 	mainMenu.addVariable("message", "Welcome to your Dashboard");
 	component.setMainMenu(mainMenu);
 	
-	//adding sub menu entries
+	//adding sub menu entries with
+	// unique name, display name, template target
 	mainMenu.addSubmenuEntry(new MenuEntry("dashboard", "Dashboard", "content/dashboard"));
 	mainMenu.addSubmenuEntry(new MenuEntry("dashboard2", "Dashboard 2", "content/dashboard2"));
 		
@@ -111,6 +112,11 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 	mainMenu.addSubmenuEntry(submenu);
 
 ```
+Template target resolvement:
+E.g. your Thymeleaf is configured to look for templates in: *classpath:/templates*
+* than your template has to be in: */templates/admintool/*
+* you want to use your own structure: */templates/admintool/myComponent/myMenuTemplate.html*
+* to get the example resolved set target to: *myComponent/myMenuTemplate*
 
 ### Creating a content template
 
@@ -162,7 +168,7 @@ So a template should look like this:
 This way it will be much easier to apply a custom layout.
 
 ### Template resolution 
-The Thymeleaf templates will be fetched in the *admintool* folder of the configured template folder.
+The Thymeleaf templates will be fetched from the *admintool* folder of the configured template folder.
 e.g. if configured Thymeleaf root template folder is *templates* all custom (admintool-)templates should be placed within: 
 `/src/main/resources/templates/admintool/`
 Commonly provided admin-tools modules will have the following structure
