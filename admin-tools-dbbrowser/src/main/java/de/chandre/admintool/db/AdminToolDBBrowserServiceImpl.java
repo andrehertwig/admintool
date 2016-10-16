@@ -18,10 +18,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -31,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 
@@ -150,6 +155,57 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			
 			iterateResult(resSet, resultTO, statementTO);
 			
+			int colTableName = -1;
+			int colSchemaName = -1;
+			int i = 0;
+			for (String colName : resultTO.getColumnsNames()) {
+				if (colName.toLowerCase(Locale.ENGLISH).startsWith("table_name")) {
+					colTableName = i;
+	    		}
+	    		if (colName.toLowerCase(Locale.ENGLISH).startsWith("table_sche")) {
+	    			colSchemaName = i;
+	    		}
+	    		++i;
+			}
+			
+			Map<String, Collection<String>> tablesAndColums = new HashMap<>();
+			
+			for (List<String> row : resultTO.getTableResult()) {
+				String schemaName = colSchemaName > -1 ? row.get(colSchemaName) : null;
+				String tableName = colTableName > -1 ? row.get(colTableName) : null;
+				
+				ResultSet tableResSet = metadata.getColumns(null, schemaName, tableName, null);
+				
+				QueryResultTO tableResultTO = new QueryResultTO();
+				iterateResult(tableResSet, tableResultTO, statementTO);
+				
+				int colColumnName = -1;
+				i = 0;
+				for (String colName : tableResultTO.getColumnsNames()) {
+		    		if (colName.toLowerCase(Locale.ENGLISH).startsWith("column_name")) {
+		    			colColumnName = i;
+		    		}
+		    		++i;
+				}
+				
+				Set<String> colums = new HashSet<>();
+				
+				for (List<String> colRow : tableResultTO.getTableResult()) {
+					String columnName = colColumnName > -1 ? colRow.get(colColumnName) : null;
+					if (null != columnName) {
+						colums.add(columnName);
+					}
+				}
+				if (tablesAndColums.containsKey(tableName)) {
+					LOGGER.info(String.format("duplicate table found: %s (schema is: %s)", tableName, schemaName));
+				}
+				tablesAndColums.put(tableName, colums);
+			}
+			
+			resultTO.setTableResult(null);
+			
+			resultTO.addMetadata("tables", tablesAndColums);
+			
 			resultTO.addMetadata(META_KEY_DB_VERSION, metadata.getDatabaseProductVersion());
 			resultTO.addMetadata(META_KEY_DRIVER_VERSION, metadata.getDriverVersion());
 			resultTO.addMetadata(META_KEY_DRIVER_NAME, metadata.getDriverName());
@@ -193,6 +249,10 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		
 		ConnectionVars vars = new ConnectionVars();
 		QueryResultTO resultTO = new QueryResultTO(statementTO);
+		if (StringUtils.isEmpty(statementTO.getStatement())) {
+			return resultTO;
+		}
+		
 		Connection c = null;
 		try {
 			c = getConnection(statementTO.getDatasourceName(), vars);
@@ -246,7 +306,8 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			    
 			    for (int i = 1; i < (cols+1); i++)
 			    {
-			    	columnsNames.add(metaData.getColumnName(i));
+			    	String colName = metaData.getColumnName(i);
+			    	columnsNames.add(colName);
 			    	type.put(i, metaData.getColumnType(i));
 			    }
 			   

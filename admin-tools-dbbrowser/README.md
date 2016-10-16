@@ -11,6 +11,8 @@
 
 Result will be displayed via jquery.datatables 
 
+![Preview image](src/doc/screen_dbbrowser_org2.png?raw=true "AdminTool Database-Browser UI")
+
 ## Introduced with
 * admin-tools-core:1.0.0
 
@@ -25,12 +27,12 @@ Result will be displayed via jquery.datatables
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-dbbrowser</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 	
 ```

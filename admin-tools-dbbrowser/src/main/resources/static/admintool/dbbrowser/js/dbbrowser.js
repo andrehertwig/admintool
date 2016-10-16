@@ -26,6 +26,7 @@ DBTab.prototype = {
 		
 	_init: function() {
 		this.initCheckboxes();
+		this.initSelects();
 		this.initCodeMirror();
 		this.initFunctions();
 		setTimeout(function(my){my.showDBInfo();}, 3000, this);
@@ -36,9 +37,19 @@ DBTab.prototype = {
 		this.$elem.find('input').iCheck('destroy');
 		this.$elem.find('input').iCheck({
 			checkboxClass: 'icheckbox_minimal',
-			radioClass: 'iradio_minimal',
+			radioClass: 'iradio_minimal'
 //					increaseArea: '20%' // optional
 		});
+	},
+	
+	initSelects: function() {
+		$("#clobEncoding_" + this.number).select2({
+			  minimumResultsForSearch: Infinity
+		});
+		$("#datasourceName_" + this.number).select2({
+			  minimumResultsForSearch: Infinity
+		});
+		$("#examples_" + this.number).select2();
 	},
 	
 	initFunctions: function() {
@@ -143,6 +154,7 @@ DBTab.prototype = {
 		$tabContent.html(data);
 		this.$elem = $(this.selector);
 		this.initCheckboxes();
+		this.initSelects();
 		this.initFunctions();
 		this.showDBInfo();
 		this.initCodeMirror();
@@ -200,10 +212,11 @@ DBTab.prototype = {
 	setSqlMode: function(dsn) {
 		var datasourceName = dsn || $('#datasourceName_' + this.number).val();
 		var mymime = null; 
+		var myMetaData = null;
 		if (this.root.metaData.hasOwnProperty(datasourceName)) {
-			var myInfo = this.root.metaData[datasourceName];
-			if (myInfo !== undefined && null != myInfo) {
-				var driverName = myInfo.metadata.driverName;
+			myMetaData = this.root.metaData[datasourceName];
+			if (myMetaData !== undefined && null != myMetaData) {
+				var driverName = myMetaData.metadata.driverName;
 				for (var vendorName in this.supportedVendors) {
 					var mime = this.supportedVendors[vendorName];
 					if(this.contains(driverName, vendorName)) {
@@ -216,6 +229,13 @@ DBTab.prototype = {
 		var info = CodeMirror.findModeByMIME(null != mymime ? mymime : this.supportedVendors['default']);
 		//console.log('using: ' + info.mode +  ': ' + info.mime);
 		this.cm.setOption("mode", info.mime);
+		
+		if (null != myMetaData && myMetaData.metadata.hasOwnProperty('tables')) {
+			var tables = {}
+			tables['tables'] = myMetaData.metadata['tables'];
+			this.cm.setOption("hintOptions", tables);
+		}
+		
 	    CodeMirror.autoLoadMode(this.cm, info.mode);
 	    this.refreshCodeMirror();
 	},

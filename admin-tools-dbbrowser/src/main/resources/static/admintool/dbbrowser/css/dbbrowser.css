@@ -25,6 +25,9 @@ span.dbInfo {
 	font-size: 12px;
 	color: #a2a2a2;
 }
+#addTab {
+	cursor: pointer;
+}
 i.fa-trash {
 	cursor: pointer;
 }

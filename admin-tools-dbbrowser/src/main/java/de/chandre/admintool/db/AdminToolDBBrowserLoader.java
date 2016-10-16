@@ -44,8 +44,13 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.getSecurityRoles().addAll(dbBroserConfig.getSecurityRoles());
 		
 		component.setDisplayName("DB Browser");
-		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js", true);
+		String adminLtePrefix = getAdminLTEPrefixUri();
 		
+		//select 2 plugin
+		component.addAdditionalJS(adminLtePrefix + "plugins/select2/select2.min.js", relative);
+		component.addAdditionalCSS(adminLtePrefix + "plugins/select2/select2.min.css", relative);
+		
+		//codemirror
 		String codeMirrorPrefix = commonPrefix + "codemirror/" + dbBroserConfig.getCodeMirrorVersion() + "/";
 		
 		component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
@@ -66,6 +71,8 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.addAdditionalCSS(codeMirrorPrefix + "lib/codemirror.css", relative);
 		component.addAdditionalCSS(codeMirrorPrefix + "addon/hint/show-hint.css", relative);
 		
+		//own JS and CSS
+		component.addAdditionalJS("/static/admintool/dbbrowser/js/dbbrowser.js", true);
 		component.addAdditionalCSS("/static/admintool/dbbrowser/css/dbbrowser.css", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
