@@ -11,7 +11,7 @@
 
 Result will be displayed via jquery.datatables 
 
-![Preview image](src/doc/screen_dbbrowser_org2.png?raw=true "AdminTool Database-Browser UI")
+![Preview image](doc/screen_dbbrowser_org2.png?raw=true "AdminTool Database-Browser UI")
 
 ## Introduced with
 * admin-tools-core:1.0.0
