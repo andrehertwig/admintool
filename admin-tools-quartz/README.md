@@ -1,6 +1,8 @@
 # The Quartz-Scheduler Management Plugin
 > View, edit, start Quartz-Jobs / Triggers ... 
 
+ ![Preview image](doc/screen_quartzJobs_org.png?raw=true "AdminTool Quartz Jobs UI")
+ ![Preview image](doc/screen_quartzMetadata_org.png?raw=true "AdminTool Quartz Metadata UI")
 
 ## Features
 * `Scheduler`: starting, stopping the scheduler instance

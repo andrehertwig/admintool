@@ -1,6 +1,8 @@
 # The Jminix integration Plugin
 > Shows Jminix Console within a IFrame
 
+ ![Preview image](doc/screen_jminix_org.png?raw=true "AdminTool Jminix UI")
+
 ## Introduced with
 * admin-tools-core:1.0.0
 

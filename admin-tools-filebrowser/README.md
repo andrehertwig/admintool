@@ -11,6 +11,9 @@
   * syntax highlighting for different file types
   * change and save editable files   
 
+ ![Preview image](doc/screen_filebrowser_org.png?raw=true "AdminTool FileBrowser UI")
+ ![Preview image](doc/screen_fileviewer_org.png?raw=true "AdminTool FileViewer UI")
+  
 ## Introduced with
 * admin-tools-core:1.0.1
 

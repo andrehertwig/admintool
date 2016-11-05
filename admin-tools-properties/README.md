@@ -1,6 +1,8 @@
 # The Properties visualization Plugin
 > Shows Git Properties if in classpath and Spring environment properties
 
+ ![Preview image](doc/screen_propertyBrowser_org.png?raw=true "AdminTool Properties UI")
+
 ## Introduced with
 * admin-tools-core:1.0.1
 

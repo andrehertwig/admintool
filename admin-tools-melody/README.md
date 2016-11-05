@@ -1,6 +1,8 @@
 # The JavaMelody integration Plugin
 > Shows JavaMelody within a IFrame
 
+ ![Preview image](doc/screen_melody_org.png?raw=true "AdminTool JavaMelody UI")
+
 ## Introduced with
 * admin-tools-core:1.0.0
 
