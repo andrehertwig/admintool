@@ -21,7 +21,7 @@
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.0.1</version>
+		<version>1.1.0</version>
 	</dependency>
 	
 ```
@@ -41,7 +41,7 @@
 	# Path (relative to own project or URL to CDN) for jQuery.
 	# Setting the jqueryPath is only required if using a different AdminLTE version than the configured one 
 	#   and the (AdminLTE's) distributed version of jQuery or name/path has been changed
-	# since 1.0.2
+	# since 1.1.0
 	admintool.core.jquery.path=
 	
 	# version of fontAwsome if CDN is used. for managed webjars this version should be used.

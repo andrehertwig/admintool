@@ -46,7 +46,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.0.1</version>
+		<version>1.1.0</version>
 	</dependency>
 	...
 ```
@@ -142,7 +142,7 @@ A content template must at least contain a block element with *id="template-cont
 
 The reason for this special id (*id="template-content"*) is that the index.html within the core module will include the content-page content through this particular id `<th:block th:include="${contentPage} :: #template-content" />`. So all other HTML tags outside the block element with this special id will be ignored.
 
-#### Since 1.0.2-SNAPSHOT
+#### Since version 1.1.0
 The template resolution has been restructured a bit. 
 Now the [Thymeleaf Layout dialect](http://www.thymeleaf.org/doc/articles/layouts.html#thymeleaf-layout-dialect) will be used.
 So a template should look like this:
