@@ -31,9 +31,9 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>org.webjars</groupId>
+		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>codemirror</artifactId>
-		    <version>5.13.2</version>
+		    <version>5.19.0</version>
 		</dependency>
 		
 	</dependencies>

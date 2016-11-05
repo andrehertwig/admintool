@@ -93,7 +93,7 @@ Examples must be managed per dataSource
 	admintool.dbbrowser.clobEncodings=UTF-8;ISO-8859-1
 	
 	# codeMirror version (if CDN is used this could maybe changed)
-	admintool.dbbrowser.codeMirrorVersion=5.13.2
+	admintool.dbbrowser.codeMirrorVersion=5.19.0
 	
 	# since 1.0.1
 	# semicolon separated list of additional codeMirror libs to load 

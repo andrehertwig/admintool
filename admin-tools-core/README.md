@@ -36,7 +36,7 @@
 	admintool.core.useCDN=true
 	
 	# version of adminLTE if CDN is used. for managed webjars this version should be used.
-	admintool.core.adminLTE.cdn.version=2.3.6
+	admintool.core.adminLTE.cdn.version=2.3.7
 	
 	# Path (relative to own project or URL to CDN) for jQuery.
 	# Setting the jqueryPath is only required if using a different AdminLTE version than the configured one 
@@ -45,7 +45,7 @@
 	admintool.core.jquery.path=
 	
 	# version of fontAwsome if CDN is used. for managed webjars this version should be used.
-	admintool.core.fontAwsome.cdn.version=4.6.3
+	admintool.core.fontAwsome.cdn.version=4.7.0
 	
 	# if the stacktrace should be shown on error pages
 	admintool.core.showStacktraceOnErrorPage=true

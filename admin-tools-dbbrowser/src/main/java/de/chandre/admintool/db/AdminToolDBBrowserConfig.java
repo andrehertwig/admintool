@@ -36,7 +36,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("#{'${admintool.dbbrowser.clobEncodings:UTF-8;ISO-8859-1}'.split(';')}")
 	private List<String> clobEncodings = new ArrayList<>();
 	
-	@Value("${admintool.dbbrowser.codeMirrorVersion:5.13.2}")
+	@Value("${admintool.dbbrowser.codeMirrorVersion:5.19.0}")
 	private String codeMirrorVersion;
 	
 	@Value("#{'${admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")

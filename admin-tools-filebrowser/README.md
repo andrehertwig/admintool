@@ -11,8 +11,9 @@
   * syntax highlighting for different file types
   * change and save editable files   
 
- ![Preview image](doc/screen_filebrowser_org.png?raw=true "AdminTool FileBrowser UI")
- ![Preview image](doc/screen_fileviewer_org.png?raw=true "AdminTool FileViewer UI")
+
+![Preview image](doc/screen_filebrowser_org.png?raw=true "AdminTool FileBrowser UI")
+![Preview image](doc/screen_fileviewer_org.png?raw=true "AdminTool FileViewer UI")
   
 ## Introduced with
 * admin-tools-core:1.0.1
@@ -123,7 +124,7 @@
 	admintool.fileviewer.allowedExtensions=txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;log;md;sh;bat;cmd
 	
 	# codeMirror version (if CDN is used this could maybe changed)
-	admintool.fileviewer.codeMirrorVersion=5.13.2
+	admintool.fileviewer.codeMirrorVersion=5.19.0
 	
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.fileviewer.codeMirrorAddLibs=addon/edit/matchbrackets.js
