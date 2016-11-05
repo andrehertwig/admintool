@@ -43,6 +43,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	public String showDirectory(@RequestParam(name = "dir", required = false) String dirPath, 
 			@RequestParam(name = "sortCol", required = false) String sortCol,
 			@RequestParam(name = "sortAsc", required = false, defaultValue = "true") boolean sortType,
+			@RequestParam(name = "filter", required = false) String filter,
 			ModelMap model, HttpServletRequest request) {
 		String currentDir = StringUtils.isEmpty(dirPath) ? filebrowserConfig.getStartDir().getAbsolutePath() : dirPath;
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("show directory: " + currentDir);
@@ -50,6 +51,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		model.put("currentDir", currentDir);
 		model.put("sortCol", SortColumn.fromIndex(sortCol));
 		model.put("sortAsc", sortType);
+		model.put("filter", filter);
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	

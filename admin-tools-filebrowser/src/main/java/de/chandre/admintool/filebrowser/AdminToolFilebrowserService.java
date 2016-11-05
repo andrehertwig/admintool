@@ -45,7 +45,7 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<File> getDirectories(String currentDir, SortColumn sortCol, Boolean sortAsc) throws IOException;
+	List<File> getDirectories(String currentDir, SortColumn sortCol, Boolean sortAsc, String filter) throws IOException;
 
 	/**
 	 * lists all files within the directory
@@ -55,7 +55,7 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<File> getFiles(String currentDir, SortColumn sortCol, Boolean sortAsc) throws IOException;
+	List<File> getFiles(String currentDir, SortColumn sortCol, Boolean sortAsc, String filter) throws IOException;
 	
 	/**
 	 * @param currentDir
@@ -109,7 +109,7 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 * @throws IOException
 	 */
-	String getFileSizeSum(String dir) throws IOException;
+	String getFileSizeSum(String dir, String filter) throws IOException;
 
 	/**
 	 * returns the last change date

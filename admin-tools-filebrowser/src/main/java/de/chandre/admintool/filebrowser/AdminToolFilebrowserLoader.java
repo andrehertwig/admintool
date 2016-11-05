@@ -48,6 +48,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		component.setPosition(filebrowserConfig.getComponentPosition());
 		component.setDisplayName("Filebrowser");
 		component.getSecurityRoles().addAll(filebrowserConfig.getSecurityRoles());
+		component.addAdditionalJS("/static/admintool/filebrowser/js/filebrowser.js", true);
 		
 		if (fileviewerConfig.isEnabled()) {
 			boolean relative = !shouldCDNsUsed();
@@ -58,17 +59,13 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 			
 			component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
 			component.addAdditionalJS(codeMirrorPrefix + "mode/meta.js", relative);
-			
 			if (null != fileviewerConfig.getCodeMirrorAddLibs()) {
 				fileviewerConfig.getCodeMirrorAddLibs().forEach(libpath -> {
 					component.addAdditionalJS(codeMirrorPrefix + libpath, relative);
 				});
 			}
-			
 			component.addAdditionalJS(codeMirrorPrefix + "addon/mode/loadmode.js", relative);
-			
 			component.addAdditionalJS(codeMirrorPrefix + "addon/hint/show-hint.js", relative);
-			
 			component.addAdditionalCSS(codeMirrorPrefix + "lib/codemirror.css", relative);
 			component.addAdditionalCSS(codeMirrorPrefix + "addon/hint/show-hint.css", relative);
 			

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -38,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import de.chandre.admintool.core.utils.RegexUtil;
 
 /**
  * 
@@ -132,14 +135,21 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	}
 	
 	@Override
-	public List<File> getDirectories(String currentDir, SortColumn sortCol, Boolean sortAsc) throws IOException {
+	public List<File> getDirectories(String currentDir, SortColumn sortCol, Boolean sortAsc, String filter) throws IOException {
 		File file = new File(currentDir);
 		if (null != file && isAllowed(file, false)) {
+			final Pattern fileNamePattern = getFileNamePattern(filter);
 			File[] files = file.listFiles(new FileFilter() {
 				@Override
 				public boolean accept(File dir) {
 					try {
-						return isAllowed(dir, false) && dir.isDirectory();
+						if (isAllowed(dir, false) && dir.isDirectory()) {
+							if (null == fileNamePattern) {
+								return true;
+							} else if (null != fileNamePattern && fileNamePattern.matcher(dir.getName()).matches()) {
+								return true;
+							}
+						}
 					} catch (IOException e) {
 						LOGGER.debug(e.getMessage(), e);
 					}
@@ -154,14 +164,21 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	}
 	
 	@Override
-	public List<File> getFiles(String currentDir, SortColumn sortCol, Boolean sortAsc) throws IOException {
+	public List<File> getFiles(String currentDir, SortColumn sortCol, Boolean sortAsc, String filter) throws IOException {
 		File file = new File(currentDir);
 		if (null != file && isAllowed(file, false)) {
+			final Pattern fileNamePattern = getFileNamePattern(filter);
 			File[] files = file.listFiles(new FileFilter() {
 				@Override
 				public boolean accept(File dir) {
 					try {
-						return isAllowed(dir, false) && dir.isFile();
+						if (isAllowed(dir, false) && dir.isFile()) {
+							if (null == fileNamePattern) {
+								return true;
+							} else if (null != fileNamePattern && fileNamePattern.matcher(dir.getName()).matches()) {
+								return true;
+							}
+						}
 					} catch (IOException e) {
 						LOGGER.debug(e.getMessage(), e);
 					}
@@ -173,6 +190,13 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			}
 		}
 		return Collections.emptyList();
+	}
+	
+	private Pattern getFileNamePattern(String filter) {
+		if (!StringUtils.isEmpty(filter)) {
+			return Pattern.compile(RegexUtil.wildcardToRegex(filter), Pattern.CASE_INSENSITIVE);
+		}
+		return null;
 	}
 	
 	@Override
@@ -206,8 +230,8 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	
 	@Override
-	public String getFileSizeSum(String dir) throws IOException {
-		List<File> files = getFiles(dir, null, true);
+	public String getFileSizeSum(String dir, String filter) throws IOException {
+		List<File> files = getFiles(dir, null, true, filter);
 		Long res = files.stream().collect(Collectors.summingLong(File::length));
 		return String.format("%s in %s files", getFileSize(res), files.size());
 	}
