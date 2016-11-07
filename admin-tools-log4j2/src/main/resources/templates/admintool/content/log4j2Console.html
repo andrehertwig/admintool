@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+<body>
+	<div layout:fragment="content">
+		<section class="content-header">
+			<h1>
+				Log4j Console <small>Tail</small>
+			</h1>
+			<ol class="breadcrumb"
+				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+
+
+		<section class="content" id="log4jTail">
+
+			<div class="box box-info">
+
+				<div class="box-header with-border">
+					<h3 class="box-title">
+						<i class="fa fa-bug"></i> Log4j Console Configuration
+					</h3>
+					<div class="box-tools pull-right">
+						<button class="btn btn-box-tool" type="button" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				
+				<div class="box-body">
+				
+					<div class="form-group">
+						<label for="name">Logger Name</label>
+						<input id="name" name="name" class="form-control" placeholder="A custom appender Name" type="text" />
+					</div>
+					<div class="form-group">
+						<label for="pattern">Logger Pattern</label>
+						<input id="pattern" name="pattern" class="form-control" placeholder="a logger pattern" th:placeholder="${@adminToolLog4j2Util.getDefaultPattern()}" type="text" />
+					</div>
+					<div class="form-group">
+						<label for="encoding">Logger Encoding</label>
+						<input id="encoding" name="encoding" class="form-control" placeholder="UTF-8" type="text" />
+					</div>
+					<div class="form-group">
+						<label for="level">Logger Level</label>
+						<select id="level" name="level" class="form-control">
+							<option th:each="level, iterState : ${@adminToolLog4j2Util.getLevels()}"
+								th:value="${level.name()}" th:text="${level.name()}"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="level">Logger Names</label>
+						<select id="loggerNames" name="loggerNames" multiple="multiple" class="form-control">
+							<option th:each="loggerName, iterState : ${@adminToolLog4j2Util.getAllLoggerNames()}"
+								th:text="${loggerName}" th:value="${loggerName}"></option>
+						</select>
+					</div>
+
+				</div>
+				<div class="box-footer clearfix">
+					<button class="btn btn-default" type="button" id="startConsole">Start Console</button>
+				</div>
+
+			</div>
+			
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">
+						<i class="fa fa-file-text-o"></i> Log4j Console Output
+					</h3>
+					<button class="btn btn-default" type="button" id="stopConsole">Stop Console</button>
+					<button class="btn btn-default" type="button" id="clearConsole">
+						<span class="badge bg-yellow" id="count">0</span>
+						Clear Console
+					</button>
+				</div>
+				<div class="box-body">
+					<pre id="consoleContent"></pre>
+				</div>
+			</div>
+
+		</section>
+	</div>
+</body>
+</html>

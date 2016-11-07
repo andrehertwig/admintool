@@ -51,10 +51,19 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		component.addAdditionalJS("/static/admintool/js/log4j2.js", true);
 		component.setDisplayName("Log4j2 Console");
 		
+		String adminLtePrefix = getAdminLTEPrefixUri();
+		boolean relative = !shouldCDNsUsed();
+		//select 2 plugin
+		component.addAdditionalJS(adminLtePrefix + "plugins/select2/select2.min.js", relative);
+		component.addAdditionalCSS(adminLtePrefix + "plugins/select2/select2.min.css", relative);
+		
 		MenuEntry mainMenu = new MenuEntry();
-		mainMenu.setDisplayName("Log4j2 Console");
+		mainMenu.setDisplayName("Log4j2 Config");
 		mainMenu.setName("log4j2");
-		mainMenu.setTarget("content/log4j2");
+		
+		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Loggers", "Log4j2 Loggers", "content/log4j2", securityRoles));
+		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Console", "Log4j2 Console", "content/log4j2Console", securityRoles));
+		
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);

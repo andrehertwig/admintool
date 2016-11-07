@@ -1,16 +1,18 @@
 var leveCss = null;
 var prefix = 'bg';
 
-AdminTool.Log4j = function(el, options) {
+AdminTool.Log4j = {}
+
+AdminTool.Log4j.Loggers = function(el, options) {
 	if (el) {
         this.init(el, options)
     }
 }
-AdminTool.Log4j.prototype = new AdminTool.Core();
+AdminTool.Log4j.Loggers.prototype = new AdminTool.Core();
 
-$.extend(AdminTool.Log4j.prototype, {
+$.extend(AdminTool.Log4j.Loggers.prototype, {
 	
-	name : 'adminToolLog4j',
+	name : 'adminToolLog4jLoggers',
 	
 	postInit: function() {
 		this.sendRequest(
@@ -34,11 +36,13 @@ $.extend(AdminTool.Log4j.prototype, {
 			eventsInitialized = true;
 		}
 		
-		$('.removeCustomLogger').click(function(){
-			sendRequest("/admintool/log4j2/removeCustomLoggers", "POST", "text", function(data) {
-				location.reload();
+		if($('.removeCustomLogger').length > 0) {
+			$('.removeCustomLogger').click(function(){
+				sendRequest("/admintool/log4j2/removeCustomLoggers", "POST", "text", function(data) {
+					location.reload();
+				});
 			});
-		});
+		}
 	},
 	
 	initEvents : function() {
@@ -103,9 +107,122 @@ $.extend(AdminTool.Log4j.prototype, {
 	}
 	
 });
+$.pluginMaker(AdminTool.Log4j.Loggers);
 
-$.pluginMaker(AdminTool.Log4j);
+
+AdminTool.Log4j.Console = function(el, options) {
+	if (el) {
+        this.init(el, options)
+    }
+}
+AdminTool.Log4j.Console.prototype = new AdminTool.Core();
+
+$.extend(AdminTool.Log4j.Console.prototype, {
+	
+	name : 'adminToolLog4jConsole',
+	
+	postInit: function() {
+		this.bind();
+		this.count = 0;
+	},
+	
+	bind : function() {
+		this.loggerNames = getByID('loggerNames').select2({
+			  placeholder: 'Root Logger'
+		});
+		
+		getByID('startConsole').on({'click': $.proxy(this.startConsole, this)});
+		getByID('stopConsole').hide();
+		getByID('clearConsole').on({'click': $.proxy(this.clearConsole, this)});
+		
+	},
+	
+	unbind : function() {
+		getByID('loggerNames').unbind();
+		getByID('startConsole').unbind();
+		getByID('clearConsole').unbind();
+	},
+	
+	startConsole : function() {
+		
+		var data = {
+			name:getByID('name').val(),
+			pattern:getByID('pattern').val(),
+			encoding:getByID('encoding').val(),
+			level:getByID('level').val(),
+			loggerNames:this.loggerNames.val()
+		};
+		
+		this.sendRequest(
+			{url: "/admintool/log4j2/initConsole", requestType: "POST", dataType: "text", data: JSON.stringify(data), my: this}, 
+			function(data, query) {
+				query.my.consoleStarted(data);
+			}
+		);
+	},
+	
+	consoleStarted : function(data) {
+		var stopButton = getByID('stopConsole');
+		stopButton.on({'click': $.proxy(this.stopConsole, this)});
+		stopButton.show();
+		this.startUpdateConsole();
+	},
+	
+	startUpdateConsole : function() {
+		this.intervalId = setInterval(function() {
+			getByID('log4jTail').adminToolLog4jConsole('updateConsole');
+		}, 5000);
+	},
+	
+	stopUpdateConsole : function() {
+		clearInterval(this.intervalId);
+		this.intervalId = null;
+	},
+	
+	updateConsole : function() {
+		this.sendRequest(
+			{url: "/admintool/log4j2/getConsoleContent", dataType: "text", my: this}, 
+			function(data, query) {
+				if (null != data && data.trim() != "" && data.trim() != "null") {
+					getByID('consoleContent').text(getByID('consoleContent').text() + data);
+				}
+				query.my.count = query.my.count + 1;
+				getByID('count').text(query.my.count);
+			}
+		);
+	},
+	
+	stopConsole : function() {
+		this.stopUpdateConsole();
+		this.sendRequest(
+			{url: "/admintool/log4j2/stopConsole", dataType: "text", my: this}, 
+			function(data, query) {
+				query.my.consoleStopped(data);
+			}
+		);
+	},
+	
+	consoleStopped : function(data) {
+		var stopButton = getByID('stopConsole');
+		stopButton.unbind();
+		stopButton.hide();
+	},
+	
+	clearConsole : function() {
+		getByID('count').text("0");
+		getByID('consoleContent').text("");
+		this.count = 0;
+	}
+
+});
+$.pluginMaker(AdminTool.Log4j.Console);
+
 
 $( document ).ready(function() {
-	getByID('log4jContent').adminToolLog4j();
+	if (getByID('log4jContent').length > 0) {
+		getByID('log4jContent').adminToolLog4jLoggers();
+	}
+	if (getByID('log4jTail').length > 0) {
+		getByID('log4jTail').adminToolLog4jConsole();
+	}
 });

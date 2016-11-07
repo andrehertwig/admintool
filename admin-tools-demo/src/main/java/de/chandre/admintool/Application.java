@@ -37,7 +37,7 @@ import de.chandre.admintool.log4j2.AdminToolLog4j2Util;
  *
  */
 @SpringBootApplication
-@ServletComponentScan
+@ServletComponentScan(basePackages={"de.chandre.admintool"})
 @EnableMBeanExport
 //required in own application to get admintool scanned  
 @ComponentScan(basePackages={"de.chandre.admintool"})

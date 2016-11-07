@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,9 +15,9 @@ import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
@@ -85,5 +86,56 @@ public class AdminLog4j2Controller
 			css.put(level.name(), log4jUtil.getLoggerLevelCss(prefix, level));
 		}
 		return css;
+	}
+	
+	@RequestMapping(value = "/initConsole", method = RequestMethod.POST)
+	@ResponseBody
+	public String initConsole(@RequestBody Log4j2ConsoleTO consoleTO, HttpServletRequest request)
+	{
+		try {
+			HttpSession session = request.getSession(true);
+			String name = log4jUtil.createOutputStreamAppender(consoleTO.getName(), consoleTO.getPattern(), 
+					consoleTO.getEncoding(), consoleTO.getLoggerNames(), consoleTO.getLevel());
+			session.setAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME, name);
+			
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return "false";
+		}
+		return "true";
+	}
+	
+	@RequestMapping(value = "/stopConsole", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String stopConsole(HttpServletRequest request)
+	{
+		try {
+			HttpSession session = request.getSession(false);
+			log4jUtil.closeOutputStreamAppender(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return "false";
+		}
+		return "true";
+	}
+	
+	@RequestMapping(value = {"/getConsoleContent", "/getConsoleContent/"}, method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String getConsoleContent(HttpServletRequest request)
+	{
+		return getConsoleContent(null, request);
+	}
+	
+	@RequestMapping(value = "/getConsoleContent/{encoding}", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String getConsoleContent(@PathVariable("encoding") String encoding, HttpServletRequest request)
+	{
+		try {
+			HttpSession session = request.getSession(false);
+			return log4jUtil.getStringOutput(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)), encoding);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return e.getMessage();
+		}
 	}
 }
