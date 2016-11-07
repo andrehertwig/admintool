@@ -22,8 +22,18 @@ public class SimpleJob implements Job
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-    	LOGGER.info("<div>I'm div</div> ");
+    	LOGGER.info("<div>I'm div</div>");
+    	LOGGER.warn("Warning with umlauts äöü &");
     	LOGGER.info("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root>I'm a XML</root>");
     	LOGGER.info("finished executing job: %s", jobExecutionContext.getJobDetail().getKey().getName());
+    	
+    	StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+    	if (null != trace) {
+    		StringBuilder traceStr = new StringBuilder("Example Trace");
+    		for (StackTraceElement stackTraceElement : trace) {
+				traceStr.append("\n").append(stackTraceElement.toString());
+			}
+    		LOGGER.error(traceStr);
+    	}
 	}
 }

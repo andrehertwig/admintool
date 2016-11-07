@@ -20,7 +20,7 @@
 						<i class="fa fa-bug"></i> Log4j Console Configuration
 					</h3>
 					<div class="box-tools pull-right">
-						<button class="btn btn-box-tool" type="button" data-widget="collapse">
+						<button class="btn btn-box-tool" type="button" data-widget="collapse" id="log4jTailConfigCollapse">
 							<i class="fa fa-minus"></i>
 						</button>
 					</div>
@@ -28,7 +28,7 @@
 				
 				<div class="box-body">
 				
-					<div class="form-group">
+					<div class="form-group" style="display:none;">
 						<label for="name">Logger Name</label>
 						<input id="name" name="name" class="form-control" placeholder="A custom appender Name" type="text" />
 					</div>
@@ -67,14 +67,30 @@
 					<h3 class="box-title">
 						<i class="fa fa-file-text-o"></i> Log4j Console Output
 					</h3>
-					<button class="btn btn-default" type="button" id="stopConsole">Stop Console</button>
+					<button class="btn btn-default stopConsole" type="button">Stop Console</button>
 					<button class="btn btn-default" type="button" id="clearConsole">
 						<span class="badge bg-yellow" id="count">0</span>
 						Clear Console
 					</button>
 				</div>
 				<div class="box-body">
-					<pre id="consoleContent"></pre>
+					<div id="consoleContent"></div>
+				</div>
+				<div class="box-footer clearfix">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="scrollToBottom" checked="checked"/> Scroll to bottom
+								</label>
+							</div>
+						</div>
+						<div class="col-md-3"></div>
+						<div class="col-md-3"></div>
+						<div class="col-md-3">
+							<button class="btn btn-default stopConsole pull-right" type="button">Stop Console</button>
+						</div>
+					</div>
 				</div>
 			</div>
 

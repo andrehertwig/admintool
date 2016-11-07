@@ -132,7 +132,7 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		});
 		
 		getByID('startConsole').on({'click': $.proxy(this.startConsole, this)});
-		getByID('stopConsole').hide();
+		getByClazz('stopConsole').hide();
 		getByID('clearConsole').on({'click': $.proxy(this.clearConsole, this)});
 		
 	},
@@ -162,10 +162,12 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	},
 	
 	consoleStarted : function(data) {
-		var stopButton = getByID('stopConsole');
-		stopButton.on({'click': $.proxy(this.stopConsole, this)});
-		stopButton.show();
+		var stopButtons = getByClazz('stopConsole');
+		stopButtons.on({'click': $.proxy(this.stopConsole, this)});
+		stopButtons.show();
 		this.startUpdateConsole();
+		$.AdminLTE.boxWidget.collapse(getByID('log4jTailConfigCollapse'));
+		getByID('startConsole').prop('disabled', true);
 	},
 	
 	startUpdateConsole : function() {
@@ -177,20 +179,67 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	stopUpdateConsole : function() {
 		clearInterval(this.intervalId);
 		this.intervalId = null;
+		getByID('startConsole').prop('disabled', false);
 	},
 	
-	updateConsole : function() {
+	updateConsole: function() {
 		this.sendRequest(
 			{url: "/admintool/log4j2/getConsoleContent", dataType: "text", my: this}, 
 			function(data, query) {
 				if (null != data && data.trim() != "" && data.trim() != "null") {
-					getByID('consoleContent').text(getByID('consoleContent').text() + data);
+					var lines = data.trim().split("\n");
+					if (lines.length > 0) {
+						var hasContent = $('#consoleContent span:last-child').length > 0;
+						var clazz;
+						for (var i=0, l=lines.length; i++ < l;) {
+							var line = lines[i];
+							if (line == null || line == undefined || line.trim() == "") {
+								continue;
+							}
+							clazz = query.my.getSpanClass(line) || clazz;
+							if (!hasContent) {
+								getByID('consoleContent').html(query.my.getText(line, clazz));
+							} else {
+								$('#consoleContent span:last-child').after(query.my.getText(line, clazz));
+							}
+						}
+						if (getByID('scrollToBottom').prop( "checked" )) {
+							$('html, body').scrollTop(getByID('consoleContent')[0].scrollHeight);
+						}
+					}
 				}
 				query.my.count = query.my.count + 1;
 				getByID('count').text(query.my.count);
 			}
 		);
 	},
+	
+	getText: function(line, clazz) {
+		line = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		if (undefined !== clazz) {
+			return '<span class="logline ' + clazz + '">' + line + '</span>';
+		}
+		return '<span class="logline">' + line + '</span>';
+	},
+	
+	getSpanClass: function(line) {
+		var lowerLine = line.toLowerCase();
+		if (lowerLine.indexOf(' error ') != -1 || lowerLine.indexOf(' fatal ') != -1) {
+			return "text-danger";
+		}
+		else if (lowerLine.indexOf(' warn ') != -1) {
+			return "text-warning";
+		}
+		else if (lowerLine.indexOf(' info ') != -1 || lowerLine.indexOf(' debug ') != -1 || lowerLine.indexOf(' trace ') != -1) {
+			return "text-info";
+		}
+		else if (lowerLine.indexOf(' off ') != -1) {
+			return "text-muted";
+		}
+		return undefined;
+	},
+	
+	
 	
 	stopConsole : function() {
 		this.stopUpdateConsole();
@@ -203,9 +252,9 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	},
 	
 	consoleStopped : function(data) {
-		var stopButton = getByID('stopConsole');
-		stopButton.unbind();
-		stopButton.hide();
+		var stopButtons = getByClazz('stopConsole');
+		stopButtons.unbind();
+		stopButtons.hide();
 	},
 	
 	clearConsole : function() {

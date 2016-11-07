@@ -17,6 +17,10 @@ public class AdminToolLog4jSessionListener implements HttpSessionListener {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolLog4jSessionListener.class);
 	
+	public AdminToolLog4jSessionListener() {
+		LOGGER.debug("Session listener to remove useless outputstreams has been initialiezed");
+	}
+	
 	@Autowired
 	private AdminToolLog4j2Util log4jUtil;
 

@@ -29,6 +29,17 @@ td.loglevel {
 	min-width: 58px;
 }
 td.logaction {
-	width:330px;
+	width: 330px;
 	min-width: 330px;
+}
+span.logline {
+	display: block;
+	white-space: nowrap;
+    width: 100%;
+}
+
+#consoleContent {
+	border-style: solid #000000 1px;
+	overflow-x: scroll;
+	height: 100%;
 }

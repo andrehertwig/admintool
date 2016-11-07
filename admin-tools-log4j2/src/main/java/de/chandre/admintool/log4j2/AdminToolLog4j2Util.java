@@ -93,6 +93,16 @@ public class AdminToolLog4j2Util
 		for (Logger logger : getLoggers()) {
 			loggerNames.add(logger.getName());
 		}
+		if (!customLoggers.isEmpty()) {
+			for (Entry<LoggerConfig, String> entry : customLoggers.entrySet()) {
+				loggerNames.add(entry.getKey().getName());
+			}
+		}
+		if (!customParentLoggers.isEmpty()) {
+			for (Entry<LoggerConfig, String> entry : customParentLoggers.entrySet()) {
+				loggerNames.add(entry.getKey().getName());
+			}
+		}
 		return loggerNames;
 	}
 	
