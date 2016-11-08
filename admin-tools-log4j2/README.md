@@ -1,7 +1,10 @@
 # The Log4j2 Management Plugin
 > Shows all loggers with possibility to change the level 
 
- ![Preview image](doc/screen_log4j_org.png?raw=true "AdminTool Log4jConsole UI")
+ ![Preview image](doc/screen_log4j_org.png?raw=true "AdminTool Log4jLoggers UI")
+ 
+ Since 1.1.1 a web console is available
+ ![Preview image](doc/screen_log4j_console_org.png?raw=true "AdminTool Log4jConsole UI")
 
 ## Introduced with
 * admin-tools-core:1.0.0

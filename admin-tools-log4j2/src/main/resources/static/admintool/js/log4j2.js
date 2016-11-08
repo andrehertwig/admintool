@@ -123,7 +123,8 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	
 	postInit: function() {
 		this.bind();
-		this.count = 0;
+		this.requestCount = 0;
+		this.lineCount = 0;
 	},
 	
 	bind : function() {
@@ -146,7 +147,7 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	startConsole : function() {
 		
 		var data = {
-			name:getByID('name').val(),
+//			name:getByID('name').val(),
 			pattern:getByID('pattern').val(),
 			encoding:getByID('encoding').val(),
 			level:getByID('level').val(),
@@ -154,7 +155,8 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		};
 		
 		this.sendRequest(
-			{url: "/admintool/log4j2/initConsole", requestType: "POST", dataType: "text", data: JSON.stringify(data), my: this}, 
+			{url: "/admintool/log4j2/initConsole", requestType: "POST", dataType: "text", 
+				data: JSON.stringify(data), my: this},
 			function(data, query) {
 				query.my.consoleStarted(data);
 			}
@@ -189,27 +191,43 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 				if (null != data && data.trim() != "" && data.trim() != "null") {
 					var lines = data.trim().split("\n");
 					if (lines.length > 0) {
-						var hasContent = $('#consoleContent span:last-child').length > 0;
+						var existingLines = $('#consoleContent span');
+						var existingNumbers = $('#lineNumbers span');
+						var hasContent = existingLines.length > 0;
 						var clazz;
-						for (var i=0, l=lines.length; i++ < l;) {
+						for (var i=-1, l=lines.length; ++i < l;) {
 							var line = lines[i];
 							if (line == null || line == undefined || line.trim() == "") {
 								continue;
 							}
 							clazz = query.my.getSpanClass(line) || clazz;
+							
 							if (!hasContent) {
 								getByID('consoleContent').html(query.my.getText(line, clazz));
+								getByID('lineNumbers').html(query.my.getText("1", "text-muted"));
+								query.my.lineCount = 1;
 							} else {
 								$('#consoleContent span:last-child').after(query.my.getText(line, clazz));
+								query.my.lineCount++
+								$('#lineNumbers span:last-child').after(query.my.getText(query.my.lineCount.toString(), "text-muted"));
 							}
 						}
+						
+						var oversize = lines.length + existingLines.length - parseInt(getByID('maxListLength').val());
+						if (oversize > 0) {
+							for (var i=-1; ++i < oversize;) {
+								$(existingLines[i]).remove();
+								$(existingNumbers[i]).remove();
+							}
+						}
+						
 						if (getByID('scrollToBottom').prop( "checked" )) {
 							$('html, body').scrollTop(getByID('consoleContent')[0].scrollHeight);
 						}
 					}
 				}
-				query.my.count = query.my.count + 1;
-				getByID('count').text(query.my.count);
+				query.my.requestCount++;
+				getByID('requestCount').text(query.my.requestCount);
 			}
 		);
 	},
@@ -258,9 +276,11 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 	},
 	
 	clearConsole : function() {
-		getByID('count').text("0");
+		this.requestCount = 0;
+		this.lineCount = 0;
+		getByID('requestCount').text(this.requestCount);
 		getByID('consoleContent').text("");
-		this.count = 0;
+		getByID('lineNumbers').text("");
 	}
 
 });

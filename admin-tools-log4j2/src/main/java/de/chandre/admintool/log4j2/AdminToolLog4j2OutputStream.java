@@ -6,43 +6,58 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * 
+ * OutputStream wrapper for Logging.
  * @author Andre
- *
+ * @since 1.1.1
  */
-public class AdminToolLog4j2OutputStream extends OutputStream{
+public class AdminToolLog4j2OutputStream extends OutputStream {
 	private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 	private Charset characterSet = Charset.forName("UTF-8");
 	
+	/**
+	 * OutputStream wrapper with ByteArrayOutputStream with size = 4096 and characterSet = UTF-8
+	 */
 	public AdminToolLog4j2OutputStream() {
+		this.buffer = new ByteArrayOutputStream(4096);
 	}
 	
+	/**
+	 * OutputStream wrapper with ByteArrayOutputStream with size and characterSet = UTF-8
+	 * @param size
+	 */
 	public AdminToolLog4j2OutputStream(int size) {
 		this.buffer = new ByteArrayOutputStream(size);
 	}
 	
+	/**
+	 * OutputStream wrapper with ByteArrayOutputStream with size and characterSet
+	 * @param size
+	 * @param characterSet
+	 */
 	public AdminToolLog4j2OutputStream(int size, String characterSet) {
 		this.buffer = new ByteArrayOutputStream(size);
 		this.characterSet = Charset.forName(characterSet);
 	}
-	
-	private synchronized ByteArrayOutputStream getBuffer() {
-		return this.buffer;
-	}
  
 	@Override
 	public void write(int b) throws IOException {
-		getBuffer().write(b);
+		synchronized (buffer) {
+			this.buffer.write(b);
+		}
 	}
  
 	@Override
 	public void write(byte[] b) throws IOException {
-		getBuffer().write(b);
+		synchronized (buffer) {
+			this.buffer.write(b);
+		}
 	}
  
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
-		getBuffer().write(b, off, len);
+		synchronized (buffer) {
+			this.buffer.write(b, off, len);
+		}
 	}
 	
 	@Override
@@ -59,35 +74,59 @@ public class AdminToolLog4j2OutputStream extends OutputStream{
 		return characterSet;
 	}
  
+	/**
+	 * change the character set
+	 * @param characterSet
+	 */
 	public void setCharacterSet(Charset characterSet) {
 		this.characterSet = characterSet;
 	}
 	
+	/**
+	 * change the character set
+	 * @param characterSet
+	 */
 	public void setCharacterSet(String characterSet) {
 		this.characterSet = Charset.forName(characterSet);
 	}
 	
+	/**
+	 * just resets the buffer (ByteArrayOutputStream)
+	 */
 	public void reset() {
-		getBuffer().reset();
+		this.buffer.reset();
 	}
 	
+	/**
+	 * returns the content of the buffer (ByteArrayOutputStream) and resets it
+	 * @return
+	 */
 	public String getAndReset() {
-		String res = new String(getBuffer().toByteArray(), getCharacterSet());
-		getBuffer().reset();
-		return res;
+		synchronized (buffer) {
+			String res = new String(this.buffer.toByteArray(), getCharacterSet());
+			this.buffer.reset();
+			return res;
+		}
 	}
 	
+	/**
+	 * returns the content of the buffer (ByteArrayOutputStream) with specific characterSet and resets it
+	 * @param characterSet
+	 * @return
+	 */
 	public String getAndReset(String characterSet) {
 		if (null == characterSet || characterSet.trim().isEmpty()) {
 			return getAndReset();
 		}
-		String res = new String(getBuffer().toByteArray(), Charset.forName(characterSet));
-		getBuffer().reset();
-		return res;
+		synchronized (buffer) {
+			String res = new String(this.buffer.toByteArray(), Charset.forName(characterSet));
+			this.buffer.reset();
+			return res;
+		}
 	}
  
 	@Override
 	public String toString() {
-		return new String(getBuffer().toByteArray(), getCharacterSet());
+		return new String(this.buffer.toByteArray(), getCharacterSet());
 	}
 }

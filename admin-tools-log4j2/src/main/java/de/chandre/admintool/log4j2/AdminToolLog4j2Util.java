@@ -29,6 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.StringUtils;
 
+/**
+ * service for log4j2 manipulation
+ * @author Andre
+ * @since 1.0.0
+ */
 @Service("adminToolLog4j2Util")
 public class AdminToolLog4j2Util 
 {
@@ -59,6 +64,10 @@ public class AdminToolLog4j2Util
 	
 	private Map<String, AdminToolLog4j2OutputStream> outputStreams = new ConcurrentReferenceHashMap<>();
 	
+	/**
+	 * returns all parent loggers 
+	 * @return
+	 */
 	public Collection<Logger> getParentLoggers() {
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		List<Logger> loggers = new ArrayList<>(ctx.getLoggers());
@@ -78,6 +87,10 @@ public class AdminToolLog4j2Util
 		}
 	}
 	
+	/**
+	 * returns all loggers 
+	 * @return
+	 */
 	public Collection<Logger> getLoggers() {
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		List<Logger> loggers = new ArrayList<>(ctx.getLoggers());
@@ -85,6 +98,12 @@ public class AdminToolLog4j2Util
 		return loggers;
 	}
 	
+	/**
+	 * returns all logger names including custom loggers
+	 * 
+	 * @since 1.1.1
+	 * @return
+	 */
 	public Collection<String> getAllLoggerNames() {
 		Set<String> loggerNames = new TreeSet<>();
 		for (Logger logger : getParentLoggers()) {
@@ -106,6 +125,14 @@ public class AdminToolLog4j2Util
 		return loggerNames;
 	}
 	
+	/**
+	 * returns the a css class with optional prefix for the particular log level.<br>
+	 * if prefix is set result will be &lt;prefix&gt;-&lt;css-class&gt;
+	 * 
+	 * @param prefix (optional) a prefic
+	 * @param level the log level
+	 * @return
+	 */
 	public String getLoggerLevelCss(String prefix, Level level) {
 		if (null == prefix) {
 			prefix = "";
@@ -136,6 +163,10 @@ public class AdminToolLog4j2Util
 		return "";
 	}
 	
+	/**
+	 * returns fix amount of logger levels 
+	 * @return
+	 */
 	public Collection<Level> getLevels() {
 		return LEVELS;
 	}
@@ -148,6 +179,14 @@ public class AdminToolLog4j2Util
 		return level;
 	}
 	
+	/**
+	 * changes the level of an logger
+	 * 
+	 * @param name logger name
+	 * @param levelStr level as string
+	 * @param parent if the logger is a parent logger
+	 * @throws IllegalArgumentException
+	 */
 	public void changeLogger(final String name, final String levelStr, boolean parent) throws IllegalArgumentException
 	{
 		Level level = getLevel(levelStr);
@@ -194,6 +233,11 @@ public class AdminToolLog4j2Util
 		}
 	}
 	
+	/**
+	 * removes all custom loggers
+	 * 
+	 * @throws IllegalArgumentException
+	 */
 	public void removeCustomLoggers() throws IllegalArgumentException
 	{
 		if (customLoggers.isEmpty()) {
@@ -208,18 +252,25 @@ public class AdminToolLog4j2Util
 		customLoggers.clear();
 	}
 	
+	/**
+	 * returns the default log message pattern (used in template)
+	 * @return
+	 * @since 1.1.1
+	 */
 	public String getDefaultPattern() {
 		return DEFAULT_PATTERN;
 	}
 	
 	/**
-	 * creates the appender and returns the name
+	 * creates the custom output steam appender and returns the name
+	 * 
 	 * @param name
 	 * @param pattern
 	 * @param encoding
 	 * @param loggerNames
 	 * @param levelStr
 	 * @return
+	 * @since 1.1.1
 	 */
 	public String createOutputStreamAppender(String name, String pattern, String encoding, Collection<String> loggerNames, 
 			String levelStr) {
@@ -260,7 +311,16 @@ public class AdminToolLog4j2Util
 		return appenderName;
 	}
 	
-	public synchronized String getStringOutput(String appenderName, String encoding) throws UnsupportedEncodingException {
+	/**
+	 * returns the log messages from custom appenders output stream
+	 * 
+	 * @param appenderName
+	 * @param encoding
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @since 1.1.1
+	 */
+	public String getStringOutput(String appenderName, String encoding) throws UnsupportedEncodingException {
 		AdminToolLog4j2OutputStream baos = outputStreams.get(appenderName);
 		String output = "";
 		if (null != baos) {
@@ -270,6 +330,12 @@ public class AdminToolLog4j2Util
 		
 	}
 	
+	/**
+	 * closes output stream and removes appender from loggers
+	 * @param appenderName
+	 * @throws IOException
+	 * @since 1.1.1
+	 */
 	public void closeOutputStreamAppender(String appenderName) throws IOException {
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
@@ -297,4 +363,12 @@ public class AdminToolLog4j2Util
 			logger.removeAppender(appender);
 		}
 	}
+	
+	public Map<String, Appender> getAppenders() {
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		final Configuration config = ctx.getConfiguration();
+		
+		return config.getAppenders();
+	}
+	
 }

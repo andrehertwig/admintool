@@ -32,21 +32,33 @@
 						<label for="name">Logger Name</label>
 						<input id="name" name="name" class="form-control" placeholder="A custom appender Name" type="text" />
 					</div>
-					<div class="form-group">
-						<label for="pattern">Logger Pattern</label>
-						<input id="pattern" name="pattern" class="form-control" placeholder="a logger pattern" th:placeholder="${@adminToolLog4j2Util.getDefaultPattern()}" type="text" />
+				
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="pattern">Logger Pattern</label>
+								<input id="pattern" name="pattern" class="form-control" placeholder="a logger pattern" th:placeholder="${@adminToolLog4j2Util.getDefaultPattern()}" type="text" />
+							</div>
+						</div>
 					</div>
-					<div class="form-group">
-						<label for="encoding">Logger Encoding</label>
-						<input id="encoding" name="encoding" class="form-control" placeholder="UTF-8" type="text" />
+					<div class="row">
+						<div class="col-md-6 col-xs-12">
+							<div class="form-group">
+								<label for="level">Logger Level</label>
+								<select id="level" name="level" class="form-control">
+									<option th:each="level, iterState : ${@adminToolLog4j2Util.getLevels()}"
+										th:value="${level.name()}" th:text="${level.name()}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-6 col-xs-12">
+							<div class="form-group">
+								<label for="encoding">Logger Encoding</label>
+								<input id="encoding" name="encoding" class="form-control" placeholder="UTF-8" type="text" />
+							</div>
+						</div>
 					</div>
-					<div class="form-group">
-						<label for="level">Logger Level</label>
-						<select id="level" name="level" class="form-control">
-							<option th:each="level, iterState : ${@adminToolLog4j2Util.getLevels()}"
-								th:value="${level.name()}" th:text="${level.name()}"></option>
-						</select>
-					</div>
+					
 					<div class="form-group">
 						<label for="level">Logger Names</label>
 						<select id="loggerNames" name="loggerNames" multiple="multiple" class="form-control">
@@ -54,7 +66,7 @@
 								th:text="${loggerName}" th:value="${loggerName}"></option>
 						</select>
 					</div>
-
+					
 				</div>
 				<div class="box-footer clearfix">
 					<button class="btn btn-default" type="button" id="startConsole">Start Console</button>
@@ -69,25 +81,27 @@
 					</h3>
 					<button class="btn btn-default stopConsole" type="button">Stop Console</button>
 					<button class="btn btn-default" type="button" id="clearConsole">
-						<span class="badge bg-yellow" id="count">0</span>
+						<span class="badge bg-yellow" id="requestCount" title="Request count">0</span>
 						Clear Console
 					</button>
 				</div>
 				<div class="box-body">
+					<div id="lineNumbers"></div>
 					<div id="consoleContent"></div>
 				</div>
 				<div class="box-footer clearfix">
 					<div class="row">
-						<div class="col-md-3">
+						<div class="col-md-3 col-xs-4">
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="scrollToBottom" checked="checked"/> Scroll to bottom
 								</label>
 							</div>
 						</div>
-						<div class="col-md-3"></div>
-						<div class="col-md-3"></div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-xs-4">
+							<input type="text" id="maxListLength" class="form-control" value="100"/>
+						</div>
+						<div class="col-md-6 col-xs-4">
 							<button class="btn btn-default stopConsole pull-right" type="button">Stop Console</button>
 						</div>
 					</div>

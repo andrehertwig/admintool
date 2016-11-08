@@ -38,8 +38,23 @@ span.logline {
     width: 100%;
 }
 
-#consoleContent {
-	border-style: solid #000000 1px;
+div#lineNumbers {
+	width: 3%;
+	float: left;
+	text-align: right;
+}
+div#consoleContent {
 	overflow-x: scroll;
 	height: 100%;
+	width: 96%;
+	float: right;
+}
+
+@media (max-width: 991px) {
+	div#lineNumbers {
+		width: 6%;
+	}
+	div#consoleContent {
+		width: 93%;
+	}
 }
