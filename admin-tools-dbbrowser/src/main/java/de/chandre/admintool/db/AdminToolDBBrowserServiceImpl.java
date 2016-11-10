@@ -149,6 +149,10 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			c = getConnection(datasourceName, null);
 			DatabaseMetaData metadata = c.getMetaData();
 			
+			resultTO.addMetadata(META_KEY_DB_VERSION, metadata.getDatabaseProductVersion());
+			resultTO.addMetadata(META_KEY_DRIVER_VERSION, metadata.getDriverVersion());
+			resultTO.addMetadata(META_KEY_DRIVER_NAME, metadata.getDriverName());
+			
 			ResultSet resSet = metadata.getTables(null, null, null, null);
 			StatementTO statementTO = new StatementTO();
 			statementTO.setShowClobs(true);
@@ -205,10 +209,6 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			resultTO.setTableResult(null);
 			
 			resultTO.addMetadata("tables", tablesAndColums);
-			
-			resultTO.addMetadata(META_KEY_DB_VERSION, metadata.getDatabaseProductVersion());
-			resultTO.addMetadata(META_KEY_DRIVER_VERSION, metadata.getDriverVersion());
-			resultTO.addMetadata(META_KEY_DRIVER_NAME, metadata.getDriverName());
 			
 		} catch (Exception e) {
 			resultTO.setExceptionMessage(e.getMessage());

@@ -204,7 +204,7 @@ DBTab.prototype = {
 		var datasourceName = dsn || $('#datasourceName_' + this.number).val();
 		if (this.root.metaData.hasOwnProperty(datasourceName)) {
 			var myInfo = this.root.metaData[datasourceName];
-			if (myInfo !== undefined && null != myInfo) 
+			if (myInfo !== undefined && null != myInfo && myInfo.metadata !== undefined && myInfo.metadata != null) 
 				$('#dbInfo_' + this.number).text(myInfo.metadata.driverName + ' | ' + myInfo.metadata.databaseProductVersion);
 		}
 	},
