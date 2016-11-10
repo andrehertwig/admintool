@@ -230,7 +230,7 @@ DBTab.prototype = {
 		//console.log('using: ' + info.mode +  ': ' + info.mime);
 		this.cm.setOption("mode", info.mime);
 		
-		if (null != myMetaData && myMetaData.metadata.hasOwnProperty('tables')) {
+		if (null != myMetaData && myMetaData.metadata != null && myMetaData.metadata.hasOwnProperty('tables')) {
 			var tables = {}
 			tables['tables'] = myMetaData.metadata['tables'];
 			this.cm.setOption("hintOptions", tables);
