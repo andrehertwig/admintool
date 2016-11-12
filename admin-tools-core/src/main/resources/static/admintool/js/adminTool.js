@@ -95,7 +95,9 @@ $.extend(AdminTool.Core.prototype, {
 			data: query.data || null,
 			contentType: query.contentType || 'application/json; charset=UTF-8',
 			error: function( xhr, status, errorThrown ) {
-				$('#admintoolError').modal();
+				if (query.showModalOnError) {
+					AdminTool.Core.prototype.showErrorModal(query.erroModalHeadline, query.errorModalText);
+				}
 		        if (console) {
 		        	console.log( "Error: " + errorThrown );
 			        console.log( "Status: " + status );
@@ -105,8 +107,19 @@ $.extend(AdminTool.Core.prototype, {
 		}).done(function (data) {
 			callback(data, query);
 		});
-	}
+	},
 	
+	showErrorModal: function(headline, text) {
+		if (null == headline || headline === undefined) {
+			headline = "Error";
+		}
+		if (null == text || text === undefined) {
+			text = "An Error has been occurred while sending XHR request";
+		}
+		getByID('admintoolErrorLabel').html('<i class="icon fa fa-ban"></i>' + headline);
+		getByID('admintoolErrorBody').html(text);
+		getByID('admintoolError').modal();
+	}
 });
 
 $.pluginMaker(AdminTool.Core);

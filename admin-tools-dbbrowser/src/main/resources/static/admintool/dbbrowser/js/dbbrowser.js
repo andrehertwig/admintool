@@ -146,6 +146,7 @@ DBTab.prototype = {
 		$tab.root.sendRequest({url: '/admintool/dbbrowser/executeQuery', data: JSON.stringify(query),
 			dataType: "text", requestType: 'POST', my: $tab, st: query.statement}, function (result, query) {
 				query.my.queryDone(result, query.st);
+				query.my.root.showError(query.my, result, "Error while fetching database query result");
 		});
 	},
 	
@@ -312,14 +313,18 @@ $.extend(AdminTool.DBBrowser.prototype, {
 	
 	getStaticObjects: function() {
 		if (null == this.datasourceNames) {
-			this.sendRequest({url: '/admintool/dbbrowser/getDatasourceNames', my: this}, function (result, query) {
+			this.sendRequest({url: '/admintool/dbbrowser/getDatasourceNames', showModalOnError: true,
+				errorModalText: "Error while fetching database datasources", my: this}, function (result, query) {
 				query.my.datasourceNames = result;
+				query.my.showError(query.my, result, "Error while fetching database datasources: ");
 				query.my.getMetaData();
 			});
 		}
 		if (null == this.examples) {
-			this.sendRequest({url: '/admintool/dbbrowser/getExamples', my: this}, function (result, query) {
+			this.sendRequest({url: '/admintool/dbbrowser/getExamples', showModalOnError: true,
+				errorModalText: "Error while fetching database example statements", my: this}, function (result, query) {
 				query.my.examples = result;
+				query.my.showError(query.my, result, "Error while fetching database example statements: ");
 			});
 		}
 	},
@@ -328,10 +333,27 @@ $.extend(AdminTool.DBBrowser.prototype, {
 		for (var key in this.datasourceNames) {
 			var datasourceName = this.datasourceNames[key];
 			if (!this.metaData.hasOwnProperty(datasourceName)) {
-				this.sendRequest({url: '/admintool/dbbrowser/getMetaData/' + datasourceName, my: this, dsn: datasourceName}, function (result, query) {
-					query.my.metaData[query.dsn] = result;
-				});
+				this.sendRequest(
+					{
+						url: '/admintool/dbbrowser/getMetaData/' + datasourceName,
+						showModalOnError: true,
+						errorModalText: "Error while fetching database metadata", 
+						my: this,
+						dsn: datasourceName
+					}, 
+					function (result, query) {
+						query.my.metaData[query.dsn] = result;
+						query.my.showError(query.my, result, "Error while fetching database metadata: ");
+					}
+				);
 			}
+		}
+	},
+	
+	showError(adminTool, result, addHeadline) {
+		if(null != result.exceptionMessage || null != result.exceptionTrace) {
+			adminTool.showErrorModal(addHeadline + result.exceptionMessage,
+					'<pre>' + result.exceptionTrace + '</pre>');
 		}
 	}
 });

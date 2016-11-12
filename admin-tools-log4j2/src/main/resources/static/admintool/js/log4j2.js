@@ -125,6 +125,7 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		this.bind();
 		this.requestCount = 0;
 		this.lineCount = 0;
+		this.maxListLength = 100;
 	},
 	
 	bind : function() {
@@ -155,8 +156,14 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		};
 		
 		this.sendRequest(
-			{url: "/admintool/log4j2/initConsole", requestType: "POST", dataType: "text", 
-				data: JSON.stringify(data), my: this},
+			{
+				url: "/admintool/log4j2/initConsole",
+				requestType: "POST",
+				dataType: "text",
+				data: JSON.stringify(data),
+				showModalOnError: true,
+				my: this
+			},
 			function(data, query) {
 				query.my.consoleStarted(data);
 			}
@@ -213,7 +220,7 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 							}
 						}
 						
-						var oversize = lines.length + existingLines.length - parseInt(getByID('maxListLength').val());
+						var oversize = lines.length + existingLines.length - query.my.getMaxListLength();
 						if (oversize > 0) {
 							for (var i=-1; ++i < oversize;) {
 								$(existingLines[i]).remove();
@@ -230,6 +237,14 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 				getByID('requestCount').text(query.my.requestCount);
 			}
 		);
+	},
+	
+	getMaxListLength() {
+		var userMaxLength = parseInt(getByID('maxListLength').val());
+		if (isNaN(userMaxLength) || userMaxLength == Infinity) {
+			return this.maxListLength;
+		}
+		return userMaxLength;
 	},
 	
 	getText: function(line, clazz) {
@@ -257,12 +272,15 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		return undefined;
 	},
 	
-	
-	
 	stopConsole : function() {
 		this.stopUpdateConsole();
 		this.sendRequest(
-			{url: "/admintool/log4j2/stopConsole", dataType: "text", my: this}, 
+			{
+				url: "/admintool/log4j2/stopConsole",
+				dataType: "text",
+				showModalOnError: true,
+				my: this
+			}, 
 			function(data, query) {
 				query.my.consoleStopped(data);
 			}
