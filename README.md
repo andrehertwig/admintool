@@ -22,7 +22,8 @@
 * Maven 3.2.x+
 
 ## Based on
-* [Spring Boot ](http://projects.spring.io/spring-boot/)
+* [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
+  * Since 1.1.2-SNAPSHOT also Spring Boot 1.4 supported 
 * [Admin LTE](https://almsaeedstudio.com/preview)
 * [Thymeleaf](http://www.thymeleaf.org/)
 
