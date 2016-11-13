@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.controller.AbstractAdminController;
-import net.bull.javamelody.MonitoredWithSpring;
 
 /**
  * Controller for login page
@@ -17,7 +16,6 @@ import net.bull.javamelody.MonitoredWithSpring;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT)
-@MonitoredWithSpring
 public class LoginController extends AbstractAdminController {
 
 	@RequestMapping(value = {"/login","/login/**"})

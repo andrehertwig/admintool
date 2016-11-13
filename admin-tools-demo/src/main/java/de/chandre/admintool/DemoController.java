@@ -23,7 +23,6 @@ import net.bull.javamelody.MonitoredWithSpring;
  *
  */
 @Controller
-@MonitoredWithSpring
 public class DemoController
 {
 	@RequestMapping({"","/"})

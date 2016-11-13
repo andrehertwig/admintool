@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.AdminToolCoreConfig;
 import de.chandre.admintool.core.utils.ExceptionUtils;
-import net.bull.javamelody.MonitoredWithSpring;
 
 /**
  * the root admin controller serving templates generally
@@ -25,7 +24,6 @@ import net.bull.javamelody.MonitoredWithSpring;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT)
-@MonitoredWithSpring
 public class AdminRootController extends AbstractAdminController
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminRootController.class);

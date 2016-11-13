@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import net.bull.javamelody.MonitoredWithSpring;
 
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/log4j2")
-@MonitoredWithSpring
 public class AdminLog4j2Controller
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminLog4j2Controller.class);

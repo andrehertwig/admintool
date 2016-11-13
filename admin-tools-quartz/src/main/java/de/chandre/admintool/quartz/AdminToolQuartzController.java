@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import net.bull.javamelody.MonitoredWithSpring;
 
 /**
  * contoller for quartz jobs actions
@@ -30,7 +29,6 @@ import net.bull.javamelody.MonitoredWithSpring;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/quartz")
-@MonitoredWithSpring
 public class AdminToolQuartzController {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzService.class);
 
