@@ -291,10 +291,23 @@ public class MenuEntry implements Serializable
 	}
 
 	/**
+	 * returns the variables map
+	 * 
 	 * @return the variables
 	 */
 	public Map<String, Object> getVariables() {
 		return variables;
+	}
+	
+	/**
+	 * returns the menu variable by key
+	 * 
+	 * @param key
+	 * @return
+	 * @since 1.1.2
+	 */
+	public Object getVariable(String key) {
+		return variables.get(key);
 	}
 
 	/**
