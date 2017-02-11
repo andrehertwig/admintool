@@ -38,7 +38,7 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf}'.split(';')}")
 	private List<String> allowedExtensions = new ArrayList<>();
 	
-	@Value("${admintool.fileviewer.codeMirrorVersion:5.19.0}")
+	@Value("${admintool.fileviewer.codeMirrorVersion:5.22.2}")
 	private String codeMirrorVersion;
 	
 	@Value("#{'${admintool.fileviewer.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")

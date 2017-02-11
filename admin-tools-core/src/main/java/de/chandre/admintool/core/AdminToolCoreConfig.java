@@ -21,7 +21,7 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.useCDN:true}")
 	private boolean useCDNs;
 	
-	@Value("${admintool.core.adminLTE.cdn.version:2.3.7}")
+	@Value("${admintool.core.adminLTE.cdn.version:2.3.11}")
 	private String adminLTECdnVersion;
 	
 	@Value("${admintool.core.jquery.path:}")

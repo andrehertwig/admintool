@@ -207,7 +207,7 @@
 		
 		<org.json.version>20151123</org.json.version>
 		
-		<spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+		<spring-boot.version>1.4.4.RELEASE</spring-boot.version>
 		
 		<thymeleaf.version>2.1.5.RELEASE</thymeleaf.version>
 		<thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>
