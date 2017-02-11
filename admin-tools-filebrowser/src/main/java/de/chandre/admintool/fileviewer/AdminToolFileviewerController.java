@@ -1,6 +1,8 @@
 package de.chandre.admintool.fileviewer;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,12 +42,13 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 	
 	@RequestMapping(value = {"/show",}, method={RequestMethod.GET, RequestMethod.POST})
 	public String loadFile(@RequestParam("file") String file, @RequestParam(name="encoding", required=false) String encoding,
-			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException {
+			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException, UnsupportedEncodingException {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving file viewer page for file: " + file + ", encoding: " + encoding);
 		String templatePath = addCommonContextVars(model, request, "filebrowser", AdminToolFilebrowserLoader.TARGET_FILEVIEWER);
 		
-		File currentFile = new File(file);
+		String decodedPath = URLDecoder.decode(file, "UTF-8");
+		File currentFile = new File(decodedPath);
 		model.put("currentDir", currentFile.getParent());
 		
 		filebrowserService.isFileAllowed(currentFile, false);

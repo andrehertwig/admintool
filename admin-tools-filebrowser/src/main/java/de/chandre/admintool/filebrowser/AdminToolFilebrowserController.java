@@ -2,6 +2,9 @@ package de.chandre.admintool.filebrowser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,13 +43,13 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	@Autowired
 	private AdminToolFilebrowserConfig filebrowserConfig;
 	
-	@RequestMapping(value = {"", "/","/dir"})
+	@RequestMapping(value = {"", "/","/dir"}, method={RequestMethod.GET, RequestMethod.POST})
 	public String showDirectory(@RequestParam(name = "dir", required = false) String dirPath, 
 			@RequestParam(name = "sortCol", required = false) String sortCol,
 			@RequestParam(name = "sortAsc", required = false, defaultValue = "true") boolean sortType,
 			@RequestParam(name = "filter", required = false) String filter,
-			ModelMap model, HttpServletRequest request) {
-		String currentDir = StringUtils.isEmpty(dirPath) ? filebrowserConfig.getStartDir().getAbsolutePath() : dirPath;
+			ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
+		String currentDir = StringUtils.isEmpty(dirPath) ? filebrowserConfig.getStartDir().getAbsolutePath() : URLDecoder.decode(dirPath, "UTF-8");
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("show directory: " + currentDir);
 		String templatePath = addCommonContextVars(model, request, "filebrowser", null);
 		model.put("currentDir", currentDir);
@@ -55,34 +59,47 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	
-	@RequestMapping(value = {"/file",})
+	@RequestMapping(value = {"/file"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void showFile(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
 		if (!filebrowserConfig.isDownloadAllowed()) {
 			throw new DownloadNotAllowedException("file download is deactivated by configuration");
 		}
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("download file: " + filePath);
-		filebrowserService.downloadFile(filePath, response, false);
+		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("download file: " + decodedPath);
+		filebrowserService.downloadFile(decodedPath, response, false);
 	}
 	
-	@RequestMapping(value = {"/download",})
+	@RequestMapping(value = {"/download"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void download(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
 		if (!filebrowserConfig.isDownloadAllowed()) {
 			throw new DownloadNotAllowedException("file download is deactivated by configuration");
 		}
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("download file: " + filePath);
-		filebrowserService.downloadFile(filePath, response, true);
+		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("download file: " + decodedPath);
+		filebrowserService.downloadFile(decodedPath, response, true);
 	}
 
-	@RequestMapping(value = {"/zip",})
+	@RequestMapping(value = {"/zip"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void downloadAsZip(@RequestParam("selectedFile") List<String> filePaths, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
 		if (!filebrowserConfig.isDownloadAllowed()) {
 			throw new DownloadNotAllowedException("file download is deactivated by configuration");
 		}
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + filePaths.size());
-		filebrowserService.downloadFilesAsZip(filePaths, response);
+		List<String> decodedPaths = new ArrayList<>();
+		if (null != filePaths) {
+			filePaths.forEach(filePath ->{
+				try {
+					decodedPaths.add(URLDecoder.decode(filePath, "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					LOGGER.error(e.getMessage(), e);
+				}
+			});
+		}
+		
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
+		filebrowserService.downloadFilesAsZip(decodedPaths, response);
 	}
 	
 	@ExceptionHandler({DownloadNotAllowedException.class, GenericFilebrowserException.class})

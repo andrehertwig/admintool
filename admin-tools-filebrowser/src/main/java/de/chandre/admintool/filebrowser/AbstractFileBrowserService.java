@@ -2,6 +2,8 @@ package de.chandre.admintool.filebrowser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +16,10 @@ public abstract class AbstractFileBrowserService {
 	
 	@Autowired
 	private AdminToolFilebrowserConfig config;
+	
+	public String encodeURL(String path) throws UnsupportedEncodingException {
+		return URLEncoder.encode(path, "UTF-8");
+	}
 	
 	/**
 	 * 

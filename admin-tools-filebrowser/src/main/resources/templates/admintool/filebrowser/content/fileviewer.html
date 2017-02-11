@@ -4,7 +4,7 @@
 	<div layout:fragment="content">
 		<section class="content-header">
 			<h1>
-				Fileviewer <span class="small">[<a th:href="${rootContext} + '/filebrowser?dir=' + ${currentDir}">back to Filebrowser</a>]</span>
+				Fileviewer <span class="small">[<a th:href="@{${rootContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)})}">back to Filebrowser</a>]</span>
 			</h1>
 			<ol class="breadcrumb"
 				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
@@ -65,7 +65,7 @@
 									<div class="col-md-1 col-xs-1"></div>
 									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${currentFile.canRead() ? ' bg-success' : ' bg-danger'}"
 										th:text="${currentFile.canRead() ? 'readable' : 'unreadable'}"
-										title="if the file permission allows to it"></div>
+										title="if the file permission allows to read this file"></div>
 									<div class="col-md-1 col-xs-1"></div>
 									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${currentFile.canWrite() ? ' bg-success' : ' bg-danger'}"
 										th:text="${currentFile.canWrite() ? 'writeable' : 'read-only'}"
@@ -73,7 +73,7 @@
 									<div class="col-md-1 col-xs-1"></div>
 									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${@adminToolFileviewerConfig.isReadOnly() ? ' bg-success' : ' bg-danger'}"
 										th:text="${@adminToolFileviewerConfig.isReadOnly() ? 'DM not allowed' : 'DM allowed'}"
-										title="this is a configured value, if data manipulation is allowed or not"></div>
+										title="if data manipulation is allowed or not (this is a configured value)"></div>
 								</div>
 							</div>
 						</div>
