@@ -339,12 +339,14 @@ public class AdminToolLog4j2Util
 	public void closeOutputStreamAppender(String appenderName) throws IOException {
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
-		OutputStreamAppender appender = config.getAppender(appenderName);
-		if (null != appender) {
-			appender.stop();
-			removeAppender(appender, getParentLoggers());
-			removeAppender(appender, getLoggers());
-			appender.getManager().getByteBuffer().clear();
+		if (null != config && null != config.getAppenders()) {
+			OutputStreamAppender appender = config.getAppender(appenderName);
+			if (null != appender) {
+				appender.stop();
+				removeAppender(appender, getParentLoggers());
+				removeAppender(appender, getLoggers());
+				appender.getManager().getByteBuffer().clear();
+			}
 		}
 		
 		AdminToolLog4j2OutputStream baos = outputStreams.get(appenderName);
