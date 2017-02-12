@@ -33,12 +33,12 @@ Result will be displayed via jquery.datatables
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-dbbrowser</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 	
 ```
@@ -93,7 +93,7 @@ Examples must be managed per dataSource
 	admintool.dbbrowser.clobEncodings=UTF-8;ISO-8859-1
 	
 	# codeMirror version (if CDN is used this could maybe changed)
-	admintool.dbbrowser.codeMirrorVersion=5.19.0
+	admintool.dbbrowser.codeMirrorVersion=5.22.2
 	
 	# since 1.0.1
 	# semicolon separated list of additional codeMirror libs to load 

@@ -30,12 +30,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-filebrowser</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 </dependency>
 ```
 
@@ -124,7 +124,7 @@
 	admintool.fileviewer.allowedExtensions=txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;log;md;sh;bat;cmd
 	
 	# codeMirror version (if CDN is used this could maybe changed)
-	admintool.fileviewer.codeMirrorVersion=5.19.0
+	admintool.fileviewer.codeMirrorVersion=5.22.2
 	
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.fileviewer.codeMirrorAddLibs=addon/edit/matchbrackets.js

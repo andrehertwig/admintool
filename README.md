@@ -27,7 +27,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 
 ## Based on
 * [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
-  * Since 1.1.2-SNAPSHOT also Spring Boot 1.4.* supported 
+  * Since 1.1.2 also Spring Boot 1.4.* is supported 
 * [Admin LTE](https://almsaeedstudio.com/preview)
 * [Thymeleaf](http://www.thymeleaf.org/)
 
@@ -48,7 +48,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 	...
 ```

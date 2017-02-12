@@ -23,12 +23,12 @@ If spring security is enabled following should be set:
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-melody</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 	
 ```
