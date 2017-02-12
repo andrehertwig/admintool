@@ -37,10 +37,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 3. run the Demo JAR
 4. go to localhost:8090/ or localhost:8090/admintool
 
-Some URLs are secured
-* `/monitoring`: operator/operator or admin/admin (also within the adminTool)
-* `/jmx/`: operator/operator or admin/admin (also within the adminTool)
-* `/admintool/dbbrowser`: admin/admin (within the adminTool)
+ -> See [Spring Boot Demo application](admin-tools-demo/)
 
 # Usage
 
