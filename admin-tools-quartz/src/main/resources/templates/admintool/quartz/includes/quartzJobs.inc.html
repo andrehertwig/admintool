@@ -65,10 +65,10 @@
 											<div class="col-xs-2">Cron Expression</div>
 											<div class="col-xs-2">Previous Fire Time</div>
 											<div class="col-xs-2">Next Fire Time</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}">State</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}">Interr.</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}">Change</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}">Remove</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}" title="Change Job-Trigger state">State</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}" title="is interruptable">Interr.</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}" title="Change Job-Trigger data">Change</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}" title="Remove the Job-Trigger">Remove</div>
 										</div>
 										
 										<div class="row text-center" th:each="trigger, triggerIter : ${@adminToolQuartzService.getTriggers(jobKey)}">
