@@ -9,7 +9,7 @@
 1. Download the project
 2. execute a `mvn clean install` or import to your IDE
 3. run the demo JAR or start within your IDE
-  3.1 you can add system parameter for log file folder: -Dapp.logdir=&lt;absolute-path-to-logfilefolder&gt;
+..1. you can add system parameter for log file folder: -Dapp.logdir=&lt;absolute-path-to-logfilefolder&gt;
 4. go to localhost:8090/ or localhost:8090/admintool
 
 You can change the application configuration (like port etc.) in /src/main/resources/application.properties 
