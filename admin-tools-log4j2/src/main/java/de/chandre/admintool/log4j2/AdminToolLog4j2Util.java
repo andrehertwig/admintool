@@ -64,6 +64,14 @@ public class AdminToolLog4j2Util
 	
 	private Map<String, AdminToolLog4j2OutputStream> outputStreams = new ConcurrentReferenceHashMap<>();
 	
+	public int getCustomLoggerSize() {
+		return customLoggers.size();
+	}
+	
+	public int getCustomParentLoggerSize() {
+		return customParentLoggers.size();
+	}
+	
 	/**
 	 * returns all parent loggers 
 	 * @return
@@ -85,6 +93,14 @@ public class AdminToolLog4j2Util
 			loggers.clear();
 			parentMap.clear();
 		}
+	}
+	
+	public Collection<String> getParentLoggerNames() {
+		List<String> loggerNames = new ArrayList<>();
+		for (Logger logger : getParentLoggers()) {
+			loggerNames.add(logger.getName());
+		}
+		return loggerNames;
 	}
 	
 	/**
@@ -190,6 +206,19 @@ public class AdminToolLog4j2Util
 	public void changeLogger(final String name, final String levelStr, boolean parent) throws IllegalArgumentException
 	{
 		Level level = getLevel(levelStr);
+		changeLogger(name, level, parent);
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param level
+	 * @param parent
+	 * @throws IllegalArgumentException
+	 * @see {@link #changeLogger(String, String, boolean)}
+	 */
+	public void changeLogger(final String name, final Level level, boolean parent) throws IllegalArgumentException
+	{
 		if (null == name) {
 			throw new IllegalArgumentException("logger name must not null");
 		}
@@ -273,7 +302,7 @@ public class AdminToolLog4j2Util
 	 * @since 1.1.1
 	 */
 	public String createOutputStreamAppender(String name, String pattern, String encoding, Collection<String> loggerNames, 
-			String levelStr) {
+			String levelStr, boolean recursive, boolean overrideLogLevel) {
 		Level level = getLevel(levelStr);
 		String encodingToUse = StringUtils.isEmpty(encoding) ? "UTF-8" : encoding;
 		PatternLayout layout = PatternLayout.newBuilder()
@@ -299,15 +328,26 @@ public class AdminToolLog4j2Util
 		final Configuration config = ctx.getConfiguration();
 		config.addAppender(appender);
 		
-		if (null != loggerNames && !loggerNames.isEmpty()) {
-			for (String loggerName : loggerNames) {
-				LoggerConfig loggerConfig = config.getLoggerConfig(loggerName);
-				loggerConfig.addAppender(appender, level, null);
+		Collection<String> parentLoggerNames = getParentLoggerNames();
+		
+		for (String configuredLoggerName : getAllLoggerNames()) {
+			for (String loggerNameToApply : loggerNames) {
+				
+				boolean apply = (recursive && configuredLoggerName.startsWith(loggerNameToApply))
+						|| (!recursive && configuredLoggerName.equalsIgnoreCase(loggerNameToApply));
+				
+				if (apply) {
+					LoggerConfig loggerConfig = config.getLoggerConfig(configuredLoggerName);
+					loggerConfig.addAppender(appender, level, null);
+					if (overrideLogLevel) {
+						baos.addOriginalLevel(configuredLoggerName, loggerConfig.getLevel());
+						changeLogger(configuredLoggerName, level, parentLoggerNames.contains(configuredLoggerName));
+					}
+				}
 			}
-		} else {
-			LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-			loggerConfig.addAppender(appender, level, null);
+			
 		}
+		ctx.updateLoggers();
 		return appenderName;
 	}
 	
@@ -339,21 +379,37 @@ public class AdminToolLog4j2Util
 	public void closeOutputStreamAppender(String appenderName) throws IOException {
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
+		AdminToolLog4j2OutputStream baos = outputStreams.get(appenderName);
+		
 		if (null != config && null != config.getAppenders()) {
 			OutputStreamAppender appender = config.getAppender(appenderName);
 			if (null != appender) {
 				appender.stop();
+				
+				Collection<String> parentLoggerNames = getParentLoggerNames();
+				
+				for (String configuredLoggerName : getAllLoggerNames()) {
+					LoggerConfig loggerConfig = config.getLoggerConfig(configuredLoggerName);
+					loggerConfig.removeAppender(appender.getName());
+					if (null != baos.getOriginalLevel(configuredLoggerName)) {
+						changeLogger(configuredLoggerName, baos.getOriginalLevel(configuredLoggerName), 
+								parentLoggerNames.contains(configuredLoggerName));
+					}
+				}
+				//unsure about, if removing the appender from logger config if it gets also removed from logger instance too...
 				removeAppender(appender, getParentLoggers());
 				removeAppender(appender, getLoggers());
 				appender.getManager().getByteBuffer().clear();
+				
+				ctx.updateLoggers();
 			}
 		}
 		
-		AdminToolLog4j2OutputStream baos = outputStreams.get(appenderName);
 		if (null != baos) {
 			try {
 				baos.close();
-			} catch (Exception e) {
+				baos.clearOriginalLevels();
+			} catch (Exception ignore) {
 			} finally {
 				outputStreams.remove(appenderName);
 			}

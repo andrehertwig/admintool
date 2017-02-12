@@ -21,8 +21,8 @@
 						<i class="fa fa-bug"></i> Parent Loggers <span
 							th:text="' ('+ ${parentLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right removeCustomLogger">Remove
-						Custom Parent Loggers</button>
+					<button class="btn btn-default pull-right removeCustomLogger" 
+						th:text="'Remove Custom Parent Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">Remove Custom Parent Loggers</button>
 				</div>
 				<div class="box-body">
 
@@ -66,8 +66,8 @@
 						<i class="fa fa-bug"></i> All Loggers <span
 							th:text="' ('+ ${allLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right removeCustomLogger">Remove
-						Custom Loggers</button>
+					<button class="btn btn-default pull-right removeCustomLogger" 
+						th:text="'Remove Custom Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">Remove Custom Loggers</button>
 				</div>
 				<div class="box-body">
 

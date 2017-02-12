@@ -92,10 +92,10 @@ public class AdminLog4j2Controller
 	{
 		try {
 			HttpSession session = request.getSession(true);
-			String name = log4jUtil.createOutputStreamAppender(consoleTO.getName(), consoleTO.getPattern(), 
-					consoleTO.getEncoding(), consoleTO.getLoggerNames(), consoleTO.getLevel());
+			String name = log4jUtil.createOutputStreamAppender(consoleTO.getName(), consoleTO.getPattern(), consoleTO.getEncoding(), 
+					consoleTO.getLoggerNames(), consoleTO.getLevel(), consoleTO.isRecursive(), consoleTO.isOverrideLogLevel());
 			session.setAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME, name);
-			
+			LOGGER.debug(String.format("log4j console initialized: %s, %s", consoleTO.getLevel(), consoleTO.getEncoding()));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return "false";

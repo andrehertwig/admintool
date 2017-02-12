@@ -4,6 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.logging.log4j.Level;
 
 /**
  * OutputStream wrapper for Logging.
@@ -13,6 +17,8 @@ import java.nio.charset.Charset;
 public class AdminToolLog4j2OutputStream extends OutputStream {
 	private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 	private Charset characterSet = Charset.forName("UTF-8");
+	
+	private Map<String, Level> originalLevels = new HashMap<>();
 	
 	/**
 	 * OutputStream wrapper with ByteArrayOutputStream with size = 4096 and characterSet = UTF-8
@@ -124,7 +130,19 @@ public class AdminToolLog4j2OutputStream extends OutputStream {
 			return res;
 		}
 	}
- 
+	
+	public void addOriginalLevel(String loggerName, Level level) {
+		this.originalLevels.put(loggerName, level);
+	}
+	
+	public Level getOriginalLevel(String loggerName) {
+		return this.originalLevels.get(loggerName);
+	}
+	
+	public void clearOriginalLevels() {
+		this.originalLevels.clear();
+	}
+
 	@Override
 	public String toString() {
 		return new String(this.buffer.toByteArray(), getCharacterSet());

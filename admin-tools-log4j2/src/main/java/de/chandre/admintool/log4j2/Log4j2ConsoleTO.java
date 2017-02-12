@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
+ * Transfer object for web console appender configuration 
  * @author Andre
  *
  */
@@ -20,6 +20,8 @@ public class Log4j2ConsoleTO implements Serializable {
 	private String name;
 	private String pattern;
 	private String encoding;
+	private boolean recursive;
+	private boolean overrideLogLevel;
 	private String level;
 	private Set<String> loggerNames;
 	
@@ -41,6 +43,18 @@ public class Log4j2ConsoleTO implements Serializable {
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
+	public boolean isRecursive() {
+		return recursive;
+	}
+	public void setRecursive(boolean recursive) {
+		this.recursive = recursive;
+	}
+	public boolean isOverrideLogLevel() {
+		return overrideLogLevel;
+	}
+	public void setOverrideLogLevel(boolean overrideLogLevel) {
+		this.overrideLogLevel = overrideLogLevel;
+	}
 	public String getLevel() {
 		return level;
 	}
@@ -61,7 +75,9 @@ public class Log4j2ConsoleTO implements Serializable {
 		result = prime * result + ((level == null) ? 0 : level.hashCode());
 		result = prime * result + ((loggerNames == null) ? 0 : loggerNames.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (overrideLogLevel ? 1231 : 1237);
 		result = prime * result + ((pattern == null) ? 0 : pattern.hashCode());
+		result = prime * result + (recursive ? 1231 : 1237);
 		return result;
 	}
 	@Override
@@ -93,10 +109,14 @@ public class Log4j2ConsoleTO implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (overrideLogLevel != other.overrideLogLevel)
+			return false;
 		if (pattern == null) {
 			if (other.pattern != null)
 				return false;
 		} else if (!pattern.equals(other.pattern))
+			return false;
+		if (recursive != other.recursive)
 			return false;
 		return true;
 	}
@@ -104,7 +124,8 @@ public class Log4j2ConsoleTO implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Log4j2ConsoleTO [name=").append(name).append(", pattern=").append(pattern).append(", encoding=")
-				.append(encoding).append(", level=").append(level).append(", loggerNames=").append(loggerNames)
+				.append(encoding).append(", recursive=").append(recursive).append(", overrideLogLevel=")
+				.append(overrideLogLevel).append(", level=").append(level).append(", loggerNames=").append(loggerNames)
 				.append("]");
 		return builder.toString();
 	}

@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6 col-xs-12">
+						<div class="col-md-4 col-xs-12">
 							<div class="form-group">
 								<label for="level">Logger Level</label>
 								<select id="level" name="level" class="form-control">
@@ -51,7 +51,28 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-md-6 col-xs-12">
+						<div class="col-md-4 col-xs-12">
+						
+							<div class="row">
+							
+								<div class="col-md-6 col-xs-6">
+									<div class="form-group">
+										<label for="recursive" title="Apply the appender recursive to all sub-loggers (in class hierachy) if a parent logger will be selected">Recursive</label><br />
+										<input id="recursive" name="recursive" type="checkbox"/>
+									</div>
+								</div>
+								
+								<div class="col-md-6 col-xs-6">
+									<div class="form-group">
+										<label for="overrideLogLevel" title="Overrides the log level of loggers where the appender will be associated with">Override log level</label><br />
+										<input id="overrideLogLevel" name="overrideLogLevel" type="checkbox"/>
+									</div>
+								</div>
+							
+							</div>
+							
+						</div>
+						<div class="col-md-4 col-xs-12">
 							<div class="form-group">
 								<label for="encoding">Logger Encoding</label>
 								<input id="encoding" name="encoding" class="form-control" placeholder="UTF-8" type="text" />
@@ -80,7 +101,7 @@
 						<i class="fa fa-file-text-o"></i> Log4j Console Output
 					</h3>
 					<button class="btn btn-default stopConsole" type="button">Stop Console</button>
-					<button class="btn btn-default" type="button" id="clearConsole">
+					<button class="btn btn-default" type="button" id="clearConsole" title="Clear console. (Request count)">
 						<span class="badge bg-yellow" id="requestCount" title="Request count">0</span>
 						Clear Console
 					</button>

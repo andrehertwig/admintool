@@ -126,6 +126,7 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		this.requestCount = 0;
 		this.lineCount = 0;
 		this.maxListLength = 100;
+		this.initCheckboxes();
 	},
 	
 	bind : function() {
@@ -145,14 +146,31 @@ $.extend(AdminTool.Log4j.Console.prototype, {
 		getByID('clearConsole').unbind();
 	},
 	
+	initCheckboxes: function() {
+		getByID('recursive').iCheck('destroy');
+		getByID('recursive').iCheck({
+			checkboxClass: 'icheckbox_minimal',
+			radioClass: 'iradio_minimal'
+//					increaseArea: '20%' // optional
+		});
+		getByID('overrideLogLevel').iCheck('destroy');
+		getByID('overrideLogLevel').iCheck({
+			checkboxClass: 'icheckbox_minimal',
+			radioClass: 'iradio_minimal'
+//					increaseArea: '20%' // optional
+		});
+	},
+	
 	startConsole : function() {
 		
 		var data = {
 //			name:getByID('name').val(),
-			pattern:getByID('pattern').val(),
-			encoding:getByID('encoding').val(),
-			level:getByID('level').val(),
-			loggerNames:this.loggerNames.val()
+			pattern: getByID('pattern').val(),
+			encoding: getByID('encoding').val(),
+			recursive: getByID('recursive').prop("checked"),
+			overrideLogLevel: getByID('overrideLogLevel').prop("checked"),
+			level: getByID('level').val(),
+			loggerNames: this.loggerNames.val()
 		};
 		
 		this.sendRequest(
