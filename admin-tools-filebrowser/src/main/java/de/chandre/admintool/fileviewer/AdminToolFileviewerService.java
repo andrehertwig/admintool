@@ -2,6 +2,7 @@ package de.chandre.admintool.fileviewer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import de.chandre.admintool.filebrowser.GenericFilebrowserException;
 
@@ -12,6 +13,15 @@ import de.chandre.admintool.filebrowser.GenericFilebrowserException;
  *
  */
 public interface AdminToolFileviewerService {
+	
+	/**
+	 * to url-encode a string
+	 *  
+	 * @param path
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	String encodeURL(String path) throws UnsupportedEncodingException;
 
 	/**
 	 * checks if file is allowed for viewing. throws exception if not.

@@ -2,6 +2,7 @@ package de.chandre.admintool.filebrowser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,15 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public interface AdminToolFilebrowserService {
+	
+	/**
+	 * to url-encode a string
+	 *  
+	 * @param path
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	String encodeURL(String path) throws UnsupportedEncodingException;
 
 	/**
 	 * returns all root directories
