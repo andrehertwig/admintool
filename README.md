@@ -1,15 +1,19 @@
 # Extendable Admin UI for Spring Boot Web Application
 > The purpose of this project is to provide an easy to integrate and extendable admin UI for Spring Boot web applications with a predefined stack of tools/dashboards which can be used out-of-the-box.
 
+This is just a spare-time project. The usage of this tool (especially in production systems) is at your own risk.
+
 ## Existing components
 * [Core](admin-tools-core/): providing the core functionality
 * [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required for your own project)
 * [Jminix integration](admin-tools-jminix/): simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required for your own project)
-* [Log4j management](admin-tools-log4j2/): dashboard for all log4j2 loggers with the option to change the log level at runtime
+* [Log4j management](admin-tools-log4j2/): 
+  * dashboard for all log4j2 loggers with the option to change the log level at runtime
+  * since 1.1.1: web based logging console to get direct log output
 * [Quartz scheduler management](admin-tools-quartz/): 
   * dashboard for configuration with option to deactivate the scheduler
-  * dashboard for configured jobs with option to pause/resume or fire them (not implemented yet: change jobs)
+  * dashboard for configured jobs with option to pause/resume or fire them (experimental: change jobs (including job data))
 * [Database browser](admin-tools-dbbrowser/): database browser to access the data sources associated with spring
 * [File browser](admin-tools-filebrowser/): 
   * browsing and downloading (direct/zipped) files and directories 
@@ -23,7 +27,7 @@
 
 ## Based on
 * [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
-  * Since 1.1.2-SNAPSHOT also Spring Boot 1.4 supported 
+  * Since 1.1.2-SNAPSHOT also Spring Boot 1.4.* supported 
 * [Admin LTE](https://almsaeedstudio.com/preview)
 * [Thymeleaf](http://www.thymeleaf.org/)
 
@@ -47,7 +51,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.0</version>
+		<version>1.1.1</version>
 	</dependency>
 	...
 ```
@@ -73,7 +77,7 @@ If you're using Spring Security you should disable CSRF support for some tools (
 ## Adding own pages
 
 ### Creating an AdminComponent 
-The AdminComponent is the main component for configuring a module. It must contain a menu entry.
+The AdminComponent is the main component for configuring a module. It must contain a menu entry. Furthermore you can append custom CSS and JS (with either relative or absolute URLs) to components, which will only be resolved within component calls.
 ```java
 
 	AdminComponent component = new AdminComponentImpl();
@@ -81,6 +85,12 @@ The AdminComponent is the main component for configuring a module. It must conta
 	component.addNotificationTemplate("notifications/notification");
 	component.addSecurityRole("ROLE_ANONYMOUS");
 	component.addSecurityRole("ROLE_ADMIN");
+	
+	//adding a custom (relative) js
+	component.addAdditionalJS("/static/mycomponent/js/myJavaScript.js", true);
+	
+	//adding a custom (relative) css
+	component.addAdditionalCSS("/static/mycomponent/css/myCascadingStyleSheet.css", true);
 	
 	MenuEntry mainMenu = new MenuEntry();
 	mainMenu.setDisplayName("Demo-App-Component");
