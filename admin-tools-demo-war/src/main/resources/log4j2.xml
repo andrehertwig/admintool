@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Properties>
+		<Property name="filename">adminTool.log</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss.SSS} %X{sessionId} [%t] %-5level %logger{36} - %msg%n"/>
+		</Console>
+		<RollingFile name="RollingFile" fileName="${sys:app.logdir}/${filename}" filePattern="${sys:app.logdir}/${filename}-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout>
+				<pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} %X{sessionId} [%t] %-5level %logger{36} : %msg%n</pattern>
+			</PatternLayout>
+			<!-- <PatternLayout pattern="%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n"/>
+			 -->
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="250MB"/>
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="de.chandre" level="debug" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<!--  -->
+		<Logger name="de.chandre.admintool.core.security.MenuItemSecurityInterceptorImpl" level="trace" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		
+		<Logger name="org.springframework" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.springframework.boot" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.springframework.web" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.springframework.core" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.springframework.security" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.springframework.security.web.access" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		
+		
+		<Logger name="org.thymeleaf" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.hibernate" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Logger name="org.quartz" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		
+		<!-- -->
+		<Logger name="*" level="info" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		 
+		<Root level="info">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Root>
+	</Loggers>
+</Configuration>

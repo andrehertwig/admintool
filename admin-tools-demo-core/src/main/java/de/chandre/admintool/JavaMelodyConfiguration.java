@@ -8,11 +8,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.bull.javamelody.MonitoredWithAnnotationPointcut;
 import net.bull.javamelody.MonitoringFilter;
 import net.bull.javamelody.MonitoringSpringAdvisor;
+import net.bull.javamelody.Parameter;
 import net.bull.javamelody.SessionListener;
 import net.bull.javamelody.SpringDataSourceBeanPostProcessor;
 
@@ -41,7 +44,7 @@ public class JavaMelodyConfiguration implements ServletContextInitializer
 	}
 
 	@Bean
-	public FilterRegistrationBean javaMelody() {
+	public FilterRegistrationBean javaMelody(Environment environment) {
 		FilterRegistrationBean javaMelody = new FilterRegistrationBean();
 		javaMelody.setFilter(new MonitoringFilter());
 		javaMelody.setAsyncSupported(true);
@@ -54,7 +57,11 @@ public class JavaMelodyConfiguration implements ServletContextInitializer
 		// to add basic auth:
 		// javaMelody.addInitParameter(Parameter.AUTHORIZED_USERS.getCode(), "admin:pwd");
 		// to change the default storage directory:
-		// javaMelody.addInitParameter(Parameter.STORAGE_DIRECTORY.getCode(), "/tmp/javamelody");
+		
+		if (null != environment.getProperty("javamelody.storage-directory")) {
+			javaMelody.addInitParameter(Parameter.STORAGE_DIRECTORY.getCode(), 
+					environment.getProperty("javamelody.storage-directory"));
+		}
 
 		javaMelody.addUrlPatterns("/*");
 		return javaMelody;

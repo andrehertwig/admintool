@@ -1,15 +1,4 @@
 <html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
-<!-- /*
-<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.4/jquery.min.js"></script>
-<script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-  
-<script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/bootstrap/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/webjars/org.webjars.bower/adminlte/2.3.2/dist/js/app.min.js"></script>
- 
-<script th:src="${#httpServletRequest.getContextPath()} + '/static/admintool/js/adminTool.js'"></script>
- */ -->
  
 <th:block th:each="jsPathEntry,iterStateJS : ${@adminTool.globalJavaScripts}">
 	<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>

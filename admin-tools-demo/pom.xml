@@ -26,157 +26,21 @@
 		<!-- project dependencies -->
 		<dependency>
 			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!--  -->
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-core-security</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-melody</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-jminix</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-log4j2</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-quartz</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-dbbrowser</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-filebrowser</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-properties</artifactId>
+			<artifactId>admin-tools-demo-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Spring Framework -->
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-        </dependency>
+		
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <!-- provided has to be if building a war file-->
-            <!-- <scope>provided</scope> -->
         </dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-web</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<!--
-		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-ldap</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.directory.server</groupId>
-		    <artifactId>apacheds-server-jndi</artifactId>
-		    <version>1.5.5</version>
-		</dependency>
-        -->
-        <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-devtools</artifactId>
-	    </dependency>
-        
-        <!-- Apache Commons-->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-		</dependency>
-		
-		<!-- maintenance-->
-		<dependency>
-			<groupId>net.bull.javamelody</groupId>
-			<artifactId>javamelody-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jminix</groupId>
-			<artifactId>jminix</artifactId>
-			<version>${jminix.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.40</version>
-		</dependency>
 		
 		<dependency>
 		    <groupId>org.flywaydb</groupId>
 		    <artifactId>flyway-core</artifactId>
-		    <version>4.0.1</version><!--$NO-MVN-MAN-VER$-->
+		    <version>4.1.0</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 	
 	</dependencies>
