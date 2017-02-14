@@ -4,7 +4,7 @@
 	<div layout:fragment="content">
 		<section class="content-header">
 			<h1>
-				Fileviewer <span class="small">[<a th:href="@{${rootContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)})}">back to Filebrowser</a>]</span>
+				Fileviewer <span class="small">[<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)})}">back to Filebrowser</a>]</span>
 			</h1>
 			<ol class="breadcrumb"
 				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
@@ -16,7 +16,7 @@
 			<span id="fileExtension" class="invisible" th:text="${@adminToolFileviewerService.getExtension(currentFile)}"></span>
 			<span id="readOnly" class="invisible" th:text="${@adminToolFileviewerConfig.isReadOnly()}"></span>
 
-			<form name="fileViewForm" id="fileViewForm" th:action="${rootContext} + '/fileviewer/show'" method="post">
+			<form name="fileViewForm" id="fileViewForm" th:action="${adminToolContext} + '/fileviewer/show'" method="post">
 				<div class="box box-info">
 
 					<div th:if="${exceptionMessage != null}" class="alert alert-danger alert-dismissible">
@@ -51,7 +51,7 @@
 				</div>
 			</form>
 			
-			<form name="fileViewForm" id="fileViewForm" th:action="${rootContext} + '/fileviewer/update'" method="post">
+			<form name="fileViewForm" id="fileViewForm" th:action="@{${adminToolContext} + '/fileviewer/update'}" method="post">
 				<div class="box box-info">
 
 					<div class="box-header with-border">

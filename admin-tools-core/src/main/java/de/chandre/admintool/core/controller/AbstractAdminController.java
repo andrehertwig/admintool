@@ -82,6 +82,7 @@ public class AbstractAdminController
 		//get menu entry by name
 		MenuEntrySearchResult result = adminTool.searchComponent(name);
 		model.put("rootContext", getRootContext(request));
+		model.put("adminToolContext", AdminTool.ROOTCONTEXT);
 		String targetTpl = "/content/error404";
 		if (null != result) {
 			LOGGER.trace("Component found: " + String.valueOf(null != result.getComponent()) +
