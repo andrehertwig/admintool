@@ -50,7 +50,7 @@ $.extend(AdminTool.Log4j.Loggers.prototype, {
 			 var $el = $(this);
 			 $el.unbind('click');
 			 $el.on({'click': function(){
-				 getByID('log4jContent').adminToolLog4j('changeLogLevel', $el)}
+				 getByID('log4jContent').adminToolLog4jLoggers('changeLogLevel', $el)}
 			 });
 		 });
 	},
