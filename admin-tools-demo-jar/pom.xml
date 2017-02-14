@@ -10,7 +10,7 @@
 		<relativePath>../</relativePath>
     </parent>
 
-	<artifactId>admin-tools-demo</artifactId>
+	<artifactId>admin-tools-demo-jar</artifactId>
 	
 	<name>admin-tools demo</name>
 	<description>admin-tools demonstration</description>
