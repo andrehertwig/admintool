@@ -36,7 +36,7 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "dist/css/skins/skin-blue.min.css", relative);
 		
 		adminTool.addGlobalJavaScript("/static/admintool/js/adminTool.js", true);
-		adminTool.addGlobalStyleSheet("/static/admintool/css/adminTool.css", false);
+		adminTool.addGlobalStyleSheet("/static/admintool/css/adminTool.css", true);
 		
 		adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/datepicker/bootstrap-datepicker.js", relative);
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "plugins/datepicker/datepicker3.css", relative);
