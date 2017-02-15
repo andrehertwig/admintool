@@ -32,7 +32,6 @@ public class SecurityConfig
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.headers().frameOptions().sameOrigin().and()
-//				.antMatcher("/monitoring").antMatcher("/jmx/**")
 				.requestMatchers().antMatchers("/monitoring", "/jmx/**").and()
 				.authorizeRequests()
 					.anyRequest().hasAnyRole("OPERATOR", "ADMIN")
@@ -53,7 +52,7 @@ public class SecurityConfig
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
-				.csrf().disable()
+//				.csrf().disable()
 				.authorizeRequests()
 					.antMatchers(AdminTool.ROOTCONTEXT + "/dbbrowser").hasAnyRole("ADMIN")
 					.antMatchers(AdminTool.ROOTCONTEXT + "/dbbrowser/**").hasAnyRole("ADMIN")

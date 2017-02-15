@@ -17,6 +17,7 @@
 			<span id="readOnly" class="invisible" th:text="${@adminToolFileviewerConfig.isReadOnly()}"></span>
 
 			<form name="fileViewForm" id="fileViewForm" th:action="${adminToolContext} + '/fileviewer/show'" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<div class="box box-info">
 
 					<div th:if="${exceptionMessage != null}" class="alert alert-danger alert-dismissible">
@@ -52,6 +53,7 @@
 			</form>
 			
 			<form name="fileViewForm" id="fileViewForm" th:action="@{${adminToolContext} + '/fileviewer/update'}" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<div class="box box-info">
 
 					<div class="box-header with-border">

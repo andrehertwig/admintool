@@ -88,12 +88,17 @@ $.extend(AdminTool.Core.prototype, {
 	
 	sendRequest: function (query, callback) {
 		var context = $('#webContext').attr('href');
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
 		$.ajax({
 			url: context + query.url,
 			dataType: query.dataType || 'json',
 			type: query.requestType || 'GET',
 			data: query.data || null,
 			contentType: query.contentType || 'application/json; charset=UTF-8',
+			beforeSend: function(xhr, settings) {
+				xhr.setRequestHeader(header, token);
+			},
 			error: function( xhr, status, errorThrown ) {
 				if (query.showModalOnError) {
 					AdminTool.Core.prototype.showErrorModal(query.erroModalHeadline, query.errorModalText);
@@ -142,10 +147,15 @@ $( document ).ready(function() {
  */
 function sendRequest(serviceUrl, requestType, dataType, callback) {
 	var context = $('#webContext').attr('href');
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
 	$.ajax({
 		url: context + serviceUrl,
 		dataType: dataType,
 		type: requestType,
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader(header, token);
+		},
 		error: function( xhr, status, errorThrown ) {
 			$('#admintoolError').modal();
 	        if (console) {
