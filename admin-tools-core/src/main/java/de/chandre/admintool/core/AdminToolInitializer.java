@@ -2,18 +2,30 @@ package de.chandre.admintool.core;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * adds the global common configuration of CSS and JS to adminTool
+ * 
+ * @author Andre
+ *
+ */
 @Service("adminToolInitializer")
 public class AdminToolInitializer extends AbstractAdminToolLoader
 {
+	private static final Log LOGGER = LogFactory.getLog(AdminToolInitializer.class);
+	
 	@Autowired
 	private AdminTool adminTool;
 	
 	@PostConstruct
 	public void init() {
+		
+		LOGGER.info("initializing AdminTool");
 		
 		boolean relative = !shouldCDNsUsed();
 		String adminLtePrefix = getAdminLTEPrefixUri();

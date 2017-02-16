@@ -128,6 +128,7 @@ E.g. your Thymeleaf is configured to look for templates in: *classpath:/template
 
 ### Creating a content template
 
+#### Before version 1.1.0 (Deprecated)
 A content template must at least contain a block element with *id="template-content"*, otherwise the content will not be found by Thymeleaf. Using the namespace within the HTML tag provides code completion in Eclipse IDE with installed Thymeleaf plugin.   
 ```html
 
@@ -194,3 +195,26 @@ beside the core. It will have:
 The *MenuEntry.target* should point relative from the *admintool* folder to the template which should be used by this menu entry. This template will be shown in the main frame (within tag `<div class="content-wrapper">`).
 
 You can also override templates provided by the admin-tools-core library. Per default templates will be found by *OrderedClassLoaderResourceResolver* using the *TemplateUrlComparator*. If more than one template has been found the core template will be used last, all others in natural string comparison order of absolute template URL (with JAR names). The first will be picked. -> Your desired template should be named to lead the comparison order.
+
+### Checking the menu integrity
+There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
+ ```html
+
+  <th:block th:include="admintool/includes/integrityCheck.inc" />
+ 
+```
+The second option would be calling the method directly, but of couse after spring has finished loading its context.
+```java
+
+	@Bean
+  public ApplicationListener<ContextRefreshedEvent> contextLoadedListener(AdminToolIntegrityUtil integrityUtil) {
+    return new ApplicationListener<ContextRefreshedEvent>() {
+      @Override
+      public void onApplicationEvent(ContextRefreshedEvent event) {
+        //checking the menu integrity
+        integrityUtil.checkMenuIntegrityAndPrintLog();
+      }
+    };
+  }
+
+```

@@ -15,7 +15,6 @@ import de.chandre.admintool.core.component.MenuEntry;
 import de.chandre.admintool.db.AdminToolDBBrowserExampleLoader;
 import de.chandre.admintool.db.ExampleStatement;
 import de.chandre.admintool.db.ExampleStatements;
-import net.bull.javamelody.MonitoredWithSpring;
 
 /**
  * Demo controller
@@ -36,9 +35,16 @@ public class DemoController
 	@Autowired
 	private AdminToolDBBrowserExampleLoader exampleLoader;
 	
+//	@Autowired
+//	private AdminToolSecurityLoader secLoader;
+	
 	@PostConstruct
 	private void createDemo()
 	{
+		//make the user view available
+//		secLoader.addUsersMenu();
+		
+		
 		AdminComponent component = new AdminComponentImpl();
 		component.setDisplayName("Demo-App-Component");
 		component.addNotificationTemplate("notifications/notification");
@@ -63,7 +69,15 @@ public class DemoController
 		submenu.addSubmenuEntry(new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4"));
 		mainMenu.addSubmenuEntry(submenu);
 		
+		//producing an error
+		mainMenu.addSubmenuEntry(new MenuEntry("dashboard5", "Dashboard 5", "content/dashboard"));
+		mainMenu.addSubmenuEntry(new MenuEntry("dashboard5", "Dashboard 5", "content/dashboard"));
+		
 		adminTool.addComponent(component);
+		
+		AdminComponent defectComponent = new AdminComponentImpl();
+		defectComponent.setDisplayName("DefectComponent");
+		adminTool.addComponent(defectComponent);
 		
 		ExampleStatements statements = new ExampleStatements();
 		statements.setDatasourceName("dataSource");

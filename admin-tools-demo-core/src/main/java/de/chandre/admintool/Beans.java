@@ -17,11 +17,14 @@ import org.apache.logging.log4j.core.appender.db.jdbc.ConnectionSource;
 import org.apache.logging.log4j.core.appender.db.jdbc.JdbcAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import de.chandre.admintool.core.utils.AdminToolIntegrityUtil;
 import de.chandre.admintool.log4j2.AdminToolLog4j2Util;
 
 @org.springframework.context.annotation.Configuration
@@ -41,6 +44,17 @@ public class Beans {
 	    LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
 	    lci.setParamName("lang");
 	    return lci;
+	}
+	
+	@Bean
+	public ApplicationListener<ContextRefreshedEvent> contextLoadedListener(AdminToolIntegrityUtil integrityUtil) {
+		return new ApplicationListener<ContextRefreshedEvent>() {
+			@Override
+			public void onApplicationEvent(ContextRefreshedEvent event) {
+				//checking the menu integrity
+				integrityUtil.checkMenuIntegrityAndPrintLog();
+			}
+		};
 	}
 	
 	/**

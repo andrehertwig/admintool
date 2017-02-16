@@ -33,7 +33,7 @@ public class AdminToolMenuUtils {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolMenuUtils.class);
 	
-	private static final String DEAULT_BC_SEP = " &gt ";
+	private static final String DEAULT_BC_SEP = " &gt; ";
 	private static final String CSS_TREEVIEW = "treeview";
 	private static final String CSS_ACTIVE = " active";
 	
@@ -44,13 +44,16 @@ public class AdminToolMenuUtils {
 		List<AdminComponent> result = new ArrayList<>();
 		
 		for (AdminComponent adminComponent : adminTool.getComponents()) {
-			Stream<MenuEntry> nonHiddenMenues = adminComponent.getMainMenu().flattened().filter(me -> !me.isHide());
-			if (nonHiddenMenues.count() == 0L) {
-				LOGGER.trace("all menu entries hidden for component: " + adminComponent.getDisplayName());
-				//do not return this menu item, because all entries are hidden
-				continue;
+			if (null != adminComponent.getMainMenu()) {
+				Stream<MenuEntry> nonHiddenMenues = adminComponent.getMainMenu().flattened().filter(me -> !me.isHide());
+				if (nonHiddenMenues.count() == 0L) {
+					LOGGER.trace("all menu entries hidden for component: " + adminComponent.getDisplayName());
+					//do not return this menu item, because all entries are hidden
+					continue;
+				}
+				result.add(adminComponent);
+
 			}
-			result.add(adminComponent);
 		}
 		return result;
 	}
@@ -114,6 +117,9 @@ public class AdminToolMenuUtils {
 	 * @return
 	 */
 	public String getBreadcrumb(MenuEntry actualEntry, String separator) {
+		if (null == actualEntry) {
+			return "";
+		}
 		StringBuilder result = new StringBuilder();
 		final String sep;
 		if (StringUtils.isEmpty(separator)) {
@@ -152,10 +158,13 @@ public class AdminToolMenuUtils {
 	}
 
 	public boolean hasMenuEntry(AdminComponent component, MenuEntry activeMenue) {
-		Optional<MenuEntry> result = component.getMainMenu().flattened()
-				.filter(menu -> checkForNull(menu, activeMenue) && menu.getName().equals(activeMenue.getName()))
-				.findFirst();
-		return result.isPresent();
+		if (null != component && null != component.getMainMenu()) {
+			Optional<MenuEntry> result = component.getMainMenu().flattened()
+					.filter(menu -> checkForNull(menu, activeMenue) && menu.getName().equals(activeMenue.getName()))
+					.findFirst();
+			return result.isPresent();
+		}
+		return false;
 	}
 
 	private boolean checkForNull(MenuEntry menu, MenuEntry activeMenu) {

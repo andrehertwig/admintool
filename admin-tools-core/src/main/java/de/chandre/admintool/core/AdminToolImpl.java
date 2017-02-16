@@ -107,10 +107,12 @@ public class AdminToolImpl implements AdminTool
 		LOGGER.debug("search for component for menuName: " + menuName);
 		Optional<MenuEntry> menuEntry = Optional.empty();
 		for (AdminComponent comp : getComponents()) {
-			menuEntry = comp.getMainMenu().flattened().filter(entry -> null != entry.getName() && entry.getName().equals(menuName)).findFirst();
-			if (menuEntry.isPresent()) {
-				result = new MenuEntrySearchResult(comp, menuEntry.get());
-				break;
+			if (null != comp.getMainMenu()) {
+				menuEntry = comp.getMainMenu().flattened().filter(entry -> null != entry.getName() && entry.getName().equals(menuName)).findFirst();
+				if (menuEntry.isPresent()) {
+					result = new MenuEntrySearchResult(comp, menuEntry.get());
+					break;
+				}
 			}
 		}
 		if (null == result && menuName.lastIndexOf('/') != -1) {

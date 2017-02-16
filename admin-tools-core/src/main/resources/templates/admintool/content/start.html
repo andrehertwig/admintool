@@ -15,37 +15,9 @@
 
 		<!-- Your Page Content Here -->
 		
-		<div class="box box-default" th:if="${@adminToolIntegrityUtil.hasMenuIntegrityErrors()}">
-			<div class="box-header with-border">
-				<h3 class="box-title">
-				<i class="fa fa-warning"></i>
-					Menu Integrity Errors
-				</h3>
-			</div>
-			<div class="box-body">
-			
-				<div class="callout callout-danger" th:each="integrityError,iterState : ${@adminToolIntegrityUtil.checkMenuIntegrity()}">
-					<h4 th:text="${integrityError.error}"></h4>
-					<p th:inline="text">
-						[[${integrityError.error} + ' on menu item occured ' + ${integrityError.menuEntries.size()} + ' times:']]
-						<ul>
-							<li th:each="errorEntry,iterState2 : ${integrityError.menuEntries}" th:text="${@adminToolMenuUtils.getBreadcrumb(errorEntry, '')}"></li>
-						</ul>
-					</p>
-				</div>
-			
-			</div>
-		</div>
+		<th:block th:include="admintool/includes/integrityCheck.inc" />
 		
-		<div class="info-box bg-green">
-			<span class="info-box-icon">
-				<i class="fa fa-check"></i>
-			</span>
-			<div class="info-box-content">
-				<h3 class="box-title">Menu Integrity Check Successful</h3>
-			</div>
-		</div>
-
+		
 	</section>
 	<!-- /.content -->
 </div>

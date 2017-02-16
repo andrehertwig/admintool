@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+
+	<th:block th:if="${@adminToolIntegrityUtil.hasMenuIntegrityErrors()}" 
+		th:with="integrityErrors = ${@adminToolIntegrityUtil.checkMenuIntegrity()}">
+		<div class="box box-default" th:if="${integrityErrors}">
+			<div class="box-header with-border">
+				<h3 class="box-title">
+				<i class="fa fa-warning"></i>
+					Menu Integrity Errors
+				</h3>
+			</div>
+			<div class="box-body">
+			
+				<div class="callout callout-danger" th:each="integrityError,iterState : ${integrityErrors}">
+					<h4 th:text="${integrityError.error}"></h4>
+					<p th:inline="text">
+						[[${integrityError.error} + '. Occured ' + ${integrityError.menuEntries.size()} + ' times.']]
+						<ul th:if="${not #lists.isEmpty(integrityError.menuEntries)}">
+							<li th:each="errorEntry,iterState2 : ${integrityError.menuEntries}" 
+								th:utext="${@adminToolMenuUtils.getBreadcrumb(errorEntry, '')} + ' seems to be equals to ' + ${@adminToolMenuUtils.getBreadcrumb(integrityError.reference, '')}"></li>
+						</ul>
+					</p>
+				</div>
+			
+			</div>
+		</div>
+		
+		<div class="info-box bg-green" th:unless="${integrityErrors}">
+			<span class="info-box-icon">
+				<i class="fa fa-check"></i>
+			</span>
+			<div class="info-box-content">
+				<h3 class="box-title">Menu Integrity Check Successful</h3>
+			</div>
+		</div>
+	</th:block>
+
+</html>
