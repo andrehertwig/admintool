@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,9 @@ public class MenuEntry implements Serializable
 	private AdminComponent component;
 	private MenuEntry parent;
 	private List<MenuEntry> submenu = new LinkedList<>();
+	
+	private Map<String, Boolean> additionalCSS = new LinkedHashMap<>(1);
+	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
 	
 	private Set<String> securityRoles = new HashSet<>();
 	
@@ -237,6 +241,71 @@ public class MenuEntry implements Serializable
 		return Stream.concat(
                 Stream.of(this),
                 Stream.of(parent).flatMap(MenuEntry::reverseFlattened));
+	}
+	
+	/**
+	 * @return the additionalCSS
+	 * @since 1.0.3
+	 */
+	public Map<String, Boolean> getAdditionalCSS() {
+		return additionalCSS;
+	}
+
+	/**
+	 *  map with paths to CSS.<br>
+	 * 
+	 * @param additionalCSS the additionalCSS to set
+	 * @see #addAdditionalCSS(String, boolean)
+	 * @since 1.0.3
+	 */
+	public void setAdditionalCSS(Map<String, Boolean> additionalCSS) {
+		this.additionalCSS = additionalCSS;
+	}
+	
+	/**
+	 * path to CSS.<br>
+	 * Example:<br>
+	 *  <code>
+	 *  addAdditionalCSS("/static/myComponent/css/myStyles.css", true);<br>
+	 *  addAdditionalCSS("http://example.com/styles.css", false);
+	 *  </code>
+	 * @param additionalCSS the additionalCSS to set
+	 * @since 1.0.3
+	 */
+	public void addAdditionalCSS(String additionalCSS, boolean relative) {
+		this.additionalCSS.put(additionalCSS, relative);
+	}
+
+	/**
+	 * @return the additionalJS
+	 * @since 1.0.3
+	 */
+	public Map<String, Boolean> getAdditionalJS() {
+		return additionalJS;
+	}
+
+	/**
+	 * map with path to additional JavaScript files. <br>
+	 * @param additionalJS the additionalJS to set
+	 * @see #addAdditionalJS(String, boolean)
+	 * @since 1.0.3
+	 */
+	public void setAdditionalJS(Map<String, Boolean> additionalJS) {
+		this.additionalJS = additionalJS;
+	}
+	
+	/**
+	 * path to additional JavaScript files.<br>
+	 * Example:<br>
+	 *  <code>
+	 *  addAdditionalJS("/static/myComponent/js/myScripts.js", true);<br>
+	 *  addAdditionalJS("http://example.com/script.js", false);
+	 *  </code>
+	 * @param additionalJS the additionalJS to set
+	 * @since 1.0.3
+	 */
+	public void addAdditionalJS(String additionalJS, boolean relative) {
+		this.additionalJS.put(additionalJS, relative);
 	}
 	
 	/**
