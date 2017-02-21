@@ -3,8 +3,11 @@ package de.chandre.admintool;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.sql.DataSource;
 
 import org.apache.logging.log4j.Level;
@@ -19,15 +22,20 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.jmx.export.assembler.SimpleReflectiveMBeanInfoAssembler;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import de.chandre.admintool.core.AdminToolConfig;
 import de.chandre.admintool.core.utils.AdminToolIntegrityUtil;
 import de.chandre.admintool.log4j2.AdminToolLog4j2Util;
 
 @org.springframework.context.annotation.Configuration
+@EnableMBeanExport
 public class Beans {
 	
 	private static final Logger LOGGER = LogManager.getFormatterLogger(Beans.class);
@@ -55,6 +63,29 @@ public class Beans {
 				integrityUtil.checkMenuIntegrityAndPrintLog();
 			}
 		};
+	}
+	
+	/**
+	 * maybe not reasonable to export all configuration beans as mbeans, especially configurations like fileBrowser or dbBrowser
+	 * 
+	 * @param mbeanExporter
+	 * @param configs
+	 * @return
+	 * @throws MalformedObjectNameException
+	 */
+	@Bean
+	public boolean adminToolMbeansExported(MBeanExporter mbeanExporter, List<AdminToolConfig> configs) throws MalformedObjectNameException {
+		
+		SimpleReflectiveMBeanInfoAssembler assembler = new SimpleReflectiveMBeanInfoAssembler();
+		mbeanExporter.setAssembler(assembler);
+		mbeanExporter.setAutodetect(true);
+		LOGGER.info("registering %s managed admintool config resources", configs.size());
+		for (AdminToolConfig adminToolConfig : configs) {
+			LOGGER.info("registering managed resource: %s", adminToolConfig.getClass().getName());
+			ObjectName name = new ObjectName(String.format("de.chandre.admintool:type=Config,name=%s", adminToolConfig.getClass().getSimpleName()));
+			mbeanExporter.registerManagedResource(adminToolConfig, name);
+		}
+		return true;
 	}
 	
 	/**

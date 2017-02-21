@@ -19,7 +19,7 @@ import org.springframework.util.CollectionUtils;
  * <i>displayName</i> is required on every item, <i>name</i> and <i>target</i> only if entry has no <i>submenu</i>
  * 
  * @author Andre
- *
+ * @since 1.0.0
  */
 public class MenuEntry implements Serializable
 {
@@ -397,16 +397,14 @@ public class MenuEntry implements Serializable
 		this.variables.put(key, variable);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("MenuEntry [name=").append(name).append(", displayName=").append(displayName)
 				.append(", resouceMessageKey=").append(resouceMessageKey).append(", target=").append(target)
-				.append(", hide=").append(hide).append(", submenu=").append(submenu).append(", securityRoles=")
-				.append(securityRoles).append(", variables=").append(variables).append("]");
+				.append(", hide=").append(hide).append(", submenu=").append(submenu).append(", additionalCSS=").append(additionalCSS)
+				.append(", additionalJS=").append(additionalJS).append(", securityRoles=").append(securityRoles)
+				.append(", variables=").append(variables).append("]");
 		return builder.toString();
 	}
 	

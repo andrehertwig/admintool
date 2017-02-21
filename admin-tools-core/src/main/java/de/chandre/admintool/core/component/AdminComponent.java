@@ -118,7 +118,9 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	/**
 	 * security role like "ROLE_USER" or for anonymous "ROLE_ANONYMOUS" validated with spring security<br>
 	 * requires: admin-tool-core-security<br>
-	 * only for displaying or hiding menu entries
+	 * setting these roles will no effect on access, only for displaying or hiding menu entries<br>
+	 * the access restrictions must be done by your own with the security configuration
+	 * 
 	 * @param securityRole
 	 * @since 1.0.1
 	 */

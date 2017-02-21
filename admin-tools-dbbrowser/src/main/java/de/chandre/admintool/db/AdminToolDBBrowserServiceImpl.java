@@ -281,6 +281,17 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			closeConnection(c, vars);
 		}
 		
+		if (!configuration.isShowMetaDataLoadException()) {
+			if (null != resultTO.getExceptionMessage() || null != resultTO.getExceptionTrace()) {
+				LOGGER.debug("Exception while fetching database meta data: " + resultTO.getExceptionMessage());
+				LOGGER.debug(resultTO.getExceptionCause());
+				LOGGER.debug(resultTO.getExceptionTrace());
+			}
+			resultTO.setExceptionMessage(null);
+			resultTO.setExceptionCause(null);
+			resultTO.setExceptionTrace(null);
+		}
+		
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(resultTO);
 		}

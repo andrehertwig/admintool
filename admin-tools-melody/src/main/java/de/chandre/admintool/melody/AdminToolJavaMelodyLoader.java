@@ -1,14 +1,10 @@
 package de.chandre.admintool.melody;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AbstractAdminToolLoader;
@@ -28,19 +24,13 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
-	@Value("${adminTool.melody.path:/monitoring}")
-	private String melodyPath;
-	
-	@Value("#{'${admintool.melody.securityRoles:}'.split(';')}")
-	private Set<String> securityRoles = new HashSet<>();
-	
-	@Value("${admintool.melody.componentPosition:}")
-	private Integer componentPosition;
+	@Autowired
+	private AdminToolJavaMelodyConfig config;
 	
 	@PostConstruct
 	public void configureAdminTool()
 	{
-		if(!coreConfig.isEnabled()) {
+		if(!coreConfig.isEnabled() || !config.isEnabled()) {
 			LOGGER.info("admin tool's javaMelody view integration is deactivated");
 			return;
 		}
@@ -48,8 +38,8 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
-		component.setPosition(componentPosition);
-		component.getSecurityRoles().addAll(securityRoles);
+		component.setPosition(config.getComponentPosition());
+		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.setDisplayName("JavaMelody");
 		component.addAdditionalCSS("/static/admintool/melody.css", true);
 		
@@ -57,55 +47,9 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("JavaMelody");
 		mainMenu.setName("javamelody");
 		mainMenu.setTarget("content/melody");
-		mainMenu.addVariable("melodyPath", melodyPath);
+		mainMenu.addVariable("melodyPath", config.getMelodyPath());
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
-	}
-	
-	/**
-	 * @return the securityRoles
-	 */
-	public Set<String> getSecurityRoles() {
-		return securityRoles;
-	}
-
-	/**
-	 * @return the melodyPath
-	 */
-	public String getMelodyPath() {
-		return melodyPath;
-	}
-
-	/**
-	 * @param melodyPath the melodyPath to set
-	 */
-	public void setMelodyPath(String melodyPath) {
-		this.melodyPath = melodyPath;
-	}
-
-	/**
-	 * @return the componentPosition
-	 */
-	public Integer getComponentPosition() {
-		return componentPosition;
-	}
-
-	/**
-	 * @param componentPosition the componentPosition to set
-	 */
-	public void setComponentPosition(Integer componentPosition) {
-		this.componentPosition = componentPosition;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolJavaMelodyLoader [melodyPath=").append(melodyPath).append(", securityRoles=")
-				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
-		return builder.toString();
 	}
 }

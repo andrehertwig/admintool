@@ -27,7 +27,7 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 			return null;
 
 		if (authentication.getAuthorities().size() == 1
-				&& authentication.getAuthorities().iterator().next().equals(ROLE_ANONYMOUS)) {
+				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return "Login";
 		}
 
@@ -61,7 +61,7 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 			return null;
 
 		if (authentication.getAuthorities().size() == 1
-				&& authentication.getAuthorities().iterator().next().equals(ROLE_ANONYMOUS)) {
+				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return null;
 		}
 
@@ -79,7 +79,7 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 			return null;
 
 		if (authentication.getAuthorities().size() == 1
-				&& authentication.getAuthorities().iterator().next().equals(ROLE_ANONYMOUS)) {
+				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return null;
 		}
 

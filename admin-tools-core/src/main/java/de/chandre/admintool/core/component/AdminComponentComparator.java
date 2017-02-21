@@ -3,7 +3,7 @@ package de.chandre.admintool.core.component;
 import java.util.Comparator;
 
 /**
- * default comparator or ordering components
+ * default comparator or ordering components against its position
  * @author Andre
  * @since 1.0.1
  */

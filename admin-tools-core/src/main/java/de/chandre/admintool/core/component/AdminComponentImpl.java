@@ -10,8 +10,9 @@ import java.util.Set;
 /**
  * A admin component<br>
  * should have at least a minimum of one menu entry
+ * 
  * @author Andre
- *
+ * @since 1.0.0
  */
 public class AdminComponentImpl implements AdminComponent
 {
@@ -167,6 +168,7 @@ public class AdminComponentImpl implements AdminComponent
 	/**
 	 * @since 1.0.1
 	 * @return the securityRoles
+	 * @see #addSecurityRole(String)
 	 */
 	@Override
 	public Set<String> getSecurityRoles() {
@@ -174,17 +176,15 @@ public class AdminComponentImpl implements AdminComponent
 	}
 
 	/**
+	 * 
 	 * @since 1.0.1
 	 * @param securityRoles the securityRoles to set
+	 * @see #addSecurityRole(String)
 	 */
 	public void setSecurityRoles(Set<String> securityRoles) {
 		this.securityRoles = securityRoles;
 	}
-
-	/**
-	 * @since 1.0.1
-	 * @param securityRole
-	 */
+	
 	@Override
 	public void addSecurityRole(String securityRole) {
 		this.securityRoles.add(securityRole);
@@ -208,7 +208,9 @@ public class AdminComponentImpl implements AdminComponent
 		this.position = position;
 	}
 	
-	
+	/**
+	 * compares the displayName
+	 */
 	@Override
 	public int compareTo(AdminComponent o) {
 		return displayName.compareTo(o.getDisplayName());

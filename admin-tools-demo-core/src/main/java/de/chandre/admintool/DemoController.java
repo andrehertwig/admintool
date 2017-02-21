@@ -1,12 +1,11 @@
 package de.chandre.admintool;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
@@ -22,12 +21,19 @@ import de.chandre.admintool.db.ExampleStatements;
  *
  */
 @Controller
-public class DemoController
-{
+public class DemoController {
+	
 	@RequestMapping({"","/"})
-	public String hello(ModelAndView model, HttpServletRequest request) {
+	public String hello() {
 		return "index";
 	}
+	
+	@RequestMapping({"/info"})
+	public String admintoolInfo(ModelMap model) {
+		model.put("adminToolInfo", adminTool.toString());
+		return "info";
+	}
+	
 	
 	@Autowired
 	private AdminTool adminTool;
@@ -86,4 +92,6 @@ public class DemoController
 		
 		exampleLoader.addExamples(statements);
 	}
+	
+	
 }

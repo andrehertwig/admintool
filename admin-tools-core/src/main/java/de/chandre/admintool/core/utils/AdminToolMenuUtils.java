@@ -40,6 +40,10 @@ public class AdminToolMenuUtils {
 	@Autowired
 	private AdminTool adminTool;
 	
+	/**
+	 * collects the components from adminTool
+	 * @return all AdminComponents with a main menu and at least one non-hidden (visible) menu entry 
+	 */
 	public List<AdminComponent> getComponents() {
 		List<AdminComponent> result = new ArrayList<>();
 		
@@ -52,7 +56,6 @@ public class AdminToolMenuUtils {
 					continue;
 				}
 				result.add(adminComponent);
-
 			}
 		}
 		return result;
@@ -150,6 +153,10 @@ public class AdminToolMenuUtils {
 		return result;
 	}
 
+	/**
+	 * reverse collector 
+	 * @return
+	 */
 	public static <T> Collector<T, ?, List<T>> toListReversed() {
 		return Collectors.collectingAndThen(Collectors.toList(), l -> {
 			Collections.reverse(l);
@@ -157,6 +164,13 @@ public class AdminToolMenuUtils {
 		});
 	}
 
+	/**
+	 * checks if the activeMenue is part of given component
+	 * 
+	 * @param component the AdminComponent which should contain the activeMenue 
+	 * @param activeMenue the menue to check
+	 * @return
+	 */
 	public boolean hasMenuEntry(AdminComponent component, MenuEntry activeMenue) {
 		if (null != component && null != component.getMainMenu()) {
 			Optional<MenuEntry> result = component.getMainMenu().flattened()

@@ -1,14 +1,10 @@
 package de.chandre.admintool.log4j2;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AbstractAdminToolLoader;
@@ -28,11 +24,8 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
-	@Value("#{'${admintool.log4j2.securityRoles:}'.split(';')}")
-	private Set<String> securityRoles = new HashSet<>();
-	
-	@Value("${admintool.log4j2.componentPosition:}")
-	private Integer componentPosition;
+	@Autowired
+	private AdminToolLog4j2Config config;
 	
 	@PostConstruct
 	public void configureAdminTool()
@@ -45,8 +38,8 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
-		component.setPosition(componentPosition);
-		component.getSecurityRoles().addAll(securityRoles);
+		component.setPosition(config.getComponentPosition());
+		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.addAdditionalCSS("/static/admintool/css/log4j2.css", true);
 		component.addAdditionalJS("/static/admintool/js/log4j2.js", true);
 		component.setDisplayName("Log4j2 Console");
@@ -61,44 +54,11 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("Log4j2 Config");
 		mainMenu.setName("log4j2");
 		
-		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Loggers", "Log4j2 Loggers", "content/log4j2", securityRoles));
-		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Console", "Log4j2 Console", "content/log4j2Console", securityRoles));
+		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Loggers", "Log4j2 Loggers", "content/log4j2", config.getSecurityRoles()));
+		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Console", "Log4j2 Console", "content/log4j2Console", config.getSecurityRoles()));
 		
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
 	}
-	
-	/**
-	 * @return the securityRoles
-	 */
-	public Set<String> getSecurityRoles() {
-		return securityRoles;
-	}
-
-	/**
-	 * @return the componentPosition
-	 */
-	public Integer getComponentPosition() {
-		return componentPosition;
-	}
-
-	/**
-	 * @param componentPosition the componentPosition to set
-	 */
-	public void setComponentPosition(Integer componentPosition) {
-		this.componentPosition = componentPosition;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolLog4j2Loader [securityRoles=").append(securityRoles).append(", componentPosition=")
-				.append(componentPosition).append("]");
-		return builder.toString();
-	}
-	
 }

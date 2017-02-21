@@ -15,7 +15,7 @@ public class ExceptionUtils {
 	}
 
 	/**
-	 * prints a exception into string
+	 * prints a exception into a string
 	 * @param throwable
 	 * @return
 	 */

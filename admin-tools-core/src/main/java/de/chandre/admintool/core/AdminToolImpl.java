@@ -120,4 +120,13 @@ public class AdminToolImpl implements AdminTool
 		}
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolImpl [components=").append(components).append(", globalJavaScripts=")
+				.append(globalJavaScripts).append(", globalStyleSheets=").append(globalStyleSheets).append("]");
+		return builder.toString();
+	}
+	
 }

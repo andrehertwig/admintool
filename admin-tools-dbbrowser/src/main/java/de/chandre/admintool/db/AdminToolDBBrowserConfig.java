@@ -48,6 +48,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.componentPosition:}")
 	private Integer componentPosition;
 	
+	@Value("${admintool.dbbrowser.showMetaDataLoadException:false}")
+	private boolean showMetaDataLoadException;
+	
 	/**
 	 * @return the enabled
 	 */
@@ -164,6 +167,25 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	public void setComponentPosition(Integer componentPosition) {
 		this.componentPosition = componentPosition;
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.3
+	 */
+	public boolean isShowMetaDataLoadException() {
+		return showMetaDataLoadException;
+	}
+
+	/**
+	 * 
+	 * @param showMetaDataLoadException
+	 * @since 1.0.3
+	 */
+	public void setShowMetaDataLoadException(boolean showMetaDataLoadException) {
+		this.showMetaDataLoadException = showMetaDataLoadException;
+	}
 
 	@Override
 	@PostConstruct
@@ -171,9 +193,6 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		LOGGER.debug(toString());
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -181,7 +200,8 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 				.append(hideMenuItem).append(", dmlAllowed=").append(dmlAllowed).append(", clobEncodings=")
 				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
 				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append(", securityRoles=")
-				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
+				.append(securityRoles).append(", componentPosition=").append(componentPosition)
+				.append(", showMetaDataLoadException=").append(showMetaDataLoadException).append("]");
 		return builder.toString();
 	}
 	

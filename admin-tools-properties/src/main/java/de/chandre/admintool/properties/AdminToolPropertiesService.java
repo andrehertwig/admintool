@@ -34,8 +34,12 @@ public class AdminToolPropertiesService {
 	private ApplicationContext applicationContext;
 	
 	@Autowired
-	private AdminToolPropertiesLoader loader;
+	private AdminToolPropertiesConfig config;
 	
+	/**
+	 * checks if GIT properties are available (loads it if necessary)
+	 * @return
+	 */
 	public synchronized boolean hasGitProperties() {
 		if(gitProperties.isEmpty()) {
 			loadGitProperties();
@@ -43,6 +47,10 @@ public class AdminToolPropertiesService {
 		return !gitProperties.isEmpty();
 	}
 	
+	/**
+	 * 
+	 * @return GIT properties (loads it if necessary)
+	 */
 	public synchronized Map<String, String> getGitProperties() {
 		if(!loaded) {
 			loadGitProperties();
@@ -52,8 +60,8 @@ public class AdminToolPropertiesService {
 	
 	private void loadGitProperties() {
 		try {
-			Resource gitResource = this.applicationContext.getResource(loader.getGitPropertiesPath());
-			Reader reader = new InputStreamReader(gitResource.getInputStream(), loader.getGitPropertiesEncoding());
+			Resource gitResource = this.applicationContext.getResource(config.getGitPropertiesPath());
+			Reader reader = new InputStreamReader(gitResource.getInputStream(), config.getGitPropertiesEncoding());
 			Properties p = new Properties();
 			p.load(reader);
 
@@ -66,6 +74,10 @@ public class AdminToolPropertiesService {
 		}
 	}
 	
+	/**
+	 * returns the spring environment properties
+	 * @return
+	 */
 	public Map<String, String> getEnvProperty() {
 		Map<String, String> res = new TreeMap<String, String>();
 		MutablePropertySources mps = env.getPropertySources();

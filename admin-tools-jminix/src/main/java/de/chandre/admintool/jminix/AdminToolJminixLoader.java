@@ -1,14 +1,10 @@
 package de.chandre.admintool.jminix;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.chandre.admintool.core.AbstractAdminToolLoader;
@@ -28,19 +24,13 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
-	@Value("${adminTool.jminix.path:/jmx/}")
-	private String jminixPath;
-	
-	@Value("#{'${admintool.jminix.securityRoles:}'.split(';')}")
-	private Set<String> securityRoles = new HashSet<>();
-	
-	@Value("${admintool.jminix.componentPosition:}")
-	private Integer componentPosition;
+	@Autowired
+	private AdminToolJminixConfig config;
 	
 	@PostConstruct
 	public void configureAdminTool()
 	{
-		if(!coreConfig.isEnabled()) {
+		if(!coreConfig.isEnabled() || !config.isEnabled()) {
 			LOGGER.info("admin tool's jminix browser integation is deactivated");
 			return;
 		}
@@ -49,8 +39,8 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
-		component.setPosition(componentPosition);
-		component.getSecurityRoles().addAll(securityRoles);
+		component.setPosition(config.getComponentPosition());
+		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.setDisplayName("JMX Console");
 		component.addAdditionalCSS("/static/admintool/jminix.css", true);
 		
@@ -58,55 +48,9 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("JminiX");
 		mainMenu.setName("jminix");
 		mainMenu.setTarget("content/jminix");
-		mainMenu.addVariable("jminixPath", jminixPath);
+		mainMenu.addVariable("jminixPath", config.getJminixPath());
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
-	}
-	
-	/**
-	 * @return the jminixPath
-	 */
-	public String getJminixPath() {
-		return jminixPath;
-	}
-
-	/**
-	 * @param jminixPath the jminixPath to set
-	 */
-	public void setJminixPath(String jminixPath) {
-		this.jminixPath = jminixPath;
-	}
-
-	/**
-	 * @return the componentPosition
-	 */
-	public Integer getComponentPosition() {
-		return componentPosition;
-	}
-
-	/**
-	 * @param componentPosition the componentPosition to set
-	 */
-	public void setComponentPosition(Integer componentPosition) {
-		this.componentPosition = componentPosition;
-	}
-
-	/**
-	 * @return the securityRoles
-	 */
-	public Set<String> getSecurityRoles() {
-		return securityRoles;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolJminixLoader [jminixPath=").append(jminixPath).append(", securityRoles=")
-				.append(securityRoles).append(", componentPosition=").append(componentPosition).append("]");
-		return builder.toString();
 	}
 }

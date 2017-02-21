@@ -1,5 +1,11 @@
 package de.chandre.admintool.core.utils;
 
+/**
+ * util for regular expressions
+ * 
+ * @author Andre
+ *
+ */
 public class RegexUtil {
 	
 	private RegexUtil()

@@ -103,6 +103,12 @@ public class AbstractAdminController
 		return targetTpl;
 	}
 	
+	/**
+	 * returns the root context path for admintool<br>
+	 * /&lt;web-app-context&gt;/{@link AdminTool#ROOTCONTEXT} 
+	 * @param request
+	 * @return
+	 */
 	protected String getRootContext(HttpServletRequest request) {
 		if (StringUtils.isEmpty(coreConfig.getStripRootContext())) {
 			return request.getContextPath() + AdminTool.ROOTCONTEXT;

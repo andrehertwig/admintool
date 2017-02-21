@@ -17,7 +17,7 @@ import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.MenuEntry;
 
 /**
- * Util for integrity check for some componenets
+ * Util for integrity check for components and menu entries
  * 
  * @author Andre
  *
@@ -26,6 +26,10 @@ import de.chandre.admintool.core.component.MenuEntry;
 public class AdminToolIntegrityUtil {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolIntegrityUtil.class);
+	
+	public static final String MSG_KEY_DUPLICATE_LINK = "admintool.integrity.error.duplicate.link";
+	public static final String MSG_KEY_DUPLICATE_TPL_REF = "admintool.integrity.error.duplicate.templateReference";
+	public static final String MSG_KEY_COMPONENT_NO_MAINMENU = "admintool.integrity.error.component.missingMainMenu";
 	
 	@Autowired
 	private AdminTool adminTool;
@@ -59,18 +63,21 @@ public class AdminToolIntegrityUtil {
 			if (null != comp.getMainMenu()) {
 				comp.getMainMenu().flattened().forEach(menu -> {
 					if (links.containsKey(menu.getName()) && CollectionUtils.isEmpty(menu.getSubmenu())) {
-						findErrorAndAddEntry("duplicate link name on menu item", errorList, menu, links.get(menu.getName()));
+						findErrorAndAddEntry("duplicate link name on menu item", 
+								MSG_KEY_DUPLICATE_LINK, errorList, menu, links.get(menu.getName()));
 					} else {
 						links.put(menu.getName(), menu);
 					}
 					if (templates.containsKey(menu.getTarget()) && CollectionUtils.isEmpty(menu.getSubmenu())) {
-						findErrorAndAddEntry("duplicate template reference on menu item", errorList, menu, templates.get(menu.getTarget()));
+						findErrorAndAddEntry("duplicate template reference on menu item", 
+								MSG_KEY_DUPLICATE_TPL_REF, errorList, menu, templates.get(menu.getTarget()));
 					} else {
 						templates.put(menu.getTarget(), menu);
 					}
 				});
 			} else {
-				findErrorAndAddEntry(String.format("the component '%s' has no main menu", comp.getDisplayName()), errorList, null, null);
+				findErrorAndAddEntry(String.format("the component '%s' has no main menu", comp.getDisplayName()), 
+						MSG_KEY_COMPONENT_NO_MAINMENU, errorList, null, null);
 			}
 		}
 		links.clear();
@@ -98,12 +105,13 @@ public class AdminToolIntegrityUtil {
 		}
 	}
 
-	private void findErrorAndAddEntry(String clusterName, List<MenuIntegrityError> errorList, MenuEntry menuEntry, MenuEntry reference) {
+	private void findErrorAndAddEntry(String clusterName, String errorMsgKey, List<MenuIntegrityError> errorList, 
+			MenuEntry menuEntry, MenuEntry reference) {
 		Optional<MenuIntegrityError> errorRes = errorList.stream().filter(error -> error.getError().equals(clusterName))
 				.findFirst();
 		MenuIntegrityError intError = null;
 		if (!errorRes.isPresent()) {
-			intError = new MenuIntegrityError(clusterName, reference);
+			intError = new MenuIntegrityError(clusterName, errorMsgKey, reference);
 			errorList.add(intError);
 		} else {
 			intError = errorRes.get();

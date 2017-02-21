@@ -3,9 +3,11 @@ package de.chandre.admintool.core;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * Abstract class which provides the core configuration bean and 
+ * some useful methods for URI prefixes of CDN / local CSS or JS files
  * 
  * @author Andre
- *
+ * @since 1.0.0
  */
 public abstract class AbstractAdminToolLoader
 {
