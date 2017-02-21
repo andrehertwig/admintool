@@ -8,7 +8,7 @@
 
 <th:block th:each="adminComponent,iterState : ${@adminTool.components}" th:remove="tag">
 	<th:block th:if="${@adminToolMenuUtils.hasMenuEntry(adminComponent, activeMenu)}" th:remove="tag">
-		<th:block th:if="${not #maps.isEmpty(activeMenu.additionalJS)}" th:each="jsPathEntry,iterStateJS : ${adminComponent.additionalJS}">
+		<th:block th:if="${not #maps.isEmpty(adminComponent.additionalJS)}" th:each="jsPathEntry,iterStateJS : ${adminComponent.additionalJS}">
 			<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
 			<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
 		</th:block>
