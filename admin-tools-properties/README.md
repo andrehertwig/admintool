@@ -13,12 +13,12 @@
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-properties</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	
 ```
@@ -27,6 +27,10 @@
 
 ```ini
 
+	#since 1.0.3
+	# to deactivate the admin component
+	adminTool.properties.enabled=true
+	
 	# path to git.properties
 	admintool.properties.gitPropertiesPath=classpath:git.properties
 	

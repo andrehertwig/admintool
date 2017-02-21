@@ -33,12 +33,12 @@ Result will be displayed via jquery.datatables
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-dbbrowser</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	
 ```
@@ -107,5 +107,10 @@ Examples must be managed per dataSource
 	# since 1.0.1
 	# integer value. used by default comparator to order components
 	admintool.dbbrowser.componentPosition=
+	
+	# since 1.0.3
+	# boolean value. In large database (e.g. if user can see all schemas in an oracle) a exception could happen while fetching metadata.
+	# This will always shown as error after starting the dbBrowser. To deactivate this error message ste this to true.
+	admintool.dbbrowser.showMetaDataLoadException=false
 	
 ```

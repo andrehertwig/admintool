@@ -48,7 +48,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	...
 ```
@@ -117,8 +117,13 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 	MenuEntry submenu = new MenuEntry("", "SubMulti", "");
 	submenu.addSubmenuEntry(new MenuEntry("dashboard3", "Dashboard 3", "content/dashboard3"));
 	submenu.addSubmenuEntry(new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4"));
+	
+	//since 1.0.3 it's possible to add custom js and css on menuEntry
+	submenu.addAdditionalJS("/static/mycomponent/js/myMenuJavaScript.js", true);
+	submenu.addAdditionalCSS("/static/mycomponent/css/myMenuCascadingStyleSheet.css", true);
+	
 	mainMenu.addSubmenuEntry(submenu);
-
+	
 ```
 Template target resolvement:
 E.g. your Thymeleaf is configured to look for templates in: *classpath:/templates*

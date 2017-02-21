@@ -23,12 +23,12 @@ If spring security is enabled following should be set:
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-jminix</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	
 ```
@@ -36,6 +36,10 @@ If spring security is enabled following should be set:
 ## Configurations
 
 ```ini
+
+	#since 1.0.3
+	# to deactivate the admin component
+	adminTool.jminix.enabled=true
 
 	# relative path to Jminix
 	adminTool.jminix.path=/jmx/

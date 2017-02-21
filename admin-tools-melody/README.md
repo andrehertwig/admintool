@@ -23,12 +23,12 @@ If spring security is enabled following should be set:
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	<dependency>
 		<groupId>de.chandre.admin-tools</groupId>
 		<artifactId>admin-tools-melody</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.3</version>
 	</dependency>
 	
 ```
@@ -37,6 +37,10 @@ If spring security is enabled following should be set:
 
 ```ini
 
+	#since 1.0.3
+	# to deactivate the admin component
+	adminTool.melody.enabled=true
+	
 	# relative path to javaMelody
 	adminTool.melody.path=/monitoring
 	
