@@ -92,6 +92,12 @@ public class AdminLog4j2Controller
 	{
 		try {
 			HttpSession session = request.getSession(true);
+			
+			if (session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME) != null) {
+				// there is already a output stream which should be closed first
+				log4jUtil.closeOutputStreamAppender(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)));
+			}
+			
 			String name = log4jUtil.createOutputStreamAppender(consoleTO.getName(), consoleTO.getPattern(), consoleTO.getEncoding(), 
 					consoleTO.getLoggerNames(), consoleTO.getLevel(), consoleTO.isRecursive(), consoleTO.isOverrideLogLevel());
 			session.setAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME, name);

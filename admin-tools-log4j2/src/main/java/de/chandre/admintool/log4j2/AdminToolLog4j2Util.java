@@ -377,6 +377,9 @@ public class AdminToolLog4j2Util
 	 * @since 1.1.1
 	 */
 	public void closeOutputStreamAppender(String appenderName) throws IOException {
+		if (null == appenderName) {
+			return;
+		}
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
 		AdminToolLog4j2OutputStream baos = outputStreams.get(appenderName);
