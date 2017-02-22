@@ -35,7 +35,7 @@ public class AdminRootController extends AbstractAdminController
 	public String startPage(ModelMap model, HttpServletRequest request) {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving admin root page");
-		model.put("rootContext", request.getContextPath() + AdminTool.ROOTCONTEXT);
+		addCommonContextVars(model, request);
 		model.put("contentPage", "admintool/content/start");
 		return AdminTool.ROOTCONTEXT_NAME + "/content/start";
 	}
@@ -61,6 +61,7 @@ public class AdminRootController extends AbstractAdminController
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("handleException: " + exception.getMessage());
 		
 		ModelAndView mv = new ModelAndView(AdminTool.GENERIC_ERROR_TPL_PATH);
+		addCommonContextVars(mv.getModelMap(), request);
 		mv.getModelMap().put("exceptionMessage", exception.getMessage());
 //		mv.getModelMap().put("httpStatus", response.getStatus());
 //		HttpStatus status = HttpStatus.valueOf(response.getStatus());
