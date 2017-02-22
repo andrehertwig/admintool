@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentComparator;
@@ -103,6 +104,9 @@ public class AdminToolImpl implements AdminTool
 	
 	@Override
 	public MenuEntrySearchResult searchComponent(final String menuName) {
+		if (StringUtils.isEmpty(menuName)) {
+			return null;
+		}
 		MenuEntrySearchResult result = null;
 		LOGGER.debug("search for component for menuName: " + menuName);
 		Optional<MenuEntry> menuEntry = Optional.empty();

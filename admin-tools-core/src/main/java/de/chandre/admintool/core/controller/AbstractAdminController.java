@@ -83,7 +83,7 @@ public class AbstractAdminController
 		MenuEntrySearchResult result = adminTool.searchComponent(name);
 		model.put("rootContext", getRootContext(request));
 		model.put("adminToolContext", AdminTool.ROOTCONTEXT);
-		String targetTpl = "/content/error404";
+		String targetTpl = "content/error404";
 		if (null != result) {
 			LOGGER.trace("Component found: " + String.valueOf(null != result.getComponent()) +
 					" | menu found: " + String.valueOf(result.getMenuEntry()));
@@ -91,7 +91,7 @@ public class AbstractAdminController
 			model.put(MenuEntrySearchResult.NAME, result);
 			MenuEntry entry = result.getMenuEntry();
 			//set alternative target
-			targetTpl = (StringUtils.isEmpty(overrideTarget) ? entry.getTarget() : overrideTarget);
+			targetTpl = (StringUtils.isEmpty(overrideTarget) ? entry.getTarget() : AdminToolMenuUtils.normalizeTarget(overrideTarget));
 			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl);
 			if (null != entry.getVariables()) {
 				model.putAll(entry.getVariables());

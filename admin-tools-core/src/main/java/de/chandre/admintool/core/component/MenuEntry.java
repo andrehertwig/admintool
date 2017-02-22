@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 
 import org.springframework.util.CollectionUtils;
 
+import de.chandre.admintool.core.utils.AdminToolMenuUtils;
+
 /**
  * Menu entry for left main menu<br>
  * <i>displayName</i> is required on every item, <i>name</i> and <i>target</i> only if entry has no <i>submenu</i>
@@ -136,7 +138,7 @@ public class MenuEntry implements Serializable
 
 	/**
 	 * relative path to target template
-	 * @return the target
+	 * @return the target template path
 	 * @see #setTarget(String)
 	 */
 	public String getTarget() {
@@ -156,10 +158,10 @@ public class MenuEntry implements Serializable
 	 * to get the example resolved set target to: <i>myComponent/myMenuTemplate</i>
 	 * 
 	 * 
-	 * @param target the target to set
+	 * @param target the target template path
 	 */
-	public void setTarget(String target) {
-		this.target = target;
+	public void setTarget(String targetTemplatePath) {
+		this.target = AdminToolMenuUtils.normalizeTarget(targetTemplatePath);
 	}
 
 	/**

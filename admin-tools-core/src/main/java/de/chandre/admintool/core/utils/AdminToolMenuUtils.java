@@ -37,6 +37,13 @@ public class AdminToolMenuUtils {
 	private static final String CSS_TREEVIEW = "treeview";
 	private static final String CSS_ACTIVE = " active";
 	
+	public static String normalizeTarget(String target) {
+		if (target.startsWith("/")) {
+			target = target.substring(1, target.length());
+		}
+		return target;
+	}
+	
 	@Autowired
 	private AdminTool adminTool;
 	
