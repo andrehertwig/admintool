@@ -16,17 +16,41 @@ import org.thymeleaf.templateresolver.TemplateResolver;
  */
 public class OrderedClassLoaderTemplateResolver extends TemplateResolver {
 
+	private final OrderedClassLoaderResourceResolver resourceResolver;
+	
+	/**
+	 * constructor using {@link TemplateUrlComparator} and enabled caching
+	 */
 	public OrderedClassLoaderTemplateResolver() {
 		 this(new TemplateUrlComparator());
 	}
 
 	/**
-	 * constructor with custom comparator
+	 * constructor with custom comparator and enabled caching
 	 * @param comparator
 	 */
 	public OrderedClassLoaderTemplateResolver(Comparator<String> comparator) {
-		 super();
-	     super.setResourceResolver(new OrderedClassLoaderResourceResolver(comparator));
+		 this(comparator, true);
 	}
-
+	
+	/**
+	 * constructor with custom comparator and option for cache control
+	 * @param comparator
+	 * @param enableCaching to switch of caching of found templates
+	 * @see OrderedClassLoaderResourceResolver#OrderedClassLoaderResourceResolver(Comparator, boolean)
+	 * @since 1.0.4
+	 */
+	public OrderedClassLoaderTemplateResolver(Comparator<String> comparator, boolean enableCaching) {
+		 super();
+		 this.resourceResolver = new OrderedClassLoaderResourceResolver(comparator, enableCaching);
+	     super.setResourceResolver(this.resourceResolver);
+	}
+	
+	/**
+	 * clears the cache of found template urls
+	 * @since 1.0.4
+	 */
+	public void clearCache() {
+		this.resourceResolver.clearCache();
+	}
 }
