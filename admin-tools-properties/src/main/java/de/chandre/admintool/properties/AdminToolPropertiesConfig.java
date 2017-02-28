@@ -1,6 +1,7 @@
 package de.chandre.admintool.properties;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -35,6 +36,9 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 	
 	@Value("${admintool.properties.componentPosition:}")
 	private Integer componentPosition;
+	
+	@Value("#{'${admintool.properties.addPropertiesPaths:}'.split(';')}")
+	private List<String> addPropertiesPaths;
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -88,6 +92,24 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 		this.securityRoles = securityRoles;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.4
+	 */
+	public List<String> getAddPropertiesPaths() {
+		return addPropertiesPaths;
+	}
+
+	/**
+	 * 
+	 * @param addPropertiesPaths
+	 * @since 1.0.4
+	 */
+	public void setAddPropertiesPaths(List<String> addPropertiesPaths) {
+		this.addPropertiesPaths = addPropertiesPaths;
+	}
+
 	@Override
 	public void printConfig() {
 		LOGGER.info(toString());
@@ -99,7 +121,7 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 		builder.append("AdminToolPropertiesConfig [enabled=").append(enabled).append(", gitPropertiesPath=")
 				.append(gitPropertiesPath).append(", gitPropertiesEncoding=").append(gitPropertiesEncoding)
 				.append(", securityRoles=").append(securityRoles).append(", componentPosition=")
-				.append(componentPosition).append("]");
+				.append(componentPosition).append(", addPropertiesPaths=").append(addPropertiesPaths).append("]");
 		return builder.toString();
 	}
 

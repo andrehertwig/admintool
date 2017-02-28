@@ -11,36 +11,43 @@
 		
 		<section class="content">
 		
-			<div class="box box-info" th:if="not ${@adminToolPropertiesService.hasGitProperties()}">
-				<div class="box-header with-border">
-					<h3 class="box-title">Environment-Properties</h3>
-				</div>
-				<div class="box-body">
-					<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getEnvProperty()}, 'envProps')" />
-				</div>
-			</div>
-		
-			<div class="nav-tabs-custom" th:if="${@adminToolPropertiesService.hasGitProperties()}">
+			<div class="nav-tabs-custom" th:with="hasGit=${@adminToolPropertiesService.hasGitProperties()}">
 				<ul class="nav nav-tabs" id="tabNavProps">
-					<li class="active">
+					<li th:class="${hasGit}? 'active' : ''" th:if="${hasGit}">
 						<a data-toggle="tab" href="#tabPane_1" aria-expanded="true">Git-Properties</a>
 					</li>
-					<li class="">
+					<li class="${hasGit}? '' : 'active'">
 						<a data-toggle="tab" href="#tabPane_2" aria-expanded="true">Environment-Properties</a>
 					</li>
+					<th:block th:with="props=${@adminToolPropertiesService.getAdditionalProperyNames()}">
+					
+						<li th:if="${not #maps.isEmpty(props)}" th:each="entry, iterState : ${props}" class="">
+							<a data-toggle="tab" th:href="'#tabPane_3' + ${entry.getKey()}" aria-expanded="true" th:text="${entry.getValue()}">Properties</a>
+						</li>
+					
+					</th:block>
 				</ul>
 				
 				<div class="tab-content" id="tabContent">
-					<div id="tabPane_1" class="tab-pane active">
+				
+					<div id="tabPane_1" class="tab-pane active" th:if="${@adminToolPropertiesService.hasGitProperties()}">
 						<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getGitProperties()}, 'gitProps')" />
 					</div>
+					
 					<div id="tabPane_2" class="tab-pane">
 						<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getEnvProperty()}, 'envProps')" />
 					</div>
+					
+					<th:block th:with="props=${@adminToolPropertiesService.getAdditionalProperyNames()}">
+					
+						<div th:if="${not #maps.isEmpty(props)}" th:each="entry, iterState : ${props}" th:id="'tabPane_3' + ${entry.getKey()}" class="tab-pane">
+							<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getAdditionalProperies(entry.getKey())}, 'addProps' + ${iterState.count})" />
+						</div>
+					
+					</th:block>
 				</div>
 				
 			</div>
-			
 			
 		</section>
 	</div>

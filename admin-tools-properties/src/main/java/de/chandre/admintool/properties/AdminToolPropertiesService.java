@@ -2,6 +2,8 @@ package de.chandre.admintool.properties;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +20,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service("adminToolPropertiesService")
 public class AdminToolPropertiesService {
@@ -91,5 +94,42 @@ public class AdminToolPropertiesService {
             }
         }
         return res;
+	}
+	
+	public Map<Integer, String> getAdditionalProperyNames() {
+		if (CollectionUtils.isEmpty(config.getAddPropertiesPaths())) {
+			return Collections.emptyMap();
+		}
+		Map<Integer, String> propertyNames = new TreeMap<>();
+		for (String path : config.getAddPropertiesPaths()) {
+			try {
+				propertyNames.put(path.hashCode(), applicationContext.getResource(path).getFilename());
+			} catch (Exception e) {
+				LOGGER.error("could not load additional property: " + e.getMessage(), e);
+			}
+		}
+		return propertyNames;
+	}
+	
+	public Map<Object, Object> getAdditionalProperies(Integer hashKey) {
+		if (CollectionUtils.isEmpty(config.getAddPropertiesPaths()) || null == hashKey) {
+			return Collections.emptyMap();
+		}
+		
+		try {
+			for (String path : config.getAddPropertiesPaths()) {
+				if (path.hashCode() == hashKey.intValue()) {
+					Resource resource = this.applicationContext.getResource(path);
+					Reader reader = new InputStreamReader(resource.getInputStream(), config.getGitPropertiesEncoding());
+					Properties p = new Properties();
+					p.load(reader);
+					return p;
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return Collections.emptyMap();
 	}
 }
