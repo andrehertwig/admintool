@@ -16,9 +16,17 @@
 </th:block>
 
 <th:block th:if="${activeMenu != null}">
-	<th:block th:if="${not #maps.isEmpty(activeMenu.additionalJS)}" th:each="jsPathEntry,iterStateJS : ${activeMenu.additionalJS}">
-		<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
-		<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
+	<th:block th:if="${activeMenu.useJSHierarchy}">
+		<th:block th:if="${not #maps.isEmpty(activeMenu.getAdditionalJSReverse())}" th:each="jsPathEntry,iterStateJS : ${activeMenu.getAdditionalJSReverse()}">
+			<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
+			<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
+		</th:block>
+	</th:block>
+	<th:block th:unless="${activeMenu.useJSHierarchy}">
+		<th:block th:if="${not #maps.isEmpty(activeMenu.additionalJS)}" th:each="jsPathEntry,iterStateJS : ${activeMenu.additionalJS}">
+			<script th:if="${jsPathEntry.getValue()}" th:src="${#httpServletRequest.getContextPath() + jsPathEntry.getKey()}"></script>
+			<script th:if="${!jsPathEntry.getValue()}" th:src="${jsPathEntry.getKey()}"></script>
+		</th:block>
 	</th:block>
 </th:block>
 </html>

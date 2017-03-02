@@ -37,7 +37,9 @@ public class MenuEntry implements Serializable
 	private MenuEntry parent;
 	private List<MenuEntry> submenu = new LinkedList<>();
 	
+	private boolean useCCSHierarchy = false;
 	private Map<String, Boolean> additionalCSS = new LinkedHashMap<>(1);
+	private boolean useJSHierarchy = false;
 	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
 	
 	private Set<String> securityRoles = new HashSet<>();
@@ -277,6 +279,43 @@ public class MenuEntry implements Serializable
 	public void addAdditionalCSS(String additionalCSS, boolean relative) {
 		this.additionalCSS.put(additionalCSS, relative);
 	}
+	
+	/**
+	 * returns all additional js from this to upper menu item hierarchy beginning with the root.
+	 * 
+	 * @return
+	 * @since 1.1.4
+	 */
+	public Map<String, Boolean> getAdditionalCSSReverse() {
+		Map<String, Boolean> result = new LinkedHashMap<>();
+		List<MenuEntry> parents = reverseFlattened().collect(AdminToolMenuUtils.toListReversed());
+		parents.forEach(menuEntry -> {
+			if (null != menuEntry.getAdditionalCSS()) {
+				result.putAll(menuEntry.getAdditionalCSS());
+			}
+		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.4
+	 */
+	public boolean isUseCCSHierarchy() {
+		return useCCSHierarchy;
+	}
+
+	/**
+	 * if this is set to true all css links up to root are collected and used.<br>
+	 * this could be usefull if you want to structure your resources in a hierarchy
+	 *  
+	 * @param useCCSHierarchy
+	 * @since 1.1.4
+	 */
+	public void setUseCCSHierarchy(boolean useCCSHierarchy) {
+		this.useCCSHierarchy = useCCSHierarchy;
+	}
 
 	/**
 	 * @return the additionalJS
@@ -310,6 +349,43 @@ public class MenuEntry implements Serializable
 		this.additionalJS.put(additionalJS, relative);
 	}
 	
+	/**
+	 * returns all additional js from this to upper menu item hierarchy beginning with the root.
+	 * 
+	 * @return
+	 * @since 1.1.4
+	 */
+	public Map<String, Boolean> getAdditionalJSReverse() {
+		Map<String, Boolean> result = new LinkedHashMap<>();
+		List<MenuEntry> parents = reverseFlattened().collect(AdminToolMenuUtils.toListReversed());
+		parents.forEach(menuEntry -> {
+			if (null != menuEntry.getAdditionalJS()) {
+				result.putAll(menuEntry.getAdditionalJS());
+			}
+		});
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.4
+	 */
+	public boolean isUseJSHierarchy() {
+		return useJSHierarchy;
+	}
+
+	/**
+	 * if this is set to true all css links up to root are collected and used.<br>
+	 * this could be usefull if you want to structure your resources in a hierarchy
+	 *  
+	 * @param useCCSHierarchy
+	 * @since 1.1.4
+	 */
+	public void setUseJSHierarchy(boolean useJSHierarchy) {
+		this.useJSHierarchy = useJSHierarchy;
+	}
+
 	/**
 	 * the effective roles reverse recursive to component if not set at this object or anywhere within the tree<br>
 	 * first menu entry or component with roles will return it.

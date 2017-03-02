@@ -56,6 +56,7 @@ public class DemoController {
 		component.addNotificationTemplate("notifications/notification");
 		component.addSecurityRole("ROLE_ANONYMOUS");
 		component.addSecurityRole("ROLE_ADMIN");
+		component.setPosition(1);
 		
 
 		MenuEntry mainMenu = new MenuEntry();

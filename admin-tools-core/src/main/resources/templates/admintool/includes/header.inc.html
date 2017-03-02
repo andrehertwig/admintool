@@ -26,9 +26,17 @@
 </th:block>
 
 <th:block th:if="${activeMenu != null}">
-	<th:block th:if="${not #maps.isEmpty(activeMenu.additionalCSS)}" th:each="cssPathEntry,iterStateCSS : ${activeMenu.additionalCSS}">
-		<link rel="stylesheet" th:if="${cssPathEntry.getValue()}" th:href="${#httpServletRequest.getContextPath() + cssPathEntry.getKey()}" />
-		<link rel="stylesheet" th:if="${!cssPathEntry.getValue()}" th:href="${cssPathEntry.getKey()}" />
+	<th:block th:if="${activeMenu.useCCSHierarchy}">
+		<th:block th:if="${not #maps.isEmpty(activeMenu.getAdditionalCSSReverse())}" th:each="cssPathEntry,iterStateCSS : ${activeMenu.getAdditionalCSSReverse()}">
+			<link rel="stylesheet" th:if="${cssPathEntry.getValue()}" th:href="${#httpServletRequest.getContextPath() + cssPathEntry.getKey()}" />
+			<link rel="stylesheet" th:if="${!cssPathEntry.getValue()}" th:href="${cssPathEntry.getKey()}" />
+		</th:block>
+	</th:block>
+	<th:block th:unless="${activeMenu.useCCSHierarchy}">
+		<th:block th:if="${not #maps.isEmpty(activeMenu.additionalCSS)}" th:each="cssPathEntry,iterStateCSS : ${activeMenu.additionalCSS}">
+			<link rel="stylesheet" th:if="${cssPathEntry.getValue()}" th:href="${#httpServletRequest.getContextPath() + cssPathEntry.getKey()}" />
+			<link rel="stylesheet" th:if="${!cssPathEntry.getValue()}" th:href="${cssPathEntry.getKey()}" />
+		</th:block>
 	</th:block>
 </th:block>
 </html>
