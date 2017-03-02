@@ -223,3 +223,80 @@ The second option would be calling the method directly, but of couse after sprin
   }
 
 ```
+
+### Flattening the Core-Menu-Structure
+
+Flattening the menu structure to creating only one (core-)component and adding all core-components to this single one.
+
+Until version 1.1.3 the flattening is not really recommended, because all CSS and JS should be appended to the new component.
+```java
+
+    /*
+     * restructure the core components
+     */
+    AdminComponent component3 = new AdminComponentImpl();
+    component3.setPosition(4);
+    component3.setDisplayName("App-Management");
+    
+    MenuEntry appMenu = new MenuEntry();
+    appMenu.setDisplayName("App-Management");
+    appMenu.setName("appManagement");
+    for (AdminComponent rootComponent : adminTool.getComponents()) {
+        component3.getSecurityRoles().addAll(rootComponent.getSecurityRoles());
+        rootComponent.getMainMenu().getSecurityRoles().addAll(rootComponent.getSecurityRoles());
+        
+        //add the existing css and js entries to new component
+        component3.getAdditionalCSS().putAll(rootComponent.getAdditionalCSS());
+        component3.getAdditionalJS().putAll(rootComponent.getAdditionalJS());
+        
+        appMenu.addSubmenuEntry(rootComponent.getMainMenu());
+    }
+    component3.setMainMenu(appMenu);
+    
+    //clear all components
+    adminTool.getComponents().clear();
+    
+    //finally add the new components
+    adminTool.getComponents().add(component3);
+
+```
+
+Since version 1.1.4 some new features make it possible to add additional CSS and JS to the MenuEntry and resolve it backward recursive to the root menu
+
+```java
+
+    /*
+     * restructure the core components
+     */
+    AdminComponent component3 = new AdminComponentImpl();
+    component3.setPosition(4);
+    component3.setDisplayName("App-Management");
+    
+    MenuEntry appMenu = new MenuEntry();
+    appMenu.setDisplayName("App-Management");
+    appMenu.setName("appManagement");
+    for (AdminComponent rootComponent : adminTool.getComponents()) {
+        component3.getSecurityRoles().addAll(rootComponent.getSecurityRoles());
+        rootComponent.getMainMenu().getSecurityRoles().addAll(rootComponent.getSecurityRoles());
+        
+        //because of loosing the component should to copy additional css and js to its menu entries, otherwise each menu will load everything
+        rootComponent.getMainMenu().getAdditionalCSS().putAll(rootComponent.getAdditionalCSS());
+        rootComponent.getMainMenu().getAdditionalJS().putAll(rootComponent.getAdditionalJS());
+        
+        //tell all menu entries using the hierarchy for loading css and js
+        rootComponent.getMainMenu().flattened().forEach(menu -> {
+            menu.setUseCCSHierarchy(true);
+            menu.setUseJSHierarchy(true);
+        });
+        
+        appMenu.addSubmenuEntry(rootComponent.getMainMenu());
+    }
+    component3.setMainMenu(appMenu);
+    
+    //clear all components
+    adminTool.getComponents().clear();
+    
+    //finally add the new components
+    adminTool.getComponents().add(component2);
+		
+```
