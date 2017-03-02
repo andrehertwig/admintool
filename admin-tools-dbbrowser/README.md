@@ -95,6 +95,10 @@ Examples must be managed per dataSource
 	# codeMirror version (if CDN is used this could maybe changed)
 	admintool.dbbrowser.codeMirrorVersion=5.22.2
 	
+	# if CDN link https://cdn.jsdelivr.net/webjars/org.webjars.bower/ or https://cdn.jsdelivr.net/webjars/ should be used
+	# since 1.1.4
+	admintool.dbbrowser.codeMirror.cdn.useBower=true
+	
 	# since 1.0.1
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.dbbrowser.codeMirrorAddLibs=addon/edit/matchbrackets.js

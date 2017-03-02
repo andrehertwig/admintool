@@ -126,6 +126,10 @@
 	# codeMirror version (if CDN is used this could maybe changed)
 	admintool.fileviewer.codeMirrorVersion=5.22.2
 	
+	# if CDN link https://cdn.jsdelivr.net/webjars/org.webjars.bower/ or https://cdn.jsdelivr.net/webjars/ should be used
+	# since 1.1.4
+	admintool.fileviewer.codeMirror.cdn.useBower=true
+	
 	# semicolon separated list of additional codeMirror libs to load 
 	admintool.fileviewer.codeMirrorAddLibs=addon/edit/matchbrackets.js
 		

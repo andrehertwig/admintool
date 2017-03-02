@@ -80,4 +80,8 @@ _since 1.0.1_
 	# integer value. used by default comparator to order components
 	admintool.quartz.componentPosition=
 	
+	#since 1.1.4
+	# string value. Absolute path to cdn of jquery validator plugin (https://github.com/1000hz/bootstrap-validator)
+	admintool.quartz.validator.cdn.path=
+	
 ```

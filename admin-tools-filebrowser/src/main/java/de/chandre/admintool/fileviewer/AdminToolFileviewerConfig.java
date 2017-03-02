@@ -41,7 +41,7 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("${admintool.fileviewer.codeMirrorVersion:5.22.2}")
 	private String codeMirrorVersion;
 	
-	@Value("${admintool.dbbrowser.codeMirror.cdn.useBower:true}")
+	@Value("${admintool.fileviewer.codeMirror.cdn.useBower:true}")
 	private boolean codeMirrorUseBowser;
 	
 	@Value("#{'${admintool.fileviewer.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")
