@@ -256,7 +256,7 @@ Until version 1.1.3 the flattening is not really recommended, because all CSS an
     //clear all components
     adminTool.getComponents().clear();
     
-    //finally add the new components
+    //finally add the new component
     adminTool.getComponents().add(component3);
 
 ```
@@ -279,7 +279,7 @@ Since version 1.1.4 some new features make it possible to add additional CSS and
         component3.getSecurityRoles().addAll(rootComponent.getSecurityRoles());
         rootComponent.getMainMenu().getSecurityRoles().addAll(rootComponent.getSecurityRoles());
         
-        //because of loosing the component should to copy additional css and js to its menu entries, otherwise each menu will load everything
+        //because of loosing the component, copy additional css and js to its main menu entry, otherwise each menu will load everything
         rootComponent.getMainMenu().getAdditionalCSS().putAll(rootComponent.getAdditionalCSS());
         rootComponent.getMainMenu().getAdditionalJS().putAll(rootComponent.getAdditionalJS());
         
@@ -296,7 +296,7 @@ Since version 1.1.4 some new features make it possible to add additional CSS and
     //clear all components
     adminTool.getComponents().clear();
     
-    //finally add the new components
+    //finally add the new component
     adminTool.getComponents().add(component2);
 		
 ```
