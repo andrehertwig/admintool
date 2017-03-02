@@ -39,6 +39,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.codeMirrorVersion:5.22.2}")
 	private String codeMirrorVersion;
 	
+	@Value("${admintool.dbbrowser.codeMirror.cdn.useBower:true}")
+	private boolean codeMirrorUseBowser;
+	
 	@Value("#{'${admintool.dbbrowser.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")
 	private List<String> codeMirrorAddLibs = new ArrayList<>();
 	
@@ -123,6 +126,25 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	}
 
 	/**
+	 * if {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER} should be used or {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
+	 * @return
+	 * @since 1.1.4
+	 */
+	public boolean getCodeMirrorUseBowser() {
+		return codeMirrorUseBowser;
+	}
+
+	/**
+	 * 
+	 * if {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER} should be used or {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
+	 * @param codeMirrorUseBowser
+	 * @since 1.1.4
+	 */
+	public void setCodeMirrorUseBowser(boolean codeMirrorUseBowser) {
+		this.codeMirrorUseBowser = codeMirrorUseBowser;
+	}
+
+	/**
 	 * @return the codeMirrorAddLibs
 	 */
 	public List<String> getCodeMirrorAddLibs() {
@@ -172,7 +194,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.3
+	 * @since 1.1.3
 	 */
 	public boolean isShowMetaDataLoadException() {
 		return showMetaDataLoadException;
@@ -181,7 +203,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	/**
 	 * 
 	 * @param showMetaDataLoadException
-	 * @since 1.0.3
+	 * @since 1.1.3
 	 */
 	public void setShowMetaDataLoadException(boolean showMetaDataLoadException) {
 		this.showMetaDataLoadException = showMetaDataLoadException;
@@ -199,9 +221,10 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		builder.append("AdminToolDBBrowserConfig [enabled=").append(enabled).append(", hideMenuItem=")
 				.append(hideMenuItem).append(", dmlAllowed=").append(dmlAllowed).append(", clobEncodings=")
 				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
-				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append(", securityRoles=")
-				.append(securityRoles).append(", componentPosition=").append(componentPosition)
-				.append(", showMetaDataLoadException=").append(showMetaDataLoadException).append("]");
+				.append(", codeMirrorUseBowser=").append(codeMirrorUseBowser).append(", codeMirrorAddLibs=")
+				.append(codeMirrorAddLibs).append(", securityRoles=").append(securityRoles)
+				.append(", componentPosition=").append(componentPosition).append(", showMetaDataLoadException=")
+				.append(showMetaDataLoadException).append("]");
 		return builder.toString();
 	}
 	

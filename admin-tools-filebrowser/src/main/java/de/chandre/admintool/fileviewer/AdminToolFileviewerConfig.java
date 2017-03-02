@@ -41,6 +41,9 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("${admintool.fileviewer.codeMirrorVersion:5.22.2}")
 	private String codeMirrorVersion;
 	
+	@Value("${admintool.dbbrowser.codeMirror.cdn.useBower:true}")
+	private boolean codeMirrorUseBowser;
+	
 	@Value("#{'${admintool.fileviewer.codeMirrorAddLibs:addon/edit/matchbrackets.js}'.split(';')}")
 	private List<String> codeMirrorAddLibs = new ArrayList<>();
 	
@@ -85,6 +88,15 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	public String getCodeMirrorVersion() {
 		return codeMirrorVersion;
 	}
+	
+	/**
+	 * if {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER} should be used or {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
+	 * @return
+	 * @since 1.1.4
+	 */
+	public boolean getCodeMirrorUseBowser() {
+		return codeMirrorUseBowser;
+	}
 
 	/**
 	 * @return the codeMirrorAddLibs
@@ -99,16 +111,14 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 		LOGGER.debug(toString());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AdminToolFileviewerConfig [enabled=").append(enabled).append(", encodings=").append(encodings)
 				.append(", defaultEncoding=").append(defaultEncoding).append(", readOnly=").append(readOnly)
 				.append(", allowedExtensions=").append(allowedExtensions).append(", codeMirrorVersion=")
-				.append(codeMirrorVersion).append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append("]");
+				.append(codeMirrorVersion).append(", codeMirrorUseBowser=").append(codeMirrorUseBowser)
+				.append(", codeMirrorAddLibs=").append(codeMirrorAddLibs).append("]");
 		return builder.toString();
 	}
 

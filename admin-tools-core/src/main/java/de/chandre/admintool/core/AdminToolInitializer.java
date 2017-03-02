@@ -29,15 +29,15 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 		
 		boolean relative = !shouldCDNsUsed();
 		String adminLtePrefix = getAdminLTEPrefixUri();
-		String commonPrefix = getWebjarsPrefixUri();
 
 		adminTool.addGlobalStyleSheet(adminLtePrefix + "bootstrap/css/bootstrap.min.css", relative);
-		adminTool.addGlobalStyleSheet(commonPrefix + "font-awesome/" + 
+		adminTool.addGlobalStyleSheet(getWebjarsPrefixUri(coreConfig.isFontAwsomeCdnUseBower()) + "font-awesome/" + 
 				coreConfig.getFontAwsomeCdnVersion() + "/css/font-awesome.min.css", relative);
-		adminTool.addGlobalStyleSheet(commonPrefix + "ionicons/2.0.1/css/ionicons.min.css", relative);	
+		adminTool.addGlobalStyleSheet(getWebjarsPrefixUri(coreConfig.isIonIconsCdnUseBower()) + "ionicons/" + 
+				coreConfig.getIonIconsCdnVersion() +"/css/ionicons.min.css", relative);	
 		
 		if (StringUtils.isEmpty(coreConfig.getJqueryPath())) {
-			adminTool.addGlobalJavaScript(adminLtePrefix + "plugins/jQuery/jquery-2.2.3.min.js", relative);
+			adminTool.addGlobalJavaScript(adminLtePrefix + coreConfig.getAdminLTEjqueryPath(), relative);
 		} else {
 			adminTool.addGlobalJavaScript(coreConfig.getJqueryPath(), relative);
 		}

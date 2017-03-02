@@ -24,11 +24,23 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.adminLTE.cdn.version:2.3.11}")
 	private String adminLTECdnVersion;
 	
+	@Value("${admintool.core.adminlte.jquery.path:plugins/jQuery/jquery-2.2.3.min.js}")
+	private String adminLTEjqueryPath;
+	
 	@Value("${admintool.core.jquery.path:}")
 	private String jqueryPath;
 	
 	@Value("${admintool.core.fontAwsome.cdn.version:4.7.0}")
 	private String fontAwsomeCdnVersion;
+	
+	@Value("${admintool.core.fontAwsome.cdn.useBower:true}")
+	private boolean fontAwsomeCdnUseBower;
+	
+	@Value("${admintool.core.ionicons.cdn.version:2.0.1}")
+	private String ionIconsCdnVersion;
+	
+	@Value("${admintool.core.ionicons.cdn.useBower:true}")
+	private boolean ionIconsCdnUseBower;
 	
 	@Value("${admintool.core.showStacktraceOnErrorPage:true}")
 	private boolean showStacktraceOnErrorPage;
@@ -96,6 +108,24 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	}
 
 	/**
+	 * relative path to jquery within adminLTE package
+	 * @return
+	 * @since 1.1.4
+	 */
+	public String getAdminLTEjqueryPath() {
+		return adminLTEjqueryPath;
+	}
+
+	/**
+	 * relative path to jquery within adminLTE package
+	 * @param adminLTEjqueryPath
+	 * @since 1.1.4
+	 */
+	public void setAdminLTEjqueryPath(String adminLTEjqueryPath) {
+		this.adminLTEjqueryPath = adminLTEjqueryPath;
+	}
+
+	/**
 	 * the version to use of fontAwsome in CDN of http://www.webjars.org/
 	 * @since 1.0.1
 	 * @return the fontAwsomeCdnVersion
@@ -111,6 +141,56 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	 */
 	public void setFontAwsomeCdnVersion(String fontAwsomeCdnVersion) {
 		this.fontAwsomeCdnVersion = fontAwsomeCdnVersion;
+	}
+
+	/**
+	 * if {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER} should be used or {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
+	 * @since 1.1.4
+	 * @return
+	 */
+	public boolean isFontAwsomeCdnUseBower() {
+		return fontAwsomeCdnUseBower;
+	}
+
+	/**
+	 * @since 1.1.4
+	 * @return
+	 */
+	public String getIonIconsCdnVersion() {
+		return ionIconsCdnVersion;
+	}
+
+	/**
+	 * @since 1.1.4
+	 * @param ionIconsCdnVersion
+	 */
+	public void setIonIconsCdnVersion(String ionIconsCdnVersion) {
+		this.ionIconsCdnVersion = ionIconsCdnVersion;
+	}
+
+	/**
+	 * @since 1.1.4
+	 * @return
+	 */
+	public boolean isIonIconsCdnUseBower() {
+		return ionIconsCdnUseBower;
+	}
+
+	/**
+	 * @since 1.1.4
+	 * @param ionIconsCdnUseBower
+	 */
+	public void setIonIconsCdnUseBower(boolean ionIconsCdnUseBower) {
+		this.ionIconsCdnUseBower = ionIconsCdnUseBower;
+	}
+
+	/**
+	 * if {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER} should be used or {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
+	 * @since 1.1.4
+	 * @param fontAwsomeCdnUseBower
+	 */
+	public void setFontAwsomeCdnUseBower(boolean fontAwsomeCdnUseBower) {
+		this.fontAwsomeCdnUseBower = fontAwsomeCdnUseBower;
 	}
 
 	/**
@@ -150,15 +230,16 @@ public class AdminToolCoreConfig implements AdminToolConfig
 		LOGGER.debug(toString());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AdminToolCoreConfig [enabled=").append(enabled).append(", useCDNs=").append(useCDNs)
-				.append(", adminLTECdnVersion=").append(adminLTECdnVersion).append(", showStacktraceOnErrorPage=")
-				.append(showStacktraceOnErrorPage).append("]");
+				.append(", adminLTECdnVersion=").append(adminLTECdnVersion).append(", jqueryPath=").append(jqueryPath)
+				.append(", adminLTEjqueryPath=").append(adminLTEjqueryPath).append(", fontAwsomeCdnVersion=")
+				.append(fontAwsomeCdnVersion).append(", fontAwsomeCdnUseBower=").append(fontAwsomeCdnUseBower)
+				.append(", ionIconsCdnVersion=").append(ionIconsCdnVersion).append(", ionIconsCdnUseBower=")
+				.append(ionIconsCdnUseBower).append(", showStacktraceOnErrorPage=").append(showStacktraceOnErrorPage)
+				.append(", stripRootContext=").append(stripRootContext).append("]");
 		return builder.toString();
 	}
 }

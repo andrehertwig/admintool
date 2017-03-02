@@ -52,10 +52,10 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		
 		if (fileviewerConfig.isEnabled()) {
 			boolean relative = !shouldCDNsUsed();
-			String commonPrefix = getWebjarsPrefixUri();
 			component.addAdditionalJS("/static/admintool/filebrowser/js/fileviewer.js", true);
 			
-			String codeMirrorPrefix = commonPrefix + "codemirror/" + fileviewerConfig.getCodeMirrorVersion() + "/";
+			String codeMirrorPrefix = getWebjarsPrefixUri(fileviewerConfig.getCodeMirrorUseBowser()) + "codemirror/" + 
+					fileviewerConfig.getCodeMirrorVersion() + "/";
 			
 			component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
 			component.addAdditionalJS(codeMirrorPrefix + "mode/meta.js", relative);

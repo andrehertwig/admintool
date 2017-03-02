@@ -37,7 +37,6 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		LOGGER.info("adding database browser to admin tool");
 		
 		boolean relative = !shouldCDNsUsed();
-		String commonPrefix = getWebjarsPrefixUri();
 		
 		AdminComponent component = new AdminComponentImpl();
 		component.setPosition(dbBroserConfig.getComponentPosition());
@@ -51,7 +50,8 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		component.addAdditionalCSS(adminLtePrefix + "plugins/select2/select2.min.css", relative);
 		
 		//codemirror
-		String codeMirrorPrefix = commonPrefix + "codemirror/" + dbBroserConfig.getCodeMirrorVersion() + "/";
+		String codeMirrorPrefix = getWebjarsPrefixUri(dbBroserConfig.getCodeMirrorUseBowser()) + "codemirror/" + 
+				dbBroserConfig.getCodeMirrorVersion() + "/";
 		
 		component.addAdditionalJS(codeMirrorPrefix + "lib/codemirror.js", relative);
 		component.addAdditionalJS(codeMirrorPrefix + "mode/meta.js", relative);

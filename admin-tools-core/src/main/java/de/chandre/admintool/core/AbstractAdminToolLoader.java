@@ -23,13 +23,39 @@ public abstract class AbstractAdminToolLoader
 	}
 	
 	/**
+	 * if param = true {@link #getWebjarsBowerPrefixUri()} will be called otherwise {@link #getWebjarsPrefixUri()}
+	 * @param useBower
+	 * @return
+	 * @since 1.1.4
+	 */
+	protected String getWebjarsPrefixUri(boolean useBower) {
+		if (useBower) {
+			return getWebjarsBowerPrefixUri();
+		}
+		return getWebjarsPrefixUri();
+	}
+	
+	/**
 	 * 
 	 * @return either the relative URL to included webjar (if {@link #shouldCDNsUsed()} is false) or
-	 * the absolute URL to webjars CDN
+	 * the absolute URL to webjars CDN {@link AdminToolConfig#WEBJARS_CDN_PREFIX}
 	 */
 	protected String getWebjarsPrefixUri() {
 		if (coreConfig.isUseCDNs()) {
 			return AdminToolConfig.WEBJARS_CDN_PREFIX;
+		}
+		return AdminToolConfig.WEBJARS_LOCAL_PREFIX;
+	}
+	
+	/**
+	 * 
+	 * @return either the relative URL to included webjar (if {@link #shouldCDNsUsed()} is false) or
+	 * the absolute URL to webjars CDN with bower {@link AdminToolConfig#WEBJARS_CDN_PREFIX_BOWER}
+	 * @since 1.1.4
+	 */
+	protected String getWebjarsBowerPrefixUri() {
+		if (coreConfig.isUseCDNs()) {
+			return AdminToolConfig.WEBJARS_CDN_PREFIX_BOWER;
 		}
 		return AdminToolConfig.WEBJARS_LOCAL_PREFIX;
 	}
@@ -41,7 +67,7 @@ public abstract class AbstractAdminToolLoader
 	 */
 	protected String getAdminLTEPrefixUri() {
 		if (coreConfig.isUseCDNs()) {
-			return AdminToolConfig.WEBJARS_CDN_PREFIX + "org.webjars.bower/adminlte/" + coreConfig.getAdminLTECdnVersion() + "/";
+			return AdminToolConfig.WEBJARS_CDN_PREFIX_BOWER + "adminlte/" + coreConfig.getAdminLTECdnVersion() + "/";
 		}
 		return AdminToolConfig.WEBJARS_LOCAL_PREFIX + "adminlte/" + coreConfig.getAdminLTECdnVersion() + "/";
 	}
