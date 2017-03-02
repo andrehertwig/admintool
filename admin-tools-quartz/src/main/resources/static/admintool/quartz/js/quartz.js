@@ -398,7 +398,7 @@ function reloadValidator(formId) {
 }
 
 function hasValidationErrors(id) {
-	return $(getByID(id)).data('bs.validator').hasErrors();
+	return getByID(id).data('bs.validator').hasErrors();
 }
 
 function save(type) {

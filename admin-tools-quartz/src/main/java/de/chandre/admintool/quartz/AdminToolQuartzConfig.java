@@ -61,6 +61,10 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	@Value("${admintool.quartz.componentPosition:}")
 	private Integer componentPosition;
 	
+	@Value("${admintool.quartz.validator.cdn.path:}")
+	private String validatorCDNPath;
+	
+	
 	/**
 	 * @return the hideMenuItem
 	 */
@@ -249,6 +253,24 @@ public class AdminToolQuartzConfig implements AdminToolConfig
 	 */
 	public void setComponentPosition(Integer componentPosition) {
 		this.componentPosition = componentPosition;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.4
+	 */
+	public String getValidatorCDNPath() {
+		return validatorCDNPath;
+	}
+
+	/**
+	 * Absolute path to cdn of jquery validator plugin
+	 * @param validatorCDNPath
+	 * @since 1.1.4
+	 */
+	public void setValidatorCDNPath(String validatorCDNPath) {
+		this.validatorCDNPath = validatorCDNPath;
 	}
 
 	/* (non-Javadoc)

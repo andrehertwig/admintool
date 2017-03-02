@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.AbstractAdminToolLoader;
 import de.chandre.admintool.core.AdminTool;
@@ -46,9 +47,14 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		component.setPosition(quartzConfig.getComponentPosition());
 		component.getSecurityRoles().addAll(allRoles);
 		component.setDisplayName("Quartz");
+		
+		if (StringUtils.isEmpty(quartzConfig.getValidatorCDNPath())) {
+			component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js", true);
+		} else {
+			component.addAdditionalJS(quartzConfig.getValidatorCDNPath(), false);
+		}
 		component.addAdditionalCSS("/static/admintool/quartz/css/quartz.css", true);
 		component.addAdditionalJS("/static/admintool/quartz/js/quartz.js", true);
-		component.addAdditionalJS("/static/admintool/quartz/js/validator.min.js", true);
 		
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Quartz");
