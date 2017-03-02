@@ -467,13 +467,20 @@ function save(type) {
 		triggerModel.originalTriggerGroup = idAr[3];
 		triggerModel.originalTriggerName = idAr[4];
 	}
+	
 	var context = $('#webContext').attr('href');
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	
 	$.ajax({
 		url: context + '/admintool/quartz/' + type,
 		data: JSON.stringify(triggerModel),
 		dataType: "text",
 		type: 'POST',
-		contentType:'application/json; charset=UTF-8' ,
+		contentType:'application/json; charset=UTF-8',
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader(header, token);
+		},
 		error: function( xhr, status, errorThrown ) {
 			$('#admintoolError').modal();
 	        if (console) {
