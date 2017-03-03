@@ -4,6 +4,7 @@
 This is just a spare-time project. The usage of this tool (especially in production systems) is at your own risk.
 
 **Table of contents**
+
 1. [Existing Components](#components)
 2. [Requirements](#requirements)
 3. [Based on](#basedOn)
