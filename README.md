@@ -36,7 +36,8 @@ This is just a spare-time project. The usage of this tool (especially in product
   * browsing and downloading (direct/zipped) files and directories 
   * showing and editing files 
 * [Property Visualization](admin-tools-properties) since 1.0.1: shows Git properties and Spring environment properties
-* [Spring Boot Demo application](admin-tools-demo/): simple spring boot web application for showcase
+* [Spring Boot Demo application](admin-tools-demo-jar/): simple spring boot web application for showcase
+* [Spring Boot Demo Tomcat application](admin-tools-demo-war/): simple spring boot web application for showcase in tomcat
 
 <a name="requirements"/>
 ## Requirements

@@ -44,4 +44,9 @@
 	# integer value. used by default comparator to order components
 	admintool.properties.componentPosition=
 	
+	# since 1.1.4
+	# semicolon separated list of additional properties. Spring resource loading will be used.
+	# paths should start either with "classpath:/" or "file:/"
+	admintool.properties.addPropertiesPaths=
+	
 ```
