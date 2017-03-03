@@ -3,7 +3,23 @@
 
 This is just a spare-time project. The usage of this tool (especially in production systems) is at your own risk.
 
-## Existing components
+**Table of contents**
+1. [Existing Components](#components)
+2. [Requirements](#requirements)
+3. [Based on](#basedOn)
+4. [Explore](#explore)
+5. [Usage](#usage)
+  1. [Dependency and Configuration](#depConf)
+  2. [Adding own Pages](#ownPages)
+    1. [Creating an AdminComponent](#createComponent)
+    2. [Creating a Content Template](#createContentTemplate)
+  3. [Template Resolution](#templateResolution)
+  4. [Checking the Menu Integrity](#menuIntegrity)
+  5. [Flattening the Core-Menu-Structure](#flattening)
+
+
+<a name="components"/>
+## Existing Components
 * [Core](admin-tools-core/): providing the core functionality
 * [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required for your own project)
@@ -21,16 +37,19 @@ This is just a spare-time project. The usage of this tool (especially in product
 * [Property Visualization](admin-tools-properties) since 1.0.1: shows Git properties and Spring environment properties
 * [Spring Boot Demo application](admin-tools-demo/): simple spring boot web application for showcase
 
+<a name="requirements"/>
 ## Requirements
 * Java 8
 * Maven 3.2.x+
 
+<a name="basedOn"/>
 ## Based on
 * [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
   * Since 1.1.2 also Spring Boot 1.4.* is supported 
 * [Admin LTE](https://almsaeedstudio.com/preview)
 * [Thymeleaf](http://www.thymeleaf.org/)
 
+<a name="explore"/>
 ## Explore
 1. Download the project
 2. execute a `mvn clean install` or import to IDE
@@ -39,9 +58,11 @@ This is just a spare-time project. The usage of this tool (especially in product
 
  -> See [Spring Boot Demo application](admin-tools-demo/)
 
-# Usage
+<a name="usage"/>
+## Usage
 
-## Dependency and Configuration
+<a name="depConf"/>
+### Dependency and Configuration
 Include the dependencies in your dependency management. You can find it in [Maven Central](https://mvnrepository.com/artifact/de.chandre.admin-tools).
 ```xml
 
@@ -70,10 +91,11 @@ If you're using Spring Security you should disable CSRF support for some tools (
 	}
 
 ```
+<a name="ownPages"/>
+### Adding own Pages
 
-## Adding own pages
-
-### Creating an AdminComponent 
+<a name="createComponent"/>
+#### Creating an AdminComponent 
 The AdminComponent is the main component for configuring a module. It must contain a menu entry. Furthermore you can append custom CSS and JS (with either relative or absolute URLs) to components, which will only be resolved within component calls.
 ```java
 
@@ -131,9 +153,10 @@ E.g. your Thymeleaf is configured to look for templates in: *classpath:/template
 * you want to use your own structure: */templates/admintool/myComponent/myMenuTemplate.html*
 * to get the example resolved set target to: *myComponent/myMenuTemplate*
 
-### Creating a content template
+<a name="createContentTemplate"/>
+#### Creating a Content Template
 
-#### Before version 1.1.0 (Deprecated)
+##### Before version 1.1.0 (Deprecated)
 A content template must at least contain a block element with *id="template-content"*, otherwise the content will not be found by Thymeleaf. Using the namespace within the HTML tag provides code completion in Eclipse IDE with installed Thymeleaf plugin.   
 ```html
 
@@ -156,7 +179,7 @@ A content template must at least contain a block element with *id="template-cont
 
 The reason for this special id (*id="template-content"*) is that the index.html within the core module will include the content-page content through this particular id `<th:block th:include="${contentPage} :: #template-content" />`. So all other HTML tags outside the block element with this special id will be ignored.
 
-#### Since version 1.1.0
+##### Since version 1.1.0
 The template resolution has been restructured a bit. 
 Now the [Thymeleaf Layout dialect](http://www.thymeleaf.org/doc/articles/layouts.html#thymeleaf-layout-dialect) will be used.
 So a template should look like this:
@@ -181,7 +204,8 @@ So a template should look like this:
 
 This way it will be much easier to apply a custom layout.
 
-### Template resolution 
+<a name="templateResolution"/>
+### Template Resolution 
 The Thymeleaf templates will be fetched from the *admintool* folder of the configured template folder.
 e.g. if configured Thymeleaf root template folder is *templates* all custom (admintool-)templates should be placed within: 
 `/src/main/resources/templates/admintool/`
@@ -201,7 +225,8 @@ The *MenuEntry.target* should point relative from the *admintool* folder to the 
 
 You can also override templates provided by the admin-tools-core library. Per default templates will be found by *OrderedClassLoaderResourceResolver* using the *TemplateUrlComparator*. If more than one template has been found the core template will be used last, all others in natural string comparison order of absolute template URL (with JAR names). The first will be picked. -> Your desired template should be named to lead the comparison order.
 
-### Checking the menu integrity
+<a name="menuIntegrity"/>
+### Checking the Menu Integrity
 There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
  ```html
 
@@ -224,6 +249,7 @@ The second option would be calling the method directly, but of couse after sprin
 
 ```
 
+<a name="flattening"/>
 ### Flattening the Core-Menu-Structure
 
 Flattening the menu structure to creating only one (core-)component and adding all core-components to this single one.
