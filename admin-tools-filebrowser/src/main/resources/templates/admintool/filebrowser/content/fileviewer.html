@@ -16,7 +16,7 @@
 			<span id="fileExtension" class="invisible" th:text="${@adminToolFileviewerService.getExtension(currentFile)}"></span>
 			<span id="readOnly" class="invisible" th:text="${@adminToolFileviewerConfig.isReadOnly()}"></span>
 
-			<form name="fileViewForm" id="fileViewForm" th:action="${adminToolContext} + '/fileviewer/show'" method="post">
+			<form name="fileViewForm" id="fileViewForm" th:action="@{${adminToolContext} + '/fileviewer/show'}" method="post">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<div class="box box-info">
 
