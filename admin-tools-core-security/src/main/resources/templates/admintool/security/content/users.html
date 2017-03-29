@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+	<body>
+		<div layout:fragment="content">
+			<section class="content-header">
+				<h1>All Users</h1>
+				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+			</section>
+			<section class="content">
+			
+				<div class="alert alert-warning alert-dismissible" th:if="${not #strings.isEmpty(@userDetailsService.getInfoMessage())}">
+	            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+	            	<h4><i class="fa fa-warning"></i> Info</h4>
+	                <th:block th:utext="${@userDetailsService.getInfoMessage()}"></th:block>
+	            </div>
+			
+				<div class="box box-info" id="users">
+					
+					<div class="box-header with-border">
+						<div class="row">
+							<div class="col-xs-3 col-md-2">
+								<h3 class="box-title">
+									<i class="fa fa-users fa-2x"></i> Users
+								</h3>
+							</div>
+							<div class="col-xs-9 col-md-10">
+								<a href="#" id="addUser"><i class="fa fa-plus fa-2x" title="Add User"></i></a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="box-body">
+					
+						<div class="table-responsive">
+							<table class="table no-margin table-hover" id="users_table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Enabled</th>
+										<th>Expired</th>
+										<th>Locked</th>
+										<th>CredentialsExpired</th>
+										<th>Roles</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="user, iterState : ${@userDetailsService.getUsers()}" class="userrow">
+									
+										<td>
+											<button th:id="'editUser_' + ${user.getUsername()}" class="btn btn-sm editUser" th:text="${user.getUsername()}"></button>
+										</td>
+										<td>
+											<button th:id="'enable_' + ${user.getUsername()}" class="btn btn-sm enable" th:text="${user.isEnabled()}"></button>
+										</td>
+										<td>
+											<button th:id="'expire_' + ${user.getUsername()}" class="btn btn-sm expire" th:text="${!user.isAccountNonExpired()}"></button>
+										</td>
+										<td>
+											<button th:id="'lock_' + ${user.getUsername()}" class="btn btn-sm lock" th:text="${!user.isAccountNonLocked()}"></button>
+										</td>
+										<td>
+											<button th:id="'expcred_' + ${user.getUsername()}" class="btn btn-sm expcred" th:text="${!user.isCredentialsNonExpired()}"></button>
+										</td>
+										<td class="roles" th:text="${#strings.listJoin(user.getAuthorities(),', ')}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					
+					</div>
+					
+					<div class="box-footer clearfix">
+					
+					</div>
+				
+				</div>
+			</section>
+			
+			<div class="modal fade" id="userDataModal" tabindex="-1" role="dialog" aria-labelledby="userDataModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="userDataModalLabel">Edit User</h4>
+						</div>
+						<form id="userDataForm">
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="userName">Name</label>
+									<input type="text" id="userName" name="userName" class="form-control" placeholder="User name" required="required"/>
+									<div class="help-block with-errors"></div>
+								</div>
+								
+								<div class="form-group">
+									<label for="userPassword">Password</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" id="userPasswordOverride" />
+										</span>
+										<input type="password" class="form-control" id="userPassword" value="" required="required" />
+									</div>
+									<div class="help-block with-errors"></div>
+								</div>
+								
+								<div class="form-group" id="authoritiesGroup">
+									<label for="authorities">Authorities</label>
+									<input type="text" class="form-control" id="authorities" value="" required="required" 
+										placeholder="ROLE_ADMIN, ROLE_USER" />
+									<div class="help-block with-errors authorities"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary pull-right" id="saveUser">Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

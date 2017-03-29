@@ -1,4 +1,4 @@
-package de.chandre.admintool;
+package de.chandre.admintool.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +16,13 @@ import de.chandre.admintool.core.AdminTool;
 public class SecurityConfig
 {
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.inMemoryAuthentication()
-				//.withUser("user").password("user").roles("USER").and()
-				.withUser("operator").password("operator").roles("OPERATOR").and()
-				.withUser("admin").password("admin").roles("ADMIN", "OPERATOR");
+	public void configureGlobal(AuthenticationManagerBuilder auth, AdminToolInMemoryUserDetailsService userDetailsService) throws Exception {
+		
+		AdminToolInMemoryUserDetailsConfigurer<AuthenticationManagerBuilder> imdmc = new AdminToolInMemoryUserDetailsConfigurer<>(userDetailsService);
+		imdmc.withUser("operator").password("operator").roles("OPERATOR");
+		imdmc.withUser("admin").password("admin").roles("ADMIN", "OPERATOR");
+		
+		imdmc.configure(auth);
 	}
 	
 	@Configuration

@@ -6,3 +6,4 @@ target/
 *.log
 *.log.gz
 *.versionsBackup
+*.bat
