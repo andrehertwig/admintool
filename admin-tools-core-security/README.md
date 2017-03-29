@@ -69,7 +69,7 @@ To use the login page it could be configured like this:
 	
 ```
 
-## Using the View
+## Using the User-View
 
 Because managing users in a application is a really specific thing the admin-tools-core-security will only provide abstract classes and a simple view.
 

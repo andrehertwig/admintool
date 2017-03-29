@@ -10,18 +10,20 @@ This is just a spare-time project. The usage of this tool (especially in product
 3. [Based on](#based-on)
 4. [Explore](#explore)
 5. [Usage](#usage)
-  1. [Dependency and Configuration](#dependency-and-configuration)
-  2. [Adding own Pages](#adding-own-pages)
-    1. [Creating an AdminComponent](#creating-an-admincomponent)
-    2. [Creating a Content Template](#creating-a-content-template)
-  3. [Template Resolution](#template-resolution)
-  4. [Checking the Menu Integrity](#checking-the-menu-integrity)
-  5. [Flattening the Core-Menu-Structure](#flattening-the-core-menu-structure)
-  6. [Using AdminTool Core JS ](#using-admintool-core-js)
+   1. [Dependency and Configuration](#dependency-and-configuration)
+   2. [Adding own Pages](#adding-own-pages)
+      1. [Creating an AdminComponent](#creating-an-admincomponent)
+      2. [Creating a Content Template](#creating-a-content-template)
+   3. [Template Resolution](#template-resolution)
+   4. [Checking the Menu Integrity](#checking-the-menu-integrity)
+   5. [Flattening the Core-Menu-Structure](#flattening-the-core-menu-structure)
+   6. [Using AdminTool Core JS ](#using-admintool-core-js)
 
 ## Existing Components
 * [Core](admin-tools-core/): providing the core functionality
-* [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
+* [Core-Security](admin-tools-core-security/) 
+  * since 1.0.1: Overrides some templates and provides a login template
+  * since 1.1.5: simpe User-View
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required for your own project)
 * [Jminix integration](admin-tools-jminix/): simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required for your own project)
 * [Log4j management](admin-tools-log4j2/): 
