@@ -5,21 +5,19 @@ This is just a spare-time project. The usage of this tool (especially in product
 
 **Table of contents**
 
-1. [Existing Components](#components)
+1. [Existing Components](#existing-components)
 2. [Requirements](#requirements)
-3. [Based on](#basedOn)
+3. [Based on](#based-on)
 4. [Explore](#explore)
 5. [Usage](#usage)
-  1. [Dependency and Configuration](#depConf)
-  2. [Adding own Pages](#ownPages)
-    1. [Creating an AdminComponent](#createComponent)
-    2. [Creating a Content Template](#createContentTemplate)
-  3. [Template Resolution](#templateResolution)
-  4. [Checking the Menu Integrity](#menuIntegrity)
-  5. [Flattening the Core-Menu-Structure](#flattening)
-
-
-<a name="components"/>
+  1. [Dependency and Configuration](#dependency-and-configuration)
+  2. [Adding own Pages](#adding-own-pages)
+    1. [Creating an AdminComponent](#creating-an-admincomponent)
+    2. [Creating a Content Template](#creating-a-content-template)
+  3. [Template Resolution](#template-resolution)
+  4. [Checking the Menu Integrity](#checking-the-menu-integrity)
+  5. [Flattening the Core-Menu-Structure](#flattening-the-core-menu-structure)
+  6. [Using AdminTool Core JS ](#using-admintool-core-js)
 
 ## Existing Components
 * [Core](admin-tools-core/): providing the core functionality
@@ -40,21 +38,15 @@ This is just a spare-time project. The usage of this tool (especially in product
 * [Spring Boot Demo application](admin-tools-demo-jar/): simple spring boot web application for showcase
 * [Spring Boot Demo Tomcat application](admin-tools-demo-war/): simple spring boot web application for showcase in tomcat
 
-<a name="requirements"/>
-
 ## Requirements
 * Java 8
 * Maven 3.2.x+
-
-<a name="basedOn"/>
 
 ## Based on
 * [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
   * Since 1.1.2 also Spring Boot 1.4.* is supported 
 * [Admin LTE](https://almsaeedstudio.com/preview)
 * [Thymeleaf](http://www.thymeleaf.org/)
-
-<a name="explore"/>
 
 ## Explore
 1. Download the project
@@ -64,11 +56,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 
  -> See [Spring Boot Demo application](admin-tools-demo/)
 
-<a name="usage"/>
-
 ## Usage
-
-<a name="depConf"/>
 
 ### Dependency and Configuration
 Include the dependencies in your dependency management. You can find it in [Maven Central](https://mvnrepository.com/artifact/de.chandre.admin-tools).
@@ -99,11 +87,8 @@ If you're using Spring Security you should disable CSRF support for some tools (
 	}
 
 ```
-<a name="ownPages"/>
 
 ### Adding own Pages
-
-<a name="createComponent"/>
 
 #### Creating an AdminComponent 
 The AdminComponent is the main component for configuring a module. It must contain a menu entry. Furthermore you can append custom CSS and JS (with either relative or absolute URLs) to components, which will only be resolved within component calls.
@@ -163,8 +148,6 @@ E.g. your Thymeleaf is configured to look for templates in: *classpath:/template
 * you want to use your own structure: */templates/admintool/myComponent/myMenuTemplate.html*
 * to get the example resolved set target to: *myComponent/myMenuTemplate*
 
-<a name="createContentTemplate"/>
-
 #### Creating a Content Template
 
 ##### Before version 1.1.0 (Deprecated)
@@ -215,8 +198,6 @@ So a template should look like this:
 
 This way it will be much easier to apply a custom layout.
 
-<a name="templateResolution"/>
-
 ### Template Resolution 
 The Thymeleaf templates will be fetched from the *admintool* folder of the configured template folder.
 e.g. if configured Thymeleaf root template folder is *templates* all custom (admintool-)templates should be placed within: 
@@ -236,8 +217,6 @@ beside the core. It will have:
 The *MenuEntry.target* should point relative from the *admintool* folder to the template which should be used by this menu entry. This template will be shown in the main frame (within tag `<div class="content-wrapper">`).
 
 You can also override templates provided by the admin-tools-core library. Per default templates will be found by *OrderedClassLoaderResourceResolver* using the *TemplateUrlComparator*. If more than one template has been found the core template will be used last, all others in natural string comparison order of absolute template URL (with JAR names). The first will be picked. -> Your desired template should be named to lead the comparison order.
-
-<a name="menuIntegrity"/>
 
 ### Checking the Menu Integrity
 There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
@@ -261,8 +240,6 @@ The second option would be calling the method directly, but of couse after sprin
   }
 
 ```
-
-<a name="flattening"/>
 
 ### Flattening the Core-Menu-Structure
 
@@ -340,3 +317,7 @@ Since version 1.1.4 some new features make it possible to add additional CSS and
     adminTool.getComponents().add(component2);
 		
 ```
+
+### Using AdminTool Core JS 
+
+TODO
