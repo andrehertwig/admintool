@@ -20,6 +20,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 
 
 <a name="components"/>
+
 ## Existing Components
 * [Core](admin-tools-core/): providing the core functionality
 * [Core-Security](admin-tools-core-security/) since 1.0.1: Overrides some templates and provides a login template
@@ -40,11 +41,13 @@ This is just a spare-time project. The usage of this tool (especially in product
 * [Spring Boot Demo Tomcat application](admin-tools-demo-war/): simple spring boot web application for showcase in tomcat
 
 <a name="requirements"/>
+
 ## Requirements
 * Java 8
 * Maven 3.2.x+
 
 <a name="basedOn"/>
+
 ## Based on
 * [Spring Boot 1.3.*](http://projects.spring.io/spring-boot/) 
   * Since 1.1.2 also Spring Boot 1.4.* is supported 
@@ -52,6 +55,7 @@ This is just a spare-time project. The usage of this tool (especially in product
 * [Thymeleaf](http://www.thymeleaf.org/)
 
 <a name="explore"/>
+
 ## Explore
 1. Download the project
 2. execute a `mvn clean install` or import to IDE
@@ -61,9 +65,11 @@ This is just a spare-time project. The usage of this tool (especially in product
  -> See [Spring Boot Demo application](admin-tools-demo/)
 
 <a name="usage"/>
+
 ## Usage
 
 <a name="depConf"/>
+
 ### Dependency and Configuration
 Include the dependencies in your dependency management. You can find it in [Maven Central](https://mvnrepository.com/artifact/de.chandre.admin-tools).
 ```xml
@@ -94,9 +100,11 @@ If you're using Spring Security you should disable CSRF support for some tools (
 
 ```
 <a name="ownPages"/>
+
 ### Adding own Pages
 
 <a name="createComponent"/>
+
 #### Creating an AdminComponent 
 The AdminComponent is the main component for configuring a module. It must contain a menu entry. Furthermore you can append custom CSS and JS (with either relative or absolute URLs) to components, which will only be resolved within component calls.
 ```java
@@ -156,6 +164,7 @@ E.g. your Thymeleaf is configured to look for templates in: *classpath:/template
 * to get the example resolved set target to: *myComponent/myMenuTemplate*
 
 <a name="createContentTemplate"/>
+
 #### Creating a Content Template
 
 ##### Before version 1.1.0 (Deprecated)
@@ -207,6 +216,7 @@ So a template should look like this:
 This way it will be much easier to apply a custom layout.
 
 <a name="templateResolution"/>
+
 ### Template Resolution 
 The Thymeleaf templates will be fetched from the *admintool* folder of the configured template folder.
 e.g. if configured Thymeleaf root template folder is *templates* all custom (admintool-)templates should be placed within: 
@@ -228,6 +238,7 @@ The *MenuEntry.target* should point relative from the *admintool* folder to the 
 You can also override templates provided by the admin-tools-core library. Per default templates will be found by *OrderedClassLoaderResourceResolver* using the *TemplateUrlComparator*. If more than one template has been found the core template will be used last, all others in natural string comparison order of absolute template URL (with JAR names). The first will be picked. -> Your desired template should be named to lead the comparison order.
 
 <a name="menuIntegrity"/>
+
 ### Checking the Menu Integrity
 There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
  ```html
@@ -252,6 +263,7 @@ The second option would be calling the method directly, but of couse after sprin
 ```
 
 <a name="flattening"/>
+
 ### Flattening the Core-Menu-Structure
 
 Flattening the menu structure to creating only one (core-)component and adding all core-components to this single one.
