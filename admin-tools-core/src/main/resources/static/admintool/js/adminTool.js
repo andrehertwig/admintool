@@ -47,9 +47,18 @@ $.extend(AdminTool.Core.prototype, {
 	init: function(el, options) {
 		 // save this element for faster queries
         this.element = $(el);
+        this.elementId = this.element.attr('id');
         
         // save options if there are any
-        this.options = options;
+        this.options = {
+        	errorModalId : "admintoolError",
+        	errorModalLabelId : "admintoolErrorLabel",
+        	errorModalTextId : "admintoolErrorBody",
+        	confirmModalId : "admintoolConfirmModal",
+        	confirmModalLabelId : "admintoolConfirmModalLabel",
+        	confirmModalTextId : "admintoolConfirmModalText",
+        	confirmModalButtonId :"btn_admintool_confirm"
+        };
         
         // bind if the element is destroyed
         this.element.bind("destroyed", $.proxy(this.teardown, this));
@@ -57,7 +66,11 @@ $.extend(AdminTool.Core.prototype, {
         // save this instance in jQuery data
         $.data(el, this.name, this);
         
+        this.initConfirmModal();
         this.postInit();
+        
+        //overriding options after extending plugins maybe pushed own config
+        this.options = $.extend( this.options, options );
 	},
 	
 	postInit: function() {
@@ -121,9 +134,32 @@ $.extend(AdminTool.Core.prototype, {
 		if (null == text || text === undefined) {
 			text = "An Error has been occurred while sending XHR request";
 		}
-		getByID('admintoolErrorLabel').html('<i class="icon fa fa-ban"></i>' + headline);
-		getByID('admintoolErrorBody').html(text);
-		getByID('admintoolError').modal();
+		getByID(this.options.errorModalLabelId).html('<i class="icon fa fa-ban"></i>' + headline);
+		getByID(this.options.errorModalTextId).html(text);
+		getByID(this.options.errorModalId).modal();
+	},
+	
+	initConfirmModal: function() {
+		getByID(this.options.confirmModalId).on('hidden.bs.modal', $.proxy(this.unbindConfirmModal, this));
+	},
+	
+	unbindConfirmModal: function() {
+		getByID(this.options.confirmModalButtonId).off();
+	},
+	
+	showConfirmModal: function(confirmTitle, confirmMessage, confirmCallback, args) {
+		this.unbindConfirmModal();
+		getByID(this.options.confirmModalButtonId).on('click', $.proxy(confirmCallback, this, args));
+		
+		if(!confirmTitle) {
+			confirmTitle = 'Confirm';
+		}
+		if(!confirmMessage) {
+			confirmMessage = 'Do you confirm?';
+		}
+		getByID(this.options.confirmModalLabelId).html(confirmTitle);
+		getByID(this.options.confirmModalTextId).html(confirmMessage);
+		getByID(this.options.confirmModalId).modal('show');
 	}
 });
 

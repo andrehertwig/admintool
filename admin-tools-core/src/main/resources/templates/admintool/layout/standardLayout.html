@@ -99,6 +99,26 @@
 			</div>
 		</div>
 		
+		<div class="modal fade modal-danger" tabindex="-1" role="dialog" id="admintoolConfirmModal" aria-labelledby="admintoolConfirmModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="admintoolConfirmModalLabel">Confirm</h4>
+					</div>
+					<div class="modal-body">
+						<p id="admintoolConfirmModalText">Do you confirm?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-outline" id="btn_admintool_confirm">Confirm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 
 		<!-- Main Footer -->
 		<footer class="main-footer" th:include="admintool/includes/footer.inc">
