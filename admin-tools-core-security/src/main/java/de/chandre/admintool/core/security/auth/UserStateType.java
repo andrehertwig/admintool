@@ -42,4 +42,9 @@ public enum UserStateType {
 		}
 		throw new IllegalArgumentException("unknown user state type: " + type);
 	}
+
+	public String getType() {
+		return type;
+	}
+	
 }

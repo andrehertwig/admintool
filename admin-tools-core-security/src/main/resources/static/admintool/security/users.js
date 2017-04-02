@@ -11,12 +11,21 @@ $.extend(AdminTool.Users.prototype, {
 	name : 'users',
 	
 	postInit: function() {
+		
+		this.options = $.extend( this.options, {
+			getUserRolesURL 	: '/admintool/users/roles',
+			changeUserStateURL 	: '/admintool/users/changeState/{{type}}',
+			addUserURL 			: '/admintool/users/add',
+			updateUserURL 		: '/admintool/users/update',
+			removeUserURL 		: '/admintool/users/remove'
+		});
+		
 		$("#users_table").DataTable();
 		
 		if (!this.userDataFormId) {
 			this.userDataFormId = '#userDataForm';
 		}
-		
+		//init meta data
 		var ctx = this;
 		this.userNames = [];
 		$(".editUser").each(function () {
@@ -26,19 +35,16 @@ $.extend(AdminTool.Users.prototype, {
 		this.roleNamesSelect = null;
 		this.initUserRoles();
 		
-		this.initStatusChange("enable");
-		this.initStatusChange("expire");
-		this.initStatusChange("lock");
-		this.initStatusChange("expcred");
-		
+		//init functions
+		this.initStatusChange();
 		this.initEditUser();
-		
 		this.initAddUser();
+		this.initRemoveUser();
 	},
 	
 	initUserRoles: function() {
 		this.sendRequest({
-			url: '/admintool/users/roles', 
+			url: this.options.getUserRolesURL, 
 			requestType: "GET",
 			ctx: this,
 		}, function(data, query) {
@@ -64,31 +70,40 @@ $.extend(AdminTool.Users.prototype, {
 		}
 	},
 	
-	initAddUser: function() {
-		$('#addUser').click(function() {
-			getByID("#users").users("prepareAddUserForm");
-		});
+	getButtonType: function($button) {
+		return $button.attr('id').split('_')[0];
 	},
+	
+	getUserName: function($button, type) {
+		return $button.attr('id').substring(type.length +1, $button.attr('id').length);
+	},
+	
+	/* ++++++++++++++++++++
+	 *  Change User
+	 ++++++++++++++++++++++ */
 
-	initStatusChange: function(type) {
-		$("." + type).each(function () {
+	initStatusChange: function() {
+		Mustache.parse(this.options.changeUserStateURL);
+		
+		var pluginId = this.elementId;
+		$(".state").each(function () {
 			var button = $(this);
 			button.click(function() {
-				getByID("#users").users("changeState", type, this);
+				getByID(pluginId).users("changeState", this);
 			});
 		});
 	},
 	
-	changeState: function(type, btn) {
-		
+	changeState: function(btn) {
 		var button = $(btn);
+		var type = this.getButtonType(button);
 		var data = {
 			"username" : this.getUserName(button, type),
 			"newState" : !(button.text().trim() == 'true')
 		}
 		
 		this.sendRequest({
-			url: '/admintool/users/changeState/' + type, 
+			url: Mustache.render(this.options.changeUserStateURL, {"type": type}), 
 			requestType: "POST", 
 			dataType: "text",
 			data: JSON.stringify(data),
@@ -104,8 +119,12 @@ $.extend(AdminTool.Users.prototype, {
 		});
 	},
 	
-	getUserName: function($button, clazz) {
-		return $button.attr('id').substring(clazz.length +1, $button.attr('id').length)
+	/* ++++++++++++++++++++
+	 *  Add/Edit User
+	 ++++++++++++++++++++++ */
+	
+	initAddUser: function() {
+		$('#addUser').on('click', $.proxy(this.prepareAddUserForm, this));
 	},
 	
 	prepareAddUserForm: function() {
@@ -117,10 +136,11 @@ $.extend(AdminTool.Users.prototype, {
 	},
 	
 	initEditUser: function() {
+		var pluginId = this.elementId;
 		$(".editUser").each(function () {
 			var button = $(this);
 			button.click(function() {
-				getByID("#users").users("editUser", this);
+				getByID(pluginId).users("editUser", this);
 			});
 		});
 	},
@@ -183,20 +203,23 @@ $.extend(AdminTool.Users.prototype, {
 	},
 	
 	saveUser: function(edit) {
+		//validate
 		getByID(this.userDataFormId).validator('validate');
-		if (this.hasValidationErrors(this.userDataFormId)) {
+		var hasErrors = this.hasValidationErrors(this.userDataFormId);
+		var authorities = this.getFormAuthorities();
+		if (null == authorities || authorities.length == 0) {
+			hasErrors = true;
+		}
+		if (hasErrors) {
 			return;
 		}
+		
 		var username = getByID('#userName').val();
 		if(!edit && this.userNames.indexOf(username) != -1) {
 			this.showCustomError('#userName', 'Username must be uniqe', this.userDataFormId);
 			return;
 		}
-		var authorities = this.getFormAuthorities();
-		if (null == authorities || authorities.length == 0) {
-			return;
-		}
-		
+		//build request and send
 		var userData = {
 			"username" : username,
 			"authorities" : authorities
@@ -206,12 +229,12 @@ $.extend(AdminTool.Users.prototype, {
 			userData["password"] = getByID('#userPassword').val();
 		}
 		
-		var type = "addUser";
+		var uri = this.options.addUserURL;
 		if (edit) {
-			type = "updateUser";
+			uri = this.options.updateUserURL;
 		}
 		this.sendRequest({
-			url: '/admintool/users/' + type, 
+			url: uri, 
 			requestType: "POST", 
 			dataType: "text", 
 			data: JSON.stringify(userData),
@@ -244,6 +267,51 @@ $.extend(AdminTool.Users.prototype, {
 		var $field = getByID(fieldId);
 		$field.data('bs.validator.errors', [message]);
 		getByID(formId).data('bs.validator').showErrors($field);
+	},
+	
+	/* ++++++++++++++++++++
+	 *  Remove User
+	 ++++++++++++++++++++++ */
+	
+	initRemoveUser: function() {
+		var $removeables = $('.remove');
+		if ($removeables.length != 0) {
+			var pluginId = this.elementId;
+			$removeables.each(function() {
+				var $el = $(this);
+				$el.click(function() {
+					getByID(pluginId).users("initRemoveUserConfirm", this);
+				});
+			});
+		}
+	},
+	
+	initRemoveUserConfirm: function(btn) {
+		this.showConfirmModal("Remove User", "Do you really want to delete this user?", this.removeUser, btn);
+	},
+	
+	removeUser: function(btn) {
+		var button = $(btn);
+		var userData = {
+			"username" : this.getUserName(button, 'remove')
+		};
+		
+		this.sendRequest({
+			url: this.options.removeUserURL, 
+			requestType: "POST", 
+			dataType: "text", 
+			data: JSON.stringify(userData),
+			showModalOnError: true,
+			ctx: this
+		},
+		function(data, query) {
+			if (data && data == 'true') {
+				location.reload();
+			} else {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error removing User', data);
+			}
+		});
 	}
 	
 });

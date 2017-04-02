@@ -52,7 +52,7 @@ public class AdminToolSecurityController extends AbstractAdminToolSecurityViewCo
 	}
 	
 	
-	@RequestMapping(value="/users/addUser", method=RequestMethod.POST)
+	@RequestMapping(value="/users/add", method=RequestMethod.POST)
 	@ResponseBody
 	public String addUser(@RequestBody UserTO userTo) {
 		
@@ -73,7 +73,7 @@ public class AdminToolSecurityController extends AbstractAdminToolSecurityViewCo
 		return Boolean.TRUE.toString();
 	}
 	
-	@RequestMapping(value="/users/updateUser", method=RequestMethod.POST)
+	@RequestMapping(value="/users/update", method=RequestMethod.POST)
 	@ResponseBody
 	public String updateUser(@RequestBody UserTO userTo) {
 		
@@ -97,6 +97,17 @@ public class AdminToolSecurityController extends AbstractAdminToolSecurityViewCo
 				user.isCredentialsNonExpired(), user.isCredentialsNonExpired(),
 				user.isAccountNonLocked(), transformToSimpleAuthorities(userTo.getAuthorities())));
 		
+		return Boolean.TRUE.toString();
+	}
+	
+	@RequestMapping(value="/users/remove", method=RequestMethod.POST)
+	@ResponseBody
+	public String removeUser(@RequestBody UserTO userTo) {
+		try {
+			userDetailsService.deleteUser(userTo.getUsername());
+		} catch (Exception e) {
+			return Boolean.FALSE.toString();
+		}
 		return Boolean.TRUE.toString();
 	}
 	
