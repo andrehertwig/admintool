@@ -31,7 +31,7 @@ public class MenuEntry implements Serializable
 	private String displayName;
 	private String resouceMessageKey;
 	private String target;
-	private boolean hide;
+	private boolean hide = false;
 	
 	private AdminComponent component;
 	private MenuEntry parent;

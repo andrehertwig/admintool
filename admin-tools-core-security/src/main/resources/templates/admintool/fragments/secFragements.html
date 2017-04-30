@@ -8,8 +8,9 @@
 		sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}"
 	 -->
 	<th:block th:fragment="submenuIncludeSec (menuItem, withIcon)">
-		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}"
-		>
+		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" 
+			th:remove="${menuItem.hide}? all : none"
+			sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}">
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
 				<span th:text="${menuItem.displayName}">Link</span>

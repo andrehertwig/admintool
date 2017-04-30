@@ -3,7 +3,7 @@
 <body >
 	
 	<th:block th:fragment="submenuInclude (menuItem, withIcon)">
-		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}">
+		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" th:remove="${menuItem.hide}? all : none">
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
 				<span th:text="${menuItem.displayName}">Link</span>
