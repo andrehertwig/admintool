@@ -48,6 +48,8 @@ import de.chandre.admintool.core.controller.AbstractAdminController;
  */
 public abstract class AbstractAdminToolSecurityViewController extends AbstractAdminController {
 	
+	private static final String ROLE_PREFIX = "ROLE_";
+	
 	/**
 	 * should return the instance of {@link UserDetailsService}
 	 * @return
@@ -64,6 +66,14 @@ public abstract class AbstractAdminToolSecurityViewController extends AbstractAd
 		return setUserState(userTo, UserStateType.fromType(type));
 	}
 	
+	/**
+	 * override this for another prefix. should end with underscore.
+	 * @return
+	 */
+	protected static String getRolePrefix() {
+		return ROLE_PREFIX;
+	}
+
 	/**
 	 * 
 	 * @param userTo the user transfer object
@@ -91,12 +101,33 @@ public abstract class AbstractAdminToolSecurityViewController extends AbstractAd
 		return Boolean.TRUE.toString();
 	}
 
+	/**
+	 * @see #transformToSimpleAuthorities(Set, boolean)
+	 * @param strAuthorities
+	 * @return Empty collection or collection of {@link SimpleGrantedAuthority}
+	 */
 	protected Collection<GrantedAuthority> transformToSimpleAuthorities(Set<String> strAuthorities) {
+		return transformToSimpleAuthorities(strAuthorities, false);
+	}
+	
+	/**
+	 * transforms all authorities to upper case and append the prefix if appendRolePrefix = true
+	 *  
+	 * @param strAuthorities
+	 * @param appendRolePrefix
+	 * @return Empty collection or collection of {@link SimpleGrantedAuthority}
+	 */
+	protected Collection<GrantedAuthority> transformToSimpleAuthorities(Set<String> strAuthorities, boolean appendRolePrefix) {
 		if (null != strAuthorities) {
 			Collection<GrantedAuthority> authorities = new HashSet<>(strAuthorities.size());
 			for (String authority : strAuthorities) {
 				if (!StringUtils.isEmpty(authority)) {
-					authorities.add(new SimpleGrantedAuthority(authority.trim().toUpperCase(Locale.ENGLISH)));
+					String role = authority.trim().toUpperCase(Locale.ENGLISH);
+					if (appendRolePrefix) {
+						authorities.add(new SimpleGrantedAuthority(getRolePrefix() + role));
+					} else {
+						authorities.add(new SimpleGrantedAuthority(role));
+					}
 				}
 			}
 			return authorities;
