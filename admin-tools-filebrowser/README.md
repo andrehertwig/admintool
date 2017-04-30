@@ -27,16 +27,18 @@
 **No artifact deployed right now** 
 
 ```xml
-<dependency>
-	<groupId>de.chandre.admin-tools</groupId>
-	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.4</version>
-</dependency>
-<dependency>
-	<groupId>de.chandre.admin-tools</groupId>
-	<artifactId>admin-tools-filebrowser</artifactId>
-	<version>1.1.4</version>
-</dependency>
+
+	<dependency>
+		<groupId>de.chandre.admin-tools</groupId>
+		<artifactId>admin-tools-core</artifactId>
+		<version>1.1.5</version>
+	</dependency>
+	<dependency>
+		<groupId>de.chandre.admin-tools</groupId>
+		<artifactId>admin-tools-filebrowser</artifactId>
+		<version>1.1.5</version>
+	</dependency>
+	
 ```
 
 ## Configurations
