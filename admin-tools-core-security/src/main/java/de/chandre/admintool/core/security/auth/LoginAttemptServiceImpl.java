@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Simple login attempt service
  * 
@@ -12,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.1.5
  */
 public class LoginAttemptServiceImpl implements LoginAttemptService {
+	
+	private static final Log LOGGER = LogFactory.getLog(LoginAttemptServiceImpl.class);
 
 	private final int MAX_ATTEMPT;
 	
@@ -33,6 +38,8 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 		MAX_ATTEMPT = maxAttempts;
 		this.useUserName = useUserName;
 		this.useRemoteAddress = useRemoteAddress;
+		LOGGER.debug("LoginAttemptService initialized with maxAttempts=" + maxAttempts 
+				+ ", using usernames=" + useUserName + ", useRemoteAddress=" + useRemoteAddress);
 	}
 
 	@Override
