@@ -16,7 +16,7 @@ This is just a spare-time project. The usage of this tool (especially in product
       2. [Creating a Content Template](#creating-a-content-template)
    3. [Template Resolution](#template-resolution)
    4. [Checking the Menu Integrity](#checking-the-menu-integrity)
-   5. [Flattening the Core-Menu-Structure](#flattening-the-core-menu-structure)
+   5. [Packing the Core-Menu-Structure](#packing-the-core-menu-structure)
    6. [Using AdminTool Core JS ](#using-admintool-core-js)
 
 ## Existing Components
@@ -233,9 +233,9 @@ The second option would be calling the method directly, but of couse after sprin
 
 ```
 
-### Flattening the Core-Menu-Structure
+### Packing the Core-Menu-Structure
 
-Flattening the menu structure to creating only one (core-)component and adding all core-components to this single one.
+Packing the menu structure to creating only one (core-)component and adding all core-components to this single one.
 
 Until version 1.1.3 the flattening is not really recommended, because all CSS and JS should be appended to the new component.
 ```java
@@ -312,4 +312,91 @@ Since version 1.1.4 some new features make it possible to add additional CSS and
 
 ### Using AdminTool Core JS 
 
-TODO
+The admin-tool-core artifact has a small javascript which could be extended to benefit from the predefined functions. It depends on JQuery (plugin).
+
+```javascript
+    
+    // creating a new Function
+    AdminTool.MyComponent = function(el, options) {
+        if (el) {
+            this.init(el, options)
+        }
+    }
+    
+    //extending the Core
+    AdminTool.MyComponent.prototype = new AdminTool.Core();
+    
+    //
+    $.extend(AdminTool.MyComponent.prototype, {
+        name : 'myComponent',
+	
+        postInit: function() {
+            //postInit will be called automatically after plug-in creation
+            this.myVar = 'myVar';
+        },
+	
+        myCustomFunction: function() {
+            return this.myVar;
+        },
+        
+        myCustomClick: function() {
+            // getByID - common function of adminTool.js (also: getByClazz()). will return the JQuery wrapped element
+            // to call a function in same context within a $.on method you have to use $.proxy 
+            getByID('saveObject').on('click', $.proxy(this.saveObjectConfirm, this, false));
+            /* 
+             * // alternatively you can use the plugin directly, 
+             * // maybe if you are within a $.each() loop where "this" is not the plugin
+             * 
+             * button.click(function() {
+             *     $("#objects").users('saveObjectConfirm', false);
+             * });
+             */
+        },
+        
+        saveObjectConfirm: function(bool) {
+            // showing a default confirm modal (1.1.5) with a confirm function
+            this.showConfirmModal("Save Object", "Do you really want to save this object?", this.saveObject, bool);
+        },
+        
+        saveObject: function(bool) {
+            // this method will automatically set the CSRF token.
+            // Only "url" is required. All other parameters are optional. Default is a GET.
+            // To access the own plugin context you should transfer it with the parameters (in this case: ctx) 
+            this.sendRequest({
+                url: '/myUri', 
+                requestType: "POST", 
+                dataType: "json", 
+                data: JSON.stringify(userData),
+                showModalOnError: true,
+                ctx: this
+            },
+            function(data, query) {
+                // result object data depends (of course) on your implementation
+                if (data && data == 'true') {
+                    // doing something usefull. access the own context with the   
+                    query.ctx.usefullEnding(data);
+                } else {
+                    //show error modal (AdminTool.Core)
+                    query.ctx.showErrorModal('Error saving User', data);
+                }
+            });
+        },
+        
+        usefullEnding: function(data) {
+            
+        }
+        
+    });
+    
+    // create the plugin
+    $.pluginMaker(AdminTool.MyComponent);
+    
+    //load the plugin
+    $( document ).ready(function() {
+        if ($("#objects").length > 0) {
+            // initialize the plugin and bind it to element with id #objects
+            // AdminTool.MyComponent.prototype.name will be used
+            $("#objects").myComponent();
+        }
+    });
+```

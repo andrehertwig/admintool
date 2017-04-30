@@ -42,8 +42,12 @@ AdminTool.Core = function(el, options) {
 
 $.extend(AdminTool.Core.prototype, {
 	
+	// my name :)
 	name: "adminTool",
 	
+	/**
+	 * the init function
+	 */
 	init: function(el, options) {
 		 // save this element for faster queries
         this.element = $(el);
@@ -73,32 +77,60 @@ $.extend(AdminTool.Core.prototype, {
         this.options = $.extend( this.options, options );
 	},
 	
+	/**
+	 * abstract function will be called within this.init() before options are getting merged
+	 */
 	postInit: function() {
 		//abstract function to override
 	},
 	
-	 // call destroy to teardown the controller while leaving the element
+	/**
+	 * call destroy to teardown the controller while leaving the element
+	 */
     destroy: function() {
         this.element.unbind("destroyed", this.teardown);
         this.teardown();
         this.unbind();
     },
     
-    // remove all the functionality of this tabs widget
+    /**
+     * removes all the functionality of this widget
+     */
     teardown: function() {
         $.removeData(this.element[0], this.name);
         // clear references to this element
         this.element = null;
     },
     
+    /**
+     * abstract function which will be called while this.destroy()
+     */
     unbind : function() {
     	//abstract function to override
     },
     
+    /**
+     * reloads the page
+     */
     reloadPage: function() {
 		location.reload();
 	},
 	
+	/**
+	 * Sends a Ajax Request with CSRF header token. Per default it's a GET.
+	 * 
+	 *  @param query - the query object
+	 *  @param query.url - (required) URI to call
+	 *  @param query.dataType - (optional) Default: json
+	 *  @param query.requestType - (optional) Default: GET
+	 *  @param query.data - (optional) Default: null
+	 *  @param query.contentType - (optional) Default: application/json; charset=UTF-8
+	 *  @param query.showModalOnError - (optional) if true the default error modal with optional message will be shown
+	 *  @param query.erroModalHeadline - (optional) headline for error modal
+	 *  @param query.errorModalText - (optional) text for error modal
+	 *  
+	 *  @param callback(data, query) - callback function with two parameters.first is the data, second the original query param.
+	 */
 	sendRequest: function (query, callback) {
 		var context = $('#webContext').attr('href');
 		var token = $("meta[name='_csrf']").attr("content");
@@ -127,6 +159,12 @@ $.extend(AdminTool.Core.prototype, {
 		});
 	},
 	
+	/**
+	 * shows the default error modal which will be identified by "this.options.errorModalId"
+	 * 
+	 * @param headline - headline for error modal
+	 * @param text - text for error modal
+	 */
 	showErrorModal: function(headline, text) {
 		if (null == headline || headline === undefined) {
 			headline = "Error";
@@ -139,14 +177,28 @@ $.extend(AdminTool.Core.prototype, {
 		getByID(this.options.errorModalId).modal();
 	},
 	
+	/**
+	 * init function for confirm modal, whichs calls the unbindConfirmModal on hide
+	 */
 	initConfirmModal: function() {
 		getByID(this.options.confirmModalId).on('hidden.bs.modal', $.proxy(this.unbindConfirmModal, this));
 	},
 	
+	/**
+	 * unbinds the click funcktions from "this.options.confirmModalButtonId"
+	 */
 	unbindConfirmModal: function() {
 		getByID(this.options.confirmModalButtonId).off();
 	},
 	
+	/**
+	 * shows the default confirm modal
+	 * 
+	 * @param confirmTitle - headline for confirm modal
+	 * @param confirmMessage - text for confirm modal
+	 * @param confirmCallback - a callback function for on.click "this.options.confirmModalButtonId"
+	 * @param args optional - arguments
+	 */
 	showConfirmModal: function(confirmTitle, confirmMessage, confirmCallback, args) {
 		this.unbindConfirmModal();
 		getByID(this.options.confirmModalButtonId).on('click', $.proxy(confirmCallback, this, args));
