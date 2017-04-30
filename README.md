@@ -80,16 +80,6 @@ To get components scanned add the package to @ComponentScan
 
 ```
 
-If you're using Spring Security you should disable CSRF support for some tools (e.g. quartz and log4j)
-```java
-
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.csrf().disable();
-	}
-
-```
-
 ### Adding own Pages
 
 #### Creating an AdminComponent 
