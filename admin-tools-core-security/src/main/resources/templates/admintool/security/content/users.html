@@ -51,16 +51,16 @@
 											<button th:id="'editUser_' + ${user.getUsername()}" class="btn btn-sm editUser" th:text="${user.getUsername()}"></button>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).ENABLE.type} + ${user.getUsername()}" class="btn btn-sm enable state" th:text="${user.isEnabled()}"></button>
+											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).ENABLE.type} + '_' + ${user.getUsername()}" class="btn btn-sm enable state" th:text="${user.isEnabled()}"></button>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).EXPIRE.type} + ${user.getUsername()}" class="btn btn-sm expire state" th:text="${!user.isAccountNonExpired()}"></button>
+											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).EXPIRE.type} + '_' + ${user.getUsername()}" class="btn btn-sm expire state" th:text="${!user.isAccountNonExpired()}"></button>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).LOCK.type} + ${user.getUsername()}" class="btn btn-sm lock state" th:text="${!user.isAccountNonLocked()}"></button>
+											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).LOCK.type} + '_' + ${user.getUsername()}" class="btn btn-sm lock state" th:text="${!user.isAccountNonLocked()}"></button>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).EXIPRE_CREDENTIALS.type} + ${user.getUsername()}" class="btn btn-sm expcred state" th:text="${!user.isCredentialsNonExpired()}"></button>
+											<button th:id="${T(de.chandre.admintool.core.security.auth.UserStateType).EXIPRE_CREDENTIALS.type} + '_' + ${user.getUsername()}" class="btn btn-sm expcred state" th:text="${!user.isCredentialsNonExpired()}"></button>
 										</td>
 										<td class="roles" th:text="${#strings.listJoin(user.getAuthorities(),', ')}"></td>
 										<td>
