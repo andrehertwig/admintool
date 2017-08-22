@@ -71,10 +71,11 @@ $.extend(AdminTool.Core.prototype, {
         $.data(el, this.name, this);
         
         this.initConfirmModal();
-        this.postInit();
         
-        //overriding options after extending plugins maybe pushed own config
+        //overriding options before extending plugins maybe pushed own config
         this.options = $.extend( this.options, options );
+        
+        this.postInit();
 	},
 	
 	/**
