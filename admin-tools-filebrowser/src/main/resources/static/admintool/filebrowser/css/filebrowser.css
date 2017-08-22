@@ -1,0 +1,25 @@
+#fileListForm td, #fileListForm td a {
+	font-size: 12px;
+}
+#fileListForm td {
+	padding: 4px 8px;
+}
+#fileListForm td.normal {
+	padding: 8px 8px;
+	font-size: 14px;
+}
+#fileListForm td a.btn, #fileListForm td button.btn {
+	margin-right: 1px;
+}
+
+.not-readable {
+	
+}
+
+.not-writeable {
+	
+}
+
+.file-hidden {
+	font-style: italic;
+}
