@@ -95,7 +95,7 @@ public class AdminToolMenuUtils {
 	 * @param activeMenuName
 	 *            name of the active MenuEntry (set in controller)
 	 * @param actualEntry
-	 *            actual iterated object
+	 *            current iterated object
 	 * @return empty string, "active", "treeview", "treeview active"
 	 */
 	public String getListItemClass(MenuEntry activeMenu, MenuEntry actualEntry) {
@@ -112,12 +112,12 @@ public class AdminToolMenuUtils {
 	 * sub entries
 	 * 
 	 * @param activeMenuName
-	 * @param actualEntry
+	 * @param actualEntry current iterated object
 	 * @return
 	 */
 	public boolean isActiveInMenuTree(MenuEntry activeMenu, MenuEntry actualEntry) {
 		return actualEntry.flattened().anyMatch(
-				entry -> checkForNull(actualEntry, activeMenu) && entry.getName().equals(activeMenu.getName()));
+				entry -> checkForNull(entry, activeMenu) ? entry.getName().equals(activeMenu.getName()): false);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class AdminToolMenuUtils {
 	public boolean hasMenuEntry(AdminComponent component, MenuEntry activeMenue) {
 		if (null != component && null != component.getMainMenu()) {
 			Optional<MenuEntry> result = component.getMainMenu().flattened()
-					.filter(menu -> checkForNull(menu, activeMenue) && menu.getName().equals(activeMenue.getName()))
+					.filter(menu -> checkForNull(menu, activeMenue) ? menu.getName().equals(activeMenue.getName()): false)
 					.findFirst();
 			return result.isPresent();
 		}
@@ -189,6 +189,6 @@ public class AdminToolMenuUtils {
 	}
 
 	private boolean checkForNull(MenuEntry menu, MenuEntry activeMenu) {
-		return null != menu.getName() && null != activeMenu && null != activeMenu.getName();
+		return null != menu && null != menu.getName() && null != activeMenu && null != activeMenu.getName();
 	}
 }
