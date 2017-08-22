@@ -94,6 +94,10 @@
 	# to deactivate download functionality
 	admintool.filebrowser.downloadAllowed=true
 	
+	#since 1.0.6
+	# to deactivate download-compression functionality
+	admintool.filebrowser.downloadCompressedAllowed=true
+	
 	#since 1.0.1
 	# for own implementation or requires admin-tools-core-security
 	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
@@ -102,6 +106,18 @@
 	#since 1.0.1
 	# integer value. used by default comparator to order components
 	admintool.filebrowser.componentPosition=
+	
+	#since 1.1.6
+	# boolean: to enable action for folder creation
+	admintool.filebrowser.createFolderAllowed=false
+	
+	#since 1.1.6
+	# boolean: to enable action to delete folders
+	admintool.filebrowser.delteFolderAllowed=false
+	
+	#since 1.1.6
+	# boolean: to enable action to delete files
+	admintool.filebrowser.delteFileAllowed=false
 		
 ```
 

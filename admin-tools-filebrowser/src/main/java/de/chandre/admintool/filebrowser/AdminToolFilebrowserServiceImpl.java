@@ -32,6 +32,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -469,5 +470,65 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	 */
 	protected boolean isAllowed(File path, boolean write) throws IOException {
 		return isAllowed(path, write, config.isReadOnly());
+	}
+	
+	@Override
+	public String accessibleCSS(File file) {
+		String res = "";
+		if (!file.canRead()) {
+			res += "not-readable";
+		}
+		if (!file.canWrite()) {
+			res += " not-writeable";
+		}
+		if (file.isHidden()) {
+			res += " file-hidden";
+		}
+		return res.trim();
+	}
+	
+	@Override
+	public String createFolder(String path, String folderName) throws IOException, GenericFilebrowserException {
+		File file = new File(path);
+		if (file.exists()) {
+			if (isAllowed(file, true)) {
+				file = new File(file, folderName);
+				if(file.mkdirs()) {
+					return file.getAbsolutePath();
+				}
+				throw new GenericFilebrowserException("could not create directories");
+			}
+		} else {
+			LOGGER.warn("[createFolder] folder already exists: " + path);
+		}
+		return null;
+	}
+	
+	@Override
+	public String deleteResource(String path) throws IOException, GenericFilebrowserException {
+		File file = new File(path);
+		
+		if (file.isDirectory() && !config.isDelteFolderAllowed()) {
+			throw new GenericFilebrowserException("delete folder is not allowed");
+		}
+		if (file.isFile() && !config.isDelteFileAllowed()) {
+			throw new GenericFilebrowserException("delete file is not allowed");
+		}
+		if (!isAllowed(file, true)) {
+			throw new GenericFilebrowserException("delete "+(file.isDirectory() ?  "folder" : "file")+" is not allowed");
+		}
+		
+		String parent = file.getParent();
+		
+		if (file.isFile()) {
+			FileUtils.deleteQuietly(file);
+		} else {
+			try {
+				FileUtils.deleteDirectory(file);
+			} catch (Exception e) {
+				LOGGER.error("error deleting folder", e);
+			}
+		}
+		return parent;
 	}
 }

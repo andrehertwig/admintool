@@ -28,12 +28,13 @@
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
+			<version>2.5</version>
 		</dependency>
 		
 		<dependency>
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>codemirror</artifactId>
-		    <version>5.22.2</version>
+		    <version>5.26.0</version>
 		</dependency>
 		
 	</dependencies>

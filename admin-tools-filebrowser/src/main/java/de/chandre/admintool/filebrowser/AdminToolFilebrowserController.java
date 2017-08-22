@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +85,8 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	@RequestMapping(value = {"/zip"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void downloadAsZip(@RequestParam("selectedFile") List<String> filePaths, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
-		if (!filebrowserConfig.isDownloadAllowed()) {
-			throw new DownloadNotAllowedException("file download is deactivated by configuration");
+		if (!filebrowserConfig.isDownloadCompressedAllowed()) {
+			throw new DownloadNotAllowedException("compressed file download is deactivated by configuration");
 		}
 		List<String> decodedPaths = new ArrayList<>();
 		if (null != filePaths) {
@@ -100,6 +101,44 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
 		filebrowserService.downloadFilesAsZip(decodedPaths, response);
+	}
+	
+	@RequestMapping(value = {"/createFolder"}, method={RequestMethod.POST})
+	public void createFolder(@RequestParam("folderName") String folderPath, @RequestParam("currentDir") String currentDir, 
+			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
+			throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		
+		if (!filebrowserConfig.isCreateFolderAllowed()) {
+			throw new DownloadNotAllowedException("folder creation not allowed");
+		}
+		String decodedPath = URLDecoder.decode(currentDir, "UTF-8");
+		String decodedFolder = URLDecoder.decode(folderPath, "UTF-8");
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("create folder: " + decodedFolder + " in path: " + decodedPath);
+		String path = filebrowserService.createFolder(decodedPath, decodedFolder);
+		if (null != path) {
+			path = URLEncoder.encode(path, "UTF-8");
+		} else {
+			path = folderPath;
+		}
+		response.sendRedirect(AdminTool.ROOTCONTEXT + "/filebrowser?dir=" + path);
+	}
+	
+	@RequestMapping(value = {"/delete"}, method={RequestMethod.POST})
+	public void deleteResource(
+			@RequestParam(name ="file", required=false) String filePath, 
+			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
+			throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		
+		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("delete resource: " + decodedPath);
+		
+		String path = filebrowserService.deleteResource(decodedPath);
+		if (null != path) {
+			path = URLEncoder.encode(path, "UTF-8");
+		} else {
+			path = filePath;
+		}
+		response.sendRedirect(AdminTool.ROOTCONTEXT + "/filebrowser?dir=" + path);
 	}
 	
 	@ExceptionHandler({DownloadNotAllowedException.class, GenericFilebrowserException.class})

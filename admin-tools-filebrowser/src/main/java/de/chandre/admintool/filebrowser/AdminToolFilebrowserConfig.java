@@ -33,7 +33,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("#{'${admintool.filebrowser.forbiddenDrives:}'.split(';')}")
 	private List<String> forbiddenDrives= new ArrayList<>();
 	
-	@Value("${admintool.filebrowser.readOnly:true}")
+	@Value("${admintool.filebrowser.readOnly:false}")
 	private boolean readOnly;
 	
 	@Value("${admintool.filebrowser.restrictedBrowsing:false}")
@@ -63,11 +63,26 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.downloadAllowed:true}")
 	private boolean downloadAllowed;
 	
+	@Value("${admintool.filebrowser.downloadCompressedAllowed:true}")
+	private boolean downloadCompressedAllowed;
+	
 	@Value("#{'${admintool.filebrowser.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
 	@Value("${admintool.filebrowser.componentPosition:}")
 	private Integer componentPosition;
+	
+	@Value("${admintool.filebrowser.uploadAllowed:false}")
+	private boolean uploadAllowed;
+	
+	@Value("${admintool.filebrowser.createFolderAllowed:true}")
+	private boolean createFolderAllowed;
+	
+	@Value("${admintool.filebrowser.delteFolderAllowed:true}")
+	private boolean delteFolderAllowed;
+	
+	@Value("${admintool.filebrowser.delteFileAllowed:true}")
+	private boolean delteFileAllowed;
 	
 	@Override
 	public boolean isEnabled() {
@@ -173,6 +188,15 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	}
 
 	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isDownloadCompressedAllowed() {
+		return downloadCompressedAllowed;
+	}
+
+	/**
 	 * @return the securityRoles
 	 * @since 1.0.1
 	 */
@@ -195,6 +219,51 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	public void setComponentPosition(Integer componentPosition) {
 		this.componentPosition = componentPosition;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isManipulationAllowed() {
+		return !readOnly && (uploadAllowed || createFolderAllowed);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isUploadAllowed() {
+		return uploadAllowed;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isCreateFolderAllowed() {
+		return createFolderAllowed;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isDelteFolderAllowed() {
+		return delteFolderAllowed;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isDelteFileAllowed() {
+		return delteFileAllowed;
+	}
 
 	@Override
 	@PostConstruct
@@ -202,9 +271,6 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 		LOGGER.debug(toString());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -217,8 +283,11 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(", fileSizeDisplayScale=").append(fileSizeDisplayScale).append(", zipUseTempFile=")
 				.append(zipUseTempFile).append(", zipCompessionLevel=").append(zipCompessionLevel)
 				.append(", zipTempDir=").append(zipTempDir).append(", downloadAllowed=").append(downloadAllowed)
-				.append(", securityRoles=").append(securityRoles).append(", componentPosition=")
-				.append(componentPosition).append("]");
+				.append(", downloadCompressedAllowed=").append(downloadCompressedAllowed).append(", securityRoles=")
+				.append(securityRoles).append(", componentPosition=").append(componentPosition)
+				.append(", uploadAllowed=").append(uploadAllowed).append(", createFolderAllowed=")
+				.append(createFolderAllowed).append(", delteFolderAllowed=").append(delteFolderAllowed)
+				.append(", delteFileAllowed=").append(delteFileAllowed).append("]");
 		return builder.toString();
 	}
 }

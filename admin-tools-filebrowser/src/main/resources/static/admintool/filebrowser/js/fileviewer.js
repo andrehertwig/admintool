@@ -41,6 +41,9 @@ $.extend(AdminTool.Fileviewer.prototype, {
 	loadModeByExtension: function() {
 		var extension = $('#fileExtension').text();
 		var info = CodeMirror.findModeByExtension((null != extension && extension.trim() != '') ? extension : "txt");
+		if(!info) {
+			info = CodeMirror.findModeByExtension("txt");
+		}
 		console.log('using: ' + info.mode +  ': ' + info.mime + ', extension is: ' + extension);
 		if (null == this.cm) {
 			return info.mime;

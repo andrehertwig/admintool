@@ -35,10 +35,10 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("${admintool.fileviewer.readOnly:true}")
 	private boolean readOnly;
 	
-	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf}'.split(';')}")
+	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;dtd;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf;diff}'.split(';')}")
 	private List<String> allowedExtensions = new ArrayList<>();
 	
-	@Value("${admintool.fileviewer.codeMirrorVersion:5.22.2}")
+	@Value("${admintool.fileviewer.codeMirrorVersion:5.26.0}")
 	private String codeMirrorVersion;
 	
 	@Value("${admintool.fileviewer.codeMirror.cdn.useBower:true}")

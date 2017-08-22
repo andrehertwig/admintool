@@ -33,6 +33,19 @@
 					</h3>
 				</div>
 				
+				<div class="box-header with-border" th:if="${@adminToolFilebrowserConfig.isManipulationAllowed()}">
+					<div class="row text-center">
+						<button th:if="${@adminToolFilebrowserConfig.isCreateFolderAllowed()}" id="createDir" type="button" class="btn btn-default">
+							<i class="fa fa-folder" aria-hidden="true"></i>
+						</button>
+						<!--
+						<button th:if="${@adminToolFilebrowserConfig.isUploadAllowed()}" id="uploadFile" type="button" class="btn btn-default">
+							<i class="fa fa-upload" aria-hidden="true"></i>
+						</button>
+						  -->
+					</div>
+				</div>
+				
 				<div class="box-header with-border">
 					<div class="row text-center">
 						<div class="col-md-1 col-xs-2">Roots: </div>
@@ -105,22 +118,29 @@
 										<td></td>
 									</tr>
 									<tr >
-										<td colspan="6" class="text-center"><em><span class="small">[directories]</span></em></td>
+										<td colspan="6" class="text-center normal"><em><span class="small">[directories]</span></em></td>
 									</tr>
 									
 									<tr th:each="directory, colIterState : ${@adminToolFilebrowserService.getDirectories(currentDir, sortCol, sortAsc, filter)}">
 										<td><input type="checkbox" name="selectedFile" th:value="${directory.getAbsolutePath()}" class="dir"/></td>
 										<td>
-											<a th:text="'[' + ${directory.getName()} + ']'" 
+											<a th:text="'[' + ${directory.getName()} + ']'" th:if="${directory.canRead()}"
 												th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(directory.getAbsolutePath())})}"></a>
+											<span th:if="${!directory.canRead()}" th:text="'[' + ${directory.getName()} + ']'"></span>
 										</td>
 										<td></td>
 										<td th:text="${@adminToolFilebrowserService.getFileType(directory)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(directory), 'dd.MMM.yyyy HH:mm:ss')}"></td>
-										<td></td>
+										<td class="text-center">
+											<button class="btn btn-xs btn-primary pull-right delete" type="button"
+												th:if="${@adminToolFilebrowserConfig.isDelteFolderAllowed()}"
+												th:attr="data-resource=${@adminToolFilebrowserService.encodeURL(directory.getAbsolutePath())}">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</button>
+										</td>
 									</tr>
 									<tr >
-										<td colspan="6" class="text-center">
+										<td colspan="6" class="text-center normal">
 											<em><span class="small" th:text="'[' + ${@adminToolFilebrowserService.getFileSizeSum(currentDir, filter)} + ']'"></span></em>
 										</td>
 									</tr>
@@ -128,24 +148,37 @@
 									<tr th:each="file, colIterState : ${@adminToolFilebrowserService.getFiles(currentDir, sortCol, sortAsc, filter)}">
 										<td><input type="checkbox" name="selectedFile" th:value="${file.getAbsolutePath()}" class="file"/></td>
 										<td>
-											<a th:text="${file.getName()}" 
+											<a th:text="${file.getName()}" th:class="${@adminToolFilebrowserService.accessibleCSS(file)}"
 												th:href="@{${adminToolContext} + '/filebrowser/file'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}"></a>
 										</td>
 										<td th:text="${@adminToolFilebrowserService.getFileSize(file)}"></td>
 										<td th:text="${@adminToolFilebrowserService.getFileType(file)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(file), 'dd.MMM.yyyy HH:mm:ss')}"></td>
 										<td class="text-center"> 
-											<a class="btn btn-xs btn-primary" 
+											<a class="btn btn-xs btn-primary pull-right" 
 												th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
-												th:href="@{${adminToolContext} + '/filebrowser/download'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">Download</a>
+												th:href="@{${adminToolContext} + '/filebrowser/download'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">
+												<i class="fa fa-download" aria-hidden="true"></i>
+											</a>
 												
-											<a class="btn btn-xs btn-primary" 
-												th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
-												th:href="@{${adminToolContext} + '/filebrowser/zip'(selectedFile=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">Zip</a>
+											<a class="btn btn-xs btn-primary pull-right" 
+												th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}" 
+												th:href="@{${adminToolContext} + '/filebrowser/zip'(selectedFile=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">
+												<i class="fa fa-file-archive-o" aria-hidden="true"></i>
+											</a>
 												
-											<a  class="btn btn-xs btn-primary"
+											<a  class="btn btn-xs btn-primary pull-right"
 												th:if="${@adminToolFileviewerService.isExtensionAllowedAndReadable(file)}" 
-												th:href="@{${adminToolContext} + '/fileviewer/show'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">Show</a>
+												th:href="@{${adminToolContext} + '/fileviewer/show'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">
+												<i class="fa fa-eye" aria-hidden="true"></i>
+											</a>
+											
+											<button class="btn btn-xs btn-primary pull-right delete" type="button"
+												th:if="${@adminToolFilebrowserConfig.isDelteFileAllowed()}"
+												th:attr="data-resource=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())}">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</button>
+											
 										</td>
 									</tr>
 									
@@ -153,13 +186,94 @@
 							</table>
 						</div>
 					</div>
-					<div class="box-footer clearfix">
+					<div class="box-footer clearfix" th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}">
 						<button id="selectDirs" type="button" class="btn btn-default">Select all dirs</button>
 						<button id="selectFiles" type="button" class="btn btn-default">Select all files</button>
 						<button name="download" type="submit" class="btn btn-default">Download selected files as ZIP</button>
 					</div>
 				</form>
 				
+			</div>
+			
+			<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="uploadLabel">Upload</h4>
+						</div>
+						<div class="modal-body">
+							<form id="upload_form" th:action="@{${adminToolContext} + '/filebrowser/upload'}" method="post">
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary pull-right" id="upload_add">Add</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="createFolderLabel">Create folder</h4>
+						</div>
+						<form id="createFolder_form" th:action="@{${adminToolContext} + '/filebrowser/createFolder'}" method="post">
+							<div class="modal-body">
+							
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="folderName">Folder name</label>
+									<div class="col-sm-9">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i class="fa fa-folder-open" aria-hidden="true"></i>
+											</span>
+											<input type="hidden" name="currentDir" th:value="${@adminToolFilebrowserService.encodeURL(currentDir)}"/>
+											<input class="form-control" type="text" name="folderName" id="folderName" placeholder="folder name" 
+												maxlength="256" />
+										</div>
+									</div>
+								</div>
+								<div class="clearfix">&nbsp;</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary pull-right" id="createFolder_add">Add</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade modal-danger" tabindex="-1" role="dialog" id="deleteConfirmModal" aria-labelledby="deleteConfirmModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="admintoolConfirmModalLabel">Confirm</h4>
+						</div>
+						<form id="deleteResource_form" th:action="@{${adminToolContext} + '/filebrowser/delete'}" method="post">
+							<div class="modal-body">
+								<p>Do you really want to delete this resource?</p>
+								<p id="resourceToDeleteShown"></p>
+								<input id="resourceToDelete" type="hidden" name="file" value=""/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-outline" id="btn_delete_confirm">Confirm</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 
 		</section>

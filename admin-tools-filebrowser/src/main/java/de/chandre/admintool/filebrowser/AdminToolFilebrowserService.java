@@ -151,4 +151,29 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 */
 	String getSortDirection(int current, SortColumn sortCol, Boolean sortAsc);
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	String accessibleCSS(File file);
+
+	/**
+	 * 
+	 * @param path
+	 * @throws IOException
+	 * @throws GenericFilebrowserException
+	 */
+	String createFolder(String path, String folderName) throws IOException, GenericFilebrowserException;
+
+	/**
+	 * deletes a file or folder
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 * @throws GenericFilebrowserException
+	 */
+	String deleteResource(String path) throws IOException, GenericFilebrowserException;
 }
