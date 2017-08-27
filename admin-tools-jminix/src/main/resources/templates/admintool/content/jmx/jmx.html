@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+<body>
+	<div layout:fragment="content">
+		<section class="content-header">
+			<h1>
+				JMX Console <small>Configuration</small>
+			</h1>
+			<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+		<section class="content" id="jmxContent">
+			
+			<div class="row">
+				<div class="col-md-6">
+					<input id="jmxTreeSearch" class="form-control" value="" placeholder="search" />
+				</div>
+			</div>
+			<div class="clearfix vertical-split"></div>
+			
+			<div class="panel-container">
+
+		            <div class="panel-left">
+		                <div id="jmxTree"></div>
+		            </div>
+		
+		            <div class="splitter">
+		            </div>
+		
+		            <div class="panel-right">
+		                <div id="jmxView"></div>
+		            </div>
+		            
+		        </div>
+			<div class="page-container">
+			
+				
+			</div>
+			
+			<!--/* style="visibility: hidden"
+			<pre id="jsondata" th:text="${@adminToolJmxService.buildJson()}" ></pre>
+			 */-->
+		</section>
+	</div>
+</body>
+</html>

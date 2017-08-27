@@ -15,17 +15,20 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolJminixConfig.class);
 	
-	@Value("${adminTool.jminix.enabled:true}")
+	@Value("${adminTool.jmx.enabled:true}")
 	private boolean enabled;
 	
-	@Value("${adminTool.jminix.path:/jmx/}")
-	private String jminixPath;
-	
-	@Value("#{'${admintool.jminix.securityRoles:}'.split(';')}")
+	@Value("#{'${admintool.jmx.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
-	@Value("${admintool.jminix.componentPosition:}")
+	@Value("${admintool.jmx.componentPosition:}")
 	private Integer componentPosition;
+	
+	@Value("${admintool.jmx.mustacheVersion:2.3.0}")
+	private String mustacheVersion;
+	
+	@Value("${adminTool.jmx.updateAllowed:true}")
+	private boolean updateAllowed;
 
 	
 	public boolean isEnabled() {
@@ -36,20 +39,8 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 		this.enabled = enabled;
 	}
 
-	public String getJminixPath() {
-		return jminixPath;
-	}
-
-	public void setJminixPath(String jminixPath) {
-		this.jminixPath = jminixPath;
-	}
-
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
-	}
-
-	public void setSecurityRoles(Set<String> securityRoles) {
-		this.securityRoles = securityRoles;
 	}
 
 	public Integer getComponentPosition() {
@@ -60,6 +51,18 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 		this.componentPosition = componentPosition;
 	}
 	
+	public String getMustacheVersion() {
+		return mustacheVersion;
+	}
+
+	public void setMustacheVersion(String mustacheVersion) {
+		this.mustacheVersion = mustacheVersion;
+	}
+
+	public boolean isUpdateAllowed() {
+		return updateAllowed;
+	}
+
 	@Override
 	public void printConfig() {
 		LOGGER.debug(toString());
@@ -68,9 +71,10 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolJminixConfig [enabled=").append(enabled).append(", jminixPath=").append(jminixPath)
-				.append(", securityRoles=").append(securityRoles).append(", componentPosition=")
-				.append(componentPosition).append("]");
+		builder.append("AdminToolJminixConfig [enabled=").append(enabled).append(", securityRoles=")
+				.append(securityRoles).append(", componentPosition=").append(componentPosition)
+				.append(", mustacheVersion=").append(mustacheVersion).append(", updateAllowed=").append(updateAllowed)
+				.append("]");
 		return builder.toString();
 	}
 

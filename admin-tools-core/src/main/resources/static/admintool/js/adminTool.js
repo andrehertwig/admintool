@@ -136,6 +136,7 @@ $.extend(AdminTool.Core.prototype, {
 		var context = $('#webContext').attr('href');
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
+		var admintool = this;
 		$.ajax({
 			url: context + query.url,
 			dataType: query.dataType || 'json',
@@ -147,13 +148,23 @@ $.extend(AdminTool.Core.prototype, {
 			},
 			error: function( xhr, status, errorThrown ) {
 				if (query.showModalOnError) {
-					AdminTool.Core.prototype.showErrorModal(query.erroModalHeadline, query.errorModalText);
+//					AdminTool.Core.prototype.showErrorModal(query.erroModalHeadline, query.errorModalText);
+					if (query.showXHRErrorInModal) {
+						var headline = "HTTP " + status + " " + xhr.status;
+						var text = xhr.responseText;
+						if (xhr.responseJSON) {
+							text = '<pre>' + JSON.stringify(xhr.responseJSON, null, "\t") + '</pre>';
+						}
+						admintool.showErrorModal(headline, text);
+					} else {
+						admintool.showErrorModal(query.erroModalHeadline, query.errorModalText);
+					}
 				}
-		        if (console) {
-		        	console.log( "Error: " + errorThrown );
-			        console.log( "Status: " + status );
-			        console.dir( xhr );
-		        }
+				if (console) {
+					console.log( "Error: " + errorThrown );
+					console.log( "Status: " + status );
+		        	console.dir( xhr );
+				}
 			}
 		}).done(function (data) {
 			callback(data, query);

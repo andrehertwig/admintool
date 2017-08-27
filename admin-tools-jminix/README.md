@@ -7,16 +7,6 @@
 * admin-tools-core:1.0.0
 
 ## Requirements, Dependencies
-If spring security is enabled following should be set:
-
-```java
-
-	http
-		.headers().frameOptions().sameOrigin();
-		
-```	
-
-## Usage
 
 ```xml
 
@@ -34,6 +24,23 @@ If spring security is enabled following should be set:
 ```
 
 ## Configurations
+If spring security is enabled and you want to use the change functionality of JMiniX you have to disable CSRF. 
+Furthermore you have to set the frame options, because. 
+
+```java
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            // allow services without CSRF token
+            .csrf().ignoringAntMatchers("/jmx/**").and()
+            //set frameOptions to sameOrigin
+            .headers().frameOptions().sameOrigin();
+    }
+
+```
+
+The following properties are available:
 
 ```ini
 

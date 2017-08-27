@@ -1,0 +1,54 @@
+.scrollable {
+	overflow-x: scroll;
+}
+
+.vertical-split {
+	padding: 2px 0px;
+}
+
+.page-container {
+  margin: 20px;
+}
+
+.panel-container {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid silver;
+  overflow: hidden;
+  
+  /* avoid browser level touch actions */
+  xtouch-action: none;
+}
+
+.panel-left {
+  flex: 0 0 auto;
+  /* only manually resize */
+  padding: 10px;
+  /*width: 300px;*/
+  width: 50%;
+  min-height: 200px;
+  min-width: 150px;
+  white-space: nowrap;
+  background: #838383;
+  color: white;
+}
+
+.splitter {
+  flex: 0 0 auto;
+  width: 18px;  
+  background: url(/static/admintool/jmx/images/vsizegrip.png) center center no-repeat #535353;
+  min-height: 200px;
+  cursor: col-resize;  
+  z-index: 1000;
+}
+
+.panel-right {
+  flex: 1 1 auto;
+  /* resizable */
+  padding: 10px;
+  width: 100%;
+  min-height: 200px;
+  min-width: 200px;
+  background: #eee;
+  z-index: 500;
+}
