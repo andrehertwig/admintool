@@ -80,6 +80,7 @@ public class AdminToolDBBrowserLoader extends AbstractAdminToolLoader
 		mainMenu.setName("dbbrowser");
 		mainMenu.setTarget("dbbrowser/content/dbbrowser");
 		mainMenu.setHide(dbBroserConfig.isHideMenuItem());
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "dbbrowser.displayName");
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);

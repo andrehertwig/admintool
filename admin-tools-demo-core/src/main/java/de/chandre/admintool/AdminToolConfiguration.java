@@ -25,34 +25,46 @@ public class AdminToolConfiguration {
 	@PostConstruct
 	public void configureAdminTool() {
 		
-		AdminComponent component = new AdminComponentImpl();
-		component.setDisplayName("Demo-App-Component");
-		component.addNotificationTemplate("notifications/notification");
-		component.addSecurityRole("ROLE_ANONYMOUS");
-		component.addSecurityRole("ROLE_ADMIN");
-		component.setPosition(1);
-		
+		AdminComponent component = AdminComponentImpl.builder()
+				.displayName("Demo-App-Component")
+				.notificationTemplate("notifications/notification")
+				.securityRole("ROLE_ANONYMOUS")
+				.securityRole("ROLE_ADMIN")
+				.position(1).build();
 
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Demo-App-Component");
 		mainMenu.setName("demo");
 		mainMenu.setTarget("");
 		mainMenu.addVariable("message", "Welcome to your Dashboard");
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "demo.displayName");
 		component.setMainMenu(mainMenu);
 		
 		//adding sub menu entries
-		mainMenu.addSubmenuEntry(new MenuEntry("dashboard", "Dashboard", "content/dashboard"));
-		mainMenu.addSubmenuEntry(new MenuEntry("dashboard2", "Dashboard 2", "content/dashboard2"));
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("dashboard").displayName("Dashboard")
+				.target("content/dashboard").resouceMessageKeySuffix("demo.dashboard.displayName").build());
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("dashboard2").displayName("Dashboard 2")
+				.target("content/dashboard2").resouceMessageKeySuffix("demo.dashboard2.displayName").build());
 		
 		//adding a new sub menu tree
-		MenuEntry submenu = new MenuEntry("", "SubMulti", "");
-		submenu.addSubmenuEntry(new MenuEntry("dashboard3", "Dashboard 3", "content/dashboard3"));
-		submenu.addSubmenuEntry(new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4"));
+		MenuEntry submenu = MenuEntry.builder().displayName("SubMulti")
+				.resouceMessageKeySuffix("demo.subMulti.displayName")
+				.submenuEntry(
+						MenuEntry.builder().name("dashboard3").displayName("Dashboard 3").target("content/dashboard3")
+								.resouceMessageKeySuffix("demo.subMulti.dashboard3.displayName").build())
+				.build();
+		submenu.addSubmenuEntry(
+				MenuEntry.builder().name("dashboard4").displayName("Dashboard 4").target("content/dashboard4")
+				.resouceMessageKeySuffix("demo.subMulti.dashboard4.displayName").build());
 		mainMenu.addSubmenuEntry(submenu);
 		
 		//producing an error
-		mainMenu.addSubmenuEntry(new MenuEntry("dashboard5", "Dashboard 5", "content/dashboard"));
-		mainMenu.addSubmenuEntry(new MenuEntry("dashboard5", "Dashboard 5", "content/dashboard"));
+		mainMenu.addSubmenuEntry(
+				MenuEntry.builder().name("dashboard5").displayName("Dashboard 5").target("content/dashboard")
+				.resouceMessageKeySuffix("demo.dashboard5.displayName").build());
+		mainMenu.addSubmenuEntry(
+				MenuEntry.builder().name("dashboard5").displayName("Dashboard 5").target("content/dashboard")
+				.resouceMessageKeySuffix("demo.dashboard5.displayName").build());
 		
 		adminTool.addComponent(component);
 		

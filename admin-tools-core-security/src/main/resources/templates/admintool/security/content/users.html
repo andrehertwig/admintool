@@ -3,7 +3,9 @@
 	<body>
 		<div layout:fragment="content">
 			<section class="content-header">
-				<h1>All Users</h1>
+				<h1>
+				<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.security.users.headline', 'All Users')" />
+				</h1>
 				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 			</section>
 			<section class="content">

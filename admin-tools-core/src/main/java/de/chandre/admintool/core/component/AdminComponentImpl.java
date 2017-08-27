@@ -44,7 +44,7 @@ public class AdminComponentImpl implements AdminComponent
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-
+	
 	/**
 	 * @return the mainMenu
 	 */
@@ -227,6 +227,122 @@ public class AdminComponentImpl implements AdminComponent
 				.append(additionalCSS).append(", additionalJS=").append(additionalJS).append(", securityRoles=")
 				.append(securityRoles).append(", position=").append(position).append("]");
 		return builder.toString();
+	}
+	
+	/**
+	 * admin component builder for chained calls
+	 * @return
+	 */
+	public static AdminComponentBuilder builder() {
+		return new AdminComponentBuilder();
+	}
+	
+	/**
+	 * static class with possibility for chained calls
+	 * @author André
+	 * @since 1.1.6
+	 */
+	public static class AdminComponentBuilder {
+		private AdminComponent component = new AdminComponentImpl();
+		
+		/**
+		 * @see AdminComponent#setDisplayName(String)
+		 * @param displayName
+		 * @return
+		 */
+		public AdminComponentBuilder displayName(String displayName) {
+			component.setDisplayName(displayName);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#setMainMenu(MenuEntry)
+		 * @param mainMenu
+		 * @return
+		 */
+		public AdminComponentBuilder mainMenu(MenuEntry mainMenu) {
+			component.setMainMenu(mainMenu);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#setNotificationTemplates(List)
+		 * @param notificationTemplates
+		 * @return
+		 */
+		public AdminComponentBuilder notificationTemplates(List<String> notificationTemplates) {
+			component.setNotificationTemplates(notificationTemplates);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#addNotificationTemplate(String)
+		 * @param notificationTemplate
+		 * @return
+		 */
+		public AdminComponentBuilder notificationTemplate(String notificationTemplate) {
+			component.addNotificationTemplate(notificationTemplate);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#setAdditionalCSS(Map)
+		 * @param additionalCSS
+		 * @return
+		 */
+		public AdminComponentBuilder additionalCSS(Map<String, Boolean> additionalCSS) {
+			component.setAdditionalCSS(additionalCSS);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#addAdditionalCSS(String, boolean)
+		 * @param additionalCSS
+		 * @param relative
+		 * @return
+		 */
+		public AdminComponentBuilder additionalCSS(String additionalCSS, boolean relative) {
+			component.addAdditionalCSS(additionalCSS, relative);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#setAdditionalJS(Map)
+		 * @param additionalJS
+		 * @return
+		 */
+		public AdminComponentBuilder additionalJS(Map<String, Boolean> additionalJS) {
+			component.setAdditionalJS(additionalJS);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#addAdditionalJS(String, boolean)
+		 * @param additionalJS
+		 * @param relative
+		 * @return
+		 */
+		public AdminComponentBuilder additionalJS(String additionalJS, boolean relative) {
+			component.addAdditionalJS(additionalJS, relative);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#addSecurityRole(String)
+		 * @param securityRole
+		 * @return
+		 */
+		public AdminComponentBuilder securityRole(String securityRole) {
+			component.addSecurityRole(securityRole);
+			return this;
+		}
+		/**
+		 * @see AdminComponent#setPosition(Integer)
+		 * @param position
+		 * @return
+		 */
+		public AdminComponentBuilder position(Integer position) {
+			component.setPosition(position);
+			return this;
+		}
+		/**
+		 * @return the {@link AdminComponent}
+		 */
+		public AdminComponent build() {
+			return component;
+		}
 	}
 	
 }

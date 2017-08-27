@@ -24,6 +24,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.assembler.SimpleReflectiveMBeanInfoAssembler;
 import org.springframework.web.servlet.LocaleResolver;
@@ -43,7 +44,7 @@ public class Beans {
 	@Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.GERMAN);
+        slr.setDefaultLocale(Locale.ENGLISH);
         return slr;
     }
 	
@@ -63,6 +64,24 @@ public class Beans {
 				integrityUtil.checkMenuIntegrityAndPrintLog();
 			}
 		};
+	}
+	
+	@Bean
+	public ReloadableResourceBundleMessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasenames(
+				"classpath:i18n/admintool/core-messages",
+				"classpath:i18n/admintool/security-messages",
+				"classpath:i18n/admintool/dbbrowser-messages",
+				"classpath:i18n/admintool/filebrowser-messages",
+				"classpath:i18n/admintool/jmx-messages",
+				"classpath:i18n/admintool/log4j2-messages",
+				"classpath:i18n/admintool/melody-messages",
+				"classpath:i18n/admintool/properties-messages",
+				"classpath:i18n/admintool/quartz-messages",
+				"classpath:i18n/admintool/demo-messages");
+		messageSource.setDefaultEncoding("UTF-8");
+		return messageSource;
 	}
 	
 	/**

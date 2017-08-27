@@ -48,6 +48,9 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	@Value("${admintool.core.stripRootContext:}")
 	private String stripRootContext;
 	
+	@Value("${admintool.core.internationalizationEnabled:false}")
+	private boolean internationalizationEnabled;
+	
 	@Override
 	public boolean isEnabled() {
 		return enabled;
@@ -224,6 +227,23 @@ public class AdminToolCoreConfig implements AdminToolConfig
 	public void setStripRootContext(String stripRootContext) {
 		this.stripRootContext = stripRootContext;
 	}
+	
+	/**
+	 * 
+	 * @since 1.1.6
+	 * @return
+	 */
+	public boolean isInternationalizationEnabled() {
+		return internationalizationEnabled;
+	}
+
+	/**
+	 * @since 1.1.6
+	 * @param enableLocalization
+	 */
+	public void setInternationalizationEnabled(boolean enableLocalization) {
+		this.internationalizationEnabled = enableLocalization;
+	}
 
 	@Override
 	public void printConfig() {
@@ -239,7 +259,8 @@ public class AdminToolCoreConfig implements AdminToolConfig
 				.append(fontAwsomeCdnVersion).append(", fontAwsomeCdnUseBower=").append(fontAwsomeCdnUseBower)
 				.append(", ionIconsCdnVersion=").append(ionIconsCdnVersion).append(", ionIconsCdnUseBower=")
 				.append(ionIconsCdnUseBower).append(", showStacktraceOnErrorPage=").append(showStacktraceOnErrorPage)
-				.append(", stripRootContext=").append(stripRootContext).append("]");
+				.append(", stripRootContext=").append(stripRootContext)
+				.append(", internationalizationEnabled=").append(internationalizationEnabled).append("]");
 		return builder.toString();
 	}
 }

@@ -53,9 +53,14 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		MenuEntry mainMenu = new MenuEntry();
 		mainMenu.setDisplayName("Log4j2 Config");
 		mainMenu.setName("log4j2");
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "log4j.displayName");
 		
-		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Loggers", "Log4j2 Loggers", "content/log4j2", config.getSecurityRoles()));
-		mainMenu.addSubmenuEntry(new MenuEntry("log4j2Console", "Log4j2 Console", "content/log4j2Console", config.getSecurityRoles()));
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2Loggers").displayName("Log4j2 Loggers")
+				.resouceMessageKeySuffix("log4j.loggers.displayName").target("content/log4j2")
+				.securityRoles(config.getSecurityRoles()).build());
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2Console").displayName("Log4j2 Console")
+				.resouceMessageKeySuffix("log4j.console.displayName").target("content/log4j2Console")
+				.securityRoles(config.getSecurityRoles()).build());
 		
 		component.setMainMenu(mainMenu);
 		

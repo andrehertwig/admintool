@@ -99,6 +99,7 @@ public class AdminToolMenuUtils {
 	 * @return empty string, "active", "treeview", "treeview active"
 	 */
 	public String getListItemClass(MenuEntry activeMenu, MenuEntry actualEntry) {
+		if (LOGGER.isTraceEnabled())LOGGER.trace("[getListItemClass]" + actualEntry);
 		StringBuilder sb = new StringBuilder();
 		if (!CollectionUtils.isEmpty(actualEntry.getSubmenu()))
 			sb.append(CSS_TREEVIEW);

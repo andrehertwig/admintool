@@ -11,8 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.AdminTool;
+import de.chandre.admintool.core.AdminToolCoreConfig;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.MenuEntry;
 
@@ -30,12 +32,16 @@ public class AdminToolIntegrityUtil {
 	public static final String MSG_KEY_DUPLICATE_LINK = "admintool.integrity.error.duplicate.link";
 	public static final String MSG_KEY_DUPLICATE_TPL_REF = "admintool.integrity.error.duplicate.templateReference";
 	public static final String MSG_KEY_COMPONENT_NO_MAINMENU = "admintool.integrity.error.component.missingMainMenu";
+	public static final String MSG_KEY_MISSING_RESOURCE_KEY = "admintool.integrity.error.missing.resourceKey";
 	
 	@Autowired
 	private AdminTool adminTool;
 	
 	@Autowired
 	private AdminToolMenuUtils menuUtils;
+	
+	@Autowired
+	private AdminToolCoreConfig config;
 
 	/**
 	 * checks for integrity errors
@@ -74,6 +80,11 @@ public class AdminToolIntegrityUtil {
 					} else {
 						templates.put(menu.getTarget(), menu);
 					}
+					if(config.isInternationalizationEnabled() && StringUtils.isEmpty(menu.getResouceMessageKey())) {
+						findErrorAndAddEntry("missing message resource key on menu item", 
+								MSG_KEY_MISSING_RESOURCE_KEY, errorList, menu, templates.get(menu.getTarget()));
+					}
+					
 				});
 			} else {
 				findErrorAndAddEntry(String.format("the component '%s' has no main menu", comp.getDisplayName()), 

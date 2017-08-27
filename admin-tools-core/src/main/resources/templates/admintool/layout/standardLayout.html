@@ -90,10 +90,12 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 class="modal-title" id="admintoolErrorLabel"><i class="icon fa fa-ban"></i>Error</h4>
+						<h4 class="modal-title" id="admintoolErrorLabel"><i class="icon fa fa-ban"></i>
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.title', 'Error')" />
+						</h4>
 					</div>
 					<div class="modal-body" id="admintoolErrorBody">
-						An Error has been occurred
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.text', 'An Error has been occurred')" />
 					</div>
 				</div>
 			</div>
@@ -106,14 +108,22 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 class="modal-title" id="admintoolConfirmModalLabel">Confirm</h4>
+						<h4 class="modal-title" id="admintoolConfirmModalLabel">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.text', 'Confirm')" />
+						</h4>
 					</div>
 					<div class="modal-body">
-						<p id="admintoolConfirmModalText">Do you confirm?</p>
+						<p id="admintoolConfirmModalText">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.title', 'Do you confirm?')" />
+						</p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-outline" id="btn_admintool_confirm">Confirm</button>
+						<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.btn.close', 'Close')" />
+						</button>
+						<button type="button" class="btn btn-outline" id="btn_admintool_confirm">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.btn.confirm', 'Confirm')" />
+						</button>
 					</div>
 				</div>
 			</div>

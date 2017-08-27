@@ -62,12 +62,15 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		mainMenu.setTarget("content/quartz");
 		mainMenu.setHide(quartzConfig.isHideMenuItem());
 		mainMenu.setSecurityRoles(allRoles);
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "quartz.displayName");
 		component.setMainMenu(mainMenu);
 		
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzconfig", "Quartz-Config", "quartz/content/quartzConfig",
-				quartzConfig.getSecurityRolesConfig()));
-		mainMenu.addSubmenuEntry(new MenuEntry("quartzjobs", "Quartz-Jobs", "quartz/content/quartzJobs",
-				quartzConfig.getSecurityRolesJobs()));
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartzconfig").displayName("Quartz-Config")
+				.resouceMessageKeySuffix("quartz.config.displayName").target("quartz/content/quartzConfig")
+				.securityRoles(quartzConfig.getSecurityRolesConfig()).build());
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartzjobs").displayName("Quartz-Jobs")
+				.resouceMessageKeySuffix("quartz.jobs.displayName").target("quartz/content/quartzJobs")
+				.securityRoles(quartzConfig.getSecurityRolesJobs()).build());
 		adminTool.addComponent(component);
 	}
 }

@@ -48,6 +48,7 @@ public class AbstractAdminToolSecurityViewLoader extends AbstractAdminToolLoader
 		MenuEntry mainMenu = new MenuEntry("users", "Users", "security/content/users", securityRolesConfig);
 		mainMenu.addAdditionalJS("/static/admintool/security/users.js", true);
 		mainMenu.addAdditionalJS("/static/admintool/security/validator.min.js", true);
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "security.users.displayName");
 		
 		String adminLtePrefix = getAdminLTEPrefixUri();
 		boolean relative = !shouldCDNsUsed();

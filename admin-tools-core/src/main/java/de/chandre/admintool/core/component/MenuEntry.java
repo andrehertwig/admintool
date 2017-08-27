@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import org.springframework.util.CollectionUtils;
 
+import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.utils.AdminToolMenuUtils;
 
 /**
@@ -32,6 +33,7 @@ public class MenuEntry implements Serializable
 	private String resouceMessageKey;
 	private String target;
 	private boolean hide = false;
+	private String activeName;
 	
 	private AdminComponent component;
 	private MenuEntry parent;
@@ -45,7 +47,6 @@ public class MenuEntry implements Serializable
 	private Set<String> securityRoles = new HashSet<>();
 	
 	private Map<String, Object> variables = new HashMap<>();
-
 	
 	public MenuEntry() {
 		super();
@@ -123,7 +124,7 @@ public class MenuEntry implements Serializable
 	}
 
 	/**
-	 * <b>not implemented</b>
+	 * key for message resources. must be enabled in core config.
 	 * @return the resouceMessageKey
 	 */
 	public String getResouceMessageKey() {
@@ -131,7 +132,7 @@ public class MenuEntry implements Serializable
 	}
 
 	/**
-	 *  <b>not implemented</b>
+	 * key for message resources. must be enabled in core config.
 	 * @param resouceMessageKey the resouceMessageKey to set
 	 */
 	public void setResouceMessageKey(String resouceMessageKey) {
@@ -180,6 +181,24 @@ public class MenuEntry implements Serializable
 	 */
 	public void setHide(boolean hide) {
 		this.hide = hide;
+	}
+	
+	/**
+	 * name of menu which should be marked as active (useful for hidden menuEntries)
+	 * @return
+	 * @since 1.1.6
+	 */
+	public String getActiveName() {
+		return activeName;
+	}
+
+	/**
+	 * name of menu which should be marked as active (useful for hidden menuEntries)
+	 * @param activeName
+	 * @since 1.1.6
+	 */
+	public void setActiveName(String activeName) {
+		this.activeName = activeName;
 	}
 
 	/**
@@ -486,4 +505,205 @@ public class MenuEntry implements Serializable
 		return builder.toString();
 	}
 	
+	/**
+	 * menu entry builder for chained calls
+	 * 
+	 * @since 1.1.6
+	 * @return
+	 */
+	public static MenuEntryBuilder builder() {
+	    return new MenuEntryBuilder();
+	}
+	
+	/**
+	 * static class with possibility for chained calls
+	 * 
+	 * @author André
+	 * @since 1.1.6
+	 */
+	public static class MenuEntryBuilder {
+		private MenuEntry entry = new MenuEntry();
+		
+		/**
+		 * @see MenuEntry#setName(String)
+		 * @param name
+		 * @return
+		 */
+		public MenuEntryBuilder name(String name) {
+			entry.setName(name);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setDisplayName(String)
+		 * @param displayName
+		 * @return
+		 */
+		public MenuEntryBuilder displayName(String displayName) {
+			entry.setDisplayName(displayName);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setResouceMessageKey(String)
+		 * @param resouceMessageKey
+		 * @return
+		 */
+		public MenuEntryBuilder resouceMessageKey(String resouceMessageKey) {
+			entry.setResouceMessageKey(resouceMessageKey);
+			return this;
+		}
+		/**
+		 * used {@link AdminTool#RESOURCE_MESSAGE_KEY_PREFIX} as prefix
+		 * @see MenuEntry#setResouceMessageKey(String)
+		 * @param resouceMessageKey
+		 * @return
+		 */
+		public MenuEntryBuilder resouceMessageKeySuffix(String resouceMessageKey) {
+			entry.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + resouceMessageKey);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setTarget(String)
+		 * @param targetTemplatePath
+		 * @return
+		 */
+		public MenuEntryBuilder target(String targetTemplatePath) {
+			entry.setTarget(targetTemplatePath);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setHide(boolean)
+		 * @param hide
+		 * @return
+		 */
+		public MenuEntryBuilder hide(boolean hide) {
+			entry.setHide(hide);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setActiveName(String)
+		 * @param activeName
+		 * @return
+		 */
+		public MenuEntryBuilder activeName(String activeName) {
+			entry.setActiveName(activeName);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setSubmenu(List)
+		 * @param submenu
+		 * @return
+		 */
+		public MenuEntryBuilder submenu(List<MenuEntry> submenu) {
+			entry.setSubmenu(submenu);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#addSubmenuEntry(MenuEntry)
+		 * @param submenu
+		 * @return
+		 */
+		public MenuEntryBuilder submenuEntry(MenuEntry submenu) {
+			entry.addSubmenuEntry(submenu);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setAdditionalCSS(Map)
+		 * @param additionalCSS
+		 * @return
+		 */
+		public MenuEntryBuilder additionalCSS(Map<String, Boolean> additionalCSS) {
+			entry.setAdditionalCSS(additionalCSS);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#addAdditionalCSS(String, boolean)
+		 * @param additionalCSS
+		 * @param relative
+		 * @return
+		 */
+		public MenuEntryBuilder additionalCSS(String additionalCSS, boolean relative) {
+			entry.addAdditionalCSS(additionalCSS, relative);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setUseCCSHierarchy(boolean)
+		 * @param useCCSHierarchy
+		 * @return
+		 */
+		public MenuEntryBuilder useCCSHierarchy(boolean useCCSHierarchy) {
+			entry.setUseCCSHierarchy(useCCSHierarchy);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setAdditionalJS(Map)
+		 * @param additionalJS
+		 * @return
+		 */
+		public MenuEntryBuilder additionalJS(Map<String, Boolean> additionalJS) {
+			entry.setAdditionalJS(additionalJS);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#addAdditionalJS(String, boolean)
+		 * @param additionalJS
+		 * @param relative
+		 * @return
+		 */
+		public MenuEntryBuilder additionalJS(String additionalJS, boolean relative) {
+			entry.addAdditionalJS(additionalJS, relative);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setUseJSHierarchy(boolean)
+		 * @param useJSHierarchy
+		 * @return
+		 */
+		public MenuEntryBuilder useJSHierarchy(boolean useJSHierarchy) {
+			entry.setUseJSHierarchy(useJSHierarchy);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setSecurityRoles(Set)
+		 * @param securityRoles
+		 * @return
+		 */
+		public MenuEntryBuilder securityRoles(Set<String> securityRoles) {
+			entry.setSecurityRoles(securityRoles);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#addSecurityRole(String)
+		 * @param securityRole
+		 * @return
+		 */
+		public MenuEntryBuilder securityRole(String securityRole) {
+			entry.addSecurityRole(securityRole);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#setVariables(Map)
+		 * @param variables
+		 * @return
+		 */
+		public MenuEntryBuilder variables(Map<String, Object> variables) {
+			entry.setVariables(variables);
+			return this;
+		}
+		/**
+		 * @see MenuEntry#addVariable(String, Object)
+		 * @param key
+		 * @param variable
+		 * @return
+		 */
+		public MenuEntryBuilder variable(String key, Object variable) {
+			entry.addVariable(key, variable);
+			return this;
+		}
+		/**
+		 * @return the menu entry
+		 */
+		public MenuEntry build() {
+			return entry;
+		}
+	}
 }

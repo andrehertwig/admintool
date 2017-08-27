@@ -1,7 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
 
 	<ul class="sidebar-menu">
-		<li class="header">MAINMENU</li>
+		<li class="header">
+			<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.menu.headline', 'MAINMENU')" />
+		</li>
 		<th:block th:each="adminComponent,iterState : ${@adminToolMenuUtils.getComponents()}">
 			<th:block th:include="admintool/fragments/fragements :: submenuInclude (${adminComponent.mainMenu}, true)" />
 		</th:block>

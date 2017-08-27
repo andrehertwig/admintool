@@ -81,6 +81,7 @@ public class AbstractAdminController
 		
 		//get menu entry by name
 		MenuEntrySearchResult result = adminTool.searchComponent(name);
+		model.put("internationalizationEnabled", coreConfig.isInternationalizationEnabled());
 		model.put("rootContext", getRootContext(request));
 		model.put("adminToolContext", AdminTool.ROOTCONTEXT);
 		String targetTpl = "content/error404";
@@ -96,7 +97,16 @@ public class AbstractAdminController
 			if (null != entry.getVariables()) {
 				model.putAll(entry.getVariables());
 			}
+			
 			model.put("activeMenu", entry);
+			//since 1.1.6
+			String overriddenActive = entry.getActiveName();
+			if (!StringUtils.isEmpty(overriddenActive)) {
+				MenuEntrySearchResult overriddenResult = adminTool.searchComponent(overriddenActive);
+				if (null != overriddenResult) {
+					model.put("activeMenu", overriddenResult.getMenuEntry());
+				}
+			}
 		} else {
 			model.put("contentPage", AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl);
 		}

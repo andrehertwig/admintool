@@ -78,7 +78,7 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		mainMenu.setTarget(TARGET_FILEBROWSER);
 		mainMenu.setHide(filebrowserConfig.isHideMenuItem());
 		mainMenu.addAdditionalCSS("/static/admintool/filebrowser/css/filebrowser.css", true);
-//		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "filebrowser.displayName");
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "filebrowser.displayName");
 		
 		component.setMainMenu(mainMenu);
 		

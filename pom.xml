@@ -200,14 +200,14 @@
 		<skip.unit.tests>false</skip.unit.tests>
 		<jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
 		
-		<commons-lang.version>3.5</commons-lang.version>
+		<commons-lang.version>3.6</commons-lang.version>
 		<commons-collections.version>4.1</commons-collections.version>
 		<commons-io.version>2.5</commons-io.version>
 		<commons-logging.version>1.2</commons-logging.version>
 		
 		<org.json.version>20151123</org.json.version>
 		
-		<spring-boot.version>1.4.6.RELEASE</spring-boot.version>
+		<spring-boot.version>1.4.7.RELEASE</spring-boot.version>
 		
 		<thymeleaf.version>2.1.5.RELEASE</thymeleaf.version>
 		<thymeleaf-extras-springsecurity4.version>2.1.2.RELEASE</thymeleaf-extras-springsecurity4.version>

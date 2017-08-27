@@ -36,6 +36,12 @@ public interface AdminTool {
 	String GENERIC_ERROR_TPL_PATH = ROOTCONTEXT_NAME + SLASH + "content" + SLASH + "error";
 	
 	/**
+	 * prefix for for resource messages
+	 * @since 1.1.6
+	 */
+	String RESOURCE_MESSAGE_KEY_PREFIX = "ui." + ROOTCONTEXT_NAME + ".core.";
+	
+	/**
 	 * to set a custom comparator for ordering components.
 	 * 
 	 * @since 1.0.1

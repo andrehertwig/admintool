@@ -48,6 +48,7 @@ public class AdminToolJavaMelodyLoader extends AbstractAdminToolLoader
 		mainMenu.setName("javamelody");
 		mainMenu.setTarget("content/melody");
 		mainMenu.addVariable("melodyPath", config.getMelodyPath());
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "javamelody.displayName");
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);

@@ -54,6 +54,10 @@
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
+		<!--  -->
+		<Logger name="org.springframework.context.support" level="debug" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
 		
 		
 		<Logger name="org.thymeleaf" level="info" additivity="false">

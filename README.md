@@ -68,19 +68,19 @@ This is just a spare-time project. The usage of this tool (especially in product
 Include the dependencies in your dependency management. You can find it in [Maven Central](https://mvnrepository.com/artifact/de.chandre.admin-tools).
 ```xml
 
-	<dependency>
-		<groupId>de.chandre.admin-tools</groupId>
-		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.5</version>
-	</dependency>
+<dependency>
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools-core</artifactId>
+	<version>1.1.5</version>
+</dependency>
 	...
 ```
 
 To get components scanned add the package to @ComponentScan
 ```java
 
-	//required in your own application to get the admintool scanned  
-	@ComponentScan(basePackages={"de.chandre.admintool"})
+//required in your own application to get the admintool scanned  
+@ComponentScan(basePackages={"de.chandre.admintool"})
 
 ```
 
@@ -90,11 +90,13 @@ To get components scanned add the package to @ComponentScan
 The AdminComponent is the main component for configuring a module. It must contain a menu entry. Furthermore you can append custom CSS and JS (with either relative or absolute URLs) to components, which will only be resolved within component calls.
 ```java
 
-	AdminComponent component = new AdminComponentImpl();
-	component.setDisplayName("Demo-App-Component");
-	component.addNotificationTemplate("notifications/notification");
-	component.addSecurityRole("ROLE_ANONYMOUS");
-	component.addSecurityRole("ROLE_ADMIN");
+	//create a new component ... since 1.1.6 it's possible to use chained builders
+	AdminComponent component = AdminComponentImpl.builder()
+				.displayName("Demo-App-Component")
+				.notificationTemplate("notifications/notification")
+				.securityRole("ROLE_ANONYMOUS")
+				.securityRole("ROLE_ADMIN")
+				.position(1).build();
 	
 	//adding a custom (relative) js
 	component.addAdditionalJS("/static/mycomponent/js/myJavaScript.js", true);
@@ -126,10 +128,17 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 	mainMenu.addSubmenuEntry(new MenuEntry("dashboard", "Dashboard", "content/dashboard"));
 	mainMenu.addSubmenuEntry(new MenuEntry("dashboard2", "Dashboard 2", "content/dashboard2"));
 		
-	//adding a new sub menu tree
-	MenuEntry submenu = new MenuEntry("", "SubMulti", "");
-	submenu.addSubmenuEntry(new MenuEntry("dashboard3", "Dashboard 3", "content/dashboard3"));
-	submenu.addSubmenuEntry(new MenuEntry("dashboard4", "Dashboard 4", "content/dashboard4"));
+	//adding a new sub menu tree ... since 1.1.6 it's possible to use chained builders
+	MenuEntry submenu = MenuEntry.builder().displayName("SubMulti")
+				.resouceMessageKeySuffix("demo.subMulti.displayName")
+				.submenuEntry(
+						MenuEntry.builder().name("dashboard3").displayName("Dashboard 3").target("content/dashboard3")
+								.resouceMessageKeySuffix("demo.subMulti.dashboard3.displayName").build())
+				.build();
+	submenu.addSubmenuEntry(
+				MenuEntry.builder().name("dashboard4").displayName("Dashboard 4").target("content/dashboard4")
+				.resouceMessageKeySuffix("demo.subMulti.dashboard4.displayName").build());
+	mainMenu.addSubmenuEntry(submenu);
 	
 	//since 1.0.3 it's possible to add custom js and css on menuEntry
 	submenu.addAdditionalJS("/static/mycomponent/js/myMenuJavaScript.js", true);
@@ -150,20 +159,20 @@ E.g. your Thymeleaf is configured to look for templates in: *classpath:/template
 A content template must at least contain a block element with *id="template-content"*, otherwise the content will not be found by Thymeleaf. Using the namespace within the HTML tag provides code completion in Eclipse IDE with installed Thymeleaf plugin.   
 ```html
 
-	<!DOCTYPE html>
-	<html xmlns:th="http://www.thymeleaf.org">
-		<body>
-			<div id="template-content" >
-				<section class="content-header">
-					<h1>My Fabulous Component</h1>
-					<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
-				</section>
-				<section class="content">
-					... my content ...
-				</section>
-			</div>
-		</body>
-	</html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<div id="template-content" >
+			<section class="content-header">
+				<h1>My Fabulous Component</h1>
+				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+			</section>
+			<section class="content">
+				... my content ...
+			</section>
+		</div>
+	</body>
+</html>
 
 ```
 
@@ -175,20 +184,20 @@ Now the [Thymeleaf Layout dialect](http://www.thymeleaf.org/doc/articles/layouts
 So a template should look like this:
 ```html
 
-	<!DOCTYPE html>
-	<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
-		<body>
-			<div layout:fragment="content">
-				<section class="content-header">
-					<h1>My Fabulous Component</h1>
-					<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
-				</section>
-				<section class="content">
-					... my content ...
-				</section>
-			</div>
-		</body>
-	</html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+	<body>
+		<div layout:fragment="content">
+			<section class="content-header">
+				<h1>My Fabulous Component</h1>
+				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+			</section>
+			<section class="content">
+				... my content ...
+			</section>
+		</div>
+	</body>
+</html>
 
 ```
 

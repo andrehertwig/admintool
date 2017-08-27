@@ -48,6 +48,7 @@ public class AdminToolPropertiesLoader extends AbstractAdminToolLoader
 		mainMenu.setDisplayName("Properties");
 		mainMenu.setName("properties");
 		mainMenu.setTarget("properties/content/properties");
+		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "properties.displayName");
 		component.setMainMenu(mainMenu);
 		
 		adminTool.addComponent(component);
