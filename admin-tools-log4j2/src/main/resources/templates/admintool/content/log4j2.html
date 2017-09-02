@@ -18,11 +18,14 @@
 
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="fa fa-bug"></i> Parent Loggers <span
-							th:text="' ('+ ${parentLoggers.size()} +')'"></span>
+						<i class="fa fa-bug"></i> 
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.parent.subHeadline', 'Parent Loggers')" /> 
+						<span th:text="' ('+ ${parentLoggers.size()} +')'"></span>
 					</h3>
 					<button class="btn btn-default pull-right removeCustomLogger" 
-						th:text="'Remove Custom Parent Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">Remove Custom Parent Loggers</button>
+						th:text="'Remove Custom Parent Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.parent.btn.remove', 'Remove Custom Parent Loggers')" /> 
+					</button>
 				</div>
 				<div class="box-body">
 
@@ -30,9 +33,9 @@
 						<table class="table no-margin table-hover" id="parentLoggers">
 							<thead>
 								<tr>
-									<th>Name</th>
-									<th>Level</th>
-									<th>Change Level</th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.name', 'Name')" /></th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.level', 'Level')" /></th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.action', 'Change Level')" /></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -63,11 +66,14 @@
 
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="fa fa-bug"></i> All Loggers <span
-							th:text="' ('+ ${allLoggers.size()} +')'"></span>
+						<i class="fa fa-bug"></i> 
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.all.subHeadline', 'All Loggers')" /> 
+						<span th:text="' ('+ ${allLoggers.size()} +')'"></span>
 					</h3>
 					<button class="btn btn-default pull-right removeCustomLogger" 
-						th:text="'Remove Custom Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">Remove Custom Loggers</button>
+						th:text="'Remove Custom Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.all.btn.remove', 'Remove Custom Loggers')" />
+					</button>
 				</div>
 				<div class="box-body">
 
@@ -75,9 +81,9 @@
 						<table class="table no-margin table-hover" id="loggers">
 							<thead>
 								<tr>
-									<th>Name</th>
-									<th>Level</th>
-									<th>Change Level</th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.name', 'Name')" /></th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.level', 'Level')" /></th>
+									<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.tableHead.action', 'Change Level')" /></th>
 								</tr>
 							</thead>
 							<tbody>

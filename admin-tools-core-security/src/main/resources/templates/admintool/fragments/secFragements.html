@@ -13,8 +13,13 @@
 			sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}">
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
+				
+				<span th:include="admintool/fragments/fragements :: message (${menuItem.resouceMessageKey}, ${menuItem.displayName})"></span>
+				
+				<!--/* 
 				<span th:if="${internationalizationEnabled}" th:text="#{${menuItem.resouceMessageKey}}">messageKey</span>
 				<span th:unless="${internationalizationEnabled}" th:text="${menuItem.displayName}">Link</span>
+				*/-->
 				<span class="pull-right-container">
 					<i class="fa fa-angle-left pull-right" th:if="${not #lists.isEmpty(menuItem.submenu)}"></i>
 				</span>

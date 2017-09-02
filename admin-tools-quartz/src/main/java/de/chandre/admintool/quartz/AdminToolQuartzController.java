@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
+import de.chandre.admintool.core.controller.AbstractAdminController;
 
 /**
  * contoller for quartz jobs actions
@@ -29,7 +30,7 @@ import de.chandre.admintool.core.AdminTool;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/quartz")
-public class AdminToolQuartzController {
+public class AdminToolQuartzController extends AbstractAdminController {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzService.class);
 
 	@Autowired
@@ -37,8 +38,8 @@ public class AdminToolQuartzController {
 	
 	@RequestMapping(value = {"/quartzJobsInc",})
 	public String getJobs(ModelMap model, HttpServletRequest request) {
-		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving quartz jobs include");
+		addCommonContextVars(model, request);
 		return AdminTool.ROOTCONTEXT_NAME + "/quartz/includes/quartzJobs.inc";
 	}
 

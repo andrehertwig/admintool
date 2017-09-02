@@ -17,7 +17,7 @@
 
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="fa fa-bug"></i> Log4j Console Configuration
+						<i class="fa fa-bug"></i> <th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.headline', 'Log4j Console Configuration')" />
 					</h3>
 					<div class="box-tools pull-right">
 						<button class="btn btn-box-tool" type="button" data-widget="collapse" id="log4jTailConfigCollapse">
@@ -29,14 +29,14 @@
 				<div class="box-body">
 				
 					<div class="form-group" style="display:none;">
-						<label for="name">Logger Name</label>
+						<label for="name"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.name', 'Logger Name')" /></label>
 						<input id="name" name="name" class="form-control" placeholder="A custom appender Name" type="text" />
 					</div>
 				
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="pattern">Logger Pattern</label>
+								<label for="pattern"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.pattern', 'Logger Pattern')" /></label>
 								<input id="pattern" name="pattern" class="form-control" placeholder="a logger pattern" th:placeholder="${@adminToolLog4j2Util.getDefaultPattern()}" type="text" />
 							</div>
 						</div>
@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-md-4 col-xs-12">
 							<div class="form-group">
-								<label for="level">Logger Level</label>
+								<label for="level"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.level', 'Logger Level')" /></label>
 								<select id="level" name="level" class="form-control">
 									<option th:each="level, iterState : ${@adminToolLog4j2Util.getLevels()}"
 										th:value="${level.name()}" th:text="${level.name()}"></option>
@@ -57,14 +57,18 @@
 							
 								<div class="col-md-6 col-xs-6">
 									<div class="form-group">
-										<label for="recursive" title="Apply the appender recursive to all sub-loggers (in class hierachy) if a parent logger will be selected">Recursive</label><br />
+										<label for="recursive" title="Apply the appender recursive to all sub-loggers (in class hierachy) if a parent logger will be selected">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.recursive', 'Recursive')" />
+										</label><br />
 										<input id="recursive" name="recursive" type="checkbox"/>
 									</div>
 								</div>
 								
 								<div class="col-md-6 col-xs-6">
 									<div class="form-group">
-										<label for="overrideLogLevel" title="Overrides the log level of loggers where the appender will be associated with">Override log level</label><br />
+										<label for="overrideLogLevel" title="Overrides the log level of loggers where the appender will be associated with">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.override', 'Override log level')" />
+										</label><br />
 										<input id="overrideLogLevel" name="overrideLogLevel" type="checkbox"/>
 									</div>
 								</div>
@@ -74,14 +78,14 @@
 						</div>
 						<div class="col-md-4 col-xs-12">
 							<div class="form-group">
-								<label for="encoding">Logger Encoding</label>
+								<label for="encoding"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.encoding', 'Logger Encoding')" /></label>
 								<input id="encoding" name="encoding" class="form-control" placeholder="UTF-8" type="text" />
 							</div>
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="level">Logger Names</label>
+						<label for="level"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.loggers', 'Logger Names')" /></label>
 						<select id="loggerNames" name="loggerNames" multiple="multiple" class="form-control">
 							<option th:each="loggerName, iterState : ${@adminToolLog4j2Util.getAllLoggerNames()}"
 								th:text="${loggerName}" th:value="${loggerName}"></option>
@@ -90,7 +94,9 @@
 					
 				</div>
 				<div class="box-footer clearfix">
-					<button class="btn btn-default" type="button" id="startConsole">Start Console</button>
+					<button class="btn btn-default" type="button" id="startConsole">
+						<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.btn.start', 'Start Console')" />
+					</button>
 				</div>
 
 			</div>
@@ -98,12 +104,14 @@
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="fa fa-file-text-o"></i> Log4j Console Output
+						<i class="fa fa-file-text-o"></i> <th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.out.headline', 'Log4j Console Output')" />
 					</h3>
-					<button class="btn btn-default stopConsole" type="button">Stop Console</button>
+					<button class="btn btn-default stopConsole" type="button">
+						<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.btn.stop', 'Stop Console')" />
+					</button>
 					<button class="btn btn-default" type="button" id="clearConsole" title="Clear console. (Request count)">
 						<span class="badge bg-yellow" id="requestCount" title="Request count">0</span>
-						Clear Console
+						<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.btn.clear', 'Clear Console')" />
 					</button>
 				</div>
 				<div class="box-body">
@@ -115,7 +123,7 @@
 						<div class="col-md-3 col-xs-4">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" id="scrollToBottom" checked="checked"/> Scroll to bottom
+									<input type="checkbox" id="scrollToBottom" checked="checked"/> <th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.out.input.scroll', 'Scroll to bottom')" />
 								</label>
 							</div>
 						</div>
@@ -123,7 +131,9 @@
 							<input type="text" id="maxListLength" class="form-control" value="" title="Maximum lines in log" placeholder="Max length of list"/>
 						</div>
 						<div class="col-md-6 col-xs-4">
-							<button class="btn btn-default stopConsole pull-right" type="button">Stop Console</button>
+							<button class="btn btn-default stopConsole pull-right" type="button">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.btn.stop', 'Stop Console')" />
+							</button>
 						</div>
 					</div>
 				</div>

@@ -26,9 +26,7 @@
 			</div>
 		</div>
 		
-		<th:block th:include="admintool/includes/integrityCheck.inc" />
-		
-		<div class="row">
+		<div class="row" th:if="${@templateUserService.isAnonymous()}">
 			<div class="col-md-3 col-xs-1"></div>
 			<div class="col-md-6 col-xs-10">
 				<div class="info-box box-info">
@@ -48,6 +46,22 @@
 			</div>
 			<div class="col-md-3 col-xs-1"></div>
 		</div>
+		
+		<div class="info-box box-info">
+			<div class="box-header with-border">
+				<i class="fa fa-info"></i>
+				<h3 class="box-title">Config</h3>
+			</div>
+			<div class="box-body">
+				<p>Internationalization Enabled = 
+					<th:block th:if="${internationalizationEnabled}">true</th:block>
+					<th:block th:unless="${internationalizationEnabled}">false</th:block>
+					&nbsp;(<span th:text="${internationalizationEnabled}"></span>)
+				</p>
+			</div>
+		</div>
+		
+		<th:block th:include="admintool/includes/integrityCheck.inc" />
 
 	</section>
 	<!-- /.content -->

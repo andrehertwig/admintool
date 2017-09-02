@@ -25,7 +25,9 @@
 											<div class="col-xs-8" >
 												<span th:if="${@adminToolQuartzService.getJobDescription(jobKey)} != null"
 													th:text="${@adminToolQuartzService.getJobDescription(jobKey)}"></span>
-												<span th:unless="${@adminToolQuartzService.getJobDescription(jobKey)} != null" class="text-muted">-- no description --</span>
+												<span th:unless="${@adminToolQuartzService.getJobDescription(jobKey)} != null" class="text-muted">
+													<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.noDescription', '-- no description --')" />
+												</span>
 											</div>
 										</div>
 									</div>
@@ -61,14 +63,30 @@
 									<div class="hidden-xs col-md-1" ></div>
 									<div class="col-xs-12 col-md-11" >
 										<div class="row trigger-header">
-											<div class="col-xs-2">TriggerName</div>
-											<div class="col-xs-2">Cron Expression</div>
-											<div class="col-xs-2">Previous Fire Time</div>
-											<div class="col-xs-2">Next Fire Time</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}" title="Change Job-Trigger state">State</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}" title="is interruptable">Interr.</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}" title="Change Job-Trigger data">Change</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}" title="Remove the Job-Trigger">Remove</div>
+											<div class="col-xs-2">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.triggerName', 'TriggerName')" />
+											</div>
+											<div class="col-xs-2">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.cronExpression', 'Cron Expression')" />
+											</div>
+											<div class="col-xs-2">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.prevFireTime', 'Previous Fire Time')" />
+											</div>
+											<div class="col-xs-2">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.nextFireTime', 'Next Fire Time')" />
+											</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}" title="Change Job-Trigger state">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.state', 'State')" />
+											</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}" title="is interruptable">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.interruptable', 'Interr.')" />
+											</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}" title="Change Job-Trigger data">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.change', 'Change')" />
+											</div>
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}" title="Remove the Job-Trigger">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.remove', 'Remove')" />
+											</div>
 										</div>
 										
 										<div class="row text-center" th:each="trigger, triggerIter : ${@adminToolQuartzService.getTriggers(jobKey)}">
@@ -83,12 +101,16 @@
 											<div class="col-xs-2">
 												<span th:if="${trigger.getPreviousFireTime() != null}" th:text="${#dates.format(trigger.getPreviousFireTime(), 'dd.MM.yyyy HH:mm')}" 
 													th:remove="tag"></span>
-												<span th:unless="${trigger.getPreviousFireTime() != null}" th:remove="tag">N/A</span>
+												<span th:unless="${trigger.getPreviousFireTime() != null}" th:remove="tag">
+													<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.notAvailable', 'N/A')" />
+												</span>
 											</div>
 											<div class="col-xs-2">
 												<span th:if="${trigger.getNextFireTime() != null}" th:text="${#dates.format(trigger.getNextFireTime(), 'dd.MM.yyyy HH:mm')}" 
 													th:remove="tag"></span>
-												<span th:unless="${trigger.getNextFireTime() != null}" th:remove="tag">N/A</span>
+												<span th:unless="${trigger.getNextFireTime() != null}" th:remove="tag">
+													<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.notAvailable', 'N/A')" />
+												</span>
 											</div>
 											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}">
 												<button th:class="'changeTriggerState btn btn-xs ' + ${@adminToolQuartzService.getTriggerStateCssClass(jobKey, trigger)}"

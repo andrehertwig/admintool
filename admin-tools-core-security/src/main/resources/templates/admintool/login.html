@@ -51,8 +51,10 @@
 				
 					<div th:if="${error}" class="alert alert-danger alert-dismissible">
 						<button class="close" aria-hidden="true" data-dismiss="alert" type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
-						<h4><i class="icon fa fa-warning"></i> Error</h4>
-						User name and/or password incorrect
+						<h4><i class="icon fa fa-warning"></i>&nbsp;
+							<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.login.error.headline', 'Error')" />
+						</h4>
+						<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.login.error.message', 'User name and/or password incorrect')" />
 					</div>
 				
 					<form method="post" th:action="@{login}">
@@ -67,7 +69,9 @@
 						<div class="row">
 							<div class="col-xs-8"></div>
 							<div class="col-xs-4">
-								<button class="btn btn-primary btn-block btn-flat" type="submit" tabindex="3">Sign In</button>
+								<button class="btn btn-primary btn-block btn-flat" type="submit" tabindex="3">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.userMenu.signIn', 'Sign in')" />
+								</button>
 							</div>
 						</div>
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -85,10 +89,12 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 class="modal-title" id="admintoolErrorLabel"><i class="icon fa fa-ban"></i>Error</h4>
+						<h4 class="modal-title" id="admintoolErrorLabel"><i class="icon fa fa-ban"></i>
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.title', 'Error')" />
+						</h4>
 					</div>
 					<div class="modal-body">
-						An Error has been occurred
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.text', 'An Error has been occurred')" />
 					</div>
 				</div>
 			</div>

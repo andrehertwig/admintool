@@ -6,8 +6,13 @@
 		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" th:remove="${menuItem.hide}? all : none">
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
+				
+				<span th:include="admintool/fragments/fragements :: message (${menuItem.resouceMessageKey}, ${menuItem.displayName})"></span>
+				
+				<!--/* 
 				<span th:if="${internationalizationEnabled}" th:text="#{${menuItem.resouceMessageKey}}">messageKey</span>
 				<span th:unless="${internationalizationEnabled}" th:text="${menuItem.displayName}">Link</span>
+				*/-->
 				<span class="pull-right-container">
 					<i class="fa fa-angle-left pull-right" th:if="${not #lists.isEmpty(menuItem.submenu)}"></i>
 				</span>
@@ -30,10 +35,18 @@
 	</ol>
 	
 	<th:block th:fragment="message (messageKey, defaultText)">
+		<th:block th:with="condition=${internationalizationEnabled and !#strings.isEmpty(#messages.msgOrNull(messageKey))}">
+			<th:block th:if="${condition}" th:text="#{${messageKey}}" />
+	 		<th:block th:unless="${condition}" th:text="${defaultText}">Default Message</th:block>
+		</th:block>
+	</th:block>
+	
+	<!--/* 
+	<th:block th:fragment="message (messageKey, defaultText)">
 		<th:block th:if="${#messages.msgOrNull(messageKey)}" th:text="#{${messageKey}}" />
  		<th:block th:unless="${#messages.msgOrNull(messageKey)}" th:text="${defaultText}">Default Message</th:block>
 	</th:block>
-
+	*/-->
 
 </body>
 

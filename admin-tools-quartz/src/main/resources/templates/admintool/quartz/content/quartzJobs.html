@@ -17,10 +17,12 @@
 				<div class="box-header with-border">
 					<h3 class="box-title">
 					<a href="#"><i class="fa fa-refresh" id="reloadInclude" title="Reload"></i></a>
-						Quartz Scheduler Jobs
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.subHeadline', 'Quartz Scheduler Jobs')" />
 					</h3>
 					<div class="pull-right">
-						<a href="#" id="autoreload" class="text-danger">(auto reload)</a>
+						<a href="#" id="autoreload" class="text-danger">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.autoReload', '(auto reload)')" />
+						</a>
 					</div>
 				</div>
 				<div id="quartzJobsInc" class="box-body">

@@ -80,7 +80,7 @@ public class AdminToolDBBrowserController extends AbstractAdminController
 			LOGGER.debug("receiving executeQuery request");
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("with object: " + statementTO.toString());
-		
+		addCommonContextVars(model, request);
 		model.put("statementTO", statementTO);
 		model.put("queryResultTO", dbBrowserService.queryDatabase(statementTO));
 		return AdminTool.ROOTCONTEXT_NAME + TAB_INCLUDE_TPL_PATH;
