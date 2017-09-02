@@ -325,30 +325,30 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 		}
 		else if (StringUtils.isNotBlank(value)) {
 			if (type.equals("byte")) {
-				return "byte".equals(type) ? (byte) 0 : null;
+				return Byte.valueOf(value).byteValue();
 			}
 			else if (type.equals("short")) {
-				return "short".equals(type) ? (short) 0 : null;
+				return Short.valueOf(value).shortValue();
 			}
 			else if (type.equals("int")) {
-				return "int".equals(type) ? (int) 0 : null;
+				return Integer.valueOf(value).intValue();
 			}
 			else if (type.equals("long")) {
-				return "long".equals(type) ? (long) 0 : null;
+				return Long.valueOf(value).longValue();
 			}
 			else if (type.equals("double")) {
-				return "double".equals(type) ? (double) 0 : null;
+				return Double.valueOf(value).doubleValue();
 			}
 			else if (type.equals("float")) {
-				return "float".equals(type) ? (float) 0 : null;
+				return Float.valueOf(value).floatValue();
 			}
 			else if (type.equals("boolean")) {
-				return "boolean".equals(type) ? false : null;
+				return Boolean.valueOf(value).booleanValue();
 			}
 		}
 
 		if (result == null) {
-			throw new RuntimeException("Type " + type + " is not supported");
+			throw new IllegalArgumentException("Type " + type + " with value " + value + " is not supported");
 		}
 
 		return result;
