@@ -345,11 +345,22 @@ function disableJobFields(disable) {
 	getByID('jobGroup').prop('disabled', disable);
 	getByID('jobName').prop('disabled', disable);
 	getByID('description').prop('disabled', disable);
-	getByID('jobGroup').prop('required', !disable);
-	getByID('jobName').prop('required', !disable);
 	
-	getByID('triggerGroup').prop('required', disable);
-	getByID('triggerName').prop('required', disable);
+	if(disable) {
+		getByID('jobGroup').removeAttr('required');
+		getByID('jobName').removeAttr('required');
+		getByID('triggerGroup').attr('required', 'required');
+		getByID('triggerName').attr('required', 'required');
+	} else {
+		getByID('jobGroup').attr('required', 'required');
+		getByID('jobName').attr('required', 'required');
+		getByID('triggerGroup').removeAttr('required');
+		getByID('triggerName').removeAttr('required');
+	}
+	
+	
+	
+	
 }
 
 function initTriggerTypeList() {
@@ -402,9 +413,11 @@ function hasValidationErrors(id) {
 }
 
 function save(type) {
-	
-	getByID('jobTriggerForm').validator('validate');
-	if (hasValidationErrors('jobTriggerForm')) {
+	var formId = 'jobTriggerForm';
+	reloadValidator(formId);
+	getByID(formId).validator('validate');
+	if (hasValidationErrors(formId)) {
+//		var errors = getByID('jobTriggerForm').data('bs.validator.errors');
 		return;
 	}
 	
@@ -566,12 +579,12 @@ function switchVisibility(hideClass, showClass) {
 		if (Array.isArray(hideClass)) {
 			$.each(hideClass, function (i, item) {
 				var hc = getByClazz(item.toLowerCase());
-				findInputsAndSetRequired(hc, true);
+				findInputsAndSetRequired(hc, false);
 				hc.hide();
 			});
 		} else {
 			var hc = getByClazz(hideClass.toLowerCase());
-			findInputsAndSetRequired(hc, true);
+			findInputsAndSetRequired(hc, false);
 			hc.hide();
 		}
 	}
@@ -598,7 +611,11 @@ function findInputsAndSetRequired($formGroup, required) {
 	$formGroup.find('.form-control').each(function() {
 		var $input = $(this);
 		if (!$input.hasClass('notRequired')) {
-			$input.prop('required', required);
+			if(required) {
+				$input.attr('required', 'required');
+			} else {
+				$input.removeAttr('required');
+			}
 		}
 	});
 }
