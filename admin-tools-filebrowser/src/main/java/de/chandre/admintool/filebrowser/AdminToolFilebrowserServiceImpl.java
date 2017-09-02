@@ -9,20 +9,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +39,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -53,6 +61,17 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 
 	private static final Log LOGGER = LogFactory.getLog(AdminToolFilebrowserServiceImpl.class);
 	
+	private static final Map<Integer, String> FILE_SIZE_EXP = new TreeMap<>();
+	static {
+		FILE_SIZE_EXP.put(Integer.valueOf(1), " B");
+		FILE_SIZE_EXP.put(Integer.valueOf(2), " KB");
+		FILE_SIZE_EXP.put(Integer.valueOf(3), " MB");
+		FILE_SIZE_EXP.put(Integer.valueOf(4), " GB");
+		FILE_SIZE_EXP.put(Integer.valueOf(5), " TB");
+		FILE_SIZE_EXP.put(Integer.valueOf(6), " PB");
+		FILE_SIZE_EXP.put(Integer.valueOf(7), " EB");
+	}
+	
 	@Autowired
 	private AdminToolFilebrowserConfig config;
 	
@@ -60,6 +79,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	private Environment env;
 	
 	private Set<String> rootDirsCache = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	
 	
 	@Override
 	public Set<String> getRootDirs() {
@@ -271,18 +291,31 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	 * @param fileLength
 	 * @return
 	 */
-	protected String getFileSize(long fileLength) {
-		long multiplicator = config.getSizeDivisorMultiplicator();
-		if (fileLength < 1024L) {
-			return String.valueOf(fileLength) + " B";
+	@Override
+	public String getFileSize(long fileLength) {
+		return calculateDisplayFileSize(fileLength, config.getSizeDivisorMultiplicator());
+	}
+	
+	@Override
+	public String getNormalFileSize(long fileLength) {
+		return calculateDisplayFileSize(fileLength, FileUtils.ONE_KB);
+	}
+	
+	protected String calculateDisplayFileSize(long fileLength, long sizeDivisorMultiplicator) {
+		BigInteger multiplicator = BigInteger.valueOf(sizeDivisorMultiplicator);
+		BigInteger size = BigInteger.valueOf(fileLength);
+		
+		for (Entry<Integer, String> entry : FILE_SIZE_EXP.entrySet()) {
+			BigInteger divisor = multiplicator.pow(entry.getKey().intValue());
+			if (fileLength < divisor.longValue()) {
+				if (entry.getKey().intValue() == 1) {
+					return  String.valueOf(size) + entry.getValue();
+				}
+				return formatFileSize(size, multiplicator.pow(entry.getKey().intValue() - 1), entry.getValue());
+			}
 		}
-		if (fileLength < 1024L * multiplicator) {
-			return getFileSize(fileLength, 1024, "KB");
-		}
-		if (fileLength < 1024L * multiplicator * multiplicator) {
-			return getFileSize(fileLength, 1024 * multiplicator, "MB");
-		}
-		return getFileSize(fileLength, 1024 * multiplicator * multiplicator, "GB");
+		//should not happen
+		return FileUtils.byteCountToDisplaySize(fileLength);
 	}
 	
 	/**
@@ -293,8 +326,8 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	 * @param unit the Unit for the divisor
 	 * @return
 	 */
-	protected String getFileSize(long fileLength, long divisor, String unit) {
-		BigDecimal size = BigDecimal.valueOf(fileLength);
+	protected String formatFileSize(BigInteger fileLength, BigInteger divisor, String unit) {
+		BigDecimal size = new BigDecimal(fileLength);
 		size = size.setScale(config.getFileSizeDisplayScale()).divide(new BigDecimal(divisor), BigDecimal.ROUND_HALF_EVEN);
 		return String.format("%s %s", size.doubleValue(), unit);
 	}
@@ -531,4 +564,95 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 		}
 		return parent;
 	}
+	
+	@Override
+	public Map<String, Object> getFileInfo(String path) throws IOException {
+		File file = new File(path);
+		Map<String, Object> result = new TreeMap<>();
+		result.put("file", file);
+		
+		if (file.isFile() && file.canRead() && config.getMaxFilesizeForHashes() > file.length()) {
+			if (config.isInfoCrc32()) {
+				result.put("file.checksumCRC32", FileUtils.checksumCRC32(file));
+			}
+			
+			FileInputStream fis = new FileInputStream(file);
+			if (config.isInfoMD5()) {
+				result.put("file.md5Hex", DigestUtils.md5Hex(fis));
+			}
+			if (config.isInfoSha1()) {
+				result.put("file.sha1Hex", DigestUtils.sha1Hex(fis));
+			}
+			if (config.isInfoSha256()) {
+				result.put("file.sha256Hex", DigestUtils.sha256Hex(fis));
+			}
+//			result.put("file.sha384Hex", DigestUtils.sha384Hex(fis));
+//			result.put("file.sha512Hex", DigestUtils.sha512Hex(fis));
+			
+			IOUtils.closeQuietly(fis);
+		}
+		
+		result.put("file.lastModified", file.lastModified());
+		result.put("file.canWrite", file.canWrite());
+		result.put("file.canRead", file.canRead());
+		result.put("file.canExecute", file.canExecute());
+		result.put("file.isHidden", file.isHidden());
+		
+		result.put("disk.totalSpace", file.getTotalSpace());
+		result.put("disk.usableSpace", file.getUsableSpace());
+		result.put("disk.freeSpace", file.getFreeSpace());
+		result.put("disk.totalSpace.coreFormat", getFileSize(file.getTotalSpace()));
+		result.put("disk.usableSpace.coreFormat", getFileSize(file.getUsableSpace()));
+		result.put("disk.freeSpace.coreFormat", getFileSize(file.getFreeSpace()));
+		result.put("disk.totalSpace.commonFormat", getNormalFileSize(file.getTotalSpace()));
+		result.put("disk.usableSpace.commonFormat", getNormalFileSize(file.getUsableSpace()));
+		result.put("disk.freeSpace.commonFormat", getNormalFileSize(file.getFreeSpace()));
+		
+		String os = System.getProperty("os.name").toLowerCase();
+		result.put("system.operationSystem", os);
+		
+		Class<? extends BasicFileAttributes> attributesClass = 
+				isWindows(os) ? DosFileAttributes.class : BasicFileAttributes.class;
+		BasicFileAttributes attr = Files.readAttributes(file.toPath(), attributesClass);
+		
+		result.put("file.attr.creationTime", attr.creationTime());
+		result.put("file.attr.lastAccessTime", attr.lastAccessTime());
+		result.put("file.attr.lastModifiedTime", attr.lastModifiedTime());
+
+		result.put("file.attr.isDirectory", attr.isDirectory());
+		result.put("file.attr.isOther", attr.isOther());
+		result.put("file.attr.isRegularFile", attr.isRegularFile());
+		result.put("file.attr.isSymbolicLink", attr.isSymbolicLink());
+		result.put("file.attr.size", attr.size());
+		
+		
+		if (DosFileAttributes.class.isAssignableFrom(attr.getClass())) {
+			result.put("file.attr.isArchive", ((DosFileAttributes)attr).isArchive());
+			result.put("file.attr.isHidden", ((DosFileAttributes)attr).isHidden());
+			result.put("file.attr.isReadOnly", ((DosFileAttributes)attr).isReadOnly());
+			result.put("file.attr.isSystem", ((DosFileAttributes)attr).isSystem());
+		}
+		
+		long size = file.length();
+		if (file.isDirectory() && !attr.isSymbolicLink() && config.isCountFolderSize()) {
+			size = FileUtils.sizeOfDirectory(file);
+		}
+		result.put("file.size", size);
+		result.put("file.size.coreFormat", getFileSize(size));
+		result.put("file.size.commonFormat", getNormalFileSize(size));
+		
+		if (!isWindows(os)) {
+			Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath(), LinkOption.NOFOLLOW_LINKS);
+			result.put("file.permissions", PosixFilePermissions.toString(permissions));
+		}
+		
+		for (Entry<String, Object> entry : result.entrySet()) {
+			System.out.println(String.format("%1$20s : %2$s", entry.getKey(), entry.getValue()));
+		}
+		return result;
+	}
+	
+	public static boolean isWindows(String os) {
+        return (os.indexOf("win") >= 0);
+    }
 }

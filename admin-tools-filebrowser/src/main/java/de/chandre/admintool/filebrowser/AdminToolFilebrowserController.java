@@ -57,7 +57,19 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		model.put("sortCol", SortColumn.fromIndex(sortCol));
 		model.put("sortAsc", sortType);
 		model.put("filter", filter);
+		
+		
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
+	}
+	
+	@RequestMapping(value = {"/info"}, method={RequestMethod.GET, RequestMethod.POST})
+	public String info(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
+		if(LOGGER.isTraceEnabled()) LOGGER.trace("info: " + decodedPath);
+		addCommonContextVars(model, request);
+		model.addAttribute("infos", filebrowserService.getFileInfo(decodedPath));
+		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + "filebrowser/includes/fileInfo.inc";
 	}
 	
 	@RequestMapping(value = {"/file"}, method={RequestMethod.GET, RequestMethod.POST})

@@ -7,3 +7,4 @@ target/
 *.log.gz
 *.versionsBackup
 *.bat
+.springBeans

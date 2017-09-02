@@ -4,7 +4,9 @@
 	<div layout:fragment="content">
 		<section class="content-header">
 			<h1>
-				Fileviewer <span class="small">[<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)})}">back to Filebrowser</a>]</span>
+				Fileviewer <span class="small">[<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)})}">
+					<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.fileviewer.link.back', 'back to Filebrowser')" />
+				</a>]</span>
 			</h1>
 			<ol class="breadcrumb"
 				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
@@ -24,7 +26,7 @@
 						<button class="close" aria-hidden="true" data-dismiss="alert"
 							type="button">x</button>
 						<h4>
-							<i class="icon fa fa-warning"></i> An Exception has been occurred!
+							<i class="icon fa fa-warning"></i> <th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.exception.headline', 'An Exception has been occurred!')" />
 						</h4>
 						<span th:text="${exceptionMessage}"></span>
 					</div>
@@ -38,7 +40,9 @@
 	
 					<div class="box-body">
 						<div class="row">
-							<div class="col-md-2 col-xs-3">Encoding</div>
+							<div class="col-md-2 col-xs-3">
+								<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.fileviewer.text.encoding', 'Encoding')" />
+							</div>
 							<div class="col-md-4 col-xs-6">
 								<select class="form-control" name="encoding">
 									<option th:each="encoding, iterState : ${@adminToolFileviewerConfig.getEncodings()}"
@@ -46,7 +50,9 @@
 								</select>
 								<input type="hidden" name="file" th:value="${currentFile.getAbsolutePath()}"/>
 							</div>
-							<div class="col-md-2 col-xs-3"><button name="reload" type="submit" class="btn btn-default">reload</button></div>
+							<div class="col-md-2 col-xs-3"><button name="reload" type="submit" class="btn btn-default">
+								<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.fileviewer.btn.reload', 'reload')" />
+							</button></div>
 						</div>
 					</div>
 				</div>
@@ -59,7 +65,9 @@
 					<div class="box-header with-border">
 						<div class="row" id="permissions">
 							<div class="row">
-								<div class="col-md-2 col-xs-3 btn-sm" title="File attributes">Security states:</div>
+								<div class="col-md-2 col-xs-3 btn-sm" title="File attributes">
+									<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.fileviewer.text.states', 'Security states:')" />
+								</div>
 								<div class="col-md-10 col-xs-9">
 									<div th:class="'col-md-2 col-xs-2 text-center btn-sm' + ${!currentFile.isHidden() ? ' bg-success' : ' bg-danger'}"
 										th:text="${currentFile.isHidden() ? 'invisble' : 'visible'}"
@@ -103,7 +111,9 @@
 							</div>
 							<div class="col-md-6 col-xs-6"></div>
 							<div class="col-md-2 col-xs-2">
-								<button  name="save" type="submit" class="btn btn-default">Save changes</button>
+								<button  name="save" type="submit" class="btn btn-default">
+									<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.fileviewer.btn.save', 'Save changes')" />
+								</button>
 							</div>
 						</div>
 					</div>

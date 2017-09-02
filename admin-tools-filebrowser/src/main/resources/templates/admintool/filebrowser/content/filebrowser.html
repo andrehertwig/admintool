@@ -18,7 +18,8 @@
 					<button class="close" aria-hidden="true" data-dismiss="alert"
 						type="button">x</button>
 					<h4>
-						<i class="icon fa fa-warning"></i> An Exception has been occurred!
+						<i class="icon fa fa-warning"></i> 
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.exception.headline', 'An Exception has been occurred!')" />
 					</h4>
 					<span th:text="${exceptionMessage}"></span>
 				</div>
@@ -48,7 +49,9 @@
 				
 				<div class="box-header with-border">
 					<div class="row text-center">
-						<div class="col-md-1 col-xs-2">Roots: </div>
+						<div class="col-md-1 col-xs-2">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.text.roots', 'Roots: ')" />
+						</div>
 						<div class="col-md-7 col-xs-8 text-center">
 							<a th:each="rootDir, colIterState : ${@adminToolFilebrowserService.getRootDirs()}"
 								th:class="'btn btn-sm btn-primary' + ${@adminToolFilebrowserService.isRootActive(rootDir, currentDir) ? ' active' : ''}"
@@ -80,25 +83,33 @@
 									<tr>
 										<td></td>
 										<th>
-											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=1,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">Name</a>
+											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=1,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.tableHead.name', 'Name')" />
+											</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).NAME.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(1, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=2,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">Size</a>
+											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=2,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.tableHead.size', 'Size')" />
+											</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).SIZE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(2, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=3,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">Type</a>
+											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=3,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.tableHead.type', 'Type')" />
+											</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).TYPE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(3, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
 										</th>
 										<th>
-											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=4,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">Date</a>
+											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(currentDir)},sortCol=4,sortAsc=${null != sortAsc ? !sortAsc : true},filter=${filter})}">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.tableHead.date', 'Date')" />
+											</a>
 											<i th:if="${sortCol != null and sortCol.getIndex() == T(de.chandre.admintool.filebrowser.SortColumn).DATE.getIndex()}"
 													th:with="direction = ${@adminToolFilebrowserService.getSortDirection(4, sortCol, sortAsc)}" 
 													th:class="'fa fa-long-arrow-'+ ${direction}" aria-hidden="true"></i>
@@ -111,14 +122,22 @@
 								
 									<tr th:with="parentDir=${@adminToolFilebrowserService.getParent(currentDir)}">
 										<td></td>
-										<td><a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(parentDir)})}">[..]</a></td>
+										<td>
+											<a th:href="@{${adminToolContext} + '/filebrowser'(dir=${@adminToolFilebrowserService.encodeURL(parentDir)})}">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.text.up', '[..]')" />
+											</a>
+										</td>
 										<td></td>
 										<td></td>
 										<td></td>
 										<td></td>
 									</tr>
 									<tr >
-										<td colspan="6" class="text-center normal"><em><span class="small">[directories]</span></em></td>
+										<td colspan="6" class="text-center normal">
+											<em><span class="small">
+												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.text.dirs', '[directories]')" />
+											</span></em>
+										</td>
 									</tr>
 									
 									<tr th:each="directory, colIterState : ${@adminToolFilebrowserService.getDirectories(currentDir, sortCol, sortAsc, filter)}">
@@ -132,6 +151,9 @@
 										<td th:text="${@adminToolFilebrowserService.getFileType(directory)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(directory), 'dd.MMM.yyyy HH:mm:ss')}"></td>
 										<td class="text-center">
+											<a class="btn btn-xs btn-default pull-left infoBtn" th:attr="data-path=${@adminToolFilebrowserService.encodeURL(directory.getAbsolutePath())}">
+												<i class="fa fa-info-circle" aria-hidden="true"></i>
+											</a>
 											<button class="btn btn-xs btn-primary pull-right delete" type="button"
 												th:if="${@adminToolFilebrowserConfig.isDelteFolderAllowed()}"
 												th:attr="data-resource=${@adminToolFilebrowserService.encodeURL(directory.getAbsolutePath())}">
@@ -155,6 +177,11 @@
 										<td th:text="${@adminToolFilebrowserService.getFileType(file)}"></td>
 										<td th:text="${#dates.format(@adminToolFilebrowserService.getLastChange(file), 'dd.MMM.yyyy HH:mm:ss')}"></td>
 										<td class="text-center"> 
+										
+											<a class="btn btn-xs btn-default pull-left infoBtn" th:attr="data-path=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())}">
+												<i class="fa fa-info-circle" aria-hidden="true"></i>
+											</a>
+										
 											<a class="btn btn-xs btn-primary pull-right" 
 												th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
 												th:href="@{${adminToolContext} + '/filebrowser/download'(file=${@adminToolFilebrowserService.encodeURL(file.getAbsolutePath())})}">
@@ -187,9 +214,15 @@
 						</div>
 					</div>
 					<div class="box-footer clearfix" th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}">
-						<button id="selectDirs" type="button" class="btn btn-default">Select all dirs</button>
-						<button id="selectFiles" type="button" class="btn btn-default">Select all files</button>
-						<button name="download" type="submit" class="btn btn-default">Download selected files as ZIP</button>
+						<button id="selectDirs" type="button" class="btn btn-default">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.btn.selectAllDirs', 'Select all dirs')" />
+						</button>
+						<button id="selectFiles" type="button" class="btn btn-default">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.btn.selectAllFiles', 'Select all files')" />
+						</button>
+						<button name="download" type="submit" class="btn btn-default">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.btn.downloadAsZip', 'Download selected files as ZIP')" />
+						</button>
 					</div>
 				</form>
 				
@@ -202,15 +235,21 @@
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
-							<h4 class="modal-title" id="uploadLabel">Upload</h4>
+							<h4 class="modal-title" id="uploadLabel">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.upload.headline', 'Upload')" />
+							</h4>
 						</div>
 						<div class="modal-body">
 							<form id="upload_form" th:action="@{${adminToolContext} + '/filebrowser/upload'}" method="post">
 							</form>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary pull-right" id="upload_add">Add</button>
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+							</button>
+							<button type="button" class="btn btn-primary pull-right" id="upload_add">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.add', 'Add')" />
+							</button>
 						</div>
 					</div>
 				</div>
@@ -223,13 +262,17 @@
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
-							<h4 class="modal-title" id="createFolderLabel">Create folder</h4>
+							<h4 class="modal-title" id="createFolderLabel">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.createFolder.headline', 'Create folder')" />
+							</h4>
 						</div>
 						<form id="createFolder_form" th:action="@{${adminToolContext} + '/filebrowser/createFolder'}" method="post">
 							<div class="modal-body">
 							
 								<div class="form-group">
-									<label class="col-sm-3 control-label" for="folderName">Folder name</label>
+									<label class="col-sm-3 control-label" for="folderName">
+										<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.createFolder.input.name', 'Folder name')" />
+									</label>
 									<div class="col-sm-9">
 										<div class="input-group">
 											<span class="input-group-addon">
@@ -244,8 +287,12 @@
 								<div class="clearfix">&nbsp;</div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-								<button type="submit" class="btn btn-primary pull-right" id="createFolder_add">Add</button>
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="submit" class="btn btn-primary pull-right" id="createFolder_add">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.add', 'Add')" />
+								</button>
 							</div>
 						</form>
 					</div>
@@ -259,25 +306,34 @@
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
-							<h4 class="modal-title" id="admintoolConfirmModalLabel">Confirm</h4>
+							<h4 class="modal-title" id="admintoolConfirmModalLabel">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.delete.confirm.headline', 'Confirm')" />
+							</h4>
 						</div>
 						<form id="deleteResource_form" th:action="@{${adminToolContext} + '/filebrowser/delete'}" method="post">
 							<div class="modal-body">
-								<p>Do you really want to delete this resource?</p>
+								<p><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.delete.confirm.text', 'Do you really want to delete this resource?')" /></p>
 								<p id="resourceToDeleteShown"></p>
 								<input id="resourceToDelete" type="hidden" name="file" value=""/>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-								<button type="submit" class="btn btn-outline" id="btn_delete_confirm">Confirm</button>
+								<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="submit" class="btn btn-outline" id="btn_delete_confirm">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.confirm', 'Confirm')" />
+								</button>
 							</div>
 						</form>
 					</div>
 				</div>
 			</div>
+			
+			<div class="modal modal-default fade" tabindex="-1" role="dialog" id="infoModals" aria-labelledby="fileInfoModalLabel"></div>
 
 		</section>
 	</div>
+	
 </body>
 </html>
 

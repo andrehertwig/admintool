@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * interface for file browser service
@@ -176,4 +179,28 @@ public interface AdminToolFilebrowserService {
 	 * @throws GenericFilebrowserException
 	 */
 	String deleteResource(String path) throws IOException, GenericFilebrowserException;
+
+	/**
+	 * returns a map with gathered file information 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
+	Map<String, Object> getFileInfo(String path) throws IOException;
+
+	/**
+	 * calculates the file size with configured parameters, except that it's scaled additionally
+	 * 
+	 * @param fileLength
+	 * @return
+	 */
+	String getFileSize(long fileLength);
+
+	/**
+	 * calculates the file size like {@link FileUtils}, except that it's scaled additionally
+	 * 
+	 * @param fileLength
+	 * @return
+	 */
+	String getNormalFileSize(long fileLength);
 }

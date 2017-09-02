@@ -84,6 +84,24 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.delteFileAllowed:true}")
 	private boolean delteFileAllowed;
 	
+	@Value("${admintool.filebrowser.info.crc32:true}")
+	private boolean infoCrc32;
+	
+	@Value("${admintool.filebrowser.info.md5:true}")
+	private boolean infoMD5;
+	
+	@Value("${admintool.filebrowser.info.sha1:true}")
+	private boolean infoSha1;
+	
+	@Value("${admintool.filebrowser.info.sha256:false}")
+	private boolean infoSha256;
+	
+	@Value("${admintool.filebrowser.info.maxFilesizeForHashes:1000000000}")
+	private long maxFilesizeForHashes;
+	
+	@Value("${admintool.filebrowser.info.countFolderSize:true}")
+	private boolean countFolderSize;
+	
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
@@ -148,12 +166,23 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	public long getSizeDivisorMultiplicator() {
 		return sizeDivisorMultiplicator;
 	}
+	
+	/**
+	 * @return the sizeDivisorMultiplicator
+	 */
+	public void setSizeDivisorMultiplicator(long sizeDivisorMultiplicator) {
+		this.sizeDivisorMultiplicator = sizeDivisorMultiplicator;
+	}
 
 	/**
 	 * @return the fileSizeDisplayScale
 	 */
 	public byte getFileSizeDisplayScale() {
 		return fileSizeDisplayScale;
+	}
+	
+	public void setFileSizeDisplayScale(byte fileSizeDisplayScale) {
+		this.fileSizeDisplayScale = fileSizeDisplayScale;
 	}
 
 	/**
@@ -264,6 +293,84 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	public boolean isDelteFileAllowed() {
 		return delteFileAllowed;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isInfoCrc32() {
+		return infoCrc32;
+	}
+
+	public void setInfoCrc32(boolean infoCrc32) {
+		this.infoCrc32 = infoCrc32;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isInfoMD5() {
+		return infoMD5;
+	}
+
+	public void setInfoMD5(boolean infoMD5) {
+		this.infoMD5 = infoMD5;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isInfoSha1() {
+		return infoSha1;
+	}
+
+	public void setInfoSha1(boolean infoSha1) {
+		this.infoSha1 = infoSha1;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isInfoSha256() {
+		return infoSha256;
+	}
+
+	public void setInfoSha256(boolean infoSha256) {
+		this.infoSha256 = infoSha256;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public long getMaxFilesizeForHashes() {
+		return maxFilesizeForHashes;
+	}
+
+	public void setMaxFilesizeForHashes(long maxFilesizeForHashes) {
+		this.maxFilesizeForHashes = maxFilesizeForHashes;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.0.6
+	 */
+	public boolean isCountFolderSize() {
+		return countFolderSize;
+	}
+
+	public void setCountFolderSize(boolean countFolderSize) {
+		this.countFolderSize = countFolderSize;
+	}
 
 	@Override
 	@PostConstruct
@@ -287,7 +394,10 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(securityRoles).append(", componentPosition=").append(componentPosition)
 				.append(", uploadAllowed=").append(uploadAllowed).append(", createFolderAllowed=")
 				.append(createFolderAllowed).append(", delteFolderAllowed=").append(delteFolderAllowed)
-				.append(", delteFileAllowed=").append(delteFileAllowed).append("]");
+				.append(", delteFileAllowed=").append(delteFileAllowed).append(", infoCrc32=").append(infoCrc32)
+				.append(", infoMD5=").append(infoMD5).append(", infoSha1=").append(infoSha1).append(", infoSha256=")
+				.append(infoSha256).append(", maxFilesizeForHashes=").append(maxFilesizeForHashes)
+				.append(", countFolderSize=").append(countFolderSize).append("]");
 		return builder.toString();
 	}
 }

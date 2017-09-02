@@ -35,6 +35,20 @@ $( document ).ready(function() {
 			getByID("deleteConfirmModal").modal();
 		});
 	});
+	
+	$('.infoBtn').each(function() {
+		var btn = $(this);
+		btn.on('click', function() {
+			var link = $(this);
 			
+			sendRequest("/admintool/filebrowser/info?file=" + link.data('path'), "GET", "text", function(data) {
+				var div = getByID('infoModals');
+				div.html(data);
+				div.modal();
+			});
+			
+		});
+	});
+	
 			
 });

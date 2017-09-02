@@ -1,0 +1,130 @@
+<html xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+<th:block th:with="fileInfo = ${infos}">
+
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="fileInfoModalLabel"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.headline', 'FileInfo')" /></h4>
+			</div>
+			<div class="modal-body">
+				<p th:text="${fileInfo.get('file').getAbsolutePath()}"></p>
+				<div class="table-responsive">
+					<table class="table no-margin table-hover">
+						<tbody>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.lastModified', 'Last modified')" /></th>
+								<td th:text="${#dates.formatISO(fileInfo.get('file.lastModified'))}" th:title="${fileInfo.get('file.lastModified')}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.creationTime', 'Creation time')" /></th>
+								<td th:text="${fileInfo.get('file.attr.creationTime')}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.lastAccessTime', 'Last access')" /></th>
+								<td th:text="${fileInfo.get('file.attr.lastAccessTime')}"></td>
+							</tr>
+							<tr th:if="${fileInfo.get('file.checksumCRC32')}">
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.checksumCRC32', 'CRC32')" /></th>
+								<td th:text="${fileInfo.get('file.checksumCRC32')}"></td>
+							</tr>
+							<tr th:if="${fileInfo.get('file.md5Hex')}">
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.md5Hex', 'MD5')" /></th>
+								<td th:text="${fileInfo.get('file.md5Hex')}"></td>
+							</tr>
+							<tr th:if="${fileInfo.get('file.sha1Hex')}">
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.sha1Hex', 'SHA-1')" /></th>
+								<td th:text="${fileInfo.get('file.sha1Hex')}"></td>
+							</tr>
+							<tr th:if="${fileInfo.get('file.sha256Hex')}">
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.sha256Hex', 'SHA-256')" /></th>
+								<td th:text="${fileInfo.get('file.sha256Hex')}"></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table no-margin table-hover">
+						<tbody>
+							<tr th:if="${fileInfo.get('file.permissions')}">
+								<th colspan="2"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.permissions', 'Permissions')" /></th>
+								<td colspan="2" th:text="${fileInfo.get('file.permissions')}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.canRead', 'Readable')" /></th>
+								<td th:text="${fileInfo.get('file.canRead')}"></td>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.canWrite', 'Writable')" /></th>
+								<td th:text="${fileInfo.get('file.canWrite')}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.canExecute', 'Executable')" /></th>
+								<td th:text="${fileInfo.get('file.canExecute')}"></td>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.isHidden', 'Hidden')" /></th>
+								<td th:text="${fileInfo.get('file.isHidden')}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.isArchive', 'Archive')" /></th>
+								<td th:text="${fileInfo.get('file.attr.isArchive')}"></td>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.isSymbolicLink', 'Symbolic Link')" /></th>
+								<td th:text="${fileInfo.get('file.attr.isSymbolicLink')}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-header modal-middle-header">
+				<h4><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.subHeadline.size', 'Size information')" /></h4>
+            </div>
+            <div class="modal-body">
+	            <div class="table-responsive">
+					<table class="table no-margin table-hover">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Bytes</th>
+								<th th:inline="text"> x / [[${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator()}]]</th>
+								<th th:if="${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator() != 1024}">x / 1024</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.file.size', 'File size')" /></th>
+								<td th:text="${fileInfo.get('file.size')}"></td>
+								<td th:text="${fileInfo.get('file.size.coreFormat')}"></td>
+								<td th:text="${fileInfo.get('file.size.commonFormat')}" th:if="${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator() != 1024}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.disk.totalSpace', 'HDD total space')" /></th>
+								<td th:text="${fileInfo.get('disk.totalSpace')}"></td>
+								<td th:text="${fileInfo.get('disk.totalSpace.coreFormat')}"></td>
+								<td th:text="${fileInfo.get('disk.totalSpace.commonFormat')}" th:if="${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator() != 1024}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.disk.usableSpace', 'HDD useable space')" /></th>
+								<td th:text="${fileInfo.get('disk.usableSpace')}"></td>
+								<td th:text="${fileInfo.get('disk.usableSpace.coreFormat')}"></td>
+								<td th:text="${fileInfo.get('disk.usableSpace.commonFormat')}" th:if="${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator() != 1024}"></td>
+							</tr>
+							<tr>
+								<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.filebrowser.modal.info.disk.freeSpace', 'HDD free space')" /></th>
+								<td th:text="${fileInfo.get('disk.freeSpace')}"></td>
+								<td th:text="${fileInfo.get('disk.freeSpace.coreFormat')}"></td>
+								<td th:text="${fileInfo.get('disk.freeSpace.commonFormat')}" th:if="${@adminToolFilebrowserConfig.getSizeDivisorMultiplicator() != 1024}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+	            
+				
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+				</button>
+			</div>
+		</div>
+	</div>
+		
+</th:block>
+</html>
