@@ -51,6 +51,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.componentPosition:}")
 	private Integer componentPosition;
 	
+	@Value("${admintool.dbbrowser.loadMetaData:true}")
+	private boolean loadMetaData;
+	
 	@Value("${admintool.dbbrowser.showMetaDataLoadException:false}")
 	private boolean showMetaDataLoadException;
 	
@@ -190,7 +193,6 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		this.componentPosition = componentPosition;
 	}
 	
-	
 	/**
 	 * 
 	 * @return
@@ -209,6 +211,24 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 		this.showMetaDataLoadException = showMetaDataLoadException;
 	}
 
+	/**
+	 * 
+	 * @return
+	 *  @since 1.1.6
+	 */
+	public boolean isLoadMetaData() {
+		return loadMetaData;
+	}
+
+	/**
+	 * 
+	 * @param loadMetaData
+	 *  @since 1.1.6
+	 */
+	public void setLoadMetaData(boolean loadMetaData) {
+		this.loadMetaData = loadMetaData;
+	}
+
 	@Override
 	@PostConstruct
 	public void printConfig() {
@@ -223,8 +243,8 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 				.append(clobEncodings).append(", codeMirrorVersion=").append(codeMirrorVersion)
 				.append(", codeMirrorUseBowser=").append(codeMirrorUseBowser).append(", codeMirrorAddLibs=")
 				.append(codeMirrorAddLibs).append(", securityRoles=").append(securityRoles)
-				.append(", componentPosition=").append(componentPosition).append(", showMetaDataLoadException=")
-				.append(showMetaDataLoadException).append("]");
+				.append(", componentPosition=").append(componentPosition).append(", loadMetaData=").append(loadMetaData)
+				.append(", showMetaDataLoadException=").append(showMetaDataLoadException).append("]");
 		return builder.toString();
 	}
 	

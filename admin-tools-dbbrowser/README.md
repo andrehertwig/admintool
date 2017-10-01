@@ -117,4 +117,7 @@ Examples must be managed per dataSource
 	# This will always shown as error after starting the dbBrowser. To deactivate this error message ste this to true.
 	admintool.dbbrowser.showMetaDataLoadException=false
 	
+	# since 1.1.6
+	admintool.dbbrowser.loadMetaData=true
+	
 ```
