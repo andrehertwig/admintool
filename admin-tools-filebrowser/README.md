@@ -6,6 +6,10 @@
 * `sorting`: sort result part of table by name, size, date and type
 * `downloading`: download files
 * `zipping`: download one ore more files/folders as compressed zip
+* `uploading`: upload files via drag'n'drop
+* `deleting`: remove files and directories
+* `creating`: create folders
+* `info`: show file and hdd info
 * `file viewer`: 
   * additional functionality to show files
   * syntax highlighting for different file types
@@ -118,6 +122,34 @@
 	#since 1.1.6
 	# boolean: to enable action to delete files
 	admintool.filebrowser.delteFileAllowed=false
+	
+	#since 1.1.6
+	# boolean: to enable action to upload files
+	admintool.filebrowser.uploadAllowed=false
+	
+	#since 1.1.6
+	# boolean: to enable hash generation for CRC-32 (in file-info-dialog)
+	admintool.filebrowser.info.crc32=true
+	
+	#since 1.1.6
+	# boolean: to enable hash generation for MD-5 (in file-info-dialog)
+	admintool.filebrowser.info.md5=true
+	
+	#since 1.1.6
+	# boolean: to enable hash generation for SHA-1 (in file-info-dialog)
+	admintool.filebrowser.info.sha1=true
+	
+	#since 1.1.6
+	# boolean: to enable hash generation for SHA-256 (in file-info-dialog)
+	admintool.filebrowser.info.sha256=false
+	
+	#since 1.1.6
+	# long: maximum file size the hashes are generated for (in file-info-dialog)
+	admintool.filebrowser.info.maxFilesizeForHashes=1000000000
+	
+	#since 1.1.6
+	# boolean: to enable folder size calculation (in file-info-dialog)
+	admintool.filebrowser.info.countFolderSize=true
 		
 ```
 
