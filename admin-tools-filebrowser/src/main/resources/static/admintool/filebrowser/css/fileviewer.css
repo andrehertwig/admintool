@@ -2,6 +2,10 @@
   border: 1px solid #eee;
   height: auto;
 }
+div.CodeMirror span.CodeMirror-matchingbracket {
+	color: red;
+	font-weight: bold;
+}
 #permissions {
 	width: 98%;
 	margin: 0 auto;

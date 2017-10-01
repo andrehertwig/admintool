@@ -30,7 +30,7 @@ public abstract class AbstractFileBrowserService {
 	 * @return
 	 * @throws IOException
 	 */
-	protected boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException {
+	public boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException {
 		try {
 			if (configReadOnly && write) return false;
 			if (config.isRestrictedBrowsing()) {

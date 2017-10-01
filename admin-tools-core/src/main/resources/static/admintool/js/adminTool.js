@@ -133,7 +133,7 @@ $.extend(AdminTool.Core.prototype, {
 	 *  @param callback(data, query) - callback function with two parameters.first is the data, second the original query param.
 	 */
 	sendRequest: function (query, callback) {
-		var context = $('#webContext').attr('href');
+		var context = getWebContext();
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		var admintool = this;
@@ -229,6 +229,16 @@ $.extend(AdminTool.Core.prototype, {
 
 $.pluginMaker(AdminTool.Core);
 
+function getWebContext() {
+	return $('#webContext').attr('href');
+}
+function getCSRFToken() {
+	return $("meta[name='_csrf']").attr("content");
+}
+function getCSRFHeader() {
+	return $("meta[name='_csrf_header']").attr("content");
+}
+
 $( document ).ready(function() {
 	if($('#reloadPage').length > 0) {
 		$('#reloadPage').click(function () {
@@ -246,7 +256,7 @@ $( document ).ready(function() {
  * @param callback
  */
 function sendRequest(serviceUrl, requestType, dataType, callback) {
-	var context = $('#webContext').attr('href');
+	var context = getWebContext();
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	$.ajax({

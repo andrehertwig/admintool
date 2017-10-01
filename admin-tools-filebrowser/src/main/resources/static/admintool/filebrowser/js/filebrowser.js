@@ -1,5 +1,6 @@
 var allFilesSelected = false;
 var allDirsSelected = false;
+
 $( document ).ready(function() {
 	
 	$('#selectFiles').on('click', function() {
@@ -22,6 +23,20 @@ $( document ).ready(function() {
 	});
 	
 	$('#uploadFile').on('click', function() {
+		
+		var csrf = {};
+		csrf[getCSRFHeader()] = getCSRFToken();
+		var uploader = null;
+		uploader = new qq.FineUploader({
+			element: $("#fine-uploader")[0],
+			request: {
+		        endpoint: getWebContext() + '/admintool/filebrowser/upload',
+		        customHeaders: csrf,
+		        params: {
+			    	"currentDir" : $("#currentDir").text()
+			    }
+		    }
+		});
 		
 		getByID("uploadModal").modal();
 	});

@@ -48,6 +48,11 @@ public class AdminToolFilebrowserLoader extends AbstractAdminToolLoader
 		component.setPosition(filebrowserConfig.getComponentPosition());
 		component.setDisplayName("Filebrowser");
 		component.getSecurityRoles().addAll(filebrowserConfig.getSecurityRoles());
+		
+		//fine-uploader
+		component.addAdditionalCSS("/static/admintool/filebrowser/fine-uploader/5.15.0/fine-uploader-gallery.min.css", true);
+		component.addAdditionalJS("/static/admintool/filebrowser/fine-uploader/5.15.0/fine-uploader.min.js", true);
+		
 		component.addAdditionalJS("/static/admintool/filebrowser/js/filebrowser.js", true);
 		
 		if (fileviewerConfig.isEnabled()) {

@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.chandre.admintool.core.utils.RegexUtil;
 
@@ -655,4 +656,29 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	public static boolean isWindows(String os) {
         return (os.indexOf("win") >= 0);
     }
+	
+	@Override
+	public boolean saveFile(String decodedPath, MultipartFile upload) throws IOException, GenericFilebrowserException {
+		if (StringUtils.isEmpty(decodedPath)) {
+			return false;
+		}
+		File uploadFolder = new File(decodedPath);
+		if (uploadFolder.isDirectory() && isAllowed(uploadFolder, true)) {
+			
+			OutputStream fos = null;
+			try {
+				File file = new File(uploadFolder, upload.getOriginalFilename());
+				fos = new FileOutputStream(file);
+				long result = IOUtils.copyLarge(upload.getInputStream(), fos);
+				LOGGER.info(String.format("uploaded %s bytes (%s)", result, getNormalFileSize(result)));
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
+				return false;
+			} finally {
+				IOUtils.closeQuietly(fos);
+			}
+			return true;
+		} 
+		throw new GenericFilebrowserException("upload not allowed");
+	}
 }

@@ -16,6 +16,12 @@ import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.AdminToolConfig;
 
+/**
+ * configuration class for file uploader 
+ * 
+ * @author André
+ * @since 1.0.0
+ */
 @Component("adminToolFilebrowserConfig")
 public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	
@@ -75,13 +81,13 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.uploadAllowed:false}")
 	private boolean uploadAllowed;
 	
-	@Value("${admintool.filebrowser.createFolderAllowed:true}")
+	@Value("${admintool.filebrowser.createFolderAllowed:false}")
 	private boolean createFolderAllowed;
 	
-	@Value("${admintool.filebrowser.delteFolderAllowed:true}")
+	@Value("${admintool.filebrowser.delteFolderAllowed:false}")
 	private boolean delteFolderAllowed;
 	
-	@Value("${admintool.filebrowser.delteFileAllowed:true}")
+	@Value("${admintool.filebrowser.delteFileAllowed:false}")
 	private boolean delteFileAllowed;
 	
 	@Value("${admintool.filebrowser.info.crc32:true}")
@@ -136,7 +142,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	 * @return the readOnly
 	 */
 	public boolean isReadOnly() {
-		return readOnly;
+		return isEnabled() && readOnly;
 	}
 
 	/**
@@ -213,7 +219,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	 * @return the downloadAllowed
 	 */
 	public boolean isDownloadAllowed() {
-		return downloadAllowed;
+		return isEnabled() && downloadAllowed;
 	}
 
 	/**
@@ -222,7 +228,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	 * @since 1.0.6
 	 */
 	public boolean isDownloadCompressedAllowed() {
-		return downloadCompressedAllowed;
+		return isEnabled() && downloadCompressedAllowed;
 	}
 
 	/**
@@ -252,7 +258,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isManipulationAllowed() {
 		return !readOnly && (uploadAllowed || createFolderAllowed);
@@ -261,43 +267,43 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isUploadAllowed() {
-		return uploadAllowed;
+		return isEnabled() && uploadAllowed;
 	}
 
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isCreateFolderAllowed() {
-		return createFolderAllowed;
+		return isEnabled() && createFolderAllowed;
 	}
 
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isDelteFolderAllowed() {
-		return delteFolderAllowed;
+		return isEnabled() && delteFolderAllowed;
 	}
 
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isDelteFileAllowed() {
-		return delteFileAllowed;
+		return isEnabled() && delteFileAllowed;
 	}
 	
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isInfoCrc32() {
 		return infoCrc32;
@@ -310,7 +316,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isInfoMD5() {
 		return infoMD5;
@@ -323,7 +329,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isInfoSha1() {
 		return infoSha1;
@@ -336,7 +342,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isInfoSha256() {
 		return infoSha256;
@@ -362,7 +368,7 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	/**
 	 * 
 	 * @return
-	 * @since 1.0.6
+	 * @since 1.1.6
 	 */
 	public boolean isCountFolderSize() {
 		return countFolderSize;

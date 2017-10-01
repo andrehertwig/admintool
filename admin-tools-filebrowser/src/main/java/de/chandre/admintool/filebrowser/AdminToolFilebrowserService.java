@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * interface for file browser service
@@ -18,6 +19,17 @@ import org.apache.commons.io.FileUtils;
  *
  */
 public interface AdminToolFilebrowserService {
+	
+	/**
+	 * checks if file is allowed to access
+	 * 
+	 * @param path
+	 * @param write
+	 * @param configReadOnly
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException;
 	
 	/**
 	 * to url-encode a string
@@ -203,4 +215,15 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 */
 	String getNormalFileSize(long fileLength);
+
+	/**
+	 * 
+	 * @param decodedPath
+	 * @param upload
+	 * @return
+	 * @throws IOException
+	 * @throws GenericFilebrowserException
+	 * @since 1.1.6
+	 */
+	boolean saveFile(String decodedPath, MultipartFile upload) throws IOException, GenericFilebrowserException;
 }
