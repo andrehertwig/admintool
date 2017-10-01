@@ -29,7 +29,9 @@ This is just a spare-time project. The usage of this tool (especially in product
   * since 1.0.1: Overrides some templates and provides a login template
   * since 1.1.5: simpe User-View
 * [JavaMelody integration](admin-tools-melody/): simple iFrame integration for JavaMelody (JavaMelody servlet registration is required for your own project)
-* [Jminix integration](admin-tools-jminix/): simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required for your own project)
+* [Jminix integration](admin-tools-jminix/): 
+  * (before 1.1.6) simple iFrame integration for Jminix MBean Browser (Jminix servlet registration is required for your own project)
+  * (since 1.1.6) rebuild JMX-Tree browser via JS 
 * [Log4j management](admin-tools-log4j2/): 
   * dashboard for all log4j2 loggers with the option to change the log level at runtime
   * since 1.1.1: web based logging console to get direct log output
@@ -38,7 +40,8 @@ This is just a spare-time project. The usage of this tool (especially in product
   * dashboard for configured jobs with option to pause/resume or fire them (experimental: change jobs (including job data))
 * [Database browser](admin-tools-dbbrowser/): database browser to access the data sources associated with spring
 * [File browser](admin-tools-filebrowser/): 
-  * browsing and downloading (direct/zipped) files and directories 
+  * browsing and downloading (direct/zipped) files and directories
+  * since 1.1.6: file info, create directories, uploading files, delete files and directories 
   * showing and editing files 
 * [Property Visualization](admin-tools-properties) since 1.0.1: shows Git properties and Spring environment properties
 * [Spring Boot Demo application](admin-tools-demo-jar/): simple spring boot web application for showcase
@@ -92,11 +95,11 @@ The AdminComponent is the main component for configuring a module. It must conta
 
 	//create a new component ... since 1.1.6 it's possible to use chained builders
 	AdminComponent component = AdminComponentImpl.builder()
-				.displayName("Demo-App-Component")
-				.notificationTemplate("notifications/notification")
-				.securityRole("ROLE_ANONYMOUS")
-				.securityRole("ROLE_ADMIN")
-				.position(1).build();
+			.displayName("Demo-App-Component")
+			.notificationTemplate("notifications/notification")
+			.securityRole("ROLE_ANONYMOUS")
+			.securityRole("ROLE_ADMIN")
+			.position(1).build();
 	
 	//adding a custom (relative) js
 	component.addAdditionalJS("/static/mycomponent/js/myJavaScript.js", true);
@@ -130,13 +133,15 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 		
 	//adding a new sub menu tree ... since 1.1.6 it's possible to use chained builders
 	MenuEntry submenu = MenuEntry.builder().displayName("SubMulti")
-				.resouceMessageKeySuffix("demo.subMulti.displayName")
-				.submenuEntry(
-						MenuEntry.builder().name("dashboard3").displayName("Dashboard 3").target("content/dashboard3")
-								.resouceMessageKeySuffix("demo.subMulti.dashboard3.displayName").build())
-				.build();
+			.resouceMessageKeySuffix("demo.subMulti.displayName")
+			.submenuEntry(
+					MenuEntry.builder().name("dashboard3")
+						.displayName("Dashboard 3").target("content/dashboard3")
+						.resouceMessageKeySuffix("demo.subMulti.dashboard3.displayName").build())
+			.build();
 	submenu.addSubmenuEntry(
-				MenuEntry.builder().name("dashboard4").displayName("Dashboard 4").target("content/dashboard4")
+			MenuEntry.builder().name("dashboard4").displayName("Dashboard 4")
+				.target("content/dashboard4")
 				.resouceMessageKeySuffix("demo.subMulti.dashboard4.displayName").build());
 	mainMenu.addSubmenuEntry(submenu);
 	
@@ -147,6 +152,16 @@ Each menu entry can have sub menu entries. Because of the AdminLTE implementatio
 	mainMenu.addSubmenuEntry(submenu);
 	
 ```
+the code above will create the following menu structure
+```
+-- Demo-App-Component
+    -- Dashboard
+    -- Dashboard 2
+    -- SubMulti
+        -- Dashboard 3
+        -- Dashboard 4
+```
+
 Template target resolvement:
 E.g. your Thymeleaf is configured to look for templates in: *classpath:/templates*
 * than your template has to be in: */templates/admintool/*
@@ -226,23 +241,21 @@ You can also override templates provided by the admin-tools-core library. Per de
 ### Checking the Menu Integrity
 There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
  ```html
-
-  <th:block th:include="admintool/includes/integrityCheck.inc" />
- 
+	<th:block th:include="admintool/includes/integrityCheck.inc" />
 ```
 The second option would be calling the method directly, but of couse after spring has finished loading its context.
 ```java
 
-	@Bean
-  public ApplicationListener<ContextRefreshedEvent> contextLoadedListener(AdminToolIntegrityUtil integrityUtil) {
-    return new ApplicationListener<ContextRefreshedEvent>() {
-      @Override
-      public void onApplicationEvent(ContextRefreshedEvent event) {
-        //checking the menu integrity
-        integrityUtil.checkMenuIntegrityAndPrintLog();
-      }
-    };
-  }
+@Bean
+public ApplicationListener<ContextRefreshedEvent> contextLoadedListener(AdminToolIntegrityUtil integrityUtil) {
+	return new ApplicationListener<ContextRefreshedEvent>() {
+		@Override
+		public void onApplicationEvent(ContextRefreshedEvent event) {
+			//checking the menu integrity
+			integrityUtil.checkMenuIntegrityAndPrintLog();
+		}
+	};
+}
 
 ```
 
