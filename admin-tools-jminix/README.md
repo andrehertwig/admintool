@@ -24,6 +24,8 @@
 ```
 
 ## Configurations
+
+### before 1.1.6
 If spring security is enabled and you want to use the change functionality of JMiniX you have to disable CSRF. 
 Furthermore you have to set the frame options, because. 
 
@@ -39,6 +41,13 @@ Furthermore you have to set the frame options, because.
     }
 
 ```
+
+### since 1.1.6
+Completely rebuild functionality of JMX Browser.
+
+CSRF must be enabled with enabled Spring Security. There also no need to configure frameOptions anymore.
+
+ 
 
 The following properties are available:
 
@@ -59,5 +68,17 @@ The following properties are available:
 	#since 1.0.1
 	# integer value. used by default comparator to order components
 	admintool.jminix.componentPosition=
+	
+	#since 1.1.6
+	# string value. used version of mustache js (only useful to change if a CDN is used)
+	admintool.jmx.mustacheVersion=2.3.0
+	
+	#since 1.1.6
+	# string value. used version of jsTree (only useful to change if a CDN is used)
+	admintool.jmx.jsTreeVersion=3.3.4
+	
+	#since 1.1.6
+	# boolean. used by default comparator to order components
+	adminTool.jmx.updateAllowed=true
 	
 ```

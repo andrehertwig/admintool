@@ -27,6 +27,9 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 	@Value("${admintool.jmx.mustacheVersion:2.3.0}")
 	private String mustacheVersion;
 	
+	@Value("${admintool.jmx.jsTreeVersion:3.3.4}")
+	private String jsTreeVersion;
+	
 	@Value("${adminTool.jmx.updateAllowed:true}")
 	private boolean updateAllowed;
 
@@ -51,14 +54,47 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 		this.componentPosition = componentPosition;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.6
+	 */
 	public String getMustacheVersion() {
 		return mustacheVersion;
 	}
 
+	/**
+	 * 
+	 * @param mustacheVersion
+	 * @since 1.1.6
+	 */
 	public void setMustacheVersion(String mustacheVersion) {
 		this.mustacheVersion = mustacheVersion;
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.6
+	 */
+	public String getJsTreeVersion() {
+		return jsTreeVersion;
+	}
+
+	/**
+	 * 
+	 * @param jsTreeVersion
+	 * @since 1.1.6
+	 */
+	public void setJsTreeVersion(String jsTreeVersion) {
+		this.jsTreeVersion = jsTreeVersion;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.6
+	 */
 	public boolean isUpdateAllowed() {
 		return updateAllowed;
 	}
@@ -77,6 +113,4 @@ public class AdminToolJminixConfig implements AdminToolConfig {
 				.append("]");
 		return builder.toString();
 	}
-
-	
 }

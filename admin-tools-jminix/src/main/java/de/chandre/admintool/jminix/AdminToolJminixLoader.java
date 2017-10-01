@@ -31,7 +31,7 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 	public void configureAdminTool()
 	{
 		if(!coreConfig.isEnabled() || !config.isEnabled()) {
-			LOGGER.info("admin tool's jminix browser integation is deactivated");
+			LOGGER.info("admin tool's jminix browser is deactivated");
 			return;
 		}
 		
@@ -44,15 +44,13 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.setDisplayName("JMX Console");
 		
-//		component.addAdditionalJS("/webjars/jquery-ui/1.12.1/jquery-ui.min.js", true);
-//		component.addAdditionalJS("/webjars/jquery-ui/1.12.1/ui/widgets/resizable.js", true);
 		component.addAdditionalJS(getWebjarsPrefixUri() + "mustache/" + config.getMustacheVersion() + "/mustache.min.js", relative);
-		component.addAdditionalJS("/webjars/jstree/3.3.4/dist/jstree.js", true);
+		component.addAdditionalJS(getWebjarsPrefixUri() + "jstree/" + config.getJsTreeVersion() + "/dist/jstree.js", relative);
 		
 		component.addAdditionalJS("/static/admintool/jmx/js/jquery-resizable.js", true);
 		component.addAdditionalJS("/static/admintool/jmx/js/jmx.js", true);
 		
-		component.addAdditionalCSS("/webjars/jstree/3.3.4/dist/themes/default/style.css", true);
+		component.addAdditionalCSS(getWebjarsPrefixUri() + "jstree/" + config.getJsTreeVersion()+ "/dist/themes/default/style.css", relative);
 		component.addAdditionalCSS("/static/admintool/jmx/css/jmx.css", true);
 		
 		
