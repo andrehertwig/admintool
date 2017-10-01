@@ -22,8 +22,8 @@ This is just a spare-time project. The usage of this tool (especially in product
    4. [Checking the Menu Integrity](#checking-the-menu-integrity)
    5. [Packing the Core-Menu-Structure](#packing-the-core-menu-structure)
    6. [Using AdminTool Core JS ](#using-admintool-core-js)
-      1. [Extending the AdminTool.Core](#extending-the-admintool-core)
-	  2. [Methods of AdminTool.Core JS](#methods-of-admintool-core-js)
+      1. [Extending the AdminTool.Core](#extending-the-admintoolcore)
+	  2. [Methods of AdminTool.Core JS](#methods-of-admintoolcore-js)
 
 ## Existing Components
 * [Core](admin-tools-core/): providing the core functionality
