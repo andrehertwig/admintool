@@ -39,7 +39,7 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;dtd;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf;diff}'.split(';')}")
 	private List<String> allowedExtensions = new ArrayList<>();
 	
-	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;dtd;htm;html;css;js;ts;md}'.split(';')}")
+	@Value("#{'${admintool.fileviewer.allowedExtensionsToEdit:txt;dtd;htm;html;css;js;ts;md}'.split(';')}")
 	private List<String> allowedExtensionsToEdit = new ArrayList<>();
 	
 	@Value("${admintool.fileviewer.codeMirrorVersion:5.27.4}")

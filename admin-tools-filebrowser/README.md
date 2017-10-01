@@ -171,7 +171,11 @@
 	admintool.fileviewer.readOnly=true
 	
 	# semicolon separated list of allowed file extensions to show in file viewer
-	admintool.fileviewer.allowedExtensions=txt;sql;properties;xml;xsd;wsdl;htm;html;css;js;log;md;sh;bat;cmd
+	admintool.fileviewer.allowedExtensions=txt;sql;properties;xml;xsd;wsdl;dtd;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf;diff
+	
+	# semicolon separated list of allowed file extensions to edit in file viewer
+	# since 1.1.6
+	admintool.fileviewer.allowedExtensionsToEdit=txt;dtd;htm;html;css;js;ts;md
 	
 	# codeMirror version (if CDN is used this could maybe changed)
 	admintool.fileviewer.codeMirrorVersion=5.22.2

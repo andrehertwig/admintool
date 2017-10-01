@@ -43,7 +43,9 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 	@RequestMapping(value = {"/show",}, method={RequestMethod.GET, RequestMethod.POST})
 	public String loadFile(@RequestParam("file") String file, @RequestParam(name="encoding", required=false) String encoding,
 			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException, UnsupportedEncodingException {
-		
+		if (!fileviewerConfig.isEnabled()) {
+			return null;
+		}
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving file viewer page for file: " + file + ", encoding: " + encoding);
 		String templatePath = addCommonContextVars(model, request, "filebrowser", AdminToolFilebrowserLoader.TARGET_FILEVIEWER);
 		
@@ -63,7 +65,9 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 	public String updateFile(@RequestParam("file") String file, @RequestParam(name="encoding", required=false) String encoding,
 			@RequestParam("fileContent") String fileContent,
 			ModelMap model, HttpServletRequest request) throws GenericFilebrowserException {
-		
+		if (!fileviewerConfig.isEnabled()) {
+			return null;
+		}
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("updating file: " + file + ", encoding: " + encoding);
 		String templatePath = addCommonContextVars(model, request, "filebrowser", null);
 		

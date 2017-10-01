@@ -33,11 +33,19 @@ public interface AdminToolFileviewerService {
 	void isFileAllowed(File file, boolean write) throws GenericFilebrowserException;
 
 	/**
-	 * checks if the file extension is in configured allowed list of extensions
+	 * checks if the file extension is configured in allowed list of viewable extensions
 	 * @param file the file to check
 	 * @return
 	 */
 	boolean isExtensionAllowedAndReadable(File file);
+	
+	/**
+	 * checks if the file extension is configured in allowed list of editable extensions
+	 * 
+	 * @param file
+	 * @return
+	 */
+	boolean isExtensionAllowedAndWriteable(File file);
 
 	/**
 	 * reads the file content
@@ -72,7 +80,4 @@ public interface AdminToolFileviewerService {
 	 * @throws IOException
 	 */
 	void writeStringToFile(File file, String encoding, String fileContent) throws GenericFilebrowserException;
-
-	
-
 }

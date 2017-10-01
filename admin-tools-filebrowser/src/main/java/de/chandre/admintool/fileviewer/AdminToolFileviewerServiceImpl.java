@@ -25,7 +25,7 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	@Override
 	public void isFileAllowed(File file, boolean write) throws GenericFilebrowserException {
 		try {
-			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly())) {
+			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly()) || !isExtensionAllowedAndWriteable(file)) {
 				throw new GenericFilebrowserException("insufficient file permissions");
 			}
 		} catch (IOException e) {
@@ -45,13 +45,21 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	}
 	
 	@Override
+	public boolean isExtensionAllowedAndWriteable(File file) {
+		if (!config.isReadOnly() && isExtensionAllowedAndReadable(file) && file.canWrite()) {
+			return config.getAllowedExtensionsToEdit().contains(getExtension(file));
+		}
+		return false;
+	}
+	
+	@Override
 	public String readFileToString(File file, String encoding) throws IOException {
 		return FileUtils.readFileToString(file, (StringUtils.isEmpty(encoding) ? config.getDefaultEncoding() : encoding));
 	}
 	
 	@Override
 	public boolean isChangeable(File file) {
-		if (!config.isReadOnly() && file.canWrite()) {
+		if (isExtensionAllowedAndWriteable(file)) {
 			return true;
 		}
 		return false;
@@ -65,6 +73,5 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 		} catch (Exception e) {
 			throw new GenericFilebrowserException("could not write content to file: " + e.getMessage(), e);
 		}
-		
 	}
 }
