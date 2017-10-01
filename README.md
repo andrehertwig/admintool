@@ -499,7 +499,7 @@ sendRequest(serviceUrl, requestType, dataType, callback);
 
 
 /** *************************************
- * following methos could be called with "this" if it's called within Context of an extended AdminTool.Core plugin
+ * following methods could be called with "this" if it's called within context of an extended AdminTool.Core plugin
  * ************************************* */
 
 //reloads the page

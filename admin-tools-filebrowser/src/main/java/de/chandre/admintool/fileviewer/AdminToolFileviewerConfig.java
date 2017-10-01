@@ -1,6 +1,7 @@
 package de.chandre.admintool.fileviewer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +39,10 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;sql;properties;xml;xsd;wsdl;dtd;htm;html;css;js;ts;json;yml;yaml;log;md;sh;bat;cmd;php;php4;php5;py;lua;java;jsp;jspx;jspf;diff}'.split(';')}")
 	private List<String> allowedExtensions = new ArrayList<>();
 	
-	@Value("${admintool.fileviewer.codeMirrorVersion:5.26.0}")
+	@Value("#{'${admintool.fileviewer.allowedExtensions:txt;dtd;htm;html;css;js;ts;md}'.split(';')}")
+	private List<String> allowedExtensionsToEdit = new ArrayList<>();
+	
+	@Value("${admintool.fileviewer.codeMirrorVersion:5.27.4}")
 	private String codeMirrorVersion;
 	
 	@Value("${admintool.fileviewer.codeMirror.cdn.useBower:true}")
@@ -79,7 +83,16 @@ public class AdminToolFileviewerConfig implements AdminToolConfig {
 	 * @return the allowedExtensions
 	 */
 	public List<String> getAllowedExtensions() {
-		return allowedExtensions;
+		return Collections.unmodifiableList(allowedExtensions);
+	}
+
+	/**
+	 * 
+	 * @return allowedExtensionsToEdit
+	 * @since 1.1.6
+	 */
+	public List<String> getAllowedExtensionsToEdit() {
+		return Collections.unmodifiableList(allowedExtensionsToEdit);
 	}
 
 	/**
