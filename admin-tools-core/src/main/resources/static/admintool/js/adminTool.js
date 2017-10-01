@@ -174,8 +174,8 @@ $.extend(AdminTool.Core.prototype, {
 	/**
 	 * shows the default error modal which will be identified by "this.options.errorModalId"
 	 * 
-	 * @param headline - headline for error modal
-	 * @param text - text for error modal
+	 * @param headline - headline for error modal (optional)
+	 * @param text - text for error modal (optional)
 	 */
 	showErrorModal: function(headline, text) {
 		if (null == headline || headline === undefined) {
@@ -206,10 +206,10 @@ $.extend(AdminTool.Core.prototype, {
 	/**
 	 * shows the default confirm modal
 	 * 
-	 * @param confirmTitle - headline for confirm modal
-	 * @param confirmMessage - text for confirm modal
+	 * @param confirmTitle - headline for confirm modal (optional)
+	 * @param confirmMessage - text for confirm modal (optional)
 	 * @param confirmCallback - a callback function for on.click "this.options.confirmModalButtonId"
-	 * @param args optional - arguments
+	 * @param args - arguments for callback (optional)
 	 */
 	showConfirmModal: function(confirmTitle, confirmMessage, confirmCallback, args) {
 		this.unbindConfirmModal();
@@ -250,10 +250,10 @@ $( document ).ready(function() {
 /**
  * JQuery function for sending a XHR 
  *  
- * @param serviceUrl
- * @param requestType
- * @param dataType
- * @param callback
+ * @param serviceUrl - (required) URI to call (Web-Application context will be set automatically)
+ * @param requestType - (required) GET / POST ...
+ * @param dataType - (required) json / text ...
+ * @param callback(responseData) - (required)  callback function with one parameter
  */
 function sendRequest(serviceUrl, requestType, dataType, callback) {
 	var context = getWebContext();
