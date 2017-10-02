@@ -9,18 +9,40 @@
 ## Usage
 
 ```xml
+<dependency>
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools-core</artifactId>
+	<version>1.1.5</version>
+</dependency>
+<dependency>
+	<groupId>de.chandre.admin-tools</groupId>
+	<artifactId>admin-tools-properties</artifactId>
+	<version>1.1.5</version>
+</dependency>
+```
 
-	<dependency>
-		<groupId>de.chandre.admin-tools</groupId>
-		<artifactId>admin-tools-core</artifactId>
-		<version>1.1.5</version>
-	</dependency>
-	<dependency>
-		<groupId>de.chandre.admin-tools</groupId>
-		<artifactId>admin-tools-properties</artifactId>
-		<version>1.1.5</version>
-	</dependency>
-	
+To create the git.properties file easily you can use for example the [GIT Commit-Id Plugin](https://github.com/ktoso/maven-git-commit-id-plugin).
+
+```xml
+<plugin>
+	<!-- https://github.com/ktoso/maven-git-commit-id-plugin -->
+	<groupId>pl.project13.maven</groupId>
+	<artifactId>git-commit-id-plugin</artifactId>
+	<version>2.2.3</version>
+	<executions>
+		<execution>
+			<goals>
+				<goal>revision</goal>
+			</goals>
+		</execution>
+	</executions>
+	<configuration>
+		<verbose>true</verbose>
+		<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+		<generateGitPropertiesFile>true</generateGitPropertiesFile>
+		<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+	</configuration>
+</plugin>
 ```
 
 ## Configurations
@@ -36,6 +58,10 @@
 	
 	# encoding o git.properties
 	admintool.properties.gitPropertiesEncoding=UTF-8
+	
+	# since 1.1.6
+	# option to disable viewing the environment properties
+	adminTool.properties.showEnvironmentProperties=true
 	
 	# for own implementation or requires admin-tools-core-security
 	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN

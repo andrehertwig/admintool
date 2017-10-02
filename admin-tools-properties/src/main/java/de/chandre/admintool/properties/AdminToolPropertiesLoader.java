@@ -36,7 +36,6 @@ public class AdminToolPropertiesLoader extends AbstractAdminToolLoader
 		}
 		
 		LOGGER.info("adding properties visualizer to admin tool");
-		LOGGER.debug(toString());
 		
 		AdminComponent component = new AdminComponentImpl();
 		component.setPosition(config.getComponentPosition());

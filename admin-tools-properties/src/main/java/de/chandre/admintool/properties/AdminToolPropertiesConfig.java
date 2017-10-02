@@ -31,6 +31,9 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 	@Value("${admintool.properties.gitPropertiesEncoding:UTF-8}")
 	private String gitPropertiesEncoding;
 	
+	@Value("${adminTool.properties.showEnvironmentProperties:true}")
+	private boolean showEnvironmentProperties;
+	
 	@Value("#{'${admintool.properties.securityRoles:}'.split(';')}")
 	private Set<String> securityRoles = new HashSet<>();
 	
@@ -70,6 +73,15 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 	 */
 	public String getGitPropertiesEncoding() {
 		return gitPropertiesEncoding;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.6
+	 */
+	public boolean isShowEnvironmentProperties() {
+		return showEnvironmentProperties;
 	}
 
 	public Integer getComponentPosition() {
@@ -120,8 +132,9 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 		StringBuilder builder = new StringBuilder();
 		builder.append("AdminToolPropertiesConfig [enabled=").append(enabled).append(", gitPropertiesPath=")
 				.append(gitPropertiesPath).append(", gitPropertiesEncoding=").append(gitPropertiesEncoding)
-				.append(", securityRoles=").append(securityRoles).append(", componentPosition=")
-				.append(componentPosition).append(", addPropertiesPaths=").append(addPropertiesPaths).append("]");
+				.append(", showEnvironmentProperties=").append(showEnvironmentProperties).append(", securityRoles=")
+				.append(securityRoles).append(", componentPosition=").append(componentPosition)
+				.append(", addPropertiesPaths=").append(addPropertiesPaths).append("]");
 		return builder.toString();
 	}
 

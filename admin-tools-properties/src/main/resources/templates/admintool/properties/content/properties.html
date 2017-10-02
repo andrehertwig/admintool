@@ -16,7 +16,7 @@
 					<li th:class="${hasGit}? 'active' : ''" th:if="${hasGit}">
 						<a data-toggle="tab" href="#tabPane_1" aria-expanded="true">Git-Properties</a>
 					</li>
-					<li class="${hasGit}? '' : 'active'">
+					<li class="${hasGit}? '' : 'active'" th:if="${@adminToolPropertiesConfig.isShowEnvironmentProperties()}">
 						<a data-toggle="tab" href="#tabPane_2" aria-expanded="true">Environment-Properties</a>
 					</li>
 					<th:block th:with="props=${@adminToolPropertiesService.getAdditionalProperyNames()}">
@@ -34,7 +34,7 @@
 						<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getGitProperties()}, 'gitProps')" />
 					</div>
 					
-					<div id="tabPane_2" class="tab-pane">
+					<div id="tabPane_2" class="tab-pane" th:if="${@adminToolPropertiesConfig.isShowEnvironmentProperties()}">
 						<th:block th:include="admintool/properties/fragments/propFragment :: propertyInclude (${@adminToolPropertiesService.getEnvProperty()}, 'envProps')" />
 					</div>
 					
