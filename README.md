@@ -3,6 +3,8 @@
 
 This is just a spare-time project. The usage of this tool (especially in production systems) is at your own risk.
 
+Last Release: 1.1.6 - 02.10.2017
+
 [![Maven Central](https://img.shields.io/maven-central/v/de.chandre.admin-tools/admin-tools-core.svg)](https://mvnrepository.com/artifact/de.chandre.admin-tools)
 [![GitHub issues](https://img.shields.io/github/issues/andrehertwig/admintool.svg)](https://github.com/andrehertwig/admintool/issues)
 [![license](https://img.shields.io/github/license/andrehertwig/admintool.svg)](https://github.com/andrehertwig/admintool/blob/develop/LICENSE)
