@@ -3,7 +3,7 @@ package de.chandre.admintool.core.component;
 import java.util.Comparator;
 
 /**
- * default comparator or ordering components against its position
+ * default comparator or ordering components against its position or its display name
  * @author Andre
  * @since 1.0.1
  */
@@ -23,6 +23,9 @@ public class AdminComponentComparator implements Comparator<AdminComponent> {
 		}
 		else if (null == o2.getPosition()) {
 			return NEG;
+		}
+		else if (o1.getPosition().intValue() == o2.getPosition().intValue()) {
+			return o1.compareTo(o2);
 		}
 		return o1.getPosition().compareTo(o2.getPosition());
 	}

@@ -493,6 +493,89 @@ public class MenuEntry implements Serializable
 	public void addVariable(String key, Object variable) {
 		this.variables.put(key, variable);
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MenuEntry other = (MenuEntry) obj;
+		if (activeName == null) {
+			if (other.activeName != null)
+				return false;
+		} else if (!activeName.equals(other.activeName))
+			return false;
+		if (additionalCSS == null) {
+			if (other.additionalCSS != null)
+				return false;
+		} else if (!additionalCSS.equals(other.additionalCSS))
+			return false;
+		if (additionalJS == null) {
+			if (other.additionalJS != null)
+				return false;
+		} else if (!additionalJS.equals(other.additionalJS))
+			return false;
+		if (displayName == null) {
+			if (other.displayName != null)
+				return false;
+		} else if (!displayName.equals(other.displayName))
+			return false;
+		if (hide != other.hide)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		if (resouceMessageKey == null) {
+			if (other.resouceMessageKey != null)
+				return false;
+		} else if (!resouceMessageKey.equals(other.resouceMessageKey))
+			return false;
+		if (securityRoles == null) {
+			if (other.securityRoles != null)
+				return false;
+		} else if (!securityRoles.equals(other.securityRoles))
+			return false;
+		if (submenu == null) {
+			if (other.submenu != null)
+				return false;
+		} else if (!submenu.equals(other.submenu))
+			return false;
+		if (target == null) {
+			if (other.target != null)
+				return false;
+		} else if (!target.equals(other.target))
+			return false;
+		if (useCCSHierarchy != other.useCCSHierarchy)
+			return false;
+		if (useJSHierarchy != other.useJSHierarchy)
+			return false;
+		if (variables == null) {
+			if (other.variables != null)
+				return false;
+		} else if (!variables.equals(other.variables))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {

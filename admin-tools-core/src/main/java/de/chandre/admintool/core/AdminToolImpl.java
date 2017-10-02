@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +29,7 @@ public class AdminToolImpl implements AdminTool
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolImpl.class);
 	
-	private Set<AdminComponent> components = new TreeSet<>(new AdminComponentComparator());
+	private Set<AdminComponent> components = new ConcurrentSkipListSet<>(new AdminComponentComparator());
 	
 	private Map<String, Boolean> globalJavaScripts = new LinkedHashMap<>();
 	private Map<String, Boolean> globalStyleSheets = new LinkedHashMap<>();
@@ -37,9 +37,9 @@ public class AdminToolImpl implements AdminTool
 	@Override
 	public void setComponentComparator(Comparator<AdminComponent> comparator) {
 		if (null == comparator) {
-			this.components = new TreeSet<>();
+			this.components = new ConcurrentSkipListSet<>();
 		} else {
-			Set<AdminComponent> newComponents = new TreeSet<>(new AdminComponentComparator());
+			Set<AdminComponent> newComponents = new ConcurrentSkipListSet<>(comparator);
 			newComponents.addAll(this.components);
 			this.components = newComponents;
 		}
@@ -60,13 +60,12 @@ public class AdminToolImpl implements AdminTool
 	public void addComponent(AdminComponent components) {
 		this.components.add(components);
 	}
-	
 
 	/**
 	 * @param components the components to set
 	 */
 	@Override
-	public void addComponents(Set<AdminComponent> components) {
+	public synchronized void addComponents(Set<AdminComponent> components) {
 		this.components.addAll(components);
 	}
 

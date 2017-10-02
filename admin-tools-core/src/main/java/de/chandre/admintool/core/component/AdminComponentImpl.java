@@ -215,6 +215,64 @@ public class AdminComponentImpl implements AdminComponent
 	public int compareTo(AdminComponent o) {
 		return displayName.compareTo(o.getDisplayName());
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
+		result = prime * result + ((mainMenu == null) ? 0 : mainMenu.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AdminComponentImpl other = (AdminComponentImpl) obj;
+		if (additionalCSS == null) {
+			if (other.additionalCSS != null)
+				return false;
+		} else if (!additionalCSS.equals(other.additionalCSS))
+			return false;
+		if (additionalJS == null) {
+			if (other.additionalJS != null)
+				return false;
+		} else if (!additionalJS.equals(other.additionalJS))
+			return false;
+		if (displayName == null) {
+			if (other.displayName != null)
+				return false;
+		} else if (!displayName.equals(other.displayName))
+			return false;
+		if (mainMenu == null) {
+			if (other.mainMenu != null)
+				return false;
+		} else if (!mainMenu.equals(other.mainMenu))
+			return false;
+		if (notificationTemplates == null) {
+			if (other.notificationTemplates != null)
+				return false;
+		} else if (!notificationTemplates.equals(other.notificationTemplates))
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (securityRoles == null) {
+			if (other.securityRoles != null)
+				return false;
+		} else if (!securityRoles.equals(other.securityRoles))
+			return false;
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
