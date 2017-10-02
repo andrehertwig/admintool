@@ -76,7 +76,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 </dependency>
 	...
 ```

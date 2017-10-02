@@ -12,12 +12,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-properties</artifactId>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 </dependency>
 ```
 
@@ -47,32 +47,33 @@ To create the git.properties file easily you can use for example the [GIT Commit
 
 ## Configurations
 
+Following the default values are shown.	
 ```ini
 
-	#since 1.0.3
-	# to deactivate the admin component
-	adminTool.properties.enabled=true
-	
-	# path to git.properties
-	admintool.properties.gitPropertiesPath=classpath:git.properties
-	
-	# encoding o git.properties
-	admintool.properties.gitPropertiesEncoding=UTF-8
-	
-	# since 1.1.6
-	# option to disable viewing the environment properties
-	adminTool.properties.showEnvironmentProperties=true
-	
-	# for own implementation or requires admin-tools-core-security
-	#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
-	admintool.properties.securityRoles=
-	
-	# integer value. used by default comparator to order components
-	admintool.properties.componentPosition=
-	
-	# since 1.1.4
-	# semicolon separated list of additional properties. Spring resource loading will be used.
-	# paths should start either with "classpath:/" or "file:/"
-	admintool.properties.addPropertiesPaths=
+#since 1.0.3
+# to deactivate the admin component
+adminTool.properties.enabled=true
+
+# path to git.properties
+admintool.properties.gitPropertiesPath=classpath:git.properties
+
+# encoding o git.properties
+admintool.properties.gitPropertiesEncoding=UTF-8
+
+# since 1.1.6
+# option to disable viewing the environment properties
+adminTool.properties.showEnvironmentProperties=true
+
+# for own implementation or requires admin-tools-core-security
+#semi-colon separated list of Spring Security roles like ROLE_ANONYMOUS;ROLE_ADMIN
+admintool.properties.securityRoles=
+
+# integer value. used by default comparator to order components
+admintool.properties.componentPosition=
+
+# since 1.1.4
+# semicolon separated list of additional properties. Spring resource loading will be used.
+# paths should start either with "classpath:/" or "file:/"
+admintool.properties.addPropertiesPaths=
 	
 ```
