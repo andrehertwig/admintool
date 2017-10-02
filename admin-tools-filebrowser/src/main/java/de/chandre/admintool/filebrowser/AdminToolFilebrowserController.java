@@ -52,6 +52,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 			@RequestParam(name = "sortAsc", required = false, defaultValue = "true") boolean sortType,
 			@RequestParam(name = "filter", required = false) String filter,
 			ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
+		if (!filebrowserConfig.isEnabled()) {
+			return null;
+		}
 		String currentDir = StringUtils.isEmpty(dirPath) ? filebrowserConfig.getStartDir().getAbsolutePath() : URLDecoder.decode(dirPath, "UTF-8");
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("show directory: " + currentDir);
 		String templatePath = addCommonContextVars(model, request, "filebrowser", null);
@@ -60,13 +63,15 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		model.put("sortAsc", sortType);
 		model.put("filter", filter);
 		
-		
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	
 	@RequestMapping(value = {"/info"}, method={RequestMethod.GET, RequestMethod.POST})
 	public String info(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		if (!filebrowserConfig.isEnabled()) {
+			return null;
+		}
 		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("info: " + decodedPath);
 		addCommonContextVars(model, request);
@@ -77,6 +82,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	@RequestMapping(value = {"/file"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void showFile(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		if (!filebrowserConfig.isEnabled()) {
+			return;
+		}
 		if (!filebrowserConfig.isDownloadAllowed()) {
 			throw new DownloadNotAllowedException("file download is deactivated by configuration");
 		}
@@ -88,6 +96,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	@RequestMapping(value = {"/download"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void download(@RequestParam("file") String filePath, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		if (!filebrowserConfig.isEnabled()) {
+			return;
+		}
 		if (!filebrowserConfig.isDownloadAllowed()) {
 			throw new DownloadNotAllowedException("file download is deactivated by configuration");
 		}
@@ -99,6 +110,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	@RequestMapping(value = {"/zip"}, method={RequestMethod.GET, RequestMethod.POST})
 	public void downloadAsZip(@RequestParam("selectedFile") List<String> filePaths, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+		if (!filebrowserConfig.isEnabled()) {
+			return;
+		}
 		if (!filebrowserConfig.isDownloadCompressedAllowed()) {
 			throw new DownloadNotAllowedException("compressed file download is deactivated by configuration");
 		}
@@ -125,6 +139,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 			@RequestParam("currentDir") String currentDir,
 			HttpServletRequest request, HttpServletResponse response) 
 			throws IOException, GenericFilebrowserException {
+		if (!filebrowserConfig.isEnabled()) {
+			return null;
+		}
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("upload file: " + qqfilename);
 		FileUploadResponse fur = new FileUploadResponse();
 		if (!filebrowserConfig.isUploadAllowed()) {
@@ -149,7 +166,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	public void createFolder(@RequestParam("folderName") String folderPath, @RequestParam("currentDir") String currentDir, 
 			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
 			throws IOException, GenericFilebrowserException {
-		
+		if (!filebrowserConfig.isEnabled()) {
+			return;
+		}
 		if (!filebrowserConfig.isCreateFolderAllowed()) {
 			throw new GenericFilebrowserException("folder creation not allowed");
 		}
@@ -170,7 +189,9 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 			@RequestParam(name ="file", required=false) String filePath, 
 			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
 			throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
-		
+		if (!filebrowserConfig.isEnabled()) {
+			return;
+		}
 		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("delete resource: " + decodedPath);
 		

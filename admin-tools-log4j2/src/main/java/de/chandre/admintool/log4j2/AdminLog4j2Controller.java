@@ -29,6 +29,9 @@ public class AdminLog4j2Controller
 	private static final Log LOGGER = LogFactory.getLog(AdminLog4j2Controller.class);
 	
 	@Autowired
+	private AdminToolLog4j2Config config;
+	
+	@Autowired
 	private AdminToolLog4j2Util log4jUtil;
 	
 	@RequestMapping(value = "/changeLevel/{loggerName}/{level}", method = {RequestMethod.POST, RequestMethod.GET})
@@ -36,6 +39,9 @@ public class AdminLog4j2Controller
 	public String changeLevel(@PathVariable("loggerName") String loggerName, @PathVariable("level") String level,
 			HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		return changeLevelParent(loggerName, level, false, request);
 	}
 	
@@ -44,6 +50,9 @@ public class AdminLog4j2Controller
 	public String changeLevelParent(@PathVariable("loggerName") String loggerName, @PathVariable("level") String level, 
 			@PathVariable("parent") boolean parent, HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		LOGGER.info(String.format("change %s to %s (parent: %s)", loggerName, level, parent));
 		try {
 			log4jUtil.changeLogger(loggerName, level, parent);
@@ -59,6 +68,9 @@ public class AdminLog4j2Controller
 	@RequestMapping(value = "/removeCustomLoggers", method = {RequestMethod.POST, RequestMethod.GET})
 	@ResponseBody
 	public String removeCustomLoggers() {
+		if (!config.isEnabled()) {
+			return null;
+		}
 		LOGGER.info(String.format("removing custom loggers"));
 		log4jUtil.removeCustomLoggers();
 		return "reload";
@@ -90,6 +102,9 @@ public class AdminLog4j2Controller
 	@ResponseBody
 	public String initConsole(@RequestBody Log4j2ConsoleTO consoleTO, HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		try {
 			HttpSession session = request.getSession(true);
 			
@@ -113,6 +128,9 @@ public class AdminLog4j2Controller
 	@ResponseBody
 	public String stopConsole(HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		try {
 			HttpSession session = request.getSession(false);
 			log4jUtil.closeOutputStreamAppender(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)));
@@ -127,6 +145,9 @@ public class AdminLog4j2Controller
 	@ResponseBody
 	public String getConsoleContent(HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		return getConsoleContent(null, request);
 	}
 	
@@ -134,6 +155,9 @@ public class AdminLog4j2Controller
 	@ResponseBody
 	public String getConsoleContent(@PathVariable("encoding") String encoding, HttpServletRequest request)
 	{
+		if (!config.isEnabled()) {
+			return null;
+		}
 		try {
 			HttpSession session = request.getSession(false);
 			return log4jUtil.getStringOutput(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)), encoding);

@@ -30,7 +30,7 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 	@PostConstruct
 	public void configureAdminTool()
 	{
-		if(!coreConfig.isEnabled()) {
+		if(!coreConfig.isEnabled() || !config.isEnabled()) {
 			LOGGER.info("admin tool's log4j viewer deactivated");
 			return;
 		}

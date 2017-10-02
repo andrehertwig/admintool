@@ -34,10 +34,16 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolQuartzService.class);
 
 	@Autowired
+	private AdminToolQuartzConfig config;
+	
+	@Autowired
 	private AdminToolQuartzService quarzService;
 	
 	@RequestMapping(value = {"/quartzJobsInc",})
 	public String getJobs(ModelMap model, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return null;
+		}
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving quartz jobs include");
 		addCommonContextVars(model, request);
 		return AdminTool.ROOTCONTEXT_NAME + "/quartz/includes/quartzJobs.inc";
@@ -46,6 +52,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@RequestMapping(path = "/changeRunningState", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public boolean changeRunningState() {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (quarzService.isSchedulerRunning()) {
 			quarzService.stopScheduler();
 		} else {
@@ -58,6 +67,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@ResponseBody
 	public boolean executeJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
 			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving triggerJob request for group: %s, job: %s", groupName, jobName));
 		try {
@@ -70,14 +82,23 @@ public class AdminToolQuartzController extends AbstractAdminController {
 
 	@RequestMapping(path = "/changeTriggerState/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean changeJobState(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+	public boolean changeJobState(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, 
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		return changeJobState(groupName, jobName, null, null, request);
 	}
 	
-	@RequestMapping(path = "/changeTriggerState/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/changeTriggerState/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", 
+			method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public boolean changeJobState(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
-			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, 
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving changeJobState request for group: %s, job: %s, trigger: %s", groupName,
 					jobName, triggerName));
@@ -91,14 +112,23 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	
 	@RequestMapping(path = "/interruptJob/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean interruptJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+	public boolean interruptJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, 
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		return interruptJob(groupName, jobName, null, null, request);
 	}
 
-	@RequestMapping(path = "/interruptJob/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/interruptJob/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}",
+			method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public boolean interruptJob(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
-			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, 
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving interruptJob request for group: %s, job: %s", groupName, jobName));
 		try {
@@ -117,14 +147,23 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	
 	@RequestMapping(path = "/removeTrigger/{jobGroup}/{jobName}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public boolean removeTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName, HttpServletRequest request) {
+	public boolean removeTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		return removeTrigger(groupName, jobName, null, null, request);
 	}
 	
-	@RequestMapping(path = "/removeTrigger/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/removeTrigger/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", 
+			method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public boolean removeTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
-			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName,
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving removeTrigger request for group: %s, job: %s, trigger: %s", groupName,
 					jobName, triggerName));
@@ -139,6 +178,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	
 	public JobTriggerTO getJobTriggerInfo(String groupName, String jobName, String triggerGroup, String triggerName, 
 			String methodName, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return null;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving %s request for group: %s, job: %s, trigger: %s", methodName, groupName,
 					jobName, triggerName));
@@ -154,13 +196,20 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@ResponseBody
 	public JobTriggerTO getJobInfo(@PathVariable("jobGroup") String jobGroup, @PathVariable("jobName") String jobName,
 			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return null;
+		}
 		return getJobTriggerInfo(jobGroup, jobName, null, null, "getJobInfo", request);
 	}
 	
-	@RequestMapping(path = "/getTriggerInfo/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(path = "/getTriggerInfo/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", 
+				method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public JobTriggerTO getTriggerInfo(@PathVariable("jobGroup") String jobGroup, @PathVariable("jobName") String jobName,
 			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return null;
+		}
 		return getJobTriggerInfo(jobGroup, jobName, triggerGroup, triggerName, "getTriggerInfo", request);
 	}
 	
@@ -207,6 +256,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@RequestMapping(path = "/changeTrigger", method = { RequestMethod.POST })
 	@ResponseBody
 	public boolean changeTrigger(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving changeTrigger request: %s", triggerTO));
 		try {
@@ -220,6 +272,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@RequestMapping(path = "/addTrigger", method = { RequestMethod.POST })
 	@ResponseBody
 	public boolean addTrigger(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving addTrigger request: %s", triggerTO));
 		try {
@@ -233,6 +288,9 @@ public class AdminToolQuartzController extends AbstractAdminController {
 	@RequestMapping(path = "/changeJob", method = { RequestMethod.POST })
 	@ResponseBody
 	public boolean changeJob(@RequestBody JobTriggerTO triggerTO, HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug(String.format("receiving changeJob request: %s", triggerTO));
 		try {
