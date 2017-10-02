@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="de">
+	
+	<th:block th:include="admintool/includes/header.inc" />
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+	<!-- required links for JS -->
+    <div th:include="admintool/includes/context.inc"> 
+    </div>
+
+	<div class="wrapper" id="admintool">
+
+		<!-- Main Header -->
+		<header class="main-header">
+
+			<a th:replace="admintool/includes/logo.inc"></a>
+
+			<!-- Header Navbar -->
+			<nav class="navbar navbar-static-top" role="navigation">
+				<!-- Navbar Right Menu -->
+				<div class="navbar-custom-menu">
+					
+					<ul class="nav navbar-nav">
+						
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside class="main-sidebar">
+
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+
+			<div class="login-box">
+				<div class="login-logo">
+					<b>Admin</b>Tool
+				</div>
+				<div class="login-box-body">
+				
+					<h4 style="display: block; text-align: center;">AdminTool is deactivated</h4>
+					
+				</div>
+			</div>
+
+		</div>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer class="main-footer" th:include="admintool/includes/footer.inc">
+			
+		</footer>
+
+		<aside class="control-sidebar control-sidebar-dark" th:replace="admintool/includes/controlSideBar.inc"></aside>
+		
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+		       immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+	
+	<th:block th:include="admintool/includes/js.inc" />
+	
+</body>
+
+</html>

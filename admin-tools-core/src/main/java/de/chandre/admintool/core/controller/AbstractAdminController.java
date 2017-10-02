@@ -84,7 +84,7 @@ public class AbstractAdminController
 		model.put("internationalizationEnabled", coreConfig.isInternationalizationEnabled());
 		model.put("rootContext", getRootContext(request));
 		model.put("adminToolContext", AdminTool.ROOTCONTEXT);
-		String targetTpl = "content/error404";
+		String targetTpl = coreConfig.isEnabled() ? "content/error404" : AdminTool.GENERIC_DEACTIVATED_TEMPLATE_NAME;
 		if (null != result) {
 			LOGGER.trace("Component found: " + String.valueOf(null != result.getComponent()) +
 					" | menu found: " + String.valueOf(result.getMenuEntry()));

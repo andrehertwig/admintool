@@ -36,6 +36,15 @@ public interface AdminTool {
 	String GENERIC_ERROR_TPL_PATH = ROOTCONTEXT_NAME + SLASH + "content" + SLASH + "error";
 	
 	/**
+	 * template name of "deactivated" template
+	 */
+	String GENERIC_DEACTIVATED_TEMPLATE_NAME = "deactivated";
+	/**
+	 * template path to default deactivated template
+	 */
+	String GENERIC_DEACTIVATED_TEMPLATE_TPL_PATH = ROOTCONTEXT_NAME + SLASH + GENERIC_DEACTIVATED_TEMPLATE_NAME;
+	
+	/**
 	 * prefix for for resource messages
 	 * @since 1.1.6
 	 */

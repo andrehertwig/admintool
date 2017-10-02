@@ -54,17 +54,22 @@
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 
-				<!-- Sidebar user panel (optional) -->
-				<div class="user-panel" th:replace="admintool/includes/leftUserPanel.inc"></div>
-
-				<!-- search form (Optional) -->
-				<form action="#" method="get" class="sidebar-form" th:replace="admintool/includes/searchForm.inc">
+				<th:block th:if="${@adminToolConfig.isEnabled()}">
+					<!-- Sidebar user panel (optional) -->
+					<div class="user-panel" th:replace="admintool/includes/leftUserPanel.inc"></div>
 					
-				</form>
-				<!-- /.search form -->
+					<!-- search form (Optional) -->
+					<form action="#" method="get" class="sidebar-form" th:replace="admintool/includes/searchForm.inc">
+					</form>
+					<!-- /.search form -->
+					
+					<!-- main menu -->
+					<div class="user-panel" th:replace="admintool/includes/menu.inc"></div>
+				</th:block>
+				<th:block th:unless="${@adminToolConfig.isEnabled()}">
+					<div class="user-panel"></div>
+				</th:block>
 				
-				<!-- main menu -->
-				<div class="user-panel" th:replace="admintool/includes/menu.inc"></div>
 				<!-- /.main menu -->
 				
 				<!-- /.sidebar-menu -->

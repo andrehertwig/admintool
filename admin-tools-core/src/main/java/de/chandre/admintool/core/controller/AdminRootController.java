@@ -29,13 +29,16 @@ public class AdminRootController extends AbstractAdminController
 	private static final Log LOGGER = LogFactory.getLog(AdminRootController.class);
 	
 	@Autowired
-	private AdminToolCoreConfig conig;
+	private AdminToolCoreConfig config;
 	
 	@RequestMapping(value = {"", "/"})
 	public String startPage(ModelMap model, HttpServletRequest request) {
 		
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("serving admin root page");
 		addCommonContextVars(model, request);
+		if (!config.isEnabled()) {
+			return AdminTool.GENERIC_DEACTIVATED_TEMPLATE_TPL_PATH;
+		}
 		model.put("contentPage", "admintool/content/start");
 		return AdminTool.ROOTCONTEXT_NAME + "/content/start";
 	}
@@ -44,6 +47,9 @@ public class AdminRootController extends AbstractAdminController
 	public String subPage(ModelMap model, HttpServletRequest request) {
 		
 		String targetTpl = addCommonContextVars(model, request);
+		if (!config.isEnabled()) {
+			return AdminTool.GENERIC_DEACTIVATED_TEMPLATE_TPL_PATH;
+		}
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl;
 	}
 	
@@ -53,6 +59,9 @@ public class AdminRootController extends AbstractAdminController
 		
 		resolveLocale(language, request, response);
 		String targetTpl = addCommonContextVars(model, request);
+		if (!config.isEnabled()) {
+			return AdminTool.GENERIC_DEACTIVATED_TEMPLATE_TPL_PATH;
+		}
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + targetTpl;
 	}
 	
@@ -67,7 +76,7 @@ public class AdminRootController extends AbstractAdminController
 //		HttpStatus status = HttpStatus.valueOf(response.getStatus());
 //		mv.getModelMap().put("httpStatusMessage", status != null ? status.getReasonPhrase() : "");
 		
-		mv.getModelMap().put("showStacktrace", conig.isShowStacktraceOnErrorPage());
+		mv.getModelMap().put("showStacktrace", config.isShowStacktraceOnErrorPage());
 		mv.getModelMap().put("stacktrace", ExceptionUtils.printException(exception));
 		return mv;
 	}
