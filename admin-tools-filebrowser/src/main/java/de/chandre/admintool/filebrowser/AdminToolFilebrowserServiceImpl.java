@@ -647,9 +647,6 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			result.put("file.permissions", PosixFilePermissions.toString(permissions));
 		}
 		
-		for (Entry<String, Object> entry : result.entrySet()) {
-			System.out.println(String.format("%1$20s : %2$s", entry.getKey(), entry.getValue()));
-		}
 		return result;
 	}
 	
