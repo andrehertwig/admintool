@@ -65,5 +65,10 @@ admintool.core.ionicons.cdn.useBower=true
 
 # if the stacktrace should be shown on error pages
 admintool.core.showStacktraceOnErrorPage=true
+
+# to enable internationalization feature.
+# each component will have message properies in /src/main/resources/i18n/admintool/&lt;component&gt;-messages.properties (and &lt;component&gt;-messages_en.properties)
+# since 1.1.6
+admintool.core.internationalizationEnabled=false
 	
 ```

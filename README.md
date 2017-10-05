@@ -21,9 +21,10 @@ Last Release: 1.1.6 - 02.10.2017
       1. [Creating an AdminComponent](#creating-an-admincomponent)
       2. [Creating a Content Template](#creating-a-content-template)
    3. [Template Resolution](#template-resolution)
-   4. [Checking the Menu Integrity](#checking-the-menu-integrity)
-   5. [Packing the Core-Menu-Structure](#packing-the-core-menu-structure)
-   6. [Using AdminTool Core JS ](#using-admintool-core-js)
+   4. [Enable Internationalization](#enable-internationalization)
+   5. [Checking the Menu Integrity](#checking-the-menu-integrity)
+   6. [Packing the Core-Menu-Structure](#packing-the-core-menu-structure)
+   7. [Using AdminTool Core JS ](#using-admintool-core-js)
       1. [Extending the AdminTool.Core](#extending-the-admintoolcore)
 	  2. [Methods of AdminTool.Core JS](#methods-of-admintoolcore-js)
 
@@ -241,6 +242,39 @@ beside the core. It will have:
 The *MenuEntry.target* should point relative from the *admintool* folder to the template which should be used by this menu entry. This template will be shown in the main frame (within tag `<div class="content-wrapper">`).
 
 You can also override templates provided by the admin-tools-core library. Per default templates will be found by *OrderedClassLoaderResourceResolver* using the *TemplateUrlComparator*. If more than one template has been found the core template will be used last, all others in natural string comparison order of absolute template URL (with JAR names). The first will be picked. -> Your desired template should be named to lead the comparison order.
+
+### Enable Internationalization
+To enable set configuration `admintool.core.internationalizationEnabled=true`.
+
+If you enable internationalization feature you must set the ResouceMessageKey on each MenuEntry, otherwise you will get an exception while rendering the menu (java.lang.IllegalArgumentException: Message key cannot be null).
+
+Furthermore you have load all the message resources. Unfortunately Spring doesn't allow configuration via wildcard:
+```java
+@Bean
+public ReloadableResourceBundleMessageSource messageSource() {
+	ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+	messageSource.setBasenames(
+			"classpath:i18n/admintool/core-messages",
+			"classpath:i18n/admintool/security-messages",
+			"classpath:i18n/admintool/dbbrowser-messages",
+			"classpath:i18n/admintool/filebrowser-messages",
+			"classpath:i18n/admintool/jmx-messages",
+			"classpath:i18n/admintool/log4j2-messages",
+			"classpath:i18n/admintool/melody-messages",
+			"classpath:i18n/admintool/properties-messages",
+			"classpath:i18n/admintool/quartz-messages",
+			"classpath:i18n/admintool/demo-messages");
+	messageSource.setDefaultEncoding("UTF-8");
+	return messageSource;
+}
+
+@Bean
+public LocaleResolver localeResolver() {
+	SessionLocaleResolver slr = new SessionLocaleResolver();
+	slr.setDefaultLocale(Locale.ENGLISH);
+	return slr;
+}
+```
 
 ### Checking the Menu Integrity
 There are two options to do that. First will be including the menu integrity check template (introduced with 1.1.3) anywhere (But for execution you have to call the page).
