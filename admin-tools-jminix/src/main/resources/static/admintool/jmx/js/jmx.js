@@ -19,7 +19,7 @@ $.extend(AdminTool.Jmx.prototype, {
 		$('#jmxTree').on("changed.jstree", $.proxy(this.selectNode, this)).jstree({
 			'core' : {
 				'data' :  {
-		            'url' : '/admintool/jmx/tree',
+		            'url' : getWebContext() + '/admintool/jmx/tree',
 		            'data' : function (node) {
 		                return { 'id' : node.id };
 		            }
@@ -75,7 +75,7 @@ $.extend(AdminTool.Jmx.prototype, {
 				
 				this.sendRequest(
 					{
-						url: "/admintool/jmx/attributes", 
+						url: getWebContext() + "/admintool/jmx/attributes", 
 						requestType:'POST',
 						dataType: "json",
 						data: JSON.stringify(queryData),
@@ -107,7 +107,7 @@ $.extend(AdminTool.Jmx.prototype, {
 					} else {
 						this.sendRequest(
 						{
-							url: "/admintool/jmx/operation", 
+							url: getWebContext() + "/admintool/jmx/operation", 
 							requestType:'POST',
 							dataType: "json",
 							data: JSON.stringify(queryData),
@@ -137,7 +137,7 @@ $.extend(AdminTool.Jmx.prototype, {
 	loadAttribute: function(queryData) {
 		this.sendRequest(
 		{
-			url: "/admintool/jmx/attribute", 
+			url: getWebContext() + "/admintool/jmx/attribute", 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
@@ -232,7 +232,7 @@ $.extend(AdminTool.Jmx.prototype, {
 		
 		this.sendRequest(
 		{
-			url: "/admintool/jmx/operation/execute", 
+			url: getWebContext() + "/admintool/jmx/operation/execute", 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
