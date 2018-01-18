@@ -15,12 +15,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.6</version>
+	<version>1.1.6.1</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-log4j2</artifactId>
-	<version>1.1.6</version>
+	<version>1.1.6.1</version>
 </dependency>
 ```
 
