@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>de.chandre.admin-tools</groupId>
+		<artifactId>admin-tools</artifactId>
+        <version>1.1.7-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+    </parent>
+	
+	<groupId>de.chandre.admin-tools.security</groupId>
+	<artifactId>admin-tools-security</artifactId>
+	
+	<name>admin-tools security parent</name>
+	<description>admin-tools security parent</description>
+	
+	<packaging>pom</packaging>
+	
+	<modules>
+		<module>admin-tools-security-commons</module>
+		<module>admin-tools-security-simple</module>
+		<module>admin-tools-security-dbuser</module>
+	</modules>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>de.chandre.admin-tools.security</groupId>
+				<artifactId>admin-tools-security-commons</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

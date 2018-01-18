@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import de.chandre.admintool.core.security.auth.AbstractAdminToolSecurityViewController;
-import de.chandre.admintool.core.security.auth.AdminToolUserDetailsService;
-import de.chandre.admintool.core.security.auth.UserTO;
+import de.chandre.admintool.security.simple.auth.AbstractAdminToolSecurityViewController;
+import de.chandre.admintool.security.simple.auth.AdminToolSecSimpleUserDetailsService;
+import de.chandre.admintool.security.simple.auth.UserTO;
 
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT)
@@ -31,7 +31,7 @@ public class AdminToolSecurityController extends AbstractAdminToolSecurityViewCo
 	private AdminToolInMemoryUserDetailsService userDetailsService;
 	
 	@Override
-	protected AdminToolUserDetailsService getUserServiceDelegate() {
+	protected AdminToolSecSimpleUserDetailsService getUserServiceDelegate() {
 		return userDetailsService;
 	}
 	

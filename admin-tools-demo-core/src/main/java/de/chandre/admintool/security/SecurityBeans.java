@@ -3,10 +3,10 @@ package de.chandre.admintool.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import de.chandre.admintool.core.security.auth.AdminToolAuthenticationFailureListener;
-import de.chandre.admintool.core.security.auth.AdminToolAuthenticationSuccessListener;
-import de.chandre.admintool.core.security.auth.LoginAttemptService;
-import de.chandre.admintool.core.security.auth.LoginAttemptServiceImpl;
+import de.chandre.admintool.security.commons.auth.AdminToolAuthenticationFailureListener;
+import de.chandre.admintool.security.commons.auth.AdminToolAuthenticationSuccessListener;
+import de.chandre.admintool.security.commons.auth.LoginAttemptService;
+import de.chandre.admintool.security.commons.auth.LoginAttemptServiceImpl;
 
 @Configuration
 public class SecurityBeans {

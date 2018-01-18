@@ -16,12 +16,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.util.CollectionUtils;
 
-import de.chandre.admintool.core.security.auth.AdminToolUserDetailsService;
-import de.chandre.admintool.core.security.auth.LoginAttemptService;
+import de.chandre.admintool.security.commons.auth.LoginAttemptService;
+import de.chandre.admintool.security.simple.auth.AdminToolSecSimpleUserDetailsService;
 
 /**
  * Extension of Springs {@link InMemoryUserDetailsManager} for additional functionality 
- * provided by {@link AdminToolUserDetailsService} interface<br>
+ * provided by {@link AdminToolSecSimpleUserDetailsService} interface<br>
  * <br>
  * Usage in Spring Security config:<br>
  * <code>
@@ -38,7 +38,7 @@ import de.chandre.admintool.core.security.auth.LoginAttemptService;
  * @since 1.0.3
  */
 public class AdminToolInMemoryUserDetailsService extends InMemoryUserDetailsManager
-	implements AdminToolUserDetailsService {
+	implements AdminToolSecSimpleUserDetailsService {
 	
 	private List<String> users = new ArrayList<>();
 	

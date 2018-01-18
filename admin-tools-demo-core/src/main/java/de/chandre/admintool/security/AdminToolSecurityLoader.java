@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import de.chandre.admintool.core.security.auth.AbstractAdminToolSecurityViewLoader;
+import de.chandre.admintool.security.simple.auth.AbstractAdminToolSecurityViewLoader;
 
 @Component
 public class AdminToolSecurityLoader extends AbstractAdminToolSecurityViewLoader {

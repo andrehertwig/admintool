@@ -59,7 +59,7 @@
 			</activation>
 			<modules>
 				<module>admin-tools-core</module>
-				<module>admin-tools-core-security</module>
+				<module>admin-tools-security</module>
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>
@@ -90,7 +90,7 @@
 			<id>release</id>
 			<modules>
 				<module>admin-tools-core</module>
-				<module>admin-tools-core-security</module>
+				<module>admin-tools-security</module>
 				<module>admin-tools-melody</module>
 				<module>admin-tools-jminix</module>
 				<module>admin-tools-log4j2</module>

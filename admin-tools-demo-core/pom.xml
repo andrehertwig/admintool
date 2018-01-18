@@ -31,8 +31,13 @@
 		</dependency>
 		<!--  -->
 		<dependency>
-			<groupId>de.chandre.admin-tools</groupId>
-			<artifactId>admin-tools-core-security</artifactId>
+			<groupId>de.chandre.admin-tools.security</groupId>
+			<artifactId>admin-tools-security-commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.chandre.admin-tools.security</groupId>
+			<artifactId>admin-tools-security-simple</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

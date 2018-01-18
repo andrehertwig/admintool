@@ -24,12 +24,16 @@
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
-		<!--  -->
+		<!--  
 		<Logger name="de.chandre.admintool.core.security.MenuItemSecurityInterceptorImpl" level="trace" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
 		</Logger>
-		
+		<Logger name="de.chandre.admintool.core.thymeleaf" level="trace" additivity="false">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		-->
 		<Logger name="org.springframework" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>

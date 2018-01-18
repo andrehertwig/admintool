@@ -71,7 +71,8 @@ public class Beans {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.setBasenames(
 				"classpath:i18n/admintool/core-messages",
-				"classpath:i18n/admintool/security-messages",
+				"classpath:i18n/admintool/security-commons-messages",
+				"classpath:i18n/admintool/security-simple-messages",
 				"classpath:i18n/admintool/dbbrowser-messages",
 				"classpath:i18n/admintool/filebrowser-messages",
 				"classpath:i18n/admintool/jmx-messages",
