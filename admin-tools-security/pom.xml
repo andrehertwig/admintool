@@ -21,7 +21,7 @@
 	<modules>
 		<module>admin-tools-security-commons</module>
 		<module>admin-tools-security-simple</module>
-		<module>admin-tools-security-dbuser</module>
+		<!-- <module>admin-tools-security-dbuser</module> -->
 	</modules>
 	
 	<dependencyManagement>
