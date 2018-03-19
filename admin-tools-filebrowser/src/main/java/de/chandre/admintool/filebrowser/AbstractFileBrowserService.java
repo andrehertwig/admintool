@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,11 +22,13 @@ public abstract class AbstractFileBrowserService {
 	}
 	
 	/**
+	 * checks file against configured path restrictions and read-write configuration<br>
+	 * doesn't check file permissions
 	 * 
-	 * @param path
-	 * @param write
-	 * @param configReadOnly
-	 * @return
+	 * @param path the file to show/manipulate
+	 * @param write if current action want to change the file
+	 * @param configReadOnly if configuration value read-only is true
+	 * @return true if accessible
 	 * @throws IOException
 	 */
 	public boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException {
@@ -49,10 +50,20 @@ public abstract class AbstractFileBrowserService {
 		return true;
 	}
 	
+	/**
+	 * returns the file extension by filename separated by last dot
+	 * @param file
+	 * @return null or extension
+	 */
 	public String getExtension(File file) {
 		return getExtension(file.getName());
 	}
 	
+	/**
+	 * returns the file extension by filename separated by last dot
+	 * @param fileName
+	 * @return null or extension
+	 */
 	public String getExtension(String fileName) {
 		if (fileName.lastIndexOf('.') > -1) {
 			return (fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length())).toLowerCase();

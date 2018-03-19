@@ -523,6 +523,9 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public String createFolder(String path, String folderName) throws IOException, GenericFilebrowserException {
+		if (StringUtils.isEmpty(path) && StringUtils.isEmpty(folderName)) {
+			throw new GenericFilebrowserException("Nothing to create.");
+		}
 		File file = new File(path);
 		if (file.exists()) {
 			if (isAllowed(file, true)) {
@@ -530,7 +533,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 				if(file.mkdirs()) {
 					return file.getAbsolutePath();
 				}
-				throw new GenericFilebrowserException("could not create directories");
+				throw new GenericFilebrowserException("Could not create directories.");
 			}
 		} else {
 			LOGGER.warn("[createFolder] folder already exists: " + path);
@@ -540,16 +543,23 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public String deleteResource(String path) throws IOException, GenericFilebrowserException {
+		if (StringUtils.isEmpty(path)) {
+			throw new GenericFilebrowserException("Nothing to delete.");
+		}
 		File file = new File(path);
 		
 		if (file.isDirectory() && !config.isDelteFolderAllowed()) {
-			throw new GenericFilebrowserException("delete folder is not allowed");
+			throw new GenericFilebrowserException("Delete folders functionality is deactivated.");
 		}
 		if (file.isFile() && !config.isDelteFileAllowed()) {
-			throw new GenericFilebrowserException("delete file is not allowed");
+			throw new GenericFilebrowserException("Delete files functionality is deactivated.");
 		}
 		if (!isAllowed(file, true)) {
-			throw new GenericFilebrowserException("delete "+(file.isDirectory() ?  "folder" : "file")+" is not allowed");
+			throw new GenericFilebrowserException("Delete "+(file.isDirectory() ?  "folder" : "file")+" is not allowed.");
+		}
+		if (!file.canWrite() && config.isNotDeletableIfNotWriteable()) {
+			throw new GenericFilebrowserException(
+					"Deleting " +(file.isDirectory() ?  "folder" : "file") + " '" + file.getName() + "' is not allowed.");
 		}
 		
 		String parent = file.getParent();
