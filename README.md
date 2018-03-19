@@ -3,7 +3,8 @@
 
 This is just a spare-time project. The usage of this tool (especially in production systems) is at your own risk.
 
-Last Release: 1.1.6.1 - 18.01.2018
+Prev Release: 1.1.6.1 - 18.01.2018
+Last Release: 1.1.6.2 - 20.03.2018
 
 [![Maven Central](https://img.shields.io/maven-central/v/de.chandre.admin-tools/admin-tools-core.svg)](https://mvnrepository.com/artifact/de.chandre.admin-tools)
 [![GitHub issues](https://img.shields.io/github/issues/andrehertwig/admintool.svg)](https://github.com/andrehertwig/admintool/issues)
@@ -79,7 +80,7 @@ Include the dependencies in your dependency management. You can find it in [Mave
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.6.1</version>
+	<version>1.1.6.2</version>
 </dependency>
 	...
 ```

@@ -37,8 +37,11 @@ $( document ).ready(function() {
 			    }
 		    }
 		});
-		
-		getByID("uploadModal").modal();
+		var uploadModal = getByID("uploadModal");
+		uploadModal.modal();
+		uploadModal.on('hidden.bs.modal', function () {
+			location.reload();
+		});
 	});
 	
 	$('.delete').each(function() {
