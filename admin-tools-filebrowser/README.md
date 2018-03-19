@@ -34,12 +34,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.6</version>
+	<version>1.1.6.2</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-filebrowser</artifactId>
-	<version>1.1.6</version>
+	<version>1.1.6.2</version>
 </dependency>
 ```
 
@@ -117,6 +117,10 @@ admintool.filebrowser.createFolderAllowed=false
 #since 1.1.6
 # boolean: to enable action to delete folders
 admintool.filebrowser.delteFolderAllowed=false
+
+#since 1.1.6.2
+# boolean: if set to true and file/folder to delete has no write permission, it's not allowed to delete them
+admintool.filebrowser.notDeletableIfNotWriteable=true
 
 #since 1.1.6
 # boolean: to enable action to delete files
