@@ -73,9 +73,8 @@ $.extend(AdminTool.Jmx.prototype, {
 				
 				console.log(queryData);
 				
-				this.sendRequest(
-					{
-						url: getWebContext() + "/admintool/jmx/attributes", 
+				this.sendRequest({
+						url: "/admintool/jmx/attributes", 
 						requestType:'POST',
 						dataType: "json",
 						data: JSON.stringify(queryData),
@@ -105,9 +104,8 @@ $.extend(AdminTool.Jmx.prototype, {
 					if(isAttribute) {
 						this.loadAttribute(queryData);
 					} else {
-						this.sendRequest(
-						{
-							url: getWebContext() + "/admintool/jmx/operation", 
+						this.sendRequest({
+							url: "/admintool/jmx/operation", 
 							requestType:'POST',
 							dataType: "json",
 							data: JSON.stringify(queryData),
@@ -135,9 +133,8 @@ $.extend(AdminTool.Jmx.prototype, {
 	},
 	
 	loadAttribute: function(queryData) {
-		this.sendRequest(
-		{
-			url: getWebContext() + "/admintool/jmx/attribute", 
+		this.sendRequest({
+			url: "/admintool/jmx/attribute", 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
@@ -230,9 +227,8 @@ $.extend(AdminTool.Jmx.prototype, {
 			queryData["parameters"] = paramList;
 		}
 		
-		this.sendRequest(
-		{
-			url: getWebContext() + "/admintool/jmx/operation/execute", 
+		this.sendRequest({
+			url: "/admintool/jmx/operation/execute", 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
