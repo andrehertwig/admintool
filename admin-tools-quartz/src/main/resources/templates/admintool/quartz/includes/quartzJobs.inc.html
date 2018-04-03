@@ -33,6 +33,9 @@
 									</div>
 								</div>
 							</td>
+							<td class="center-middle">
+								<i th:if="${@adminToolQuartzService.isStateful(jobKey)}" class="fa fa-database fa-3x" title="stateful job"></i>
+							</td>
 							<td class="center-middle" th:if="${@adminToolQuartzConfig.isInterruptJobAllowed()}">
 								<a class="interruptJob text-danger" th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}"
 						 		 th:id="'interruptJob_' + ${group} + '_' + ${jobKey.getName()}"><i class="fa fa-bolt fa-3x" title="Interrupt"></i></a>
@@ -75,16 +78,21 @@
 											<div class="col-xs-2">
 												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.nextFireTime', 'Next Fire Time')" />
 											</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}" title="Change Job-Trigger state">
+											
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}" 
+												th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.text.state.title'),'Change Job-Trigger state')}">
 												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.state', 'State')" />
 											</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}" title="is interruptable">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}"
+												th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.text.interruptable.title'),'is interruptable')}">
 												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.interruptable', 'Interr.')" />
 											</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}" title="Change Job-Trigger data">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}"
+												th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.text.change.title'),'Change Job-Trigger data')}">
 												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.change', 'Change')" />
 											</div>
-											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}" title="Remove the Job-Trigger">
+											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}"
+												th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.text.remove.title'),'Remove the Job-Trigger')}">
 												<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.remove', 'Remove')" />
 											</div>
 										</div>
@@ -112,28 +120,42 @@
 													<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.jobs.text.notAvailable', 'N/A')" />
 												</span>
 											</div>
+											
+											<!--/* Change Trigger State Action */-->
 											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangetTriggerStateAllowed()}">
 												<button th:class="'changeTriggerState btn btn-xs ' + ${@adminToolQuartzService.getTriggerStateCssClass(jobKey, trigger)}"
 													th:id="'changeTriggerState_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${#objects.nullSafe(trigger.getKey().getName(), 'all')}"
-													th:text="${@adminToolQuartzService.getTriggerState(jobKey, trigger)}">
+													th:text="${@adminToolQuartzService.getTriggerState(jobKey, trigger)}"
+													th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.button.state.title'),'Change Job-Trigger state')}">
 												</button>
 											</div>
+											
+											<!--/* Interrupt Trigger Action */-->
 											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isInterruptTriggerAllowed()}">
 												<button th:id="'interruptTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}" 
 													th:if="${@adminToolQuartzService.isInteruptable(jobKey)}" 
-													class="interruptTrigger btn btn-xs btn-danger"><i class="fa fa-stop-circle-o"></i></button>
+													class="interruptTrigger btn btn-xs btn-danger"
+													th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.button.interruptable.title'),'is interruptable')}">
+													<i class="fa fa-stop-circle-o"></i>
+												</button>
 												<span th:unless="${@adminToolQuartzService.isInteruptable(jobKey)}" th:text="${@adminToolQuartzService.isInteruptable(jobKey)}" 
 													th:remove="tag"></span>
 											</div>
+											
+											<!--/* Change Trigger Action */-->
 											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isChangeTriggerAllowed()}">
 												<button class="changeTrigger btn btn-xs btn-primary"
-													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
+													th:id="'changeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}"
+													th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.button.change.title'),'Change Job-Trigger data')}">
 													<i class="fa fa-wrench"></i>
 												</button>
 											</div>
+											
+											<!--/* Remove Trigger Action */-->
 											<div class="col-xs-1" th:if="${@adminToolQuartzConfig.isRemoveTriggerAllowed()}">
 												<button class="removeTrigger btn btn-xs btn-danger"
-													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}">
+													th:id="'removeTrigger_' + ${group} + '_' + ${jobKey.getName()} + '_' + ${trigger.getKey().getGroup()} + '_' + ${trigger.getKey().getName()}"
+													th:title="${#strings.defaultString(#messages.msgOrNull('ui.admintool.core.quartz.jobs.button.remove.title'),'Remove the Job-Trigger')}">
 													<i class="fa fa-trash"></i>
 												</button>
 											</div>
