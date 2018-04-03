@@ -4,11 +4,17 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,10 +35,34 @@ public class AdminToolImpl implements AdminTool
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminToolImpl.class);
 	
+	@Autowired
+	private ApplicationContext context;
+	
 	private Set<AdminComponent> components = new ConcurrentSkipListSet<>(new AdminComponentComparator());
 	
 	private Map<String, Boolean> globalJavaScripts = new LinkedHashMap<>();
 	private Map<String, Boolean> globalStyleSheets = new LinkedHashMap<>();
+	
+	private Properties version;
+	
+	@PostConstruct
+	private void loadVersion() {
+		try {
+			Resource versionProp = context.getResource("classpath:/admintool-version.properties");
+			if (null != versionProp) {
+				version = new Properties();
+				version.load(versionProp.getInputStream());
+				
+			}
+		} catch (Exception e) {
+			LOGGER.warn("could not load version properties: " + e.getMessage());
+		}
+	}
+	
+	@Override
+	public String getVersion() {
+		return version.getProperty("version", "no version available");
+	}
 	
 	@Override
 	public void setComponentComparator(Comparator<AdminComponent> comparator) {
