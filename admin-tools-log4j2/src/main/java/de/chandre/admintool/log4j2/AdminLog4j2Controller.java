@@ -28,6 +28,10 @@ public class AdminLog4j2Controller
 {
 	private static final Log LOGGER = LogFactory.getLog(AdminLog4j2Controller.class);
 	
+	private static final String RESULT_ACTION_RELOAD = "reload";
+	private static final String RESULT_TRUE = Boolean.TRUE.toString();
+	private static final String RESULT_FALSE = Boolean.FALSE.toString();
+	
 	@Autowired
 	private AdminToolLog4j2Config config;
 	
@@ -57,12 +61,37 @@ public class AdminLog4j2Controller
 		try {
 			log4jUtil.changeLogger(loggerName, level, parent);
 		} catch (Exception e) {
-			return "false";
+			LOGGER.error(e.getMessage(), e);
+			return RESULT_FALSE;
 		}
 		if (loggerName.equals("ROOT") || parent) {
-			return "reload";
+			return RESULT_ACTION_RELOAD;
 		}
-		return "true";
+		return RESULT_TRUE;
+	}
+	
+	/**
+	 * 
+	 * @param manageTO
+	 * @param request
+	 * @return
+	 * @since 1.1.6.4
+	 */
+	@RequestMapping(value = "/manageLogger", method = RequestMethod.POST)
+	@ResponseBody
+	public String manageLogger(@RequestBody Log4j2ManageLoggerTO manageTO, HttpServletRequest request)
+	{
+		if (!config.isEnabled()) {
+			return RESULT_FALSE;
+		}
+		LOGGER.info(String.format("manage logger %s", manageTO));
+		try {
+			log4jUtil.addCustomParentLogger(manageTO.isAdditivity(), manageTO.getLevel(), manageTO.getLoggerName(), manageTO.getAppenderNames());
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return RESULT_FALSE;
+		}
+		return RESULT_ACTION_RELOAD;
 	}
 	
 	@RequestMapping(value = "/removeCustomLoggers", method = {RequestMethod.POST, RequestMethod.GET})
@@ -73,8 +102,21 @@ public class AdminLog4j2Controller
 		}
 		LOGGER.info(String.format("removing custom loggers"));
 		log4jUtil.removeCustomLoggers();
-		return "reload";
+		return RESULT_ACTION_RELOAD;
 	}
+	
+	@RequestMapping(value = "/removeCustomParentLogger", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public String removeCustomParentLogger() {
+		if (!config.isEnabled()) {
+			return null;
+		}
+		LOGGER.info(String.format("removing custom loggers"));
+		log4jUtil.removeCustomParentLoggers();
+		return RESULT_ACTION_RELOAD;
+	}
+	
+	
 	
 	@RequestMapping(value = "/getLevels", method = RequestMethod.GET)
 	@ResponseBody
@@ -119,9 +161,9 @@ public class AdminLog4j2Controller
 			LOGGER.debug(String.format("log4j console initialized: %s, %s", consoleTO.getLevel(), consoleTO.getEncoding()));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			return "false";
+			return RESULT_FALSE;
 		}
-		return "true";
+		return RESULT_TRUE;
 	}
 	
 	@RequestMapping(value = "/stopConsole", method = {RequestMethod.GET, RequestMethod.POST})
@@ -136,9 +178,9 @@ public class AdminLog4j2Controller
 			log4jUtil.closeOutputStreamAppender(String.class.cast(session.getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME)));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			return "false";
+			return RESULT_FALSE;
 		}
-		return "true";
+		return RESULT_TRUE;
 	}
 	
 	@RequestMapping(value = {"/getConsoleContent", "/getConsoleContent/"}, method = {RequestMethod.GET, RequestMethod.POST})
