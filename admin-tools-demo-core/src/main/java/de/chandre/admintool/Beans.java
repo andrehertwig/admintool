@@ -123,6 +123,23 @@ public class Beans {
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
 		
+//		ColumnConfig[] cc = {
+//				ColumnConfig.newBuilder().setConfiguration(config).setName("DATE").setEventTimestamp(true).build(),
+//				ColumnConfig.newBuilder().setConfiguration(config).setName("LEVEL").setPattern("%level").build(),
+//				ColumnConfig.newBuilder().setConfiguration(config).setName("LOGGER").setPattern("%logger").build(),
+//				ColumnConfig.newBuilder().setConfiguration(config).setName("MESSAGE").setPattern("%message").setClob(true).build(),
+//				ColumnConfig.newBuilder().setConfiguration(config).setName("EXCEPTION").setPattern("%ex{full}").setClob(true).build()
+//		};
+//		
+//		Appender appender = JdbcAppender.newBuilder()
+//	            .setBufferSize(0)
+//	            .setColumnConfigs(cc)
+//	            .setConnectionSource(new Connect(dataSource))
+//	            .setTableName("LOGGING")
+//	            .withName("databaseAppender")
+//	            .withIgnoreExceptions(false)
+//	            .build();
+		
 		ColumnConfig[] cc = {
 				ColumnConfig.createColumnConfig(config, "DATE", null, null, "true", null, null),
 	            ColumnConfig.createColumnConfig(config, "LEVEL", "%level", null, null, null, null),
