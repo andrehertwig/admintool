@@ -18,7 +18,7 @@
 	<packaging>jar</packaging>
 	
 	<properties>
-		<log4j2.version>2.9.1</log4j2.version>
+		<log4j2.version>2.11.0</log4j2.version>
 		<quartz-version>2.3.0</quartz-version>
 	</properties>
 	
@@ -134,6 +134,17 @@
 			<artifactId>log4j-web</artifactId>
 			<version>${log4j2.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j-impl</artifactId>
+		    <version>${log4j2.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

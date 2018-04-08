@@ -15,8 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.db.ColumnMapping;
+import org.apache.logging.log4j.core.appender.db.jdbc.AbstractConnectionSource;
 import org.apache.logging.log4j.core.appender.db.jdbc.ColumnConfig;
-import org.apache.logging.log4j.core.appender.db.jdbc.ConnectionSource;
 import org.apache.logging.log4j.core.appender.db.jdbc.JdbcAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -123,32 +124,33 @@ public class Beans {
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		final Configuration config = ctx.getConfiguration();
 		
-//		ColumnConfig[] cc = {
-//				ColumnConfig.newBuilder().setConfiguration(config).setName("DATE").setEventTimestamp(true).build(),
-//				ColumnConfig.newBuilder().setConfiguration(config).setName("LEVEL").setPattern("%level").build(),
-//				ColumnConfig.newBuilder().setConfiguration(config).setName("LOGGER").setPattern("%logger").build(),
-//				ColumnConfig.newBuilder().setConfiguration(config).setName("MESSAGE").setPattern("%message").setClob(true).build(),
-//				ColumnConfig.newBuilder().setConfiguration(config).setName("EXCEPTION").setPattern("%ex{full}").setClob(true).build()
-//		};
-//		
-//		Appender appender = JdbcAppender.newBuilder()
-//	            .setBufferSize(0)
-//	            .setColumnConfigs(cc)
-//	            .setConnectionSource(new Connect(dataSource))
-//	            .setTableName("LOGGING")
-//	            .withName("databaseAppender")
-//	            .withIgnoreExceptions(false)
-//	            .build();
-		
 		ColumnConfig[] cc = {
-				ColumnConfig.createColumnConfig(config, "DATE", null, null, "true", null, null),
-	            ColumnConfig.createColumnConfig(config, "LEVEL", "%level", null, null, null, null),
-	            ColumnConfig.createColumnConfig(config, "LOGGER", "%logger", null, null, null, null),
-	            ColumnConfig.createColumnConfig(config, "MESSAGE", "%message", null, null, null, "true"),
-	            ColumnConfig.createColumnConfig(config, "EXCEPTION", "%ex{full}", null, null, null, "true"),
+				ColumnConfig.newBuilder().setConfiguration(config).setName("DATE").setEventTimestamp(true).build(),
+				ColumnConfig.newBuilder().setConfiguration(config).setName("LEVEL").setPattern("%level").build(),
+				ColumnConfig.newBuilder().setConfiguration(config).setName("LOGGER").setPattern("%logger").build(),
+				ColumnConfig.newBuilder().setConfiguration(config).setName("MESSAGE").setPattern("%message").setClob(true).build(),
+				ColumnConfig.newBuilder().setConfiguration(config).setName("EXCEPTION").setPattern("%ex{full}").setClob(true).build()
 		};
 		
-		Appender appender = JdbcAppender.createAppender("databaseAppender", "false", null, new Connect(dataSource), "0", "LOGGING", cc);
+		Appender appender = JdbcAppender.newBuilder()
+	            .setBufferSize(0)
+	            .setColumnConfigs(cc)
+	            .setColumnMappings(new ColumnMapping[]{})
+	            .setConnectionSource(new Connect(dataSource))
+	            .setTableName("LOGGING")
+	            .withName("databaseAppender")
+	            .withIgnoreExceptions(false)
+	            .build();
+		
+//		ColumnConfig[] cc = {
+//				ColumnConfig.createColumnConfig(config, "DATE", null, null, "true", null, null),
+//	            ColumnConfig.createColumnConfig(config, "LEVEL", "%level", null, null, null, null),
+//	            ColumnConfig.createColumnConfig(config, "LOGGER", "%logger", null, null, null, null),
+//	            ColumnConfig.createColumnConfig(config, "MESSAGE", "%message", null, null, null, "true"),
+//	            ColumnConfig.createColumnConfig(config, "EXCEPTION", "%ex{full}", null, null, null, "true"),
+//		};
+//		Appender appender = JdbcAppender.createAppender("databaseAppender", "false", null, new Connect(dataSource), "0", "LOGGING", cc);
+		
 		appender.start();
 		config.addAppender(appender);
 		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
@@ -170,11 +172,12 @@ public class Beans {
 	}
 	
 	// inner class
-	class Connect implements ConnectionSource {
+	class Connect extends AbstractConnectionSource {
 		private DataSource dsource;
 
 		public Connect(DataSource dsource) {
 			this.dsource = dsource;
+			setState(State.STARTED);
 		}
 
 		@Override

@@ -48,7 +48,9 @@
 									<td class="logname" th:with="appenders = ${@adminToolLog4j2Util.getAppendersForLogger(logger.getName())}"
 										th:title="'AppenderRefs: ' + ${appenders}"
 										th:attr="data-appenders=${appenders}"
-										th:text="${#strings.defaultString(logger.getName(),'ROOT')}"></td>
+										th:inline="text">[[${#strings.defaultString(logger.getName(),'ROOT')}]]
+											<span th:if="${@adminToolLog4j2Util.isCustom(logger.getName())}" class="label label-default" th:text="Custom"></span>
+										</td>
 									<td th:text="${logger.getLevel()}"
 										th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
 									<td class="logaction">
