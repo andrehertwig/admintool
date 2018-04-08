@@ -22,9 +22,13 @@
 						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.parent.subHeadline', 'Parent Loggers')" /> 
 						<span th:text="' ('+ ${parentLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right removeCustomLogger" 
-						th:text="'Remove Custom Parent Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">
-						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.parent.btn.remove', 'Remove Custom Parent Loggers')" /> 
+					<button class="btn btn-default pull-right topButton removeCustomLogger">
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.parent.btn.remove', 'Remove Custom Parent Loggers')" />
+						<span class="label label-default" th:text="${@adminToolLog4j2Util.getCustomParentLoggerSize()}"></span>
+					</button>
+					<button class="btn btn-default pull-right topButton" id="addCustomLogger"
+						th:tile="Add a custom Logger">
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.btn.add', 'Add')" /> 
 					</button>
 				</div>
 				<div class="box-body">
@@ -41,8 +45,12 @@
 							<tbody>
 								<tr th:each="logger, iterState : ${parentLoggers}"
 									class="logrow parent">
-									<td class="logname"
-										th:text="${#strings.defaultString(logger.getName(),'ROOT')}"></td>
+									<td class="logname" th:with="appenders = ${@adminToolLog4j2Util.getAppendersForLogger(logger.getName())}"
+										th:title="'AppenderRefs: ' + ${appenders}"
+										th:attr="data-appenders=${appenders}"
+										th:inline="text">[[${#strings.defaultString(logger.getName(),'ROOT')}]]
+											<span th:if="${@adminToolLog4j2Util.isCustom(logger.getName())}" class="label label-default" th:text="Custom"></span>
+										</td>
 									<td th:text="${logger.getLevel()}"
 										th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
 									<td class="logaction">
@@ -50,6 +58,11 @@
 											th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
 											th:text="${level}"
 											th:class="'changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
+										</button>
+										<button
+											th:title="Change"
+											class="manageLogger btn btn-xs">
+											<i class="fa fa-wrench" aria-hidden="true"></i>
 										</button>
 									</td>
 								</tr>
@@ -70,9 +83,9 @@
 						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.all.subHeadline', 'All Loggers')" /> 
 						<span th:text="' ('+ ${allLoggers.size()} +')'"></span>
 					</h3>
-					<button class="btn btn-default pull-right removeCustomLogger" 
-						th:text="'Remove Custom Loggers (' + ${@adminToolLog4j2Util.getCustomLoggerSize()} + ')'">
+					<button class="btn btn-default pull-right topButton removeCustomParentLogger">
 						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.log4j.loggers.all.btn.remove', 'Remove Custom Loggers')" />
+						<span class="label label-default" th:text="${@adminToolLog4j2Util.getCustomLoggerSize()}"></span>
 					</button>
 				</div>
 				<div class="box-body">
@@ -90,9 +103,12 @@
 								<tr th:each="logger, iterState : ${allLoggers}" class="logrow">
 									<td>
 										<div class="logname"
+											th:with="appenders = ${@adminToolLog4j2Util.getAppendersForLogger(logger.getName())}"
+											th:title="'AppenderRefs: ' + ${appenders}"
+											th:attr="data-appenders=${appenders}"
 											th:text="${#strings.defaultString(logger.getName(),'ROOT')}"></div>
 									</td>
-									<td th:text="${logger.getLevel()}"
+									<td th:text="${logger.getLevel()}" 
 										th:class="'loglevel text-center ' + ${@adminToolLog4j2Util.getLoggerLevelCss('bg', logger.getLevel())}"></td>
 									<td class="logaction">
 										<button
@@ -108,6 +124,96 @@
 				</div>
 				<div class="box-footer clearfix">&nbsp;</div>
 
+			</div>
+			
+			<div class="modal fade" id="manageLoggerModal" tabindex="-1" role="dialog" aria-labelledby="manageLoggerLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="manageLoggerLabel">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.manage.headline', 'Manage Logger')" />
+							</h4>
+						</div>
+						<!--  <form id="manageLogger_form" th:action="@{${adminToolContext} + '/log4j2/manage'}" method="post"> -->
+							<div class="modal-body">
+								
+								<input type="hidden" name="action" id="action" value="" />
+								
+								<div class="row">
+									<div class="col-md-12 col-xs-12">
+										<div class="form-group">
+											<label for="loggerName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.manage.input.loggerName', 'Logger name')" />
+											</label>
+											<input class="form-control" type="text" name="loggerName" id="loggerName" placeholder="logger name" />
+										</div>
+									</div>
+								</div>
+								<div class="clearfix">&nbsp;</div>
+								
+								<div class="row">
+									<div class="col-md-12 col-xs-12">
+										<div class="form-group">
+											<label for="appenderNames">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.loggers.manage.input.appenderNames', 'Appender Names')" />
+											</label>
+											<select id="appenderNames" name="appenderNames" multiple="multiple" class="form-control">
+												<option th:each="loggerName, iterState : ${@adminToolLog4j2Util.getAppenderNames()}"
+													th:text="${loggerName}" th:value="${loggerName}"></option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix">&nbsp;</div>
+								
+								<div class="row">
+								
+									<!-- 
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group">
+											<label for="recursive" title="Apply the appender recursive to all sub-loggers (in class hierachy) if a parent logger will be selected">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.recursive', 'Recursive')" />
+											</label><br />
+											<input id="recursive" name="recursive" type="checkbox"/>
+										</div>
+									</div>
+									 -->
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group">
+											<label for="level"><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.input.level', 'Logger Level')" /></label>
+											<select id="level" name="level" class="form-control">
+												<option th:each="level, iterState : ${@adminToolLog4j2Util.getLevels()}"
+													th:value="${level.name()}" th:text="${level.name()}"></option>
+											</select>
+										</div>
+									</div>
+									
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group">
+											<label for="additivity" title="">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.log4j.console.manage.input.additivity', 'Additivity')" />
+											</label><br />
+											<input id="additivity" name="additivity" type="checkbox"/>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix">&nbsp;</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="submit" class="btn btn-primary pull-right" id="manageLogger_submit">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Submit')" />
+								</button>
+							</div>
+						<!-- </form> -->
+					</div>
+				</div>
 			</div>
 
 		</section>

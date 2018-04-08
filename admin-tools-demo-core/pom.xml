@@ -18,7 +18,7 @@
 	<packaging>jar</packaging>
 	
 	<properties>
-		<log4j2.version>2.9.1</log4j2.version>
+		<log4j2.version>2.11.0</log4j2.version>
 		<quartz-version>2.3.0</quartz-version>
 	</properties>
 	
@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>de.chandre.quartz</groupId>
 			<artifactId>spring-boot-starter-quartz</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.4</version>
 		</dependency>
 		
 		<dependency>
@@ -115,6 +115,12 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-spring-boot-starter</artifactId>
+			<version>1.71.0</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
@@ -133,6 +139,17 @@
 			<artifactId>log4j-web</artifactId>
 			<version>${log4j2.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j-impl</artifactId>
+		    <version>${log4j2.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
+		
         <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 public class TemplateUserServiceImpl implements TemplateUserService {
 
 	protected static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
-
+	
 	@Override
-	public String getUserName() {
+	public Authentication getAuthentication() {
+		
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		if (securityContext == null)
 			return null;
@@ -25,25 +26,24 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 		Authentication authentication = securityContext.getAuthentication();
 		if (authentication == null)
 			return null;
+		return authentication;
+	}
 
+	@Override
+	public String getUserName() {
+		
+		Authentication authentication = getAuthentication();
 		if (authentication.getAuthorities().size() == 1
 				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return "Login";
 		}
-
 		return authentication.getName();
 	}
 
 	@Override
 	public boolean isAnonymous() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		if (securityContext == null)
-			return true;
-
-		Authentication authentication = securityContext.getAuthentication();
-		if (authentication == null)
-			return true;
-
+		
+		Authentication authentication = getAuthentication();
 		if (authentication instanceof AnonymousAuthenticationToken) {
 			return true;
 		}
@@ -52,37 +52,23 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 
 	@Override
 	public Object getUserDetails() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		if (securityContext == null)
-			return null;
-
-		Authentication authentication = securityContext.getAuthentication();
-		if (authentication == null)
-			return null;
-
+		
+		Authentication authentication = getAuthentication();
 		if (authentication.getAuthorities().size() == 1
 				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return null;
 		}
-
 		return authentication.getDetails();
 	}
 
 	@Override
 	public Object getUserPrincipal() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		if (securityContext == null)
-			return null;
-
-		Authentication authentication = securityContext.getAuthentication();
-		if (authentication == null)
-			return null;
-
+		
+		Authentication authentication = getAuthentication();
 		if (authentication.getAuthorities().size() == 1
 				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
 			return null;
 		}
-
 		return authentication.getPrincipal();
 	}
 }

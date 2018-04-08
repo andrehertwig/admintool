@@ -1,3 +1,6 @@
+.topButton {
+	margin: 0 0 0 2px;	
+}
 
 .label {
 	margin: 0 2px 0 0;
@@ -29,8 +32,8 @@ td.loglevel {
 	min-width: 58px;
 }
 td.logaction {
-	width: 330px;
-	min-width: 330px;
+	width: 340px;
+	min-width: 340px;
 }
 span.logline {
 	display: block;

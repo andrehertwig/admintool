@@ -1,6 +1,8 @@
 # The Log4j2 Management Plugin
 > Shows all loggers with possibility to change the level 
 
+Since 1.1.6.4 it's possible to add new Logger with available appenders
+
  ![Preview image](doc/screen_log4j_org.png?raw=true "AdminTool Log4jLoggers UI")
  
  Since 1.1.1 a web console is available
@@ -15,12 +17,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.6.3</version>
+	<version>1.1.6.4</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-log4j2</artifactId>
-	<version>1.1.6.3</version>
+	<version>1.1.6.4</version>
 </dependency>
 ```
 

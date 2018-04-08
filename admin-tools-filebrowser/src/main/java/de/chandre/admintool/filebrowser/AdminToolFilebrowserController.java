@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,7 +109,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	}
 
 	@RequestMapping(value = {"/zip"}, method={RequestMethod.GET, RequestMethod.POST})
-	public void downloadAsZip(@RequestParam("selectedFile") List<String> filePaths, ModelMap model, HttpServletRequest request,
+	public void downloadAsZip(@RequestParam(name="selectedFile", required=false) List<String> filePaths, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
 		if (!filebrowserConfig.isEnabled()) {
 			return;
@@ -126,9 +127,10 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 				}
 			});
 		}
-		
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
-		filebrowserService.downloadFilesAsZip(decodedPaths, response);
+		if (!CollectionUtils.isEmpty(decodedPaths)) {
+			if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
+			filebrowserService.downloadFilesAsZip(decodedPaths, response);
+		}
 	}
 	
 	@RequestMapping(value = {"/upload"}, method={RequestMethod.POST})
