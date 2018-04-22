@@ -44,22 +44,18 @@ public class AdminToolJminixLoader extends AbstractAdminToolLoader
 		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.setDisplayName("JMX Console");
 		
-		component.addAdditionalJS(getWebjarsPrefixUri() + "mustache/" + config.getMustacheVersion() + "/mustache.min.js", relative);
-		component.addAdditionalJS(getWebjarsPrefixUri() + "jstree/" + config.getJsTreeVersion() + "/dist/jstree.js", relative);
+		component.addAdditionalJS(getWebjarsBowerPrefixUri() + "mustache/" + config.getMustacheVersion() + "/mustache.min.js", relative);
+		component.addAdditionalJS(getWebjarsBowerPrefixUri() + "jstree/" + config.getJsTreeVersion() + "/dist/jstree.js", relative);
 		
 		component.addAdditionalJS("/static/admintool/jmx/js/jquery-resizable.js", true);
 		component.addAdditionalJS("/static/admintool/jmx/js/jmx.js", true);
 		
-		component.addAdditionalCSS(getWebjarsPrefixUri() + "jstree/" + config.getJsTreeVersion()+ "/dist/themes/default/style.css", relative);
+		component.addAdditionalCSS(getWebjarsBowerPrefixUri() + "jstree/" + config.getJsTreeVersion() + "/dist/themes/default/style.css", relative);
 		component.addAdditionalCSS("/static/admintool/jmx/css/jmx.css", true);
 		
-		
-		MenuEntry mainMenu = new MenuEntry();
-		mainMenu.setDisplayName("JMX");
-		mainMenu.setName("jmx");
-		mainMenu.setTarget("content/jmx/jmx");
-		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "jmx.displayName");
-		component.setMainMenu(mainMenu);
+		component.setMainMenu(
+				MenuEntry.builder().displayName("JMX").name("jmx").target("content/jmx/jmx").resouceMessageKeySuffix("jmx.displayName")
+				.build());
 		
 		adminTool.addComponent(component);
 	}

@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,7 +109,7 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	}
 
 	@RequestMapping(value = {"/zip"}, method={RequestMethod.GET, RequestMethod.POST})
-	public void downloadAsZip(@RequestParam("selectedFile") List<String> filePaths, ModelMap model, HttpServletRequest request,
+	public void downloadAsZip(@RequestParam(name="selectedFile", required=false) List<String> filePaths, ModelMap model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
 		if (!filebrowserConfig.isEnabled()) {
 			return;
@@ -126,9 +127,10 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 				}
 			});
 		}
-		
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
-		filebrowserService.downloadFilesAsZip(decodedPaths, response);
+		if (!CollectionUtils.isEmpty(decodedPaths)) {
+			if(LOGGER.isTraceEnabled()) LOGGER.trace("downloadAsZip file: " + decodedPaths.size());
+			filebrowserService.downloadFilesAsZip(decodedPaths, response);
+		}
 	}
 	
 	@RequestMapping(value = {"/upload"}, method={RequestMethod.POST})
@@ -163,11 +165,11 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 	}
 	
 	@RequestMapping(value = {"/createFolder"}, method={RequestMethod.POST})
-	public void createFolder(@RequestParam("folderName") String folderPath, @RequestParam("currentDir") String currentDir, 
+	public String createFolder(@RequestParam("folderName") String folderPath, @RequestParam("currentDir") String currentDir, 
 			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
 			throws IOException, GenericFilebrowserException {
 		if (!filebrowserConfig.isEnabled()) {
-			return;
+			return null;
 		}
 		if (!filebrowserConfig.isCreateFolderAllowed()) {
 			throw new GenericFilebrowserException("folder creation not allowed");
@@ -175,33 +177,54 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		String decodedPath = URLDecoder.decode(currentDir, "UTF-8");
 		String decodedFolder = URLDecoder.decode(folderPath, "UTF-8");
 		if(LOGGER.isTraceEnabled()) LOGGER.trace("create folder: " + decodedFolder + " in path: " + decodedPath);
-		String path = filebrowserService.createFolder(decodedPath, decodedFolder);
+		
+		String path = null;
+		try {
+			path = filebrowserService.createFolder(decodedPath, decodedFolder);
+		} catch (GenericFilebrowserException e) {
+			String templatePath = addCommonContextVars(model, request, "filebrowser", null);
+			model.put("exceptionMessage", e.getMessage());
+			model.put("currentDir", decodedPath);
+			return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
+		}
 		if (null != path) {
 			path = URLEncoder.encode(path, "UTF-8");
 		} else {
 			path = folderPath;
 		}
-		response.sendRedirect(AdminTool.ROOTCONTEXT + "/filebrowser?dir=" + path);
+		response.sendRedirect(getRootContext(request)+ "/filebrowser?dir=" + path);
+		return null;
 	}
 	
 	@RequestMapping(value = {"/delete"}, method={RequestMethod.POST})
-	public void deleteResource(
+	public String deleteResource(
 			@RequestParam(name ="file", required=false) String filePath, 
 			ModelMap model, HttpServletRequest request, HttpServletResponse response) 
-			throws IOException, DownloadNotAllowedException, GenericFilebrowserException {
+			throws IOException {
 		if (!filebrowserConfig.isEnabled()) {
-			return;
+			return null;
 		}
-		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
-		if(LOGGER.isTraceEnabled()) LOGGER.trace("delete resource: " + decodedPath);
 		
-		String path = filebrowserService.deleteResource(decodedPath);
+		String decodedPath = URLDecoder.decode(filePath, "UTF-8");
+		LOGGER.info("delete resource: " + decodedPath);
+		
+		String path = null;
+		try {
+			path = filebrowserService.deleteResource(decodedPath);
+		} catch (GenericFilebrowserException e) {
+			String templatePath = addCommonContextVars(model, request, "filebrowser", null);
+			model.put("exceptionMessage", e.getMessage());
+			File currentPath = StringUtils.isEmpty(decodedPath) ? filebrowserConfig.getStartDir() : new File(decodedPath);
+			model.put("currentDir", currentPath.isDirectory() ? currentPath : currentPath.getParent());
+			return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
+		}
 		if (null != path) {
 			path = URLEncoder.encode(path, "UTF-8");
 		} else {
 			path = filePath;
 		}
-		response.sendRedirect(AdminTool.ROOTCONTEXT + "/filebrowser?dir=" + path);
+		response.sendRedirect(getRootContext(request) + "/filebrowser?dir=" + path);
+		return null;
 	}
 	
 	@ExceptionHandler({DownloadNotAllowedException.class, GenericFilebrowserException.class})
@@ -215,7 +238,10 @@ public class AdminToolFilebrowserController extends AbstractAdminController {
 		if (StringUtils.isEmpty(lastFile)) {
 			lastFile = request.getParameter("selectedFile");
 		}
-		String decodedPath = URLDecoder.decode(lastFile, "UTF-8");
+		String decodedPath = null;
+		if (StringUtils.hasLength(lastFile)) {
+			decodedPath = URLDecoder.decode(lastFile, "UTF-8");
+		}
 		LOGGER.info("lastFile: " + lastFile);
 		if (StringUtils.hasLength(decodedPath) && 
 				filebrowserService.isAllowed(new File(decodedPath).getParentFile(), false, filebrowserConfig.isReadOnly()) ) {

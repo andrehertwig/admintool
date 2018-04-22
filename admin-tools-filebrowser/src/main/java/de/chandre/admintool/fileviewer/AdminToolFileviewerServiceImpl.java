@@ -25,7 +25,8 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	@Override
 	public void isFileAllowed(File file, boolean write) throws GenericFilebrowserException {
 		try {
-			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly()) || !isExtensionAllowedAndWriteable(file)) {
+			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly()) || !isExtensionAllowedAndReadable(file)
+					|| (write && !isExtensionAllowedAndWriteable(file))) {
 				throw new GenericFilebrowserException("insufficient file permissions");
 			}
 		} catch (IOException e) {

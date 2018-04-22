@@ -90,6 +90,9 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.delteFileAllowed:false}")
 	private boolean delteFileAllowed;
 	
+	@Value("${admintool.filebrowser.notDeletableIfNotWriteable:true}")
+	private boolean notDeletableIfNotWriteable;
+	
 	@Value("${admintool.filebrowser.info.crc32:true}")
 	private boolean infoCrc32;
 	
@@ -300,6 +303,15 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 		return isEnabled() && delteFileAllowed;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @since 1.1.6.2
+	 */
+	public boolean isNotDeletableIfNotWriteable() {
+		return notDeletableIfNotWriteable;
+	}
+
 	/**
 	 * 
 	 * @return

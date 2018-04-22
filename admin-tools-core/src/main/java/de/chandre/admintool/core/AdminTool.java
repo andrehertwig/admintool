@@ -62,19 +62,19 @@ public interface AdminTool {
 	 * 
 	 * @return
 	 */
-	public Set<AdminComponent> getComponents();
+	Set<AdminComponent> getComponents();
 	
 	/**
 	 * 
 	 * @param components
 	 */
-	public void addComponent(AdminComponent components);
+	void addComponent(AdminComponent components);
 	
 	/**
 	 * 
 	 * @param components
 	 */
-	public void addComponents(Set<AdminComponent> components);
+	void addComponents(Set<AdminComponent> components);
 	
 	/**
 	 *  A map with script url as key and a boolean if it's a relative url<br>
@@ -85,7 +85,7 @@ public interface AdminTool {
 	 *  </code>
 	 * @return
 	 */
-	public Map<String, Boolean> getGlobalJavaScripts();
+	Map<String, Boolean> getGlobalJavaScripts();
 	
 	/**
 	 * Example:<br>
@@ -97,7 +97,7 @@ public interface AdminTool {
 	 * @param globalJavaScript
 	 * @param relative if url is relative (not absolute) and pointing to the server
 	 */
-	public void addGlobalJavaScript(String globalJavaScript, boolean relative);
+	void addGlobalJavaScript(String globalJavaScript, boolean relative);
 	
 	/**
 	 * A map with css url as key and a boolean if it's a relative url 
@@ -108,7 +108,7 @@ public interface AdminTool {
 	 *  </code>
 	 * @return
 	 */
-	public Map<String, Boolean> getGlobalStyleSheets();
+	Map<String, Boolean> getGlobalStyleSheets();
 	
 	/**
 	 * Example:<br>
@@ -120,7 +120,7 @@ public interface AdminTool {
 	 * @param globalStyleSheet
 	 * @param relative if url is relative (not absolute) and pointing to the server
 	 */
-	public void addGlobalStyleSheet(String globalStyleSheet, boolean relative);
+	void addGlobalStyleSheet(String globalStyleSheet, boolean relative);
 
 	/**
 	 * searches for a menuEntry with specified name
@@ -129,4 +129,11 @@ public interface AdminTool {
 	 * @return null or MenuEntrySearchResult
 	 */
 	MenuEntrySearchResult searchComponent(String menuName);
+
+	/**
+	 * Returns the version of admintool
+	 * @since 1.1.6.3
+	 * @return admintool version
+	 */
+	String getVersion();
 }

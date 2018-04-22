@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.commons;
 
+import org.springframework.security.core.Authentication;
 import java.io.Serializable;
 
 /**
@@ -8,6 +9,12 @@ import java.io.Serializable;
  * @since 1.0.1
  */
 public interface TemplateUserService {
+	
+	/**
+	 * returns the authentication object
+	 * @return
+	 */
+	Authentication getAuthentication();
 
 	/**
 	 * should return the user name

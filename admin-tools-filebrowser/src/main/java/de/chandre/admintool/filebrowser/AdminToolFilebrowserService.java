@@ -3,10 +3,10 @@ package de.chandre.admintool.filebrowser;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,7 +44,7 @@ public interface AdminToolFilebrowserService {
 	 * returns all root directories
 	 * @return
 	 */
-	Set<String> getRootDirs();
+	Collection<String> getRootDirs();
 	
 	/**
 	 * returns if the currentDir starts with rootDir  

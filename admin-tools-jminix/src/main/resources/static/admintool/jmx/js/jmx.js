@@ -11,6 +11,7 @@ $.extend(AdminTool.Jmx.prototype, {
 	name : 'adminToolJmx',
 	
 	postInit: function() {
+		this.debug=false;
 		this.initJsTree()
 	},
 	
@@ -60,9 +61,11 @@ $.extend(AdminTool.Jmx.prototype, {
 			var selectedNode = data.instance.get_node(data.selected[0]);
 			if (selectedNode.type == 'attributes') {
 				
-				console.log('The selected node is: ' + selectedNode.text);
-				console.log('The selected parent is: ' + selectedNode.parent);
-				console.log('The selected parents parent is: ' + data.instance.get_node(selectedNode.parent).parent);
+				if (console && this.debug) {
+					console.log('The selected node is: ' + selectedNode.text);
+					console.log('The selected parent is: ' + selectedNode.parent);
+					console.log('The selected parents parent is: ' + data.instance.get_node(selectedNode.parent).parent);
+				}
 				
 				var domain = this.getParent(data, selectedNode.parent);
 				var queryData = {
@@ -71,18 +74,11 @@ $.extend(AdminTool.Jmx.prototype, {
 					'server' : this.getParent(data, domain)
 				};
 				
-				console.log(queryData);
-				
-				this.sendRequest(
-					{
-						url: getWebContext() + "/admintool/jmx/attributes", 
-						requestType:'POST',
-						dataType: "json",
-						data: JSON.stringify(queryData),
-						my: this
-					},
-					$.proxy(this.viewAttributeList, this));
-				
+				if (console && this.debug) {
+					console.log(queryData);
+				}
+				this.loadAttribute("attributes", queryData);
+
 			} else if (selectedNode.type == 'attribute' || selectedNode.type == 'operation') {
 				
 				console.log('The selected node is: ' + selectedNode.text);
@@ -100,14 +96,14 @@ $.extend(AdminTool.Jmx.prototype, {
 						'domain' : domain,
 						'server' : server
 					};
-					console.log(queryData);
-					
+					if (console && this.debug) {
+						console.log(queryData);
+					}
 					if(isAttribute) {
-						this.loadAttribute(queryData);
+						this.loadAttribute("attribute", queryData);
 					} else {
-						this.sendRequest(
-						{
-							url: getWebContext() + "/admintool/jmx/operation", 
+						this.sendRequest({
+							url: "/admintool/jmx/operation", 
 							requestType:'POST',
 							dataType: "json",
 							data: JSON.stringify(queryData),
@@ -117,7 +113,9 @@ $.extend(AdminTool.Jmx.prototype, {
 					}
 					
 				} catch (e) {
-					console.log(e)
+					if (console) {
+						console.log(e)
+					}
 				}
 			}
 		}
@@ -134,16 +132,17 @@ $.extend(AdminTool.Jmx.prototype, {
 		return data.instance.get_node(currentNode).parent;
 	},
 	
-	loadAttribute: function(queryData) {
-		this.sendRequest(
-		{
-			url: getWebContext() + "/admintool/jmx/attribute", 
+	loadAttribute: function(urlSuffix, queryData) {
+		
+		this.sendRequest({
+			url: "/admintool/jmx/" + urlSuffix, 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
 			showModalOnError: true,
 			showXHRErrorInModal: true,
 			my: this,
+			urlSuffix: urlSuffix
 		},
 		$.proxy(this.viewAttributeList, this));
 	},
@@ -159,6 +158,8 @@ $.extend(AdminTool.Jmx.prototype, {
 					
 				} else if (Array.isArray(method.value) || typeof method.value === 'object') {
 					data.methods[i].value = JSON.stringify(method.value, null, "\t");
+				} else if (method.type == "java.util.Date" || method.type == "java.sql.Date") {
+					data.methods[i].value = new Date(method.value) + " (TS: "+method.value+")"
 				}
 			}
 			
@@ -170,11 +171,18 @@ $.extend(AdminTool.Jmx.prototype, {
 			}
 		}
 		$('#jmxView').html(result);
-		$('#jmxView').find('#refreshView').on('click', $.proxy(this.loadAttribute, this, orgData));
+		$('#jmxView').find('#refreshView').on('click', $.proxy(this.loadAttribute, this, query.urlSuffix, orgData));
+		
+		clearTimeout(this.loadTimout);
+		this.loadTimout = window.setTimeout(function() {
+			$('.fa-refresh').removeClass("fa-spin")
+		}, 800);
 	},
 	
 	viewOperation: function(data, query) {
-		console.log(data)
+		if (console && this.debug) {
+			console.log(data);
+		}
 		
 		var result = "";
 		if (data && data.methods && data.methods.length > 0) {
@@ -206,7 +214,8 @@ $.extend(AdminTool.Jmx.prototype, {
 		
 		var msg = $('#jmxView').find('#save_success');
 		if (msg && msg.length > 0) {
-			window.setTimeout(function() {
+			clearTimeout(this.saveTimout);
+			this.saveTimout = window.setTimeout(function() {
 				$("#save_success").fadeTo(500, 0).slideUp(500, function(){
 					$(this).remove(); 
 				});
@@ -230,9 +239,8 @@ $.extend(AdminTool.Jmx.prototype, {
 			queryData["parameters"] = paramList;
 		}
 		
-		this.sendRequest(
-		{
-			url: getWebContext() + "/admintool/jmx/operation/execute", 
+		this.sendRequest({
+			url: "/admintool/jmx/operation/execute", 
 			requestType:'POST',
 			dataType: "json",
 			data: JSON.stringify(queryData),
@@ -249,7 +257,7 @@ $.pluginMaker(AdminTool.Jmx);
 var attributeListTpl =
 	'<div class="row">'+
 		'<div class="col-xs-10 col-md-11"><h4>{{headline}}</h4></div>'+
-		'<div class="col-xs-2 col-md-1"><a class="pull-right" id="refreshView"><i class="fa fa-refresh"></i></a></div>'+
+		'<div class="col-xs-2 col-md-1"><a class="pull-right" id="refreshView"><i class="fa fa-refresh fa-spin"></i></a></div>'+
 	'</div>'+
 	'<div class="table-responsive"><table class="table no-margin table-hover">'+
 		'<tbody>' +
@@ -265,7 +273,7 @@ Mustache.parse(attributeListTpl);
 var attributeTpl =
 	'<div class="row">'+
 		'<div class="col-xs-10 col-md-11"><h4>{{name}}</h4></div>'+
-		'<div class="col-xs-2 col-md-1"><a class="pull-right" id="refreshView"><i class="fa fa-refresh"></i></a></div>'+
+		'<div class="col-xs-2 col-md-1"><a class="pull-right" id="refreshView"><i class="fa fa-refresh fa-spin"></i></a></div>'+
 	'</div>'+
 	'<div class="table-responsive"><table class="table no-margin table-hover"><tbody>' +
 		'<tr id="dec_{{name}}">' +

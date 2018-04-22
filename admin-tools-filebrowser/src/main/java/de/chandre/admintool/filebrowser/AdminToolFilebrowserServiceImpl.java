@@ -22,6 +22,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -30,7 +31,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -79,19 +79,22 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	@Autowired
 	private Environment env;
 	
-	private Set<String> rootDirsCache = Collections.newSetFromMap(new ConcurrentHashMap<>());
+	private List<String> rootDirsCache = new ArrayList<>();
 	
 	
 	@Override
-	public Set<String> getRootDirs() {
+	public Collection<String> getRootDirs() {
 		File[] roots = File.listRoots();
 		
 		if (this.rootDirsCache.isEmpty()) {
-			for (File file : roots) {
-				if(!config.getForbiddenDrives().contains(file.getAbsolutePath().toLowerCase())) {
-					// if not forbidden add it to result
-					this.rootDirsCache.add(file.getAbsolutePath());
+			synchronized (this.rootDirsCache) {
+				for (File file : roots) {
+					if(!config.getForbiddenDrives().contains(file.getAbsolutePath().toLowerCase())) {
+						// if not forbidden add it to result
+						this.rootDirsCache.add(file.getAbsolutePath());
+					}
 				}
+				Collections.sort(this.rootDirsCache);
 			}
 		}
 		return this.rootDirsCache;
@@ -114,10 +117,13 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 		return "";
 	}
 	
-	protected List<File> sort(File[] fileAr, final SortColumn sortCol, Boolean sortAsc) {
+	protected List<File> sort(File[] fileAr, SortColumn sortCol, Boolean sortAsc) {
 		List<File> files = Arrays.asList(fileAr);
+		final SortColumn sortColToUse;
 		if (null == sortCol) {
-			return files;
+			sortColToUse = SortColumn.NAME;
+		} else {
+			sortColToUse = sortCol;
 		}
 		if (null == sortAsc) {
 			sortAsc = Boolean.TRUE;
@@ -128,7 +134,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			@Override
 			public int compare(File o1, File o2) {
 				try {
-					switch (sortCol) {
+					switch (sortColToUse) {
 						case DATE:
 							return getLastChange(o1).compareTo(getLastChange(o2)) * direction;
 						case SIZE: 
@@ -150,6 +156,9 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public String getSortDirection(int current, SortColumn sortCol, Boolean sortAsc) {
+		if(null == sortCol) {
+			return "up";
+		}
 		if (current == sortCol.getIndex() && sortAsc != null) {
 			return sortAsc ? "up" : "down";
 		}
@@ -523,6 +532,9 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public String createFolder(String path, String folderName) throws IOException, GenericFilebrowserException {
+		if (StringUtils.isEmpty(path) && StringUtils.isEmpty(folderName)) {
+			throw new GenericFilebrowserException("Nothing to create.");
+		}
 		File file = new File(path);
 		if (file.exists()) {
 			if (isAllowed(file, true)) {
@@ -530,7 +542,7 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 				if(file.mkdirs()) {
 					return file.getAbsolutePath();
 				}
-				throw new GenericFilebrowserException("could not create directories");
+				throw new GenericFilebrowserException("Could not create directories.");
 			}
 		} else {
 			LOGGER.warn("[createFolder] folder already exists: " + path);
@@ -540,16 +552,23 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	
 	@Override
 	public String deleteResource(String path) throws IOException, GenericFilebrowserException {
+		if (StringUtils.isEmpty(path)) {
+			throw new GenericFilebrowserException("Nothing to delete.");
+		}
 		File file = new File(path);
 		
 		if (file.isDirectory() && !config.isDelteFolderAllowed()) {
-			throw new GenericFilebrowserException("delete folder is not allowed");
+			throw new GenericFilebrowserException("Delete folders functionality is deactivated.");
 		}
 		if (file.isFile() && !config.isDelteFileAllowed()) {
-			throw new GenericFilebrowserException("delete file is not allowed");
+			throw new GenericFilebrowserException("Delete files functionality is deactivated.");
 		}
 		if (!isAllowed(file, true)) {
-			throw new GenericFilebrowserException("delete "+(file.isDirectory() ?  "folder" : "file")+" is not allowed");
+			throw new GenericFilebrowserException("Delete "+(file.isDirectory() ?  "folder" : "file")+" is not allowed.");
+		}
+		if (!file.canWrite() && config.isNotDeletableIfNotWriteable()) {
+			throw new GenericFilebrowserException(
+					"Deleting " +(file.isDirectory() ?  "folder" : "file") + " '" + file.getName() + "' is not allowed.");
 		}
 		
 		String parent = file.getParent();

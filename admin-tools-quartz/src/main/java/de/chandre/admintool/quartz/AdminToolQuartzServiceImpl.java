@@ -18,12 +18,14 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.DailyTimeIntervalScheduleBuilder;
 import org.quartz.DailyTimeIntervalTrigger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.InterruptableJob;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
+import org.quartz.PersistJobDataAfterExecution;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -319,7 +321,10 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 */
 	@Override
 	public boolean isStateful(JobKey jobKey) throws SchedulerException {
-		return StatefulJob.class.isAssignableFrom(scheduler.getJobDetail(jobKey).getJobClass());
+		Class<?> jobClazz = scheduler.getJobDetail(jobKey).getJobClass();
+		DisallowConcurrentExecution annotation1 = jobClazz.getAnnotation(DisallowConcurrentExecution.class);
+		PersistJobDataAfterExecution annotation2 = jobClazz.getAnnotation(PersistJobDataAfterExecution.class);
+		return StatefulJob.class.isAssignableFrom(jobClazz) || null != annotation1 || null != annotation2;
 	}
 	
 	/* (non-Javadoc)

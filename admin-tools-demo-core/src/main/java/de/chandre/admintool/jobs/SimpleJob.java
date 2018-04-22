@@ -2,6 +2,7 @@ package de.chandre.admintool.jobs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
@@ -10,6 +11,7 @@ import org.quartz.JobExecutionContext;
  * @author Andre
  *
  */
+@DisallowConcurrentExecution
 public class SimpleJob implements Job 
 {
 	private static final Logger LOGGER = LogManager.getFormatterLogger(SimpleJob.class);
