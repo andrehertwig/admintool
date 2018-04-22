@@ -387,6 +387,15 @@ public class AdminComponentImpl implements AdminComponent
 			return this;
 		}
 		/**
+		 * @see AdminComponent#getSecurityRoles().addAll(set)
+		 * @param securityRoles
+		 * @return
+		 */
+		public AdminComponentBuilder securityRoles(Set<String> securityRoles) {
+			component.getSecurityRoles().addAll(securityRoles);
+			return this;
+		}
+		/**
 		 * @see AdminComponent#setPosition(Integer)
 		 * @param position
 		 * @return

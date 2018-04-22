@@ -5,6 +5,7 @@
 			<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.menu.headline', 'MAINMENU')" />
 		</li>
 		<th:block th:each="adminComponent,iterState : ${@adminToolMenuUtils.getComponents()}">
+			<!--/** overriding the default submenuInclude with special one **/-->
 			<th:block th:include="admintool/fragments/secFragements :: submenuIncludeSec (${adminComponent.mainMenu}, true)" />
 		</th:block>
 	</ul>

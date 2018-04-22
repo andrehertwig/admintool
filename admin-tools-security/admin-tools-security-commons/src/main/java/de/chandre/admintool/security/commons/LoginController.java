@@ -22,12 +22,14 @@ import de.chandre.admintool.core.controller.AbstractAdminController;
 @RequestMapping(AdminTool.ROOTCONTEXT)
 public class LoginController extends AbstractAdminController {
 	
+	public static final String LOGIN_PATH = "/login";
+	
 	private static final Log LOGGER = LogFactory.getLog(LoginController.class);
 	
 	@Autowired
 	private AdminToolCoreConfig config;
 
-	@RequestMapping(value = {"/login","/login/**"})
+	@RequestMapping(value = {LOGIN_PATH,"/login/**"})
 	public String login(ModelMap model, HttpServletRequest request) {
 		addCommonContextVars(model, request);
 		if (!config.isEnabled()) {
@@ -36,6 +38,6 @@ public class LoginController extends AbstractAdminController {
 		boolean error = null != request.getParameter("error");
 		model.put("error", error);
 		LOGGER.debug("login called with error: " + (error ? "true" : "false"));
-		return AdminTool.ROOTCONTEXT_NAME + "/login";
+		return AdminTool.ROOTCONTEXT_NAME + LOGIN_PATH;
 	}
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+<body>
+	<div layout:fragment="content">
+		<section class="content-header">
+			<h1>
+				<span th:text="${httpStatus}"></span> <small>There was an unexpected error</small>
+			</h1>
+			<ol class="breadcrumb"
+				th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+		</section>
+		<section class="content" th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+			<h3 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h3>
+		    <p th:utext="${errorMessage}">Error</p>
+		    <a href="index.html" th:href="${rootContext}">Back to Home Page</a>
+
+		</section>
+	</div>
+</body>
+</html>

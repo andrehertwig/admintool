@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+	<body>
+		<div layout:fragment="content">
+			<section class="content-header">
+				<h1>
+					<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.headline', 'All Users')" />
+				</h1>
+				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+			</section>
+			<section class="content">
+			
+				<div class="alert alert-warning alert-dismissible" th:if="${not #strings.isEmpty(@adminToolSecDBUserDetailsService.getInfoMessage())}">
+	            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+	            	<h4><i class="fa fa-warning"></i> Info</h4>
+	                <th:block th:utext="${@adminToolSecDBUserDetailsService.getInfoMessage()}"></th:block>
+	            </div>
+			
+				<div class="box box-info" id="users">
+					
+					<div class="box-header with-border">
+						<div class="row">
+							<div class="col-xs-3 col-md-2">
+								<h3 class="box-title">
+									<i class="fa fa-user fa-2x" aria-hidden="true"></i>
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.subHeadline', 'Users')" />
+								</h3>
+							</div>
+							<div class="col-xs-9 col-md-10">
+								<a href="#" id="addUser"><i class="fa fa-user-plus fa-2x" aria-hidden="true" title="Add User"></i></a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="box-body">
+					
+						<div class="table-responsive">
+							<table class="table no-margin table-hover" id="users_table">
+								<thead>
+									<tr>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.name', 'Name')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.tableHead.enabled', 'Last Login')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.attempts', 'Attempts')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.enabled', 'Has Access')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.expired', 'Expired')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.locked', 'Locked')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.tableHead.credExp', 'CredExpired')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.tableHead.userGroups', 'Assigned Groups')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.tableHead.clients', 'Assigned Clients')" /></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="user, iterState : ${@adminToolSecDBUserDetailsService.getUsers()}" class="userrow">
+									
+										<td>
+											<button th:id="'showUser_' + ${user.getUsername()}" class="btn btn-sm showUser" th:text="${user.getUsername()}"
+												th:attr="data-timezone=${user.getTimeZone()}, data-locale=${user.getLocale()}, 
+												data-firstname=${user.getFirstName()}, data-lastname=${user.getLastName()}, 
+												data-email=${user.getEmail()}, data-phone=${user.getPhone()}"></button>
+										</td>
+										<td>
+											<th:block th:if="${user.getLastLogin()}" th:text="${#temporals.format(user.getLastLogin(), 'yyyy-MM-dd HH:mm')}"></th:block>
+										</td>
+										
+										<td>
+											<th:block th:if="${user.getLoginAttempts()}" th:text="${user.getLoginAttempts()}"></th:block>
+										</td>
+										
+										<td>
+											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).ENABLE.type} + '_' + ${user.getUsername()}" 
+												class="btn btn-sm enable state" th:text="${user.isEnabled()}"></button>
+										</td>
+										
+										<td>
+											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXPIRE.type} + '_' + ${user.getUsername()}"
+												class="btn btn-sm expire state" th:text="${user.isAccountExpired()}" 
+												th:title="${user.getAccountExpiredSince()} ? 'expired since: ' + ${#temporals.format(user.getAccountExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
+											</button>
+										</td>
+										<td>
+											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).LOCK.type} + '_' + ${user.getUsername()}" 
+												class="btn btn-sm lock state" th:text="${user.isAccountLocked()}"
+												th:title="${user.getAccountLockedSince()} ? 'expired since: ' + ${#temporals.format(user.getAccountLockedSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
+											</button>
+										</td>
+										<td>
+											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXIPRE_CREDENTIALS.type} + '_' + ${user.getUsername()}" 
+												class="btn btn-sm expcred state" th:text="${user.isCredentialsExpired()}"
+												th:title="${user.getCredentialsExpiredSince()} ? 'expired since: ' + ${#temporals.format(user.getCredentialsExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
+											</button>
+										</td>
+										
+										<td class="userGroups" th:text="${#strings.listJoin(user.getUserGroupDisplayNames(),', ')}"
+											th:attr="data-usergroups=${#strings.listJoin(user.getUserGroupNames(),',')}"></td>
+											
+										<td class="clients" th:text="${#strings.listJoin(user.getClientDisplayNames(),', ')}"
+											th:attr="data-clients=${#strings.listJoin(user.getClientNames(),',')}"></td>
+											
+										<td>
+											<button class="btn btn-xs info" th:id="'info_' + ${user.getId()}" title="User Information">
+												<i class="fa fa-info-circle" aria-hidden="true"></i>
+											</button>
+											<button class="btn btn-xs remove pull-right" th:id="'remove_' + ${user.getUsername()}" title="Delete user">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					
+					</div>
+					
+					<div class="box-footer clearfix">
+					
+					</div>
+				
+				</div>
+			</section>
+			
+			<div class="modal fade" id="userInfoModal" tabindex="-1" role="dialog" aria-labelledby="userInfoModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="userInfoModalLabel">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.info.modal.head', 'User Info')" />
+							</h4>
+						</div>
+						<div class="modal-body">
+							<div class="table-responsive">
+								<table class="table no-margin table-hover">
+									<colgroup>
+										<col width="25%" />
+										<col width="75%" />
+									</colgroup>
+									<tbody>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.username', 'Username')" /></th>
+											<td id="info_username"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordLogin', 'Last login')" /></th>
+											<td id="info_lastLogin"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordLastChange', 'Last password change')" /></th>
+											<td id="info_lastPwdChange"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.firstLastName', 'First and last name')" /></th>
+											<td id="info_first_last_name"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.emailPhone', 'E-Mail / Phone')" /></th>
+											<td id="info_email_phone"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.localeTimeZone', 'Locale / Timezone')" /></th>
+											<td id="info_locale_timeZone"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.userGroups', 'UserGroup relations')" /></th>
+											<td id="info_userGroups"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.roles', 'Active role relations')" /></th>
+											<td id="info_roles"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.clients', 'Client relations')" /></th>
+											<td id="info_clients"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.expired', 'Account expired (since)')" /></th>
+											<td id="info_accountExpired"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.locked', 'Account locked (since)')" /></th>
+											<td id="info_accountLocked"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.credExpired', 'Credentials expired (since)')" /></th>
+											<td id="info_credExpired"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.attempts', 'Login Attempts (last attempt)')" /></th>
+											<td id="info_loginAttempts"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.created', 'Created by (when)')" /></th>
+											<td id="info_created"></td>
+										</tr>
+										<tr>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.modified', 'Modified by (when)')" /></th>
+											<td id="info_modified"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+								<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="userDataModal" tabindex="-1" role="dialog" aria-labelledby="userDataModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="userDataModalLabel">
+										<span id="editUserTitle" style="visibility: none;">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.head.edit', 'Edit User')" />
+										</span>
+										<span id="createUserTitle" style="visibility: none;">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.head.create', 'Create User')" />
+										</span>
+									</h4>
+								</div>
+								<div class="col-xs-2 col-sm-1">
+									<button type="button" class="btn btn-primary" id="editUser">
+										<i class="fa fa-wrench" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<form id="userDataForm">
+							<div class="modal-body">
+								
+							<!--/** username and password **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="userName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.name', 'Username')" />
+											</label>
+											<input type="text" id="username" name="username" class="form-control" placeholder="" required="required" disabled="disabled" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="userPassword">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.modal.password', 'Password')" />
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon">
+													<input type="checkbox" id="userPasswordOverride" />
+												</span>
+												<input type="password" class="form-control" id="userPassword" value="" required="required" disabled="disabled" />
+												<span class="input-group-addon">
+													<a id="generatePassword" href="#"><i class="fa fa-cog" aria-hidden="true"></i></a>
+												</span>
+												<span class="input-group-addon">
+													<a id="showPassword" href="#"><i class="fa fa-eye"></i></a>
+												</span>
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							<!--/** first and last name **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="firstName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.firstName', 'First Name')" />
+											</label>
+											<input type="text" id="firstName" name="firstName" class="form-control" placeholder="" disabled="disabled" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="lastName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.lastName', 'Last Name')" />
+											</label>
+											<input type="text" class="form-control" id="lastName" name="lastName" value="" disabled="disabled" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+								
+							<!--/** email and phone **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="email">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.email', 'E-Mail')" />
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon" id="email-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+												<input type="email" id="email" class="form-control" placeholder="my-email@provider.com" aria-describedby="email-addon" disabled="disabled" />
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									
+									
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="phone">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.phone', 'Phone')" />
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon" id="phone-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+												<input type="text" id="phone" class="form-control" placeholder="" aria-describedby="phone-addon" disabled="disabled" />
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							<!--/** locale and timezone **/-->
+								
+								<div class="row">
+									<span id="defaultLocale" class="hidden" th:text="${#locale}"></span>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group" id="localeGroup">
+											<label for="locale">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.locale', 'Locale relation')" />
+											</label>
+											<select id="locale" class="form-control" disabled="disabled">
+												<option th:each="locale, localeIter : ${@adminToolSecDBTemplateUtils.getAvailableLocales()}"
+													th:value="${locale.toString()}" th:text="${locale.getDisplayName()}"></option>
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<span id="defaultTimeZone" class="hidden" th:text="${@adminToolSecDBTemplateUtils.getDefaultTimeZone()}"></span>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group" id="timeZoneGroup">
+											<label for="timeZone">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.timeZone', 'Timezone relation')" />
+											</label>
+											<select id="timeZone" class="form-control" >
+												<option th:each="zone, zoneIter : ${@adminToolSecDBTemplateUtils.getAvailableTimeZones()}"
+													th:value="${zone}" th:text="${zone}"></option>
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+							
+							<!--/** user groups **/-->
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group" id="authoritiesGroup">
+											<label for="authorities">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.userGroups', 'UserGroup relations')" />
+											</label>
+											<select id="authorities" multiple="multiple" class="form-control" disabled="disabled">
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+							
+							<!--/** clients **/-->
+							
+								<div class="row" id="clientRow">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group" id="clientGroup">
+											<label for="clients">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.clients', 'Client relations')" />
+											</label>
+											<select id="clients" multiple="multiple" class="form-control" disabled="disabled">
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="button" class="btn btn-primary pull-right" id="saveUser">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

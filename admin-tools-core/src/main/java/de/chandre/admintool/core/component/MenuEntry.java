@@ -783,6 +783,25 @@ public class MenuEntry implements Serializable
 			return this;
 		}
 		/**
+		 * append this menu item to a main menu
+		 * @param mainMenu
+		 * @return
+		 */
+		public MenuEntryBuilder toMainMenu(MenuEntry mainMenu) {
+			mainMenu.addSubmenuEntry(this.entry);
+			return this;
+		}
+		
+		/**
+		 * append a new sub menu item to a this menu item
+		 * @param mainMenu
+		 * @return
+		 */
+		public MenuEntryBuilder subMenu(MenuEntry submenu) {
+			this.entry.addSubmenuEntry(submenu);
+			return this;
+		}
+		/**
 		 * @return the menu entry
 		 */
 		public MenuEntry build() {

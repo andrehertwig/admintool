@@ -30,6 +30,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>de.chandre.admin-tools.security</groupId>
+			<artifactId>admin-tools-security-simple</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		
 		<!-- Spring Framework -->
         <dependency>

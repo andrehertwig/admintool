@@ -93,6 +93,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 		}
 	}
 
+	@Override
 	public boolean isUseUserName() {
 		return useUserName;
 	}
@@ -101,6 +102,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 		this.useUserName = useUserName;
 	}
 
+	@Override
 	public boolean isUseRemoteAddress() {
 		return useRemoteAddress;
 	}
@@ -109,7 +111,14 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 		this.useRemoteAddress = useRemoteAddress;
 	}
 	
+	@Override
 	public void clearAttempts() {
 		this.attemptsCache.clear();
 	}
+
+	@Override
+	public int getMaximumAttempts() {
+		return MAX_ATTEMPT;
+	}
+	
 }

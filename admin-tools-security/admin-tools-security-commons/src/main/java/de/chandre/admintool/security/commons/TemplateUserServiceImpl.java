@@ -1,5 +1,7 @@
 package de.chandre.admintool.security.commons;
 
+import java.io.Serializable;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -84,5 +86,10 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 		}
 
 		return authentication.getPrincipal();
+	}
+	
+	@Override
+	public <U extends Serializable> U getUserPrincipal(Class<U> userClass) {
+		return userClass.cast(getUserPrincipal());
 	}
 }

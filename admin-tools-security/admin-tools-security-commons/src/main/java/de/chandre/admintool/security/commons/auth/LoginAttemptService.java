@@ -44,4 +44,10 @@ public interface LoginAttemptService {
 	 * clears all attempts
 	 */
 	void clearAttempts();
+
+	/**
+	 * configured amount of maximum failed attempts before locking
+	 * @return
+	 */
+	int getMaximumAttempts();
 }

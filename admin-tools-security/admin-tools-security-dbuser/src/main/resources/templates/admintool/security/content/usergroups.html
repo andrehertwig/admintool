@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+	<body>
+		<div layout:fragment="content">
+			<section class="content-header">
+				<h1>
+					<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.headline', 'All User Groups')" />
+				</h1>
+				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
+			</section>
+			<section class="content">
+				<span id="relationType" style="visibility: hidden;">usergroup</span>
+			
+				<div class="box box-info" id="accessrelation">
+					
+					<div class="box-header with-border">
+						<div class="row">
+							<div class="col-xs-3 col-md-2">
+								<h3 class="box-title">
+									<i class="fa fa-users fa-2x"></i> <th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.subHeadline', 'User Groups')" />
+								</h3>
+							</div>
+							<div class="col-xs-9 col-md-10">
+								<a href="#" id="addRelation"><i class="fa fa-plus fa-2x" title="Add UserGroup"></i></a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="box-body">
+					
+						<div class="table-responsive">
+							<table class="table no-margin table-hover" id="relation_table">
+								<thead>
+									<tr>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.name', 'Name')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.displayName', 'Diaplay Name')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.description', 'Description')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.active', 'Active')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.roles', 'Assigned Roles')" /></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="usergroup, iterState : ${@adminToolSecDBUserGroupService.getAllUserGroups()}" class="userrow">
+									
+										<td>
+											<button th:id="'edit_' + ${usergroup.getName()}" class="btn btn-sm edit" th:text="${usergroup.getName()}"></button>
+										</td>
+										<td class="displayName" th:text="${usergroup.getDisplayName()}"></td>
+										<td class="description" th:text="${usergroup.getDescription()}"></td>
+										<td>
+											<button th:id="'state_' + ${usergroup.getName()}" class="btn btn-sm state" th:text="${usergroup.isActive()}"></button>
+										</td>
+										<td class="roles" th:text="${#strings.listJoin(usergroup.getRoleDisplayNames(),', ')}" 
+											th:attr="data-roles=${#strings.listJoin(usergroup.getRoleNames(),',')}"></td>
+										<td>
+											<button class="btn btn-xs remove" th:id="'remove_' + ${usergroup.getName()}" title="Delete usergroup">
+												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					
+					</div>
+					
+					<div class="box-footer clearfix">
+					
+					</div>
+				
+				</div>
+				
+			</section>
+			
+			<div class="modal fade" id="relationDataModal" tabindex="-1" role="dialog" aria-labelledby="relationDataModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="relationDataModalLabel">
+										<span id="editTitle" style="visibility: none;">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.userGroups.modal.head.edit', 'Edit User Group')" />
+										</span>
+										<span id="createTitle" style="visibility: none;">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.userGroups.modal.head.create', 'Create User Group')" />
+										</span>
+									</h4>
+								</div>
+								<div class="col-xs-2 col-sm-1">
+									<button type="button" class="btn btn-primary" id="editRelationBtn">
+										<i class="fa fa-wrench" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<form id="relationDataForm">
+							<div class="modal-body">
+								
+							<!--/** name **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="name">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.relation.modal.name', 'Name')" />
+											</label>
+											<input type="text" id="name" name="name" class="form-control" placeholder="" required="required" disabled="disabled"/>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							<!--/** displayName **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="displayName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.relation.modal.displayName', 'Display name')" />
+											</label>
+											<input type="text" id="displayName" name="displayName" class="form-control" placeholder="" disabled="disabled" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+								
+							<!--/** description **/-->
+								
+								<div class="row">
+									
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="description">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.relation.modal.description', 'Description')" />
+											</label>
+											<textarea rows="2" class="form-control" id="description" name="description" disabled="disabled" ></textarea>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							<!--/** state **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="active">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.relation.modal.active', 'Active')" />
+											</label>
+											<input type="checkbox" class="form-control" id="active" name="active" disabled="disabled" />
+											<div class="help-block with-errors locale"></div>
+										</div>
+									</div>
+								</div>
+							
+							<!--/** Roles **/-->
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group" id="rolesGroup">
+											<label for="roles">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.relation.modal.roles', 'Role relations')" />
+											</label>
+											<select id="roles" multiple="multiple" class="form-control" disabled="disabled">
+											</select>
+											<div class="help-block with-errors authorities"></div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="button" class="btn btn-primary pull-right" id="saveRelationBtn">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

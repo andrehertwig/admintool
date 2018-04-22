@@ -189,6 +189,10 @@ $.extend(AdminTool.Core.prototype, {
 		getByID(this.options.errorModalId).modal();
 	},
 	
+	appendToErrorModal: function(text) {
+		getByID(this.options.errorModalTextId).append(text);
+	},
+	
 	/**
 	 * init function for confirm modal, whichs calls the unbindConfirmModal on hide
 	 */

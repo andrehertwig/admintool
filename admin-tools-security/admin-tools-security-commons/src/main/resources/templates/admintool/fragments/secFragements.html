@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:atsec="http://www.thymeleaf.org/extras/spring-security-at">
 <body >
 	<!-- sec:authorize="${hasAnyRole(#vars.securityRoles)}"
 		doesn't because DefaultWebInvocationPrivilegeEvaluator only validates for RLOE_USER ... spring security bug?
+			 no... it's a h2-console bug with spring boot :-/ which will lead to a second / different FilterSecurityInterceptor
 		th:if="${#authorization.url(#vars.rootContext + '/' + #vars.menuItem.name)}"
 		
 		sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}"
 	 -->
 	<th:block th:fragment="submenuIncludeSec (menuItem, withIcon)">
+	
 		<li th:class="${@adminToolMenuUtils.getListItemClass(activeMenu, menuItem)}" 
 			th:remove="${menuItem.hide}? all : none"
-			sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}">
+			atsec:authorize-url="${#vars.rootContext + '/' + #vars.menuItem.name}">
+			<!--/**  **/ -->
+			<!--/** sec:authorize="${hasAnyRole(#vars.menuItem.getAffectedSecurityRoles())}" **/-->
+			
 			<a href="#" th:href="${rootContext} + '/' + ${menuItem.name}">
 				<i class="fa fa-link" th:if="${withIcon}"></i>
 				
@@ -31,6 +36,7 @@
 				</th:block>
 			</ul>
 		</li>
+		
 	</th:block>
 
 </body>

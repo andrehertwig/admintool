@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.controller.AbstractAdminController;
+import de.chandre.admintool.security.commons.auth.UserStateType;
+import de.chandre.admintool.security.commons.auth.UserTO;
 
 /**
  * Abstract controller for security view.

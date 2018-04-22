@@ -20,6 +20,8 @@ import org.apache.logging.log4j.core.appender.db.jdbc.ConnectionSource;
 import org.apache.logging.log4j.core.appender.db.jdbc.JdbcAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableMBeanExport;
@@ -30,16 +32,23 @@ import org.springframework.jmx.export.assembler.SimpleReflectiveMBeanInfoAssembl
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.thymeleaf.TemplateEngine;
 
 import de.chandre.admintool.core.AdminToolConfig;
 import de.chandre.admintool.core.utils.AdminToolIntegrityUtil;
 import de.chandre.admintool.log4j2.AdminToolLog4j2Util;
+import de.chandre.admintool.security.commons.auth.thymeleaf.ATSpringSecurityDialect;
 
 @org.springframework.context.annotation.Configuration
 @EnableMBeanExport
 public class Beans {
 	
 	private static final Logger LOGGER = LogManager.getFormatterLogger(Beans.class);
+	
+	@Autowired
+    public void templateConfig(TemplateEngine engine) {
+		engine.addDialect(new ATSpringSecurityDialect());
+	}
 	
 	@Bean
     public LocaleResolver localeResolver() {
@@ -117,8 +126,11 @@ public class Beans {
 	 * https://logging.apache.org/log4j/2.x/manual/appenders.html#JDBCAppender
 	 * http://stackoverflow.com/questions/17593308/how-to-use-spring-bonecpdatasource-bean-as-data-source-for-log4j-2-jdbc-appender
 	 */
-	@Bean 
-	public Appender datasourceAppender(DataSource dataSource, AdminToolLog4j2Util logUtil) {
+	@Bean
+	public Appender datasourceAppender(DataSource dataSource, AdminToolLog4j2Util logUtil, @Value("${databaselogging.enabled:false}") boolean enabled) {
+		if (!enabled) {
+			return null;
+		}
 		LOGGER.info("adding jdbc appender");
 		
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);

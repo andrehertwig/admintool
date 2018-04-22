@@ -1,5 +1,7 @@
 package de.chandre.admintool.security.commons;
 
+import java.io.Serializable;
+
 /**
  * service used in templates to get some user information
  * @author Andre
@@ -20,14 +22,25 @@ public interface TemplateUserService {
 	Object getUserDetails();
 
 	/**
-	 * retunrs the principal 
+	 * retunrs the principal. normally the user object.
+	 * 
 	 * @return
 	 */
 	Object getUserPrincipal();
+	
+	/**
+	 * 
+	 * @see #getUserPrincipal()
+	 * @param userClass
+	 * @return the casted object
+	 */
+	<U extends Serializable> U getUserPrincipal(Class<U> userClass);
 
 	/**
 	 * returns if user is not logged in 
 	 * @return
 	 */
 	boolean isAnonymous();
+
+	
 }
