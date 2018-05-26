@@ -115,5 +115,9 @@ admintool.dbbrowser.showMetaDataLoadException=false
 
 # since 1.1.6
 admintool.dbbrowser.loadMetaData=true
+admintool.dbbrowser.showMetaDataLoadException=false
+
+# since 1.1.6.5
+admintool.dbbrowser.closeConnections=true
 
 ```
