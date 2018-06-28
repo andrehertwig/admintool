@@ -130,11 +130,12 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		}
 		//unsure about if we could close a pooled connection??
 		//... but if we close the connection, setAutoCommit and setReadOnly is useless 
-		if (null != c) {
+		if (null != c && configuration.isCloseConnections()) {
 			try {
 				c.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				LOGGER.warn("could not close connection: " + e.getMessage());
+				LOGGER.trace(e.getMessage(), e);
 			}
 		}
 	}
@@ -146,6 +147,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		QueryResultTO resultTO = new QueryResultTO();
 		
 		Connection c = null;
+		ResultSet resSet = null;
 		try {
 			c = getConnection(datasourceName, null);
 			DatabaseMetaData metadata = c.getMetaData();
@@ -157,12 +159,13 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			if (!configuration.isLoadMetaData()) {
 				return resultTO;
 			}
-			ResultSet resSet = metadata.getTables(null, null, null, null);
+			resSet = metadata.getTables(null, null, null, null);
 			StatementTO statementTO = new StatementTO();
 			statementTO.setShowClobs(true);
 			
 			iterateResult(resSet, resultTO, statementTO);
 			
+			//get position/column of schema and table name in result set
 			int colTableName = -1;
 			int colSchemaName = -1;
 			int i = 0;
@@ -178,36 +181,37 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			
 			Map<String, Collection<String>> tablesAndColums = new HashMap<>();
 			
+			//search each "getTables" result for columns
 			for (List<String> row : resultTO.getTableResult()) {
 				String schemaName = colSchemaName > -1 ? row.get(colSchemaName) : null;
 				String tableName = colTableName > -1 ? row.get(colTableName) : null;
 				
-				ResultSet tableResSet = metadata.getColumns(null, schemaName, tableName, null);
-				
-				QueryResultTO tableResultTO = new QueryResultTO();
-				iterateResult(tableResSet, tableResultTO, statementTO);
-				
-				int colColumnName = -1;
-				i = 0;
-				for (String colName : tableResultTO.getColumnsNames()) {
-		    		if (colName.toLowerCase(Locale.ENGLISH).startsWith("column_name")) {
-		    			colColumnName = i;
-		    		}
-		    		++i;
-				}
-				
-				Set<String> colums = new HashSet<>();
-				
-				for (List<String> colRow : tableResultTO.getTableResult()) {
-					String columnName = colColumnName > -1 ? colRow.get(colColumnName) : null;
-					if (null != columnName) {
-						colums.add(columnName);
+				try (ResultSet tableResSet = metadata.getColumns(null, schemaName, tableName, null);){
+					QueryResultTO tableResultTO = new QueryResultTO();
+					iterateResult(tableResSet, tableResultTO, statementTO);
+					
+					int colColumnName = -1;
+					i = 0;
+					for (String colName : tableResultTO.getColumnsNames()) {
+			    		if (colName.toLowerCase(Locale.ENGLISH).startsWith("column_name")) {
+			    			colColumnName = i;
+			    		}
+			    		++i;
 					}
+					
+					Set<String> colums = new HashSet<>();
+					
+					for (List<String> colRow : tableResultTO.getTableResult()) {
+						String columnName = colColumnName > -1 ? colRow.get(colColumnName) : null;
+						if (null != columnName) {
+							colums.add(columnName);
+						}
+					}
+					if (tablesAndColums.containsKey(tableName)) {
+						LOGGER.info(String.format("duplicate table found: %s (schema is: %s)", tableName, schemaName));
+					}
+					tablesAndColums.put(tableName, colums);
 				}
-				if (tablesAndColums.containsKey(tableName)) {
-					LOGGER.info(String.format("duplicate table found: %s (schema is: %s)", tableName, schemaName));
-				}
-				tablesAndColums.put(tableName, colums);
 			}
 			
 			resultTO.setTableResult(null);
@@ -215,18 +219,32 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			resultTO.addMetadata("tables", tablesAndColums);
 			
 		} catch (Exception e) {
-			resultTO.setExceptionMessage(e.getMessage());
-			resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
-			resultTO.setExceptionTrace(printException(e));
-			
+			if (!configuration.isShowMetaDataLoadException()) {
+				resultTO.setExceptionMessage(e.getMessage());
+				resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
+				resultTO.setExceptionTrace(printException(e));
+			}
+			LOGGER.trace(e.getMessage(), e);
 		} finally {
 			closeConnection(c, null);
+			close(resSet);
 		}
 		
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(resultTO);
 		}
 		return resultTO;
+	}
+
+	private void close(AutoCloseable resSet) {
+		if (null != resSet) {
+			try {
+				resSet.close();
+			} catch (Exception e) {
+				LOGGER.warn("could not close resultSet: " + e.getMessage());
+				LOGGER.trace(e.getMessage(), e);
+			}
+		}
 	}
 	
 	private String prepareQuery(StatementTO statementTO){
@@ -258,6 +276,7 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 		}
 		
 		Connection c = null;
+		ResultSet resSet = null;
 		try {
 			c = getConnection(statementTO.getDatasourceName(), vars);
 			Statement st = c.createStatement();
@@ -267,7 +286,6 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 	        LOGGER.trace("executing query: " + strQuery);
 			
 	        if (strQuery.toLowerCase().startsWith("select")) {
-	        	ResultSet resSet = null;
 	        	resSet = st.executeQuery(strQuery);
 	        	
 	        	iterateResult(resSet, resultTO, statementTO);
@@ -280,20 +298,10 @@ public class AdminToolDBBrowserServiceImpl implements AdminToolDBBrowserService
 			resultTO.setExceptionMessage(e.getMessage());
 			resultTO.setExceptionCause(null != e.getCause() ? e.getCause().toString() : null);
 			resultTO.setExceptionTrace(printException(e));
-			
+			LOGGER.trace(e.getMessage(), e);
 		} finally {
 			closeConnection(c, vars);
-		}
-		
-		if (!configuration.isShowMetaDataLoadException()) {
-			if (null != resultTO.getExceptionMessage() || null != resultTO.getExceptionTrace()) {
-				LOGGER.debug("Exception while fetching database meta data: " + resultTO.getExceptionMessage());
-				LOGGER.debug(resultTO.getExceptionCause());
-				LOGGER.debug(resultTO.getExceptionTrace());
-			}
-			resultTO.setExceptionMessage(null);
-			resultTO.setExceptionCause(null);
-			resultTO.setExceptionTrace(null);
+			close(resSet);
 		}
 		
 		if (LOGGER.isTraceEnabled()) {

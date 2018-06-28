@@ -57,6 +57,9 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	@Value("${admintool.dbbrowser.showMetaDataLoadException:false}")
 	private boolean showMetaDataLoadException;
 	
+	@Value("${admintool.dbbrowser.closeConnections:true}")
+	private boolean closeConnections;
+	
 	/**
 	 * @return the enabled
 	 */
@@ -214,7 +217,7 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	/**
 	 * 
 	 * @return
-	 *  @since 1.1.6
+	 * @since 1.1.6
 	 */
 	public boolean isLoadMetaData() {
 		return loadMetaData;
@@ -223,10 +226,30 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 	/**
 	 * 
 	 * @param loadMetaData
-	 *  @since 1.1.6
+	 * @since 1.1.6
 	 */
 	public void setLoadMetaData(boolean loadMetaData) {
 		this.loadMetaData = loadMetaData;
+	}
+
+	/**
+	 * if connections will be closed after query
+	 * 
+	 * @return
+	 * @since 1.1.6.5
+	 */
+	public boolean isCloseConnections() {
+		return closeConnections;
+	}
+
+	/**
+	 * if connections will be closed after query
+	 * 
+	 * @param closeConnections
+	 * @since 1.1.6.5
+	 */
+	public void setCloseConnections(boolean closeConnections) {
+		this.closeConnections = closeConnections;
 	}
 
 	@Override
@@ -244,7 +267,8 @@ public class AdminToolDBBrowserConfig implements AdminToolConfig
 				.append(", codeMirrorUseBowser=").append(codeMirrorUseBowser).append(", codeMirrorAddLibs=")
 				.append(codeMirrorAddLibs).append(", securityRoles=").append(securityRoles)
 				.append(", componentPosition=").append(componentPosition).append(", loadMetaData=").append(loadMetaData)
-				.append(", showMetaDataLoadException=").append(showMetaDataLoadException).append("]");
+				.append(", showMetaDataLoadException=").append(showMetaDataLoadException).append(", closeConnections=")
+				.append(closeConnections).append("]");
 		return builder.toString();
 	}
 	
