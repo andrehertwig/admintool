@@ -25,6 +25,7 @@ public class AdminComponentImpl implements AdminComponent
 	private Map<String, Boolean> additionalCSS = new LinkedHashMap<>(1);
 	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
 	
+	@Deprecated
 	private Set<String> securityRoles = new HashSet<>();
 	
 	private Integer position;
@@ -169,8 +170,10 @@ public class AdminComponentImpl implements AdminComponent
 	 * @since 1.0.1
 	 * @return the securityRoles
 	 * @see #addSecurityRole(String)
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
 	@Override
+	@Deprecated
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
 	}
@@ -180,12 +183,15 @@ public class AdminComponentImpl implements AdminComponent
 	 * @since 1.0.1
 	 * @param securityRoles the securityRoles to set
 	 * @see #addSecurityRole(String)
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	public void setSecurityRoles(Set<String> securityRoles) {
 		this.securityRoles = securityRoles;
 	}
 	
 	@Override
+	@Deprecated
 	public void addSecurityRole(String securityRole) {
 		this.securityRoles.add(securityRole);
 	}
@@ -380,8 +386,10 @@ public class AdminComponentImpl implements AdminComponent
 		/**
 		 * @see AdminComponent#addSecurityRole(String)
 		 * @param securityRole
+		 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 		 * @return
 		 */
+		@Deprecated
 		public AdminComponentBuilder securityRole(String securityRole) {
 			component.addSecurityRole(securityRole);
 			return this;
@@ -389,8 +397,10 @@ public class AdminComponentImpl implements AdminComponent
 		/**
 		 * @see AdminComponent#getSecurityRoles().addAll(set)
 		 * @param securityRoles
+		 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 		 * @return
 		 */
+		@Deprecated
 		public AdminComponentBuilder securityRoles(Set<String> securityRoles) {
 			component.getSecurityRoles().addAll(securityRoles);
 			return this;

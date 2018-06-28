@@ -1,17 +1,12 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import de.chandre.admintool.core.controller.AbstractAdminController;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.utils.ReflectUtils;
-import de.chandre.admintool.security.commons.LoginController;
-import de.chandre.admintool.security.commons.TemplateUserService;
 import de.chandre.admintool.security.commons.auth.UserStateType;
 import de.chandre.admintool.security.commons.auth.UserTO;
+import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
 import de.chandre.admintool.security.dbuser.auth.ExtUserTO;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsService;
+import de.chandre.admintool.security.dbuser.service.comm.SendException;
+import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserValidator;
 
 /**
  * User controller
@@ -38,26 +33,15 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsSer
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/accessmanagement/user")
-public class AdminToolSecDBUserController extends AbstractAdminController {
+public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 
-	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserController.class);
+	private final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserController.class);
 	
 	@Autowired
 	private AdminToolSecDBUserDetailsService userService;
-	
+
 	@Autowired
-	private TemplateUserService templateUserService;
-	
-	@RequestMapping(value="/profile")
-	public String profile(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (templateUserService.isAnonymous()) {
-			response.sendRedirect(super.getRootContext(request) + LoginController.LOGIN_PATH);
-		}
-		addCommonContextVars(model, request);
-		ATUser currentUser = templateUserService.getUserPrincipal(ATUser.class);
-		model.put("currentUser", userService.getUserForId(currentUser.getId()));
-		return AdminTool.ROOTCONTEXT_NAME + "/security/content/profile";
-	}
+	private AdminToolSecDBUserValidator userValidator;
 	
 	@RequestMapping(value="/get/{userId}", method=RequestMethod.GET)
 	@ResponseBody
@@ -83,13 +67,21 @@ public class AdminToolSecDBUserController extends AbstractAdminController {
 	@ResponseBody
 	public Set<ATError> addUser(@RequestBody UserTO userTo) {
 		
-		return userService.createUser(userTo);
+		try {
+			return userService.createUser(userTo);
+		} catch (SendException e) {
+			return handleException(e, LOGGER, userValidator, "error.create.user", "create.user.error", "Could not create user");
+		}
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> updateUser(@RequestBody UserTO userTo) {
-		return userService.updateUser(userTo);
+		try {
+			return userService.updateUser(userTo);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, userValidator, "error.update.user", "update.user.error", "Could not update user");
+		}
 	}
 	
 	@RequestMapping(value="/remove", method=RequestMethod.POST)
@@ -97,6 +89,18 @@ public class AdminToolSecDBUserController extends AbstractAdminController {
 	public String removeUser(@RequestBody UserTO userTo) {
 		try {
 			userService.removeByName(userTo.getUsername());
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return Boolean.FALSE.toString();
+		}
+		return Boolean.TRUE.toString();
+	}
+	
+	@RequestMapping(value="/resetPassword", method=RequestMethod.POST)
+	@ResponseBody
+	public String resetPassword(@RequestBody UserTO userTo) {
+		try {
+			userService.createResetPassword(userTo.getUsername(), CommunicationProcess.RESET_PASSWORD_REQUEST_ADMIN);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return Boolean.FALSE.toString();

@@ -42,8 +42,6 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	@Column(name="USERNAME", nullable=false, unique=true)
 	private String username;
 	
-	@NotNull(message = MSG_KEY_PREFIX + "user.password.NotNull")
-	@Size(min = 1, message = MSG_KEY_PREFIX + "user.password.Size")
 	@Column(name="PASSWORD", nullable=false)
 	private String password;
 	
@@ -375,7 +373,13 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 
 	public void setPasswordLinkHash(String passwordLinkHash) {
-		this.passwordLinkHash = passwordLinkHash;
+		if (null != passwordLinkHash) {
+			this.passwordLinkHash = passwordLinkHash;
+			this.passwordLinkCreated = LocalDateTime.now();
+		} else {
+			this.passwordLinkHash = null;
+			this.passwordLinkCreated = null;
+		}
 	}
 
 	@Override

@@ -20,11 +20,13 @@ $.extend(AdminTool.Users.prototype, {
 			updateUserURL 		: '/admintool/accessmanagement/user/update',
 			removeUserURL 		: '/admintool/accessmanagement/user/remove',
 			getUserInfoURL 		: '/admintool/accessmanagement/user/get/',
+			resetUserPasswordURL: '/admintool/accessmanagement/user/resetPassword',
 			passwordLength		: 14
 		});
 
 		this.validationUtil = new AdminTool.ValidationUtil(this);
 		this.select2Util = new AdminTool.Select2Util(this);
+		this.passwordGen = new AdminTool.PasswordGenerator(this);
 		
 		$("#users_table").DataTable();
 		//prepare
@@ -50,6 +52,7 @@ $.extend(AdminTool.Users.prototype, {
 		this.initAddUser();
 		this.initShowUserInfo();
 		this.initRemoveUser();
+		this.initResetPassword();
 	},
 	
 	initUserGroups: function() {
@@ -119,6 +122,51 @@ $.extend(AdminTool.Users.prototype, {
 				query.btn.text(query.newState);
 			} else if (data && data == 'reload') {
 				query.ctx.reloadPage();
+			}
+		});
+	},
+	
+	/* ++++++++++++++++++++
+	 * Reset password
+	 * ++++++++++++++++++++++ */
+	
+	initResetPassword: function() {
+		var $resetables = $('.resetPassword');
+		if ($resetables.length != 0) {
+			var pluginId = this.elementId;
+			$resetables.each(function() {
+				var $el = $(this);
+				$el.click(function() {
+					getByID(pluginId).users("initResetPasswordConfirm", this);
+				});
+			});
+		}
+	},
+	
+	initResetPasswordConfirm: function(btn) {
+		this.showConfirmModal("Reset Password", "Do you really want to reset the users password: " + this.getUserIdentifier(btn, 'resetPassword')+"?", this.resetPassword, btn);
+	},
+	
+	resetPassword: function(btn) {
+		var button = $(btn);
+		var userData = {
+			"username" : this.getUserIdentifier(button, 'resetPassword')
+		};
+		
+		this.sendRequest({
+			url: this.options.resetUserPasswordURL, 
+			requestType: "POST", 
+			dataType: "text", 
+			data: JSON.stringify(userData),
+			showModalOnError: true,
+			ctx: this
+		},
+		function(data, query) {
+			if (data && data == 'true') {
+				location.reload();
+			} else {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error', 'Error reseting password');
 			}
 		});
 	},
@@ -209,6 +257,7 @@ $.extend(AdminTool.Users.prototype, {
 		saveUserButton.off();
 		saveUserButton.on('click', $.proxy(this.saveUser, this, existingUser));
 		saveUserButton.show();
+		getByID('editUser').hide();
 		
 		//from parent accessManagement.js
 		this.enableFormElements(this.userDataFormId);
@@ -217,27 +266,13 @@ $.extend(AdminTool.Users.prototype, {
 		
 		var genPwdButton = getByID('generatePassword');
 		genPwdButton.off();
-		genPwdButton.on('click', $.proxy(this.generatePassword, this));
+		genPwdButton.on('click', $.proxy(this.generatePassword, this, 'userPassword'));
 		genPwdButton.parent().show();
 		
 		var showPwdButton = getByID('showPassword');
 		showPwdButton.off();
-		showPwdButton.on('click', $.proxy(this.switchPasswordVisibility, this));
+		showPwdButton.on('click', $.proxy(this.switchPasswordVisibility, this, 'userPassword'));
 		showPwdButton.parent().show();
-	},
-	
-	generatePassword: function() {
-		getByID('userPassword').val(this.generatePass(this.options.passwordLength));
-	},
-	
-	switchPasswordVisibility: function() {
-		var pwd = getByID('userPassword');
-		if (pwd.attr('type') == 'password') {
-			pwd.attr('type', 'text');
-		} else {
-			pwd.attr('type', 'password');
-		}
-		getByID('showPassword').find('.fa').switchClass('fa-eye', 'fa-eye-slash');
 	},
 	
 	setRequiredFields: function(required) {
@@ -245,12 +280,14 @@ $.extend(AdminTool.Users.prototype, {
 		var pwd = getByID('#userPassword');
 		var username = getByID('#username')
 		
-		checkbox.prop('checked', required);
-		checkbox.prop('disabled', required);
-		if (required) {
-			pwd.attr('required', 'required');
-		} else {
-			pwd.prop('required', required);
+		if (checkbox.length > 0) {
+			checkbox.prop('checked', required);
+			checkbox.prop('disabled', required);
+			if (required) {
+				pwd.attr('required', 'required');
+			} else {
+				pwd.prop('required', required);
+			}
 		}
 		
 		username.prop('disabled', !required);
@@ -306,7 +343,7 @@ $.extend(AdminTool.Users.prototype, {
 			"clients" 	: this.getFormSelectChoice('clients', false)
 		};
 		var checkbox = getByID('#userPasswordOverride');
-		if (checkbox.is(':checked')) {
+		if (checkbox.length > 0 && checkbox.is(':checked')) {
 			userData["password"] = getByID('#userPassword').val();
 		}
 		
@@ -328,7 +365,7 @@ $.extend(AdminTool.Users.prototype, {
 			} else {
 				//show error modal (AdminTool.Core)
 				query.ctx.showErrorModal('Error saving User', data);
-				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data, query.ctx.userDataFormId);
 			}
 		});
 	},

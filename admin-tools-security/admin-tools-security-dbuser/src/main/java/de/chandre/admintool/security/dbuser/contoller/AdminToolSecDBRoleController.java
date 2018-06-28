@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import de.chandre.admintool.core.controller.AbstractAdminController;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
+import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBRoleValidator;
 
 /**
  * Role controller
@@ -29,15 +29,18 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/accessmanagement/role")
-public class AdminToolSecDBRoleController extends AbstractAdminController {
+public class AdminToolSecDBRoleController extends ATSecDBAbctractController {
 	
-	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBRoleController.class);
+	private final Log LOGGER = LogFactory.getLog(AdminToolSecDBRoleController.class);
 	
 	@Autowired
 	private AdminToolSecDBRoleService roleService;
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
+	
+	@Autowired
+	private AdminToolSecDBRoleValidator validator;
 
 	@RequestMapping(path="/get", method=RequestMethod.GET)
 	@ResponseBody
@@ -62,7 +65,12 @@ public class AdminToolSecDBRoleController extends AbstractAdminController {
 	@RequestMapping(path="/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> update(@RequestBody AccessRelationTO accessRelationTO) {
-		return roleService.updateRole(accessRelationTO);
+		try {
+			return roleService.updateRole(accessRelationTO);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, validator, "error.update.role", "update.role.error", "Could not update Role");
+		}
+		
 	}
 	
 }

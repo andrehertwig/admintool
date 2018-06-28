@@ -235,7 +235,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			} else {
 				//show error modal (AdminTool.Core)
 				query.ctx.showErrorModal('Error saving Relation', data);
-				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data, query.ctx.relationDataFormId);
 			}
 		});
 		

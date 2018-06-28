@@ -17,7 +17,7 @@
 	                <th:block th:utext="${#messages.msgOrNull('ui.admintool.security.db.profile.headInfo')}"></th:block>
 	            </div>
 			
-				<div class="box box-info" id="accessrelation">
+				<div class="box box-info" id="currentUserProfile">
 					
 					<div class="box-header with-border">
 						<div class="row">
@@ -40,63 +40,63 @@
 									</colgroup>
 									<tbody>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.username', 'Username')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.username', 'Username')" /></th>
 											<td id="info_currentUsername" th:text="${currentUser.getUsername()}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.passwordLogin', 'Last login')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.lastLogin', 'Last login')" /></th>
 											<td id="info_lastLogin">
 												<th:block th:if="${currentUser.getLastLogin()}" th:text="${#temporals.format(currentUser.getLastLogin(), 'yyyy-MM-dd HH:mm')}"></th:block>
 											</td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.passwordLastChange', 'Last password change')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordLastChange', 'Last password change')" /></th>
 											<td id="info_lastPwdChange" th:text="${#temporals.format(currentUser.getPasswordDate(), 'yyyy-MM-dd HH:mm')}">
 												<th:block th:if="${currentUser.getPasswordDate()}" th:text="${#temporals.format(currentUser.getPasswordDate(), 'yyyy-MM-dd HH:mm')}"></th:block>
 											</td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.firstLastName', 'First and last name')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.firstLastName', 'First and last name')" /></th>
 											<td id="info_first_last_name" th:text="${#strings.defaultString(currentUser.getFirstName(), '')} + ' ' + ${#strings.defaultString(currentUser.getLastName(), '')}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.emailPhone', 'E-Mail | Phone')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.emailPhone', 'E-Mail | Phone')" /></th>
 											<td id="info_email_phone" th:text="${#strings.defaultString(currentUser.getEmail(), '')} + ' | ' + ${#strings.defaultString(currentUser.getPhone(), '')}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.localeTimeZone', 'Locale | Timezone')" /></th>
-											<td id="info_locale_timeZone" th:text="${#strings.defaultString(currentUser.getLocale(), '')} + ' | ' + ${#strings.defaultString(currentUser.getTimeZone(), '')}"></td>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.localeTimeZone', 'Locale | Timezone')" /></th>
+											<td id="info_locale_timeZone" th:text="${#strings.defaultString(currentUser.getLocaleAsLocale().getDisplayName(), '')} + ' | ' + ${#strings.defaultString(currentUser.getTimeZone(), '')}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.currentUserGroups', 'UserGroup relations')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.userGroups', 'UserGroup relations')" /></th>
 											<td id="info_currentUserGroups" th:text="${#strings.listJoin(currentUser.getUserGroupDisplayNames(),', ')}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.clients', 'Client relations')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.clients', 'Client relations')" /></th>
 											<td id="info_clients" th:text="${#strings.listJoin(currentUser.getClientDisplayNames(),', ')}"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.expired', 'Account expired since')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.expired', 'Account expired since')" /></th>
 											<td id="info_accountExpired" th:text="${currentUser.getAccountExpiredSince()} ? ${#temporals.format(currentUser.getAccountExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.locked', 'Account locked since')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.locked', 'Account locked since')" /></th>
 											<td id="info_accountLocked" th:text="${currentUser.getAccountLockedSince()} ? ${#temporals.format(currentUser.getAccountLockedSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.credExpired', 'Credentials expired (since)')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.credExpired', 'Credentials expired (since)')" /></th>
 											<td id="info_credExpired" th:text="${currentUser.getCredentialsExpiredSince()} ? ${#temporals.format(currentUser.getCredentialsExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.attempts', 'Login Attempts (last attempt)')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.attempts', 'Login Attempts (last attempt)')" /></th>
 											<td id="info_loginAttempts" th:text="${currentUser.getLoginAttempts()} + ' (' + (${currentUser.getLastLoginAttempt()} ? ${#temporals.format(currentUser.getLastLoginAttempt(), 'yyyy-MM-dd HH:mm')} : 'n/a') + ')'"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.created', 'Created')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.created', 'Created')" /></th>
 											<td id="info_created" th:text="${currentUser.getCreated()} ? ${#temporals.format(currentUser.getCreated(), 'yyyy-MM-dd HH:mm')} : 'n/a'"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.currentUsers.modal.modified', 'Modified by (when)')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modified', 'Modified by (when)')" /></th>
 											<td id="info_modified" th:text="${currentUser.getModifiedBy()} + ' (' + (${currentUser.getModified()} ? ${#temporals.format(currentUser.getModified(), 'yyyy-MM-dd HH:mm')} : 'n/a') + ')'"></td>
 										</tr>
 									</tbody>
@@ -106,12 +106,226 @@
 					</div>
 					
 					<div class="box-footer clearfix">
-					
+						<button type="button" class="btn btn-primary pull-right spacer5right" id="editProfile">
+							<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.btn.edit', 'Edit Profile')" />
+						</button>
+						
+						<button type="button" class="btn btn-primary pull-right spacer5right" id="changePassword" th:if="${@adminToolSecDBTemplateUtils.isDirectPasswordChangeInProfileAllowed()}">
+							<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.btn.changePassword', 'Change Password')" />
+						</button>
+						
+						<!--/** th:if="${!@adminToolSecDBTemplateUtils.isDirectPasswordChangeInProfileAllowed()} and ${@adminToolSecDBTemplateUtils.isCommunicatorImplemented()}" **/-->
+						<button type="button" class="btn btn-primary pull-right spacer5right" id="resetPassword"
+							>
+							<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.btn.resetPassword', 'Reset Password')" />
+						</button>
 					</div>
 				
 				</div>
 				
 			</section>
+			
+			<div class="modal fade" id="passwordDataModal" tabindex="-1" role="dialog" aria-labelledby="passwordDataModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="passwordDataModalLabel">
+										<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modal.head.edit', 'Change Password')" />
+									</h4>
+								</div>
+							</div>
+						</div>
+						<form id="passwordDataForm">
+							<div class="modal-body">
+								
+							<!--/** first and last name **/-->
+							
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="currentPassword">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modal.currentPassword', 'Current Password')" />
+											</label>
+											<div class="input-group">
+												<input type="password" class="form-control" id="currentPassword" value="" required="required" tabindex="1" autofocus="autofocus"/>
+												<span class="input-group-addon">
+													<a id="showCurrentPassword" href="#"><i class="fa fa-eye eye-switch"></i></a>
+												</span>
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="newPassword">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modal.newPassword', 'New Password')" />
+											</label>
+											<div class="input-group">
+												<input type="password" class="form-control" id="newPassword" value="" required="required" tabindex="2" />
+												<span class="input-group-addon">
+													<a id="generatePassword" href="#"><i class="fa fa-cog" aria-hidden="true"></i></a>
+												</span>
+												<span class="input-group-addon">
+													<a id="showNewPassword" href="#"><i class="fa fa-eye eye-switch"></i></a>
+												</span>
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row passwordConfirmRow">
+									<div class="col-xs-12 col-sm-12">
+										<div class="form-group">
+											<label for="passwordConfirm">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modal.newPasswordConfirm', 'Confirm Password')" />
+											</label>
+											<input type="password" class="form-control" id="passwordConfirm" value="" required="required" tabindex="3" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="button" class="btn btn-primary pull-right" id="savePassword">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')"  tabindex="4" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="profileDataModal" tabindex="-1" role="dialog" aria-labelledby="profileDataModalLabel">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="profileDataModalLabel">
+										<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.profile.modal.head.edit', 'Edit Profile')" />
+									</h4>
+								</div>
+							</div>
+						</div>
+						<form id="profileDataForm">
+							<div class="modal-body">
+								
+							<!--/** first and last name **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="firstName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.firstName', 'First Name')" />
+											</label>
+											<input type="text" id="firstName" name="firstName" class="form-control" th:value="${currentUser.getFirstName()}" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="lastName">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.lastName', 'Last Name')" />
+											</label>
+											<input type="text" class="form-control" id="lastName" name="lastName" th:value="${currentUser.getLastName()}" />
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+								
+							<!--/** email and phone **/-->
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="email">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.email', 'E-Mail')" />
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon" id="email-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+												<input type="email" id="email" class="form-control" th:value="${currentUser.getEmail()}" aria-describedby="email-addon" />
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									
+									
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label for="phone">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.phone', 'Phone')" />
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon" id="phone-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+												<input type="text" id="phone" class="form-control" th:value="${currentUser.getPhone()}" aria-describedby="phone-addon" />
+											</div>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							<!--/** locale and timezone **/-->
+								
+								<div class="row">
+									<span id="defaultLocale" class="hidden" th:text="${#locale}"></span>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group" id="localeGroup">
+											<label for="locale">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.locale', 'Locale relation')" />
+											</label>
+											<select id="locale" class="form-control">
+												<option th:each="locale, localeIter : ${@adminToolSecDBTemplateUtils.getAvailableLocales()}"
+													th:value="${locale.toString()}" th:text="${locale.getDisplayName()}" th:selected="${locale.toString()} eq ${currentUser.getLocale()}"></option>
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<span id="defaultTimeZone" class="hidden" th:text="${@adminToolSecDBTemplateUtils.getDefaultTimeZone()}"></span>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group" id="timeZoneGroup">
+											<label for="timeZone">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.timeZone', 'Timezone relation')" />
+											</label>
+											<select id="timeZone" class="form-control">
+												<option th:each="zone, zoneIter : ${@adminToolSecDBTemplateUtils.getAvailableTimeZones()}"
+													th:value="${zone}" th:text="${zone}" th:selected="${zone} eq ${currentUser.getTimeZone()}"></option>
+											</select>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
+								</button>
+								<button type="button" class="btn btn-primary pull-right" id="saveProfile">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 			
 			
 		</div>

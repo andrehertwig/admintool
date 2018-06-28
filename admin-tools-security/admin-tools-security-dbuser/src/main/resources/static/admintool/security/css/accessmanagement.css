@@ -1,3 +1,11 @@
-input#userPassword {
+input#userPassword, input#currentPassword, input#newPassword, input#password {
 	font-family: monospace;
+}
+
+.spacer5right {
+	margin-right: 5px; 
+}
+
+.spacer2left {
+	margin-left: 2px; 
 }

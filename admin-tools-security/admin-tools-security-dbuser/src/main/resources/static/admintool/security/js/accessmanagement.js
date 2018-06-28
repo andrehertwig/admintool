@@ -32,13 +32,35 @@ $.extend(AdminTool.AccessManagement.prototype, {
 		this.switchFormElements(true, additionSelector, exceptionList);
 	},
 	
-	switchFormElements: function(enable, additionSelector='', exceptionList=[]) {
-		$(additionSelector + ' .form-control').each(function() {
+	switchFormElements: function(disable, additionSelector='', exceptionList=[]) {
+		$(additionSelector).find("input, select, textarea").each(function() {
 			var $thisElem = $(this);
 			if (exceptionList.indexOf($thisElem.attr('id')) == -1) {
-				$thisElem.prop("disabled", enable);
+				$thisElem.prop("disabled", disable);
 			}
 		});
+	},
+	
+	generatePassword: function(fieldId) {
+		var pwdField = getByID(fieldId);
+		pwdField.val(this.passwordGen.generatePass());
+		if(pwdField.attr('type') == 'password') {
+			this.switchPasswordVisibility(fieldId)
+		}
+	},
+	
+	switchPasswordVisibility: function(fieldId, addFuction=null) {
+		var pwd = getByID(fieldId);
+		if (pwd.attr('type') == 'password') {
+			pwd.attr('type', 'text');
+		} else {
+			pwd.attr('type', 'password');
+		}
+		getByID(fieldId).parent().find('.eye-switch').switchClass('fa-eye', 'fa-eye-slash');
+		
+		if (addFuction && typeof addFuction === 'function') {
+			addFuction(pwd.attr('type'), this);
+		}
 	},
 	
 	show: function(id) {

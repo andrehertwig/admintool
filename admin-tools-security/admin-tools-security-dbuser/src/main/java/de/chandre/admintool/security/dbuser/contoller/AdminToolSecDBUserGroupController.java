@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import de.chandre.admintool.core.controller.AbstractAdminController;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
+import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserGroupValidator;
 
 /**
  * UserGroup Controller
@@ -29,15 +29,18 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupServi
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/accessmanagement/usergroup")
-public class AdminToolSecDBUserGroupController extends AbstractAdminController {
+public class AdminToolSecDBUserGroupController extends ATSecDBAbctractController {
 	
-	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserGroupController.class);
+	private final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserGroupController.class);
 
 	@Autowired
 	private AdminToolSecDBUserGroupService userGroupService;
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
+	
+	@Autowired
+	private AdminToolSecDBUserGroupValidator validator;
 	
 	@RequestMapping(path="/get", method=RequestMethod.GET)
 	@ResponseBody
@@ -62,13 +65,21 @@ public class AdminToolSecDBUserGroupController extends AbstractAdminController {
 	@RequestMapping(path="/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> update(@RequestBody AccessRelationTO accessRelationTO) {
-		return userGroupService.updateUserGroup(accessRelationTO);
+		try {
+			return userGroupService.updateUserGroup(accessRelationTO);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, validator, "error.update.group", "update.group.error", "Could not update UserGroup");
+		}
 	}
 	
 	@RequestMapping(path="/add", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> add(@RequestBody AccessRelationTO accessRelationTO) {
-		return userGroupService.addUserGroup(accessRelationTO);
+		try {
+			return userGroupService.addUserGroup(accessRelationTO);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, validator, "error.add.group", "add.group.error", "Could not add UserGroup");
+		}
 	}
 	
 	@RequestMapping(path="/remove/name/{name}", method=RequestMethod.POST)

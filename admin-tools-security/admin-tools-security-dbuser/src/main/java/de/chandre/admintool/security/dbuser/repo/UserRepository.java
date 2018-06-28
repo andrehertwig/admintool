@@ -15,5 +15,7 @@ public interface UserRepository extends JpaRepository<ATUser, String> {
 	
 	ATUser findByUsername(String username);
 	
+	ATUser findByPasswordLinkHash(String passwordLinkHash);
+	
 	void deleteByUsername(String username);
 }

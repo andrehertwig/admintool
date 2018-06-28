@@ -137,10 +137,20 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 		}
 		
 		if (value.length() < validations.getMinLength()) {
-			errors.add(new ATError(errorCode, getMessage(errorCode + ".minLength", null, fieldName + " is to short min-length is " + validations.getMinLength()), fieldName));
+			errors.add(new ATError(errorCode, 
+					getMessage(
+							errorCode + ".minLength", 
+							new Object[] {validations.getMinLength()}, 
+							fieldName + " is to short min-length is " + validations.getMinLength()),
+					fieldName));
 		}
-		if (value.length() > validations.getMaxLength()) {
-			errors.add(new ATError(errorCode, getMessage(errorCode + ".maxLength", null, fieldName + " is to long. max-length is " + validations.getMaxLength()), fieldName));
+		if (validations.getMaxLength() > 0 && value.length() > validations.getMaxLength()) {
+			errors.add(new ATError(errorCode, 
+					getMessage(
+							errorCode + ".maxLength", 
+							new Object[] {validations.getMaxLength()}, 
+							fieldName + " is to long. max-length is " + validations.getMaxLength()),
+					fieldName));
 		}
 		if (null != validations.getPattern() && !validations.getPattern().matcher(value).matches()) {
 			errors.add(new ATError(errorCode, getMessage(errorCode + ".patternMismatch", null, fieldName + " doesn't matches the required pattern"), fieldName));

@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser;
 
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -165,6 +166,10 @@ public class AdminToolSecDBProperties {
 		private Validations email = new Validations();
 		private Validations phone = new Validations();
 		
+		private boolean directPasswordChangeAllowed = true;
+		private boolean directPasswordChangeInProfileAllowed = true;
+		
+		private String passwordHashPeriod = "P7D";
 		
 		public List<String> getAvailableLocales() {
 			return availableLocales;
@@ -208,6 +213,26 @@ public class AdminToolSecDBProperties {
 		public void setPhone(Validations phone) {
 			this.phone = phone;
 		}
+		public boolean isDirectPasswordChangeAllowed() {
+			return directPasswordChangeAllowed;
+		}
+		public void setDirectPasswordChangeAllowed(boolean directPasswordChangeAllowed) {
+			this.directPasswordChangeAllowed = directPasswordChangeAllowed;
+		}
+		public boolean isDirectPasswordChangeInProfileAllowed() {
+			return directPasswordChangeInProfileAllowed;
+		}
+		public void setDirectPasswordChangeInProfileAllowed(boolean directPasswordChangeInProfileAllowed) {
+			this.directPasswordChangeInProfileAllowed = directPasswordChangeInProfileAllowed;
+		}
+		public void setPasswordHashPeriod(String passwordHashPeriod) {
+			this.passwordHashPeriod = passwordHashPeriod;
+		}
+		public Period getPasswordHashPeriod() {
+			return Period.parse(passwordHashPeriod);
+		}
+		
+		
 	}
 	
 	public static class UserGroups {

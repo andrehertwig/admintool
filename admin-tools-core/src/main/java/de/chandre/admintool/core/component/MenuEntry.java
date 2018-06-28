@@ -44,6 +44,7 @@ public class MenuEntry implements Serializable
 	private boolean useJSHierarchy = false;
 	private Map<String, Boolean> additionalJS = new LinkedHashMap<>(1);
 	
+	@Deprecated
 	private Set<String> securityRoles = new HashSet<>();
 	
 	private Map<String, Object> variables = new HashMap<>();
@@ -74,6 +75,7 @@ public class MenuEntry implements Serializable
 	 * @param target -  the template path. see {@link #setTarget(String)}
 	 * @param securityRoles - Set of roles to check against the current user for displaying/hiding menu entries in the frontend
 	 */
+	@Deprecated
 	public MenuEntry(String name, String displayName, String target, Set<String> securityRoles) {
 		super();
 		this.name = name;
@@ -410,7 +412,9 @@ public class MenuEntry implements Serializable
 	 * first menu entry or component with roles will return it.
 	 * @return a unmodifiable Set or empty Set
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	public Set<String> getAffectedSecurityRoles() {
 		if (CollectionUtils.isEmpty(securityRoles)) {
 			Stream<MenuEntry> parents = reverseFlattened();
@@ -435,7 +439,9 @@ public class MenuEntry implements Serializable
 	/**
 	 * @return the securityRoles
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	public Set<String> getSecurityRoles() {
 		return securityRoles;
 	}
@@ -443,7 +449,9 @@ public class MenuEntry implements Serializable
 	/**
 	 * @param securityRoles the securityRoles to set
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	public void setSecurityRoles(Set<String> securityRoles) {
 		this.securityRoles = securityRoles;
 	}
@@ -451,7 +459,9 @@ public class MenuEntry implements Serializable
 	/**
 	 * @param securityRole the securityRoles to set
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	public void addSecurityRole(String securityRole) {
 		this.securityRoles.add(securityRole);
 	}
@@ -749,7 +759,9 @@ public class MenuEntry implements Serializable
 		 * @see MenuEntry#setSecurityRoles(Set)
 		 * @param securityRoles
 		 * @return
+		 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 		 */
+		@Deprecated
 		public MenuEntryBuilder securityRoles(Set<String> securityRoles) {
 			entry.setSecurityRoles(securityRoles);
 			return this;
@@ -758,7 +770,9 @@ public class MenuEntry implements Serializable
 		 * @see MenuEntry#addSecurityRole(String)
 		 * @param securityRole
 		 * @return
+		 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 		 */
+		@Deprecated
 		public MenuEntryBuilder securityRole(String securityRole) {
 			entry.addSecurityRole(securityRole);
 			return this;

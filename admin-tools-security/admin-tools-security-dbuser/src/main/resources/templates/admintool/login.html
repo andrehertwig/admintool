@@ -27,7 +27,14 @@
 							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 						</div>
 						<div class="row">
-							<div class="col-xs-8"></div>
+							<div class="col-xs-6">
+								<a class="btn btn-primary btn-block btn-flat" th:href="@{${adminToolContext} + '/accessmanagement/reset/password'}"
+									tabindex="4" th:if="${@adminToolSecDBTemplateUtils.isCommunicatorImplemented()}">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.login.btn.resetPassword', 'Reset Password')" />
+								</a>
+							</div>
+							<div class="col-xs-2">
+							</div>
 							<div class="col-xs-4">
 								<button class="btn btn-primary btn-block btn-flat" type="submit" tabindex="3">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.userMenu.signIn', 'Sign in')" />

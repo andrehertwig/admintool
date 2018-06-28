@@ -11,6 +11,10 @@ AdminTool.ValidationUtil = function(parent) {
 		return getByID(formId).validator();
 	};
 	
+	this.destroy = function(formId) {
+		getByID(formId).validator('destroy');
+	};
+	
 	this.validate = function(formId) {
 		getByID(formId).validator('validate');
 		return self.hasValidationErrors(formId);
@@ -27,19 +31,19 @@ AdminTool.ValidationUtil = function(parent) {
 	};
 
 	this.reloadValidator = function(formId) {
-		getByID(formId).validator('destroy');
+		self.destroy(formId);
 		// validator doesn't remove everything
 		getByID(formId).find('.form-control-feedback').removeClass(
 				'glyphicon-remove');
 		self.create(formId);
 	};
 
-	this.showFieldErrorsOnATErrorList = function(data) {
+	this.showFieldErrorsOnATErrorList = function(data, formId) {
 		var globalErrors = [];
 		for (var i = 0; i < data.length; i++) {
 			var error = data[i];
 			if (error.field && error.field.length > 0) {
-				self.parent.showCustomError(error.field, error.message, this.userDataFormId);
+				self.showCustomError(error.field, error.message, formId);
 			} else {
 				globalErrors.push('<li>' + error.message + '</li>');
 			}
@@ -51,4 +55,4 @@ AdminTool.ValidationUtil = function(parent) {
 	};
 
 	this.construct(parent);
-}
+};

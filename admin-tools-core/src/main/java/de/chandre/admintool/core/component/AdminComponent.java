@@ -112,7 +112,9 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * should return a list of roles which should be able to access this component 
 	 * @return
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	Set<String> getSecurityRoles();
 
 	/**
@@ -123,7 +125,9 @@ public interface AdminComponent extends Comparable<AdminComponent>
 	 * 
 	 * @param securityRole
 	 * @since 1.0.1
+	 * @deprecated unnecessary because url resolving in template will work, will be removed with version 1.2.0
 	 */
+	@Deprecated
 	void addSecurityRole(String securityRole);
 
 	/**

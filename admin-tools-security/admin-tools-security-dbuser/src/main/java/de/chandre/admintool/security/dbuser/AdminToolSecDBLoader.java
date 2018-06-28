@@ -62,7 +62,6 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		AdminComponent component = new AdminComponentImpl.AdminComponentBuilder()
 				.displayName("User-Management")
 				.position(config.getPosition())
-				.securityRoles(allRoles)
 				.build();
 		
 		if (StringUtils.isEmpty(config.getValidatorCdnPath())) {
@@ -84,14 +83,17 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		component.addAdditionalJS("/static/admintool/js/validation-util.js", true);
 		component.addAdditionalJS("/static/admintool/js/select2-util.js", true);
 		
+		component.addAdditionalJS("/static/admintool/security/js/password.min.js", true);
+		component.addAdditionalCSS("/static/admintool/security/css/password.min.css", true);
+		
 		component.addAdditionalCSS("/static/admintool/security/css/accessmanagement.css", true);
+		component.addAdditionalJS("/static/admintool/security/js/passwordgen.js", true);
 		component.addAdditionalJS("/static/admintool/security/js/accessmanagement.js", true);
 		
 		MenuEntry mainMenu = MenuEntry.builder()
 				.displayName("Access Management")
 				.name("accessmanagement")
 				.target("security/content/notExisting")
-				.securityRoles(allRoles)
 				.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.displayname")
 				.build();
 		component.setMainMenu(mainMenu);
@@ -100,7 +102,6 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/users").displayName("Users")
 				.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.users.displayname")
 				.target("security/content/users")
-				.securityRoles(config.getSecurityRolesUsers())
 				.additionalJS("/static/admintool/security/js/users.js", true)
 				.build());
 		
@@ -108,7 +109,6 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/userGroups").displayName("UserGroups")
 				.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.usergroups.displayname")
 				.target("security/content/usergroups")
-				.securityRoles(config.getSecurityRolesUsers())
 				.additionalJS("/static/admintool/security/js/accessrelation.js", true)
 				.additionalJS("/static/admintool/security/js/usergroups.js", true)
 				.build());
@@ -117,7 +117,6 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/roles").displayName("Roles")
 				.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.roles.displayname")
 				.target("security/content/roles")
-				.securityRoles(config.getSecurityRolesUsers())
 				.additionalJS("/static/admintool/security/js/accessrelation.js", true)
 				.build());
 		
@@ -126,10 +125,23 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 			mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/clients").displayName("Clients")
 					.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.clients.displayname")
 					.target("security/content/clients")
-					.securityRoles(config.getSecurityRolesUsers())
 					.additionalJS("/static/admintool/security/js/accessrelation.js", true)
 					.build());
 		}
+		
+		//hidden pseudo target ... resolved via user controller -> addCommonContextVars(..)
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/user/profile").displayName("Profile")
+				.hide(true)
+				.target("security/content/profile")
+				.additionalJS("/static/admintool/security/js/profile.js", true)
+				.build());
+		
+		//hidden pseudo target ... resolved via user controller -> addCommonContextVars(..)
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("accessmanagement/reset").displayName("Reset Password")
+				.hide(true)
+				.target("security/content/resetPassword")
+				.additionalJS("/static/admintool/security/js/resetPassword.js", true)
+				.build());
 		
 		//finally adding the component
 		adminTool.addComponent(component);

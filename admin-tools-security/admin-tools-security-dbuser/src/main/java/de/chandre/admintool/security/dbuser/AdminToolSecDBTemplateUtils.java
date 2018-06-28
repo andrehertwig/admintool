@@ -11,4 +11,10 @@ public interface AdminToolSecDBTemplateUtils {
 
 	String getDefaultTimeZone();
 
+	boolean isDirectPasswordChangeAllowed();
+
+	boolean isDirectPasswordChangeInProfileAllowed();
+
+	boolean isCommunicatorImplemented();
+
 }

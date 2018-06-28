@@ -26,7 +26,7 @@ AdminTool.Select2Util = function(parent) {
 	};
 	
 	this.clearSelect = function(selectId) {
-//		self.setValue(selectId);
+		self.setValue(selectId);
 	};
 	
 	this.setValue = function(selectId, value = []) {
@@ -83,4 +83,4 @@ AdminTool.Select2Util = function(parent) {
 	};
 
 	this.construct(parent);
-}
+};

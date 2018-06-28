@@ -98,11 +98,17 @@
 											th:attr="data-clients=${#strings.listJoin(user.getClientNames(),',')}"></td>
 											
 										<td>
-											<button class="btn btn-xs info" th:id="'info_' + ${user.getId()}" title="User Information">
-												<i class="fa fa-info-circle" aria-hidden="true"></i>
-											</button>
-											<button class="btn btn-xs remove pull-right" th:id="'remove_' + ${user.getUsername()}" title="Delete user">
+											<button class="btn btn-xs pull-right spacer2left remove" th:id="'remove_' + ${user.getUsername()}" title="Delete user">
 												<i class="fa fa-trash-o" aria-hidden="true"></i>
+											</button>
+											
+											<button class="btn btn-xs pull-right spacer2left resetPassword" th:id="'resetPassword_' + ${user.getUsername()}" title="Reset Password" 
+												th:if="${@adminToolSecDBTemplateUtils.isCommunicatorImplemented()}">
+												<i class="fa fa-envelope-o" aria-hidden="true"></i>
+											</button>
+											
+											<button class="btn btn-xs pull-right spacer2left info" th:id="'info_' + ${user.getId()}" title="User Information">
+												<i class="fa fa-info-circle" aria-hidden="true"></i>
 											</button>
 										</td>
 									</tr>
@@ -143,7 +149,7 @@
 											<td id="info_username"></td>
 										</tr>
 										<tr>
-											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordLogin', 'Last login')" /></th>
+											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.lastLogin', 'Last login')" /></th>
 											<td id="info_lastLogin"></td>
 										</tr>
 										<tr>
@@ -255,19 +261,22 @@
 									<div class="col-xs-12 col-sm-6">
 										<div class="form-group">
 											<label for="userPassword">
-												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.modal.password', 'Password')" />
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.password', 'Password')" />
 											</label>
-											<div class="input-group">
+											<div class="input-group" th:if="${@adminToolSecDBTemplateUtils.isDirectPasswordChangeAllowed()}">
 												<span class="input-group-addon">
-													<input type="checkbox" id="userPasswordOverride" />
+													<input type="checkbox" id="userPasswordOverride" disabled="disabled" />
 												</span>
 												<input type="password" class="form-control" id="userPassword" value="" required="required" disabled="disabled" />
 												<span class="input-group-addon">
 													<a id="generatePassword" href="#"><i class="fa fa-cog" aria-hidden="true"></i></a>
 												</span>
 												<span class="input-group-addon">
-													<a id="showPassword" href="#"><i class="fa fa-eye"></i></a>
+													<a id="showPassword" href="#"><i class="fa fa-eye eye-switch"></i></a>
 												</span>
+											</div>
+											<div>
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordInfo', 'User will receive password reset request.')" />
 											</div>
 											<div class="help-block with-errors"></div>
 										</div>
@@ -352,7 +361,7 @@
 											<label for="timeZone">
 												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.timeZone', 'Timezone relation')" />
 											</label>
-											<select id="timeZone" class="form-control" >
+											<select id="timeZone" class="form-control" disabled="disabled">
 												<option th:each="zone, zoneIter : ${@adminToolSecDBTemplateUtils.getAvailableTimeZones()}"
 													th:value="${zone}" th:text="${zone}"></option>
 											</select>

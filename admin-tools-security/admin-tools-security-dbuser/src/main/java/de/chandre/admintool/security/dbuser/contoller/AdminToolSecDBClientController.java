@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
-import de.chandre.admintool.core.controller.AbstractAdminController;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATClient;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBClientService;
+import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBClientValidator;
 
 /**
  * Client controller
@@ -29,7 +29,7 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBClientService;
  */
 @Controller
 @RequestMapping(AdminTool.ROOTCONTEXT + "/accessmanagement/client")
-public class AdminToolSecDBClientController extends AbstractAdminController {
+public class AdminToolSecDBClientController extends ATSecDBAbctractController {
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBClientController.class);
 
@@ -38,6 +38,9 @@ public class AdminToolSecDBClientController extends AbstractAdminController {
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
+	
+	@Autowired
+	private AdminToolSecDBClientValidator validator;
 	
 	@RequestMapping(path="/get", method=RequestMethod.GET)
 	@ResponseBody
@@ -62,13 +65,21 @@ public class AdminToolSecDBClientController extends AbstractAdminController {
 	@RequestMapping(path="/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> update(@RequestBody AccessRelationTO accessRelationTO) {
-		return clientService.updateClient(accessRelationTO);
+		try {
+			return clientService.updateClient(accessRelationTO);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, validator, "error.update.client", "update.client.error", "Could not update Client");
+		}
 	}
 	
 	@RequestMapping(path="/add", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> add(@RequestBody AccessRelationTO accessRelationTO) {
-		return clientService.addClient(accessRelationTO);
+		try {
+			return clientService.addClient(accessRelationTO);
+		} catch (Exception e) {
+			return handleException(e, LOGGER, validator, "error.add.client", "add.client.error", "Could not add Client");
+		}
 	}
 	
 	@RequestMapping(path="/remove/name/{name}", method=RequestMethod.POST)

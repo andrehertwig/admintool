@@ -25,14 +25,33 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 	
 	private final Map<String, LoginAttempt> attemptsCache = new ConcurrentHashMap<>();
 	
+	/**
+	 * initializes the LoginAttemptService with maxAttempts=5, useUserName=true and useRemoteAddress=false
+	 * 
+	 * @see #LoginAttemptServiceImpl(int, boolean, boolean)
+	 */
 	public LoginAttemptServiceImpl() {
 		this(5);
 	}
 	
+	/**
+	 * initializes the LoginAttemptService with given maxAttempt, useUserName=true and useRemoteAddress=false
+	 * 
+	 * @param maxAttempts number of maximum attempts a user can try logging in with wrong password until service marks user as blocked
+	 * 
+	 * @see #LoginAttemptServiceImpl(int, boolean, boolean)
+	 */
 	public LoginAttemptServiceImpl(int maxAttempts) {
 		this(maxAttempts, true, false);
 	}
 	
+	/**
+	 * initializes the LoginAttemptService with given parameters
+	 * 
+	 * @param maxAttempts number of maximum attempts a user can try logging in with wrong password until service marks user as blocked
+	 * @param useUserName used in login failure/success listeners to add user/invalidate username
+	 * @param useRemoteAddress used in login failure/success listeners to add user/invalidate remote address (may not work/be used when behind a (reverse)proxy)
+	 */
 	public LoginAttemptServiceImpl(int maxAttempts, boolean useUserName, boolean useRemoteAddress) {
 		super();
 		MAX_ATTEMPT = maxAttempts;

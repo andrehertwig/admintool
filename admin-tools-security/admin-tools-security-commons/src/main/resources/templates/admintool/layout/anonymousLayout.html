@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="de">
+	
+	<th:block th:include="admintool/includes/header.inc" />
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+	<!-- required links for JS -->
+    <div th:include="admintool/includes/context.inc"> 
+    </div>
+
+	<div class="wrapper" id="admintool">
+
+		<!-- Main Header -->
+		<header class="main-header">
+
+			<a th:replace="admintool/includes/logo.inc"></a>
+
+			<!-- Header Navbar -->
+			<nav class="navbar navbar-static-top" role="navigation">
+				<!-- Navbar Right Menu -->
+				<div class="navbar-custom-menu">
+					
+					<ul class="nav navbar-nav">
+						
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<!-- Left side column. contains the logo and sidebar -->
+		<aside class="main-sidebar">
+
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+		
+			<div layout:fragment="content"></div>
+			
+			<!--/* 
+			<th:block th:include="${contentPage} :: #template-content" />
+			*/-->
+		</div>
+		<!-- /.content-wrapper -->
+		
+		<div class="modal fade" id="admintoolError" tabindex="-1" role="dialog" aria-labelledby="admintoolErrorLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content alert alert-danger">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="admintoolErrorLabel"><i class="icon fa fa-ban"></i>
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.title', 'Error')" />
+						</h4>
+					</div>
+					<div class="modal-body" id="admintoolErrorBody">
+						<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.error.text', 'An Error has been occurred')" />
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal fade modal-danger" tabindex="-1" role="dialog" id="admintoolConfirmModal" aria-labelledby="admintoolConfirmModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="admintoolConfirmModalLabel">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.text', 'Confirm')" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p id="admintoolConfirmModalText">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.confirm.title', 'Do you confirm?')" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.btn.close', 'Close')" />
+						</button>
+						<button type="button" class="btn btn-outline" id="btn_admintool_confirm">
+							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.modal.btn.confirm', 'Confirm')" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<!-- Main Footer -->
+		<footer class="main-footer" th:include="admintool/includes/footer.inc">
+			
+		</footer>
+
+		<aside class="control-sidebar control-sidebar-dark" th:replace="admintool/includes/controlSideBar.inc"></aside>
+		
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+		       immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+	
+	<th:block th:include="admintool/includes/js.inc" />
+	
+</body>
+
+</html>
