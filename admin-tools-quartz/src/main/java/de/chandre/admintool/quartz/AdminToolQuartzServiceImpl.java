@@ -388,6 +388,7 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 			return;
 		}
 		Trigger triggerFound = findTrigger(groupName, jobName, triggerGroup, triggerName);
+		
 		if (null != triggerFound) {
 			// pause only the one trigger of job
 			changeTriggerState(triggerFound);
@@ -431,12 +432,25 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	 * @see de.chandre.admintool.quartz.AdminToolQuartzService#triggerJob(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void triggerJob(String groupName, String jobName) throws SchedulerException {
+	public void executeJob(String groupName, String jobName) throws SchedulerException {
 		if (!config.isExecuteJobAllowed()) {
 			LOGGER.warn("not allowed to execute any job");
 			return;
 		}
 		scheduler.triggerJob(new JobKey(jobName, groupName));
+	}
+	
+	@Override
+	public void executeJobTrigger(String groupName, String jobName, final String triggerGroup, final String triggerName) throws SchedulerException {
+		if (!config.isExecuteJobAllowed()) {
+			LOGGER.warn("not allowed to execute any job trigger");
+			return;
+		}
+		Trigger triggerFound = findTrigger(groupName, jobName, triggerGroup, triggerName);
+		
+		if (null != triggerFound) {
+			scheduler.triggerJob(new JobKey(jobName, groupName), triggerFound.getJobDataMap());
+		}
 	}
 	
 	private JobDetail findJob(String groupName, String jobName) throws SchedulerException {

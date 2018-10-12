@@ -108,6 +108,16 @@ function initHandlers() {
 			});
 		});
 	});
+	$('.executeJobTrigger').each(function() {
+		var $el = $(this);
+		$el.click(function() {
+			doActionOnJob(this, '/admintool/quartz/executeJobTrigger', function (result, $btn) {
+				if (result == 'true') {
+					reloadIncludeDelayed(500);
+				}
+			});
+		});
+	});
 	$('.interruptJob, .interruptTrigger').each(function() {
 		var $el = $(this);
 		$el.click(function() {
