@@ -21,6 +21,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * 
+ * @author Andre
+ *
+ */
 @Service("adminToolPropertiesService")
 public class AdminToolPropertiesService {
 	
@@ -88,7 +93,13 @@ public class AdminToolPropertiesService {
             PropertySource<?> ps = iter.next();
             if (ps instanceof EnumerablePropertySource<?>) {
                 for (String propName : ((EnumerablePropertySource<?>) ps).getPropertyNames()) {
-                	res.put(propName, env.getProperty(propName));
+                	try {
+                		res.put(propName, env.getProperty(propName));
+					} catch (Exception e) {
+						LOGGER.warn("unresolveable property: " + propName);
+						res.put(propName, "UNRESOLVEABLE");
+					}
+                	
                 }
             }
         }
@@ -126,7 +137,7 @@ public class AdminToolPropertiesService {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			LOGGER.error(e.getMessage(), e);
 		}
 		
 		return Collections.emptyMap();
