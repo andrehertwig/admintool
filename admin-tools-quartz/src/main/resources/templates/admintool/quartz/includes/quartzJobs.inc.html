@@ -42,6 +42,7 @@
 							</td>
 							<td class="center-middle">
 								<a class="text-muted" th:href="'#box_' + ${group} + '_' + ${jobKey.getName()}" data-toggle="collapse" aria-expanded="false"
+									th:id="'#collapse_box_' + ${group} + '_' + ${jobKey.getName()}"
 									data-th-attr="data-target='#triggersOf_' + ${jobKey.getName()}"
 									th:attr="aria-controls='triggersOf_' + ${jobKey.getName()}">
 									<i class="fa fa-bars fa-3x" th:title="${@adminToolQuartzService.getTriggers(jobKey).size()} + ' Trigger(s)'"></i>

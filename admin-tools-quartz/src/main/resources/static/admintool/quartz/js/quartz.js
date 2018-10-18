@@ -404,10 +404,19 @@ function reloadIncludeDelayed(delay) {
 
 function reloadInclude() {
 	$('#reloadInclude').addClass('fa-spin');
+	var opened = $('.collapse.in');
+	
 	sendRequest("/admintool/quartz/quartzJobsInc", "GET", "text", function(result) {
 		$("#quartzJobsInc").html(result);
 		initHandlers();
 		$('#reloadInclude').removeClass('fa-spin');
+		
+		if(opened.length > 0) {
+			console.log(opened);
+			opened.each(function(){
+				getByID($(this).attr('id')).collapse('show');
+			});
+		}
 	});
 }
 
