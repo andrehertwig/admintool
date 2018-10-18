@@ -36,10 +36,10 @@
 				
 				<div class="box-header with-border" th:if="${@adminToolFilebrowserConfig.isManipulationAllowed()}">
 					<div class="row text-center">
-						<button th:if="${@adminToolFilebrowserConfig.isCreateFolderAllowed()}" id="createDir" type="button" class="btn btn-default">
+						<button th:if="${@adminToolFilebrowserService.isCreateFolderAllowed(currentDir)}" id="createDir" type="button" class="btn btn-default">
 							<i class="fa fa-folder" aria-hidden="true"></i>
 						</button>
-						<button th:if="${@adminToolFilebrowserConfig.isUploadAllowed()}" id="uploadFile" type="button" class="btn btn-default">
+						<button th:if="${@adminToolFilebrowserService.isUploadFileAllowed(currentDir)}" id="uploadFile" type="button" class="btn btn-default">
 							<i class="fa fa-upload" aria-hidden="true"></i>
 						</button>
 					</div>
@@ -156,7 +156,7 @@
 													<i class="fa fa-info-circle" aria-hidden="true"></i>
 												</a>
 												<button class="btn btn-xs btn-danger pull-right delete" type="button"
-													th:if="${@adminToolFilebrowserConfig.isDelteFolderAllowed()}"
+													th:if="${@adminToolFilebrowserService.isDeleteFolderAllowed(directory)}"
 													th:attr="data-resource=${encodedAbsolutePath}"
 													title="Delete folder"
 													>
@@ -200,7 +200,7 @@
 												</a>
 												
 												<button class="btn btn-xs btn-danger pull-right delete" type="button"
-													th:if="${@adminToolFilebrowserConfig.isDelteFileAllowed()}"
+													th:if="${@adminToolFilebrowserService.isDeleteFileAllowed(file)}"
 													th:attr="data-resource=${encodedAbsolutePath}"
 													title="Delete file"
 													>
@@ -255,7 +255,7 @@
 				
 			</div>
 			
-			<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadLabel">
+			<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadLabel" th:if="${@adminToolFilebrowserService.isUploadFileAllowed(currentDir)}">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -288,7 +288,7 @@
 				</div>
 			</div>
 			
-			<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel">
+			<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel" th:if="${@adminToolFilebrowserService.isCreateFolderAllowed(currentDir)}" >
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -364,7 +364,8 @@
 			
 			<div class="modal modal-default fade" tabindex="-1" role="dialog" id="infoModals" aria-labelledby="fileInfoModalLabel"></div>
 
-<script type="text/template" id="qq-template">
+<th:block th:if="${@adminToolFilebrowserService.isUploadFileAllowed(currentDir)}">
+	<script type="text/template" id="qq-template">
 	<div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
 		<div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
 			<div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"/>
@@ -443,6 +444,7 @@
 		</dialog>
 	</div>
 	</script>
+</th:block>
 		</section>
 		
 		

@@ -22,8 +22,18 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	@Autowired
 	private AdminToolFileviewerConfig config;
 	
+	@Autowired(required=false)
+	private ATFileviewerPermissionHandler permissionHandler;
+	
 	@Override
 	public void isFileAllowed(File file, boolean write) throws GenericFilebrowserException {
+		
+		if (null != permissionHandler) {
+			if (!permissionHandler.isAllowed(file, write)) {
+				throw new GenericFilebrowserException("insufficient file permissions");
+			}
+		}
+		
 		try {
 			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly()) || !isExtensionAllowedAndReadable(file)
 					|| (write && !isExtensionAllowedAndWriteable(file))) {
@@ -60,6 +70,9 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	
 	@Override
 	public boolean isChangeable(File file) {
+		if (null != permissionHandler) {
+			return permissionHandler.isChangeable(file);
+		}
 		if (isExtensionAllowedAndWriteable(file)) {
 			return true;
 		}

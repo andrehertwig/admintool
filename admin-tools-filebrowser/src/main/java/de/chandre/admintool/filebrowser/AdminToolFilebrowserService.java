@@ -226,4 +226,12 @@ public interface AdminToolFilebrowserService {
 	 * @since 1.1.6
 	 */
 	boolean saveFile(String decodedPath, MultipartFile upload) throws IOException, GenericFilebrowserException;
+
+	boolean isCreateFolderAllowed(String currentDir);
+
+	boolean isUploadFileAllowed(String currentDir);
+
+	boolean isDeleteFileAllowed(File currentFile);
+
+	boolean isDeleteFolderAllowed(File currentDir);
 }

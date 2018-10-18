@@ -84,11 +84,11 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	@Value("${admintool.filebrowser.createFolderAllowed:false}")
 	private boolean createFolderAllowed;
 	
-	@Value("${admintool.filebrowser.delteFolderAllowed:false}")
-	private boolean delteFolderAllowed;
+	@Value("${admintool.filebrowser.deleteFolderAllowed:false}")
+	private boolean deleteFolderAllowed;
 	
-	@Value("${admintool.filebrowser.delteFileAllowed:false}")
-	private boolean delteFileAllowed;
+	@Value("${admintool.filebrowser.deleteFileAllowed:false}")
+	private boolean deleteFileAllowed;
 	
 	@Value("${admintool.filebrowser.notDeletableIfNotWriteable:true}")
 	private boolean notDeletableIfNotWriteable;
@@ -290,8 +290,8 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	 * @return
 	 * @since 1.1.6
 	 */
-	public boolean isDelteFolderAllowed() {
-		return isEnabled() && delteFolderAllowed;
+	public boolean isDeleteFolderAllowed() {
+		return isEnabled() && deleteFolderAllowed;
 	}
 
 	/**
@@ -299,8 +299,8 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 	 * @return
 	 * @since 1.1.6
 	 */
-	public boolean isDelteFileAllowed() {
-		return isEnabled() && delteFileAllowed;
+	public boolean isDeleteFileAllowed() {
+		return isEnabled() && deleteFileAllowed;
 	}
 	
 	/**
@@ -411,8 +411,8 @@ public class AdminToolFilebrowserConfig implements AdminToolConfig {
 				.append(", downloadCompressedAllowed=").append(downloadCompressedAllowed).append(", securityRoles=")
 				.append(securityRoles).append(", componentPosition=").append(componentPosition)
 				.append(", uploadAllowed=").append(uploadAllowed).append(", createFolderAllowed=")
-				.append(createFolderAllowed).append(", delteFolderAllowed=").append(delteFolderAllowed)
-				.append(", delteFileAllowed=").append(delteFileAllowed).append(", infoCrc32=").append(infoCrc32)
+				.append(createFolderAllowed).append(", delteFolderAllowed=").append(deleteFolderAllowed)
+				.append(", delteFileAllowed=").append(deleteFileAllowed).append(", infoCrc32=").append(infoCrc32)
 				.append(", infoMD5=").append(infoMD5).append(", infoSha1=").append(infoSha1).append(", infoSha256=")
 				.append(infoSha256).append(", maxFilesizeForHashes=").append(maxFilesizeForHashes)
 				.append(", countFolderSize=").append(countFolderSize).append("]");

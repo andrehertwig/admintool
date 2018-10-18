@@ -79,8 +79,10 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	@Autowired
 	private Environment env;
 	
-	private List<String> rootDirsCache = new ArrayList<>();
+	@Autowired(required=false)
+	private ATFilebrowserPermissionHandler permissionHandler;
 	
+	private List<String> rootDirsCache = new ArrayList<>();
 	
 	@Override
 	public Collection<String> getRootDirs() {
@@ -557,10 +559,10 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 		}
 		File file = new File(path);
 		
-		if (file.isDirectory() && !config.isDelteFolderAllowed()) {
+		if (file.isDirectory() && !config.isDeleteFolderAllowed()) {
 			throw new GenericFilebrowserException("Delete folders functionality is deactivated.");
 		}
-		if (file.isFile() && !config.isDelteFileAllowed()) {
+		if (file.isFile() && !config.isDeleteFileAllowed()) {
 			throw new GenericFilebrowserException("Delete files functionality is deactivated.");
 		}
 		if (!isAllowed(file, true)) {
@@ -696,5 +698,37 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			return true;
 		} 
 		throw new GenericFilebrowserException("upload not allowed");
+	}
+	
+	@Override
+	public boolean isCreateFolderAllowed(String currentDir) {
+		if (null != permissionHandler) {
+			return permissionHandler.isCreateFolderAllowed(currentDir);
+		}
+		return config.isCreateFolderAllowed();
+	}
+	
+	@Override
+	public boolean isUploadFileAllowed(String currentDir) {
+		if (null != permissionHandler) {
+			return permissionHandler.isUploadFileAllowed(currentDir);
+		}
+		return config.isUploadAllowed();
+	}
+	
+	@Override
+	public boolean isDeleteFileAllowed(File currentFile) {
+		if (null != permissionHandler) {
+			return permissionHandler.isDeleteFileAllowed(currentFile);
+		}
+		return config.isDeleteFileAllowed();
+	}
+	
+	@Override
+	public boolean isDeleteFolderAllowed(File currentDir) {
+		if (null != permissionHandler) {
+			return permissionHandler.isDeleteFolderAllowed(currentDir);
+		}
+		return config.isDeleteFolderAllowed();
 	}
 }
