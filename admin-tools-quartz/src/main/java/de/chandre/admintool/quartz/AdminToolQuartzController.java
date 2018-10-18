@@ -71,9 +71,27 @@ public class AdminToolQuartzController extends AbstractAdminController {
 			return false;
 		}
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug(String.format("receiving triggerJob request for group: %s, job: %s", groupName, jobName));
+			LOGGER.debug(String.format("receiving executeJob request for group: %s, job: %s", groupName, jobName));
 		try {
-			quarzService.triggerJob(groupName, jobName);
+			quarzService.executeJob(groupName, jobName);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(path = "/executeJobTrigger/{jobGroup}/{jobName}/{triggerGroup}/{triggerName}", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public boolean executeJobTrigger(@PathVariable("jobGroup") String groupName, @PathVariable("jobName") String jobName,
+			@PathVariable("triggerGroup") String triggerGroup, @PathVariable("triggerName") String triggerName, 
+			HttpServletRequest request) {
+		if (!config.isEnabled()) {
+			return false;
+		}
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(String.format("receiving executeJobTrigger request for group: %s, job: %s, trigger: %s", groupName, jobName, triggerName));
+		try {
+			quarzService.executeJobTrigger(groupName, jobName, triggerGroup, triggerName);
 		} catch (Exception e) {
 			return false;
 		}

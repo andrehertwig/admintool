@@ -232,11 +232,22 @@ public interface AdminToolQuartzService {
 
 	/**
 	 * executes the job immediately with a custom trigger
-	 * @param groupName
-	 * @param jobName
+	 * @param groupName job group
+	 * @param jobName job name
 	 * @throws SchedulerException
 	 */
-	void triggerJob(String groupName, String jobName) throws SchedulerException;
+	void executeJob(String groupName, String jobName) throws SchedulerException;
+	
+	/**
+	 * executes the job immediately with a custom trigger but the data map from original trigger will be used
+	 * @param groupName job group
+	 * @param jobName job name
+	 * @param triggerGroup trigger group
+	 * @param triggerName trigger name
+	 * @throws SchedulerException
+	 */
+	void executeJobTrigger(String groupName, String jobName, String triggerGroup, String triggerName)
+			throws SchedulerException;
 
 	/**
 	 * removes trigger from job

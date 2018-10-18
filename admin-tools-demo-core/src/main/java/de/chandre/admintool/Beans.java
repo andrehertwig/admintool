@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.sql.DataSource;
@@ -21,6 +22,7 @@ import org.apache.logging.log4j.core.appender.db.jdbc.ColumnConfig;
 import org.apache.logging.log4j.core.appender.db.jdbc.JdbcAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -41,7 +43,6 @@ import de.chandre.admintool.log4j2.AdminToolLog4j2Util;
 import de.chandre.admintool.security.commons.auth.thymeleaf.ATSpringSecurityDialect;
 
 @org.springframework.context.annotation.Configuration
-@EnableMBeanExport
 public class Beans {
 	
 	private static final Logger LOGGER = LogManager.getFormatterLogger(Beans.class);
@@ -104,8 +105,10 @@ public class Beans {
 	 * @throws MalformedObjectNameException
 	 */
 	@Bean
-	public boolean adminToolMbeansExported(MBeanExporter mbeanExporter, List<AdminToolConfig> configs) throws MalformedObjectNameException {
-		
+	public boolean adminToolMbeansExported(MBeanServer server, BeanFactory beanFactory, List<AdminToolConfig> configs) throws MalformedObjectNameException {
+		MBeanExporter mbeanExporter = new MBeanExporter();
+		mbeanExporter.setServer(server);
+		mbeanExporter.setBeanFactory(beanFactory);
 		SimpleReflectiveMBeanInfoAssembler assembler = new SimpleReflectiveMBeanInfoAssembler();
 		mbeanExporter.setAssembler(assembler);
 		mbeanExporter.setAutodetect(true);
