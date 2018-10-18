@@ -11,6 +11,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Session listener to remove unused outputstream appender to free resources
+ * you may have to configure @ServletComponentScan 
+ * @author André
+ *
+ */
 @WebListener
 @Component
 public class AdminToolLog4jSessionListener implements HttpSessionListener {
@@ -31,10 +37,11 @@ public class AdminToolLog4jSessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent sessionEvent) {
 		String appenderName = (String) sessionEvent.getSession().getAttribute(AdminToolLog4j2Util.SESSION_APPENDER_NAME);
 		try {
-			log4jUtil.closeOutputStreamAppender(appenderName);
+			if (null != log4jUtil) {
+				log4jUtil.closeOutputStreamAppender(appenderName);
+			}
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 	}
-
 }
