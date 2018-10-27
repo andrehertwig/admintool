@@ -20,7 +20,7 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.6.5</version>
+	<version>1.1.7.1</version>
 </dependency>
 ```
 
