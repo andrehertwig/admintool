@@ -25,16 +25,23 @@ $.extend(AdminTool.Log4j.Loggers.prototype, {
 	},
 	
 	bind : function() {
+		var ctx = this;
 		if($('#parentLoggers').length > 0) {
-			$('#parentLoggers').on('init.dt', $.proxy(this.initEvents, this)).dataTable();
-			$('#parentLoggers').on('page.dt', $.proxy(this.initEvents, this));
+			var dataTableRoot = $('#parentLoggers').DataTable();
+			dataTableRoot.on( 'draw', function() {
+				console.log( 'Redraw root finished');
+				getByID('log4jContent').adminToolLog4jLoggers('initButtons', '.root');
+			});
 		}
-		var eventsInitialized = false;
 		if($('#loggers').length > 0) {
-			$('#loggers').on('init.dt', $.proxy(this.initEvents, this)).dataTable();
-			$('#loggers').on('page.dt', $.proxy(this.initEvents, this));
-			eventsInitialized = true;
+			var dataTable = $('#loggers').DataTable();
+			dataTable.on( 'draw', function() {
+				console.log( 'Redraw child finished');
+				getByID('log4jContent').adminToolLog4jLoggers('initButtons', '.child');
+			});
 		}
+		
+		this.initEvents();
 		
 		if($('.removeCustomLogger').length > 0) {
 			$('.removeCustomLogger').click(function(){
@@ -54,25 +61,29 @@ $.extend(AdminTool.Log4j.Loggers.prototype, {
 	},
 	
 	initEvents : function() {
-		$('.changeLogger').each(function() {
-			 var $el = $(this);
-			 $el.unbind('click');
-			 $el.on({'click': function(){
-				 getByID('log4jContent').adminToolLog4jLoggers('changeLogLevel', $el)}
-			 });
-		});
-		$('.manageLogger').each(function() {
-			 var $el = $(this);
-			 $el.unbind('click');
-			 $el.on({'click': function(){
-				 getByID('log4jContent').adminToolLog4jLoggers('manageLogger', $el)}
-			 });
-		});
-		getByID('addCustomLogger').on({'click': function(){
-			 getByID('log4jContent').adminToolLog4jLoggers('manageLogger', null)}
+		this.initButtons();
+		getByID('addCustomLogger').on('click', function(){
+			 getByID('log4jContent').adminToolLog4jLoggers('manageLogger', null);
 		});
 		
 		this.initModalInputs();
+	},
+	
+	initButtons: function(loggergroupclazz='') {
+		$(loggergroupclazz+'.changeLogger').each(function() {
+			var $el = $(this);
+			$el.unbind('click');
+			$el.on('click', function(){
+				getByID('log4jContent').adminToolLog4jLoggers('changeLogLevel', $el);
+			});
+		});
+		$(loggergroupclazz+'.manageLogger').each(function() {
+			 var $el = $(this);
+			 $el.unbind('click');
+			 $el.on('click', function(){
+				 getByID('log4jContent').adminToolLog4jLoggers('manageLogger', $el);
+			 });
+		});
 	},
 	
 	initModalInputs: function() {

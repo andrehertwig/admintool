@@ -57,11 +57,11 @@
 										<button
 											th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
 											th:text="${level}"
-											th:class="'changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
+											th:class="'root changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
 										</button>
 										<button
 											th:title="Change"
-											class="manageLogger btn btn-xs">
+											class="root manageLogger btn btn-xs">
 											<i class="fa fa-wrench" aria-hidden="true"></i>
 										</button>
 									</td>
@@ -114,7 +114,7 @@
 										<button
 											th:each="level, levelState : ${@adminToolLog4j2Util.getLevels()}"
 											th:text="${level}"
-											th:class="'changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
+											th:class="'child changeLogger btn btn-xs ' +  ${@adminToolLog4j2Util.getLoggerLevelCss('btn', level)}">
 										</button>
 									</td>
 								</tr>
