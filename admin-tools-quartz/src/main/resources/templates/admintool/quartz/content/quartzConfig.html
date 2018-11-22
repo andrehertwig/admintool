@@ -35,13 +35,13 @@
 									<td><th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.quartz.config.tbl.isRunning', 'Scheduler is running')" /></td>
 									<td>
 										<button id="changeScheduler"
-											th:if="${@adminToolQuartzConfig.isStopSchedulerAllowed()}"
+											th:if="${@adminToolQuartzService.isStopSchedulerAllowed()}"
 											th:class="${@adminToolQuartzService.isSchedulerRunning()} ? 'btn btn-success' : 'btn btn-danger'"
 											th:text="${@adminToolQuartzService.isSchedulerRunning()}"
 											th:title="${@adminToolQuartzService.isSchedulerRunning()} ? 'stop' : 'start'">
 										</button>
 										<span
-											th:unless="${@adminToolQuartzConfig.isStopSchedulerAllowed()}"
+											th:unless="${@adminToolQuartzService.isStopSchedulerAllowed()}"
 											th:class="${@adminToolQuartzService.isSchedulerRunning()} ? 'btn btn-success' : 'btn btn-danger'"
 											th:text="${@adminToolQuartzService.isSchedulerRunning()}">
 										</span>

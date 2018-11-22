@@ -18,8 +18,8 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.DailyTimeIntervalScheduleBuilder;
 import org.quartz.DailyTimeIntervalTrigger;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.InterruptableJob;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -63,6 +63,9 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 	
 	@Autowired
 	private AdminToolQuartzConfig config;
+	
+	@Autowired(required=false)
+	private ATQuartzPermissionHandler permissionHandler;
 	
 	private String prevGroup;
 	private String prevJob;
@@ -844,4 +847,49 @@ public class AdminToolQuartzServiceImpl implements AdminToolQuartzService
 		}
 		return builder.build();
 	}
+	
+	@Override
+	public boolean isChangeJobInfoAllowed() {
+		return null != permissionHandler ? permissionHandler.isChangeJobInfoAllowed() : config.isChangeJobInfoAllowed();
+	}
+	
+	@Override
+	public boolean isExecuteJobAllowed() {
+		return null != permissionHandler ? permissionHandler.isExecuteJobAllowed() : config.isExecuteJobAllowed();
+	}
+	
+	@Override
+	public boolean isInterruptJobAllowed() {
+		return null != permissionHandler ? permissionHandler.isInterruptJobAllowed() : config.isInterruptJobAllowed();
+	}
+	
+	@Override
+	public boolean isAddTriggerAllowed() {
+		return null != permissionHandler ? permissionHandler.isAddTriggerAllowed() : config.isAddTriggerAllowed();
+	}
+	
+	@Override
+	public boolean isChangetTriggerStateAllowed() {
+		return null != permissionHandler ? permissionHandler.isChangetTriggerStateAllowed() : config.isChangetTriggerStateAllowed();
+	}
+	
+	@Override
+	public boolean isInterruptTriggerAllowed() {
+		return null != permissionHandler ? permissionHandler.isInterruptTriggerAllowed() : config.isInterruptTriggerAllowed();
+	}
+
+	@Override
+	public boolean isChangeTriggerAllowed() {
+		return null != permissionHandler ? permissionHandler.isChangeTriggerAllowed() : config.isChangeTriggerAllowed();
+	}
+
+	@Override
+	public boolean isRemoveTriggerAllowed() {
+		return null != permissionHandler ? permissionHandler.isRemoveTriggerAllowed() : config.isRemoveTriggerAllowed();
+	}
+	@Override
+	public boolean isStopSchedulerAllowed() {
+		return null != permissionHandler ? permissionHandler.isStopSchedulerAllowed() : config.isStopSchedulerAllowed();
+	}
+	
 }

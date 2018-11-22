@@ -18,7 +18,7 @@ import de.chandre.admintool.quartz.JobTriggerTO.TriggerType;
  * @author Andre
  *
  */
-public interface AdminToolQuartzService {
+public interface AdminToolQuartzService extends ATQuartzPermissions {
 
 	/**
 	 * starts the scheduler process
@@ -306,5 +306,5 @@ public interface AdminToolQuartzService {
 	 * @throws SchedulerException
 	 */
 	boolean changeTrigger(JobTriggerTO triggerTO, boolean add) throws SchedulerException;
-
+	
 }
