@@ -40,6 +40,7 @@
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.displayName', 'Display Name')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.description', 'Description')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.active', 'Active')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.userGroupCount', 'UserGroups')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.created', 'Created')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.roles.tableHead.modified', 'Modified')" /></th>
 									</tr>
@@ -54,6 +55,7 @@
 										<td>
 											<button th:id="'state_' + ${role.getName()}" class="btn btn-sm state" th:text="${role.isActive()}"></button>
 										</td>
+										<td class="userGroupCount" th:text="${@adminToolSecDBRoleService.getAssignedUserGroupCount(role)}"></td>
 										<td th:text="${role.getCreated()} ? ${#temporals.format(role.getCreated(), 'yyyy-MM-dd HH:mm')} : 'n/a'" 
 											th:title="${role.getCreatedBy()}"></td>
 										<td th:text="${role.getModified()} ? ${#temporals.format(role.getModified(), 'yyyy-MM-dd HH:mm')} : 'n/a'"

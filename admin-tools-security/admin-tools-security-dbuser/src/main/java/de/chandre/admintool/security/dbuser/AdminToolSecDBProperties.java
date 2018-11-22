@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 
-@Component
+@Component("adminToolSecDBProperties")
 @ConfigurationProperties(prefix = AdminToolSecDBProperties.PREFIX, ignoreUnknownFields = true)
 public class AdminToolSecDBProperties {
 	

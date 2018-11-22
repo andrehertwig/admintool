@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>de.chandre.quartz</groupId>
 			<artifactId>spring-boot-starter-quartz</artifactId>
-			<version>1.0.5-SNAPSHOT</version>
+			<version>1.0.5</version>
 		</dependency>
 		
 		<dependency>
@@ -119,6 +119,11 @@
 			<groupId>net.bull.javamelody</groupId>
 			<artifactId>javamelody-spring-boot-starter</artifactId>
 			<version>1.72.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-core</artifactId>
+			<version>1.74.0</version>
 		</dependency>
 		
 		<dependency>

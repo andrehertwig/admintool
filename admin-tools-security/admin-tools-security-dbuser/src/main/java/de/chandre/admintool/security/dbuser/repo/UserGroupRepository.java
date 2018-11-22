@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 
 /**
@@ -28,4 +29,6 @@ public interface UserGroupRepository extends JpaRepository<ATUserGroup, String> 
 	List<ATUserGroup> findByIdIn(Set<String> ids);
 	
 	void deleteByName(String name);
+
+	int countUserGroupsByRolesIn(List<ATRole> asList);
 }

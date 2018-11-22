@@ -2,6 +2,7 @@ package de.chandre.admintool.security.dbuser.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,7 @@ import de.chandre.admintool.security.dbuser.Constants;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.repo.RoleRepository;
+import de.chandre.admintool.security.dbuser.repo.UserGroupRepository;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBRoleValidator;
 
 /**
@@ -33,6 +35,9 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBRoleServiceImpl.class);
 
+	@Autowired
+	private UserGroupRepository userGroupRepository;
+	
 	@Autowired
 	private RoleRepository roleRepository;
 	
@@ -60,6 +65,11 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	}
 	
 	@Override
+	public int getAssignedUserGroupCount(ATRole role) {
+		return userGroupRepository.countUserGroupsByRolesIn(Arrays.asList(role));
+	}
+	
+	@Override
 	public Set<ATError> addRolesIfNotExists(Set<String> roles) {
 		
 		Set<String> rolesToAdd = roles.stream().map(role -> ATRole.checkForPrefix(role)).collect(Collectors.toSet());
@@ -69,13 +79,15 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 			existingRoles.forEach(role -> {
 				if(rolesToAdd.contains(role.getName())) {
 					rolesToAdd.remove(role.getName());
+					LOGGER.trace("remove role '"+role.getName()+"' from new roles to add");
 				}
 			});
 		}
 		Set<ATError> errors = new HashSet<>();
-		LOGGER.info("there are " + rolesToAdd.size() + " roles to add");
+		LOGGER.debug("there are " + rolesToAdd.size() + " roles to add");
 		if (!CollectionUtils.isEmpty(rolesToAdd)) {
 			rolesToAdd.forEach(roleToAdd -> {
+				LOGGER.trace("add new role: " + roleToAdd);
 				errors.addAll(addRole(roleToAdd, roleToAdd, 
 						"automatically created: " + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), false));
 			});

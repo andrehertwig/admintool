@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser.service;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 import de.chandre.admintool.security.dbuser.repo.RoleRepository;
 import de.chandre.admintool.security.dbuser.repo.UserGroupRepository;
+import de.chandre.admintool.security.dbuser.repo.UserRepository;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserGroupValidator;
 
 /**
@@ -31,6 +33,9 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	
 	private static final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserGroupServiceImpl.class);
 
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Autowired
 	private UserGroupRepository userGroupRepository;
 	
@@ -55,6 +60,11 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 		return userGroupRepository.saveAndFlush(userGroup);
 	}
 	
+	@Override
+	public int getAssignedUserCount(ATUserGroup userGroup) {
+		return userRepository.countUsersByUserGroupsIn(Arrays.asList(userGroup));
+	}
+	
 	private Set<ATError> setAndValidateAndSave(AccessRelationTO accessRelationTO, ATUserGroup userGroup) {
 		userGroup.setName(StringUtils.trimToNull(accessRelationTO.getName()));
 		userGroup.setDisplayName(StringUtils.trimToNull(accessRelationTO.getDisplayName()));
@@ -62,7 +72,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 		userGroup.setActive(accessRelationTO.isActive());
 
 		if (!CollectionUtils.isEmpty(accessRelationTO.getRelationNames())) {
-			userGroup.setRoles(roleRepository.findByIdIn(accessRelationTO.getRelationNames()));
+			userGroup.setRoles(roleRepository.findByNameIn(accessRelationTO.getRelationNames()));
 		} else {
 			userGroup.getRoles().clear();
 		}

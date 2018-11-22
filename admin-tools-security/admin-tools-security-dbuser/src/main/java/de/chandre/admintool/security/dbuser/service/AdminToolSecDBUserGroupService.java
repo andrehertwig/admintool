@@ -28,4 +28,6 @@ public interface AdminToolSecDBUserGroupService {
 
 	void removeByName(String name);
 
+	int getAssignedUserCount(ATUserGroup userGroup);
+
 }

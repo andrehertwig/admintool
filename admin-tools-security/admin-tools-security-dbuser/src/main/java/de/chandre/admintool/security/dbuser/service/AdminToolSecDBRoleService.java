@@ -28,4 +28,6 @@ public interface AdminToolSecDBRoleService {
 
 	Set<ATError> addRolesIfNotExists(Set<String> roles);
 
+	int getAssignedUserGroupCount(ATRole role);
+
 }

@@ -110,7 +110,11 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 		for ( ConstraintViolation<S> violation : constraintViolations ) {
 			String type = violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName();
 			String attrPath = violation.getPropertyPath().toString();
-			errors.add(new ATError((attrPath + "." + type), getMessage(type, new Object[]{attrPath}, violation.getMessage()), attrPath));
+			String msgKey = attrPath + "." + type;
+			if (null != violation.getMessage() && violation.getMessage().startsWith(MSG_KEY_PREFIX)) {
+				msgKey = violation.getMessage();
+			}
+			errors.add(new ATError((attrPath + "." + type), getMessage(msgKey, new Object[]{attrPath}, violation.getMessage()), attrPath));
 		}
 	}
 	
@@ -153,7 +157,8 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 					fieldName));
 		}
 		if (null != validations.getPattern() && !validations.getPattern().matcher(value).matches()) {
-			errors.add(new ATError(errorCode, getMessage(errorCode + ".patternMismatch", null, fieldName + " doesn't matches the required pattern"), fieldName));
+			errors.add(new ATError(errorCode, getMessage(errorCode + ".patternMismatch", new Object[] {validations.getPatternStr()},
+					fieldName + " doesn't matches the required pattern"), fieldName));
 		}
 	}
 	

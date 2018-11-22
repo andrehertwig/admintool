@@ -50,7 +50,7 @@ $.extend(AdminTool.UserGroups.prototype, {
 			}
 			return selections;
 		}
-		return getByID(id).val().split(",");
+		return getByID(id +'Group').val().split(",");
 	},
 	
 	additionalValidation: function() {
@@ -59,6 +59,14 @@ $.extend(AdminTool.UserGroups.prototype, {
 			return true
 		}
 		return false;
+	},
+	
+	addRelationData: function(relationData) {
+		var relationNames = this.getFormSelectChoice('roles', true);
+		if (null == relationNames || relationNames.length == 0) {
+			return;
+		}
+		relationData["relationNames"] = relationNames;
 	}
 	
 });

@@ -37,6 +37,7 @@
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.description', 'Description')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.active', 'Active')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.roles', 'Assigned Roles')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.userCount', 'Users')" /></th>
 										<th></th>
 									</tr>
 								</thead>
@@ -52,7 +53,9 @@
 											<button th:id="'state_' + ${usergroup.getName()}" class="btn btn-sm state" th:text="${usergroup.isActive()}"></button>
 										</td>
 										<td class="roles" th:text="${#strings.listJoin(usergroup.getRoleDisplayNames(),', ')}" 
-											th:attr="data-roles=${#strings.listJoin(usergroup.getRoleNames(),',')}"></td>
+											th:attr="data-roles=${#strings.listJoin(usergroup.getRoleNames(),',')}">
+										</td>
+										<td class="userCount" th:text="${@adminToolSecDBUserGroupService.getAssignedUserCount(usergroup)}"></td>
 										<td>
 											<button class="btn btn-xs remove" th:id="'remove_' + ${usergroup.getName()}" title="Delete usergroup">
 												<i class="fa fa-trash-o" aria-hidden="true"></i>

@@ -20,12 +20,20 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			removeRelationURL	: '/admintool/accessmanagement/{{type}}/remove/name/{{name}}',
 		});
 		
-		$("#relation_table").DataTable();
-		
+		this.gatherAllRelationNames();
 		this.validationUtil = new AdminTool.ValidationUtil(this);
 		this.relationDataFormId = '#relationDataForm';
 		
-		this.gatherAllRelationNames();
+		
+		var dataTable = $("#relation_table").DataTable();
+		//init removeables and stoppables after page change
+		var ctx = this;
+		dataTable.on( 'draw', function () {
+		    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+			ctx.initStatusChange();
+			ctx.initShowRelation();
+			ctx.initRemoveRelation();
+		});
 		
 		this.initStatusChange();
 		this.initShowRelation();
@@ -65,6 +73,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 		
 		var ctx = this;
 		$(".state").each(function () {
+			$(this).off();
 			$(this).on('click', $.proxy(ctx.changeState, ctx, this));
 		});
 	},
@@ -105,6 +114,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 		Mustache.parse(this.options.addRelationURL);
 		var $addButton = $('#addRelation');
 		if ($addButton && $addButton.length > 0) {
+			$addButton.off();
 			$addButton.on('click', $.proxy(this.prepareAddRelationForm, this));
 		}
 	},
@@ -133,6 +143,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 		Mustache.parse(this.options.updateRelationURL);
 		var ctx = this;
 		$(".edit").each(function () {
+			$(this).off();
 			$(this).on('click', $.proxy(ctx.showRelation, ctx, this));
 		});
 	},
@@ -195,6 +206,8 @@ $.extend(AdminTool.AccessRelation.prototype, {
 	
 	additionalValidation: function() {},
 	
+	addRelationData: function(relationData) {},
+	
 	saveRelation: function(existingRelation) {
 		
 		var hasErrors = this.validationUtil.validate(this.relationDataFormId);
@@ -216,6 +229,8 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			"description" 	: getByID('description').val(),
 			"active" 		: getByID('active').is(':checked')
 		}
+		this.addRelationData(relationData);
+		
 		var uri = this.options.addRelationURL;
 		if (existingRelation) {
 			uri = this.options.updateRelationURL;
@@ -260,6 +275,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			Mustache.parse(this.options.removeRelationURL);
 			var ctx = this;
 			$removeables.each(function() {
+				$(this).off();
 				$(this).on('click', $.proxy(ctx.initRemoveRelationConfirm, ctx, this));
 			});
 		}

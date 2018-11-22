@@ -28,7 +28,7 @@ $.extend(AdminTool.Users.prototype, {
 		this.select2Util = new AdminTool.Select2Util(this);
 		this.passwordGen = new AdminTool.PasswordGenerator(this);
 		
-		$("#users_table").DataTable();
+		
 		//prepare
 		Mustache.parse(this.select2Util.getSelectMultipleMustacheTemplate());
 		
@@ -45,6 +45,17 @@ $.extend(AdminTool.Users.prototype, {
 		this.initClients();
 		this.select2Util.initClassicSelect('locale', '#userDataModal');
 		this.select2Util.initClassicSelect('timeZone', '#userDataModal');
+		
+		var dataTable = $("#users_table").DataTable();
+		var ctx = this;
+		dataTable.on( 'draw', function () {
+		    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+			ctx.initStatusChange();
+			ctx.initShowUser();
+			ctx.initShowUserInfo();
+			ctx.initRemoveUser();
+			ctx.initResetPassword();
+		});
 		
 		//init functions
 		this.initStatusChange();
@@ -93,6 +104,7 @@ $.extend(AdminTool.Users.prototype, {
 		var pluginId = this.elementId;
 		$(".state").each(function () {
 			var button = $(this);
+			button.off();
 			button.click(function() {
 				getByID(pluginId).users("changeState", this);
 			});
@@ -136,6 +148,7 @@ $.extend(AdminTool.Users.prototype, {
 			var pluginId = this.elementId;
 			$resetables.each(function() {
 				var $el = $(this);
+				$el.off();
 				$el.click(function() {
 					getByID(pluginId).users("initResetPasswordConfirm", this);
 				});
@@ -176,6 +189,7 @@ $.extend(AdminTool.Users.prototype, {
 	 ++++++++++++++++++++++ */
 	
 	initAddUser: function() {
+		$('#addUser').off();
 		$('#addUser').on('click', $.proxy(this.prepareAddUserForm, this));
 	},
 	
@@ -208,6 +222,7 @@ $.extend(AdminTool.Users.prototype, {
 	initShowUser: function() {
 		var pluginId = this.elementId;
 		$(".showUser").each(function () {
+			$(this).off();
 			$(this).click(function() {
 				getByID(pluginId).users("showUser", this);
 			});
@@ -410,6 +425,7 @@ $.extend(AdminTool.Users.prototype, {
 			var pluginId = this.elementId;
 			$removeables.each(function() {
 				var $el = $(this);
+				$el.off();
 				$el.click(function() {
 					getByID(pluginId).users("initRemoveUserConfirm", this);
 				});
@@ -455,6 +471,7 @@ $.extend(AdminTool.Users.prototype, {
 			var pluginId = this.elementId;
 			$infoBtns.each(function() {
 				var $el = $(this);
+				$el.off();
 				$el.click(function() {
 					getByID(pluginId).users("showUserInfo", this);
 				});

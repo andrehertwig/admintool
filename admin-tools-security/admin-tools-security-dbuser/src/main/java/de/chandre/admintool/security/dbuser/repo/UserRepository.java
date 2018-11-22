@@ -1,9 +1,12 @@
 package de.chandre.admintool.security.dbuser.repo;
 
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import de.chandre.admintool.security.dbuser.domain.ATUser;
+import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 
 /**
  * 
@@ -18,4 +21,6 @@ public interface UserRepository extends JpaRepository<ATUser, String> {
 	ATUser findByPasswordLinkHash(String passwordLinkHash);
 	
 	void deleteByUsername(String username);
+	
+	int countUsersByUserGroupsIn(Collection<ATUserGroup> userGroups);
 }

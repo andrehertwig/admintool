@@ -71,7 +71,7 @@
 											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.userGroups', 'UserGroup relations')" /></th>
 											<td id="info_currentUserGroups" th:text="${#strings.listJoin(currentUser.getUserGroupDisplayNames(),', ')}"></td>
 										</tr>
-										<tr>
+										<tr th:if="${@adminToolSecDBProperties.getClients().isEnabled()}">
 											<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.clients', 'Client relations')" /></th>
 											<td id="info_clients" th:text="${#strings.listJoin(currentUser.getClientDisplayNames(),', ')}"></td>
 										</tr>

@@ -65,7 +65,7 @@ public class AdminToolSecDBUserValidatorImpl extends AbstractValidator<User> imp
 		if (validatePassword) {
 			validate(user.getPassword(), properties.getUsers().getPassword(), "password", errors);
 		}
-		validate(user.getFirstName(), properties.getUsers().getFirstName(), "firstBame", errors);
+		validate(user.getFirstName(), properties.getUsers().getFirstName(), "firstName", errors);
 		validate(user.getLastName(), properties.getUsers().getLastName(), "lastName", errors);
 		validate(user.getPhone(), properties.getUsers().getPhone(), "phone", errors);
 		validate(user.getEmail(), properties.getUsers().getEmail(), "email", errors);
