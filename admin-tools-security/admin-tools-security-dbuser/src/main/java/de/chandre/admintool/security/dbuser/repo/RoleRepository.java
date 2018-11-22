@@ -22,6 +22,8 @@ public interface RoleRepository extends JpaRepository<ATRole, String> {
 	@Query("SELECT r.name FROM ATRole r")
 	List<String> findAllRoleNames();
 	
+	List<ATRole> findByNameIn(Set<String> ids);
+	
 	List<ATRole> findByIdIn(Set<String> ids);
 	
 	void deleteByName(String name);

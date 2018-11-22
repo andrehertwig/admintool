@@ -1,6 +1,7 @@
 package de.chandre.admintool.security.dbuser;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -17,6 +18,8 @@ import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentImpl;
 import de.chandre.admintool.core.component.MenuEntry;
+import de.chandre.admintool.core.sec.AdminToolRoles;
+import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
 
 /**
  * 
@@ -37,6 +40,11 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 	@Autowired
 	private TemplateEngine templateEngine;
 	
+	@Autowired
+	private AdminToolSecDBRoleService roleService;
+	
+	@Autowired Collection<AdminToolRoles> atRoles;
+	
 	@PostConstruct
 	public void configureAdminTool()
 	{
@@ -51,13 +59,13 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 			templateEngine.addDialect(timeDialect);
 		}
 		
-		LOGGER.info("adding database user management view to admin tool");
+		int roleInterfaceSize = atRoles != null ? atRoles.size() : 0;
+		LOGGER.info("found " + roleInterfaceSize + " interfaces with roles");
+		if (roleInterfaceSize > 0) {
+			roleService.addRolesIfNotExists(atRoles.stream().flatMap(roleI -> roleI.getRoles().stream()).collect(Collectors.toSet()));
+		}
 		
-		HashSet<String> allRoles = new HashSet<>();
-		allRoles.addAll(config.getSecurityRolesClients());
-		allRoles.addAll(config.getSecurityRolesGroups());
-		allRoles.addAll(config.getSecurityRolesRoles());
-		allRoles.addAll(config.getSecurityRolesUsers());
+		LOGGER.info("adding database user management view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl.AdminComponentBuilder()
 				.displayName("User-Management")

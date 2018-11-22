@@ -1,8 +1,11 @@
 package de.chandre.admintool.security.dbuser.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -54,6 +57,30 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	@Override
 	public ATRole saveRole(ATRole role) {
 		return roleRepository.saveAndFlush(role);
+	}
+	
+	@Override
+	public Set<ATError> addRolesIfNotExists(Set<String> roles) {
+		
+		Set<String> rolesToAdd = roles.stream().map(role -> ATRole.checkForPrefix(role)).collect(Collectors.toSet());
+		
+		List<ATRole> existingRoles = roleRepository.findByNameIn(rolesToAdd);
+		if (!CollectionUtils.isEmpty(existingRoles)) {
+			existingRoles.forEach(role -> {
+				if(rolesToAdd.contains(role.getName())) {
+					rolesToAdd.remove(role.getName());
+				}
+			});
+		}
+		Set<ATError> errors = new HashSet<>();
+		LOGGER.info("there are " + rolesToAdd.size() + " roles to add");
+		if (!CollectionUtils.isEmpty(rolesToAdd)) {
+			rolesToAdd.forEach(roleToAdd -> {
+				errors.addAll(addRole(roleToAdd, roleToAdd, 
+						"automatically created: " + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), false));
+			});
+		}
+		return errors;
 	}
 	
 	@Override

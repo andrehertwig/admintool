@@ -26,4 +26,6 @@ public interface AdminToolSecDBRoleService {
 
 	Set<ATError> updateRole(AccessRelationTO accessRelationTO);
 
+	Set<ATError> addRolesIfNotExists(Set<String> roles);
+
 }

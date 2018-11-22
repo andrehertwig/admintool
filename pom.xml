@@ -69,12 +69,12 @@
 				<module>admin-tools-properties</module>
 				<!-- 
 				<module>admin-tools-cluster</module>
-				<module>admin-tools-demo-fileserver</module>
+				
 				-->
 				<module>admin-tools-demo-core</module>
 				<module>admin-tools-demo-jar</module>
 				<module>admin-tools-demo-war</module>
-				
+				<module>admin-tools-demo-fileserver</module>
 			</modules>
 			<!--
 			<build>
