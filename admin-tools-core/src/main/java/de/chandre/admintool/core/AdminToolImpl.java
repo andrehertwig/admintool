@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import de.chandre.admintool.core.component.AdminComponent;
 import de.chandre.admintool.core.component.AdminComponentComparator;
 import de.chandre.admintool.core.component.MenuEntry;
+import de.chandre.admintool.core.ui.ATFooterInformation;
 
 /**
  * the admin tool<br>
@@ -44,6 +45,8 @@ public class AdminToolImpl implements AdminTool
 	private Map<String, Boolean> globalStyleSheets = new LinkedHashMap<>();
 	
 	private Properties version;
+	
+	private ATFooterInformation footerInformation;
 	
 	@PostConstruct
 	private void loadVersion() {
@@ -155,10 +158,22 @@ public class AdminToolImpl implements AdminTool
 	}
 
 	@Override
+	public ATFooterInformation getFooterInformation() {
+		return footerInformation;
+	}
+
+	@Override
+	public void setFooterInformation(ATFooterInformation footerInformation) {
+		this.footerInformation = footerInformation;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AdminToolImpl [components=").append(components).append(", globalJavaScripts=")
-				.append(globalJavaScripts).append(", globalStyleSheets=").append(globalStyleSheets).append("]");
+		builder.append("AdminToolImpl [components=").append(components)
+				.append(", globalJavaScripts=").append(globalJavaScripts).append(", globalStyleSheets=")
+				.append(globalStyleSheets).append(", version=").append(version).append(", footerInformation=")
+				.append(footerInformation).append("]");
 		return builder.toString();
 	}
 	

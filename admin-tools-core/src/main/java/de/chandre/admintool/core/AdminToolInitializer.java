@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import de.chandre.admintool.core.ui.ATFooterInformation;
+
 /**
  * adds the global common configuration of CSS and JS to adminTool
  * 
@@ -22,10 +24,15 @@ public class AdminToolInitializer extends AbstractAdminToolLoader
 	@Autowired
 	private AdminTool adminTool;
 	
+	@Autowired(required=false)
+	private ATFooterInformation footerInformation;
+	
 	@PostConstruct
 	public void init() {
 		
 		LOGGER.info("initializing AdminTool");
+		
+		adminTool.setFooterInformation(footerInformation);
 		
 		boolean relative = !shouldCDNsUsed();
 		String adminLtePrefix = getAdminLTEPrefixUri();

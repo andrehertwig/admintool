@@ -1,7 +1,18 @@
 
 <!-- To the right -->
-<div class="pull-right hidden-xs">The Admin-UI</div>
+<div class="pull-right hidden-xs" th:text="${@adminTool.getFooterInformation() != null} ? ${@adminTool.getFooterInformation().getApplicationName()}">The Admin-UI</div>
 <!-- Default to the left -->
+<div class="pull-left hidden-xs" th:if="${@adminTool.getFooterInformation() != null}">
+	<th:block th:if="${!#strings.isEmpty(@adminTool.getFooterInformation().getAppVersion())}">
+		<strong><th:block th:text="${@adminTool.getFooterInformation().getAppVersionDescription()}"></th:block>: 
+		</strong><th:block th:text="${@adminTool.getFooterInformation().getAppVersion()}"></th:block>
+	</th:block>
+	<th:block th:if="${!#strings.isEmpty(@adminTool.getFooterInformation().getAppBuildTime())}">
+		<small>(<th:block th:text="${@adminTool.getFooterInformation().getAppBuildTimeDescritpion()}"></th:block>: 
+			<th:block th:text="${@adminTool.getFooterInformation().getAppBuildTime()}"></th:block>)</small>
+	</th:block>
+	&nbsp;&nbsp;
+</div>
 <strong>Copyright &copy; 2018 <a href="https://github.com/andrehertwig/admintool">AdminTool</a>.
 </strong> All rights reserved. <small>(Version: <th:block th:text="${@adminTool.getVersion()}"></th:block>)</small>
 

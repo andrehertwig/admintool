@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.chandre.admintool.core.component.AdminComponent;
+import de.chandre.admintool.core.ui.ATFooterInformation;
 
 /**
  * AdminTool core interface to get and add components.<br>
@@ -136,4 +137,16 @@ public interface AdminTool {
 	 * @return admintool version
 	 */
 	String getVersion();
+
+	/**
+	 * @since 1.2.0
+	 * @return null or footer information class
+	 */
+	ATFooterInformation getFooterInformation();
+
+	/**
+	 * @since 1.2.0
+	 * @param footerInformation footer information class
+	 */
+	void setFooterInformation(ATFooterInformation footerInformation);
 }
