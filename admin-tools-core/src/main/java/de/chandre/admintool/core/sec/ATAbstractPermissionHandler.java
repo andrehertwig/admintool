@@ -24,10 +24,10 @@ public abstract class ATAbstractPermissionHandler {
 		return authentication;
 	}
 	
-	protected boolean userHasRole(String role) {
+	protected boolean userHasRole(ATInitRole role) {
 		Authentication auth = getAuthentication();
 		return auth != null
-				? auth.getAuthorities().stream().filter(ga -> ga.getAuthority().equals(AdminToolRoles.PREFIX + role))
+				? auth.getAuthorities().stream().filter(ga -> ga.getAuthority().equals(AdminToolRoles.PREFIX + role.getName()))
 						.findFirst().isPresent()
 				: false;
 	}

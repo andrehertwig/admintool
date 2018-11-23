@@ -13,8 +13,8 @@ $.extend(AdminTool.Users.prototype, {
 	postInit: function() {
 		
 		this.options = $.extend( this.options, {
-			getUserGroupsURL 	: '/admintool/accessmanagement/usergroup/get',
-			getClientsURL	 	: '/admintool/accessmanagement/client/get',
+			getUserGroupsURL 	: '/admintool/accessmanagement/user/usergroups',
+			getClientsURL	 	: '/admintool/accessmanagement/user/clients',
 			changeUserStateURL 	: '/admintool/accessmanagement/user/changeState/{{type}}',
 			addUserURL 			: '/admintool/accessmanagement/user/add',
 			updateUserURL 		: '/admintool/accessmanagement/user/update',

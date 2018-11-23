@@ -39,7 +39,7 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		
 		AdminComponent component = new AdminComponentImpl();
 		component.setPosition(config.getComponentPosition());
-		component.getSecurityRoles().addAll(config.getSecurityRoles());
+//		component.getSecurityRoles().addAll(config.getSecurityRoles());
 		component.addAdditionalCSS("/static/admintool/css/log4j2.css", true);
 		component.addAdditionalJS("/static/admintool/js/log4j2.js", true);
 		component.setDisplayName("Log4j2 Console");
@@ -55,12 +55,14 @@ public class AdminToolLog4j2Loader extends AbstractAdminToolLoader
 		mainMenu.setName("log4j2");
 		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "log4j.displayName");
 		
-		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2Loggers").displayName("Log4j2 Loggers")
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2/log4j2Loggers").displayName("Log4j2 Loggers")
 				.resouceMessageKeySuffix("log4j.loggers.displayName").target("content/log4j2")
-				.securityRoles(config.getSecurityRoles()).build());
-		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2Console").displayName("Log4j2 Console")
+//				.securityRoles(config.getSecurityRoles())
+				.build());
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("log4j2/log4j2Console").displayName("Log4j2 Console")
 				.resouceMessageKeySuffix("log4j.console.displayName").target("content/log4j2Console")
-				.securityRoles(config.getSecurityRoles()).build());
+//				.securityRoles(config.getSecurityRoles())
+				.build());
 		
 		component.setMainMenu(mainMenu);
 		

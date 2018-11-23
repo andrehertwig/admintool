@@ -86,8 +86,13 @@ public class AdminToolFileviewerController extends AbstractAdminController {
 		File currentFile = new File(file);
 		model.put("currentDir", currentFile.getParent());
 		
-		fileviewerService.writeStringToFile(currentFile, encoding, fileContent);
-		
+		try {
+			fileviewerService.writeStringToFile(currentFile, encoding, fileContent);
+		} catch (GenericFilebrowserException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new GenericFilebrowserException("Exception while writing content to file: " + e.getMessage(), e);
+		}
 		return AdminTool.ROOTCONTEXT_NAME + AdminTool.SLASH + templatePath;
 	}
 	

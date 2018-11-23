@@ -12,5 +12,5 @@ public interface AdminToolRoles {
 	
 	public static String PREFIX = "ROLE_";
 	
-	Collection<String> getRoles();
+	Collection<ATInitRole> getRoles();
 }

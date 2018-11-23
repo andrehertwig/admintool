@@ -45,7 +45,7 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		
 		AdminComponent component = new AdminComponentImpl();
 		component.setPosition(quartzConfig.getComponentPosition());
-		component.getSecurityRoles().addAll(allRoles);
+//		component.getSecurityRoles().addAll(allRoles);
 		component.setDisplayName("Quartz");
 		
 		if (StringUtils.isEmpty(quartzConfig.getValidatorCDNPath())) {
@@ -61,16 +61,18 @@ public class AdminToolQuartzLoader extends AbstractAdminToolLoader
 		mainMenu.setName("quartz");
 		mainMenu.setTarget("content/quartz");
 		mainMenu.setHide(quartzConfig.isHideMenuItem());
-		mainMenu.setSecurityRoles(allRoles);
+//		mainMenu.setSecurityRoles(allRoles);
 		mainMenu.setResouceMessageKey(AdminTool.RESOURCE_MESSAGE_KEY_PREFIX + "quartz.displayName");
 		component.setMainMenu(mainMenu);
 		
-		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartzconfig").displayName("Quartz-Config")
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartz/quartzconfig").displayName("Quartz-Config")
 				.resouceMessageKeySuffix("quartz.config.displayName").target("quartz/content/quartzConfig")
-				.securityRoles(quartzConfig.getSecurityRolesConfig()).build());
-		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartzjobs").displayName("Quartz-Jobs")
+//				.securityRoles(quartzConfig.getSecurityRolesConfig())
+				.build());
+		mainMenu.addSubmenuEntry(MenuEntry.builder().name("quartz/quartzjobs").displayName("Quartz-Jobs")
 				.resouceMessageKeySuffix("quartz.jobs.displayName").target("quartz/content/quartzJobs")
-				.securityRoles(quartzConfig.getSecurityRolesJobs()).build());
+//				.securityRoles(quartzConfig.getSecurityRolesJobs())
+				.build());
 		adminTool.addComponent(component);
 	}
 }

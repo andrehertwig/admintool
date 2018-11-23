@@ -3,6 +3,7 @@ package de.chandre.admintool.security.dbuser.service;
 import java.util.List;
 import java.util.Set;
 
+import de.chandre.admintool.core.sec.ATInitRole;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATRole;
@@ -10,7 +11,7 @@ import de.chandre.admintool.security.dbuser.domain.ATRole;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 public interface AdminToolSecDBRoleService {
 
@@ -26,7 +27,7 @@ public interface AdminToolSecDBRoleService {
 
 	Set<ATError> updateRole(AccessRelationTO accessRelationTO);
 
-	Set<ATError> addRolesIfNotExists(Set<String> roles);
+	Set<ATError> addRolesIfNotExists(Set<ATInitRole> roles);
 
 	int getAssignedUserGroupCount(ATRole role);
 

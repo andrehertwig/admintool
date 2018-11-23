@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import de.chandre.admintool.core.sec.ATInitRole;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.dbuser.Constants;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
@@ -27,7 +30,7 @@ import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBRol
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 @Service("adminToolSecDBRoleService")
 @Transactional
@@ -70,14 +73,14 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	}
 	
 	@Override
-	public Set<ATError> addRolesIfNotExists(Set<String> roles) {
+	public Set<ATError> addRolesIfNotExists(Set<ATInitRole> roles) {
 		
-		Set<String> rolesToAdd = roles.stream().map(role -> ATRole.checkForPrefix(role)).collect(Collectors.toSet());
+		Map<String, ATInitRole> rolesToAdd = roles.stream().collect(Collectors.toMap(ATInitRole::getNamePrefixed, Function.identity()));
 		
-		List<ATRole> existingRoles = roleRepository.findByNameIn(rolesToAdd);
+		List<ATRole> existingRoles = roleRepository.findByNameIn(rolesToAdd.keySet());
 		if (!CollectionUtils.isEmpty(existingRoles)) {
 			existingRoles.forEach(role -> {
-				if(rolesToAdd.contains(role.getName())) {
+				if(rolesToAdd.containsKey(role.getName())) {
 					rolesToAdd.remove(role.getName());
 					LOGGER.trace("remove role '"+role.getName()+"' from new roles to add");
 				}
@@ -86,10 +89,15 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 		Set<ATError> errors = new HashSet<>();
 		LOGGER.debug("there are " + rolesToAdd.size() + " roles to add");
 		if (!CollectionUtils.isEmpty(rolesToAdd)) {
-			rolesToAdd.forEach(roleToAdd -> {
-				LOGGER.trace("add new role: " + roleToAdd);
-				errors.addAll(addRole(roleToAdd, roleToAdd, 
-						"automatically created: " + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), false));
+			rolesToAdd.entrySet().forEach(roleEntry -> {
+				LOGGER.trace("add new role: " + roleEntry.getValue());
+				errors.addAll(
+						addRole(
+								roleEntry.getKey(),
+								StringUtils.isNotEmpty(roleEntry.getValue().getDisplayName()) ? roleEntry.getValue().getDisplayName() : roleEntry.getValue().getName(),
+								StringUtils.isNotEmpty(roleEntry.getValue().getDescription()) ? roleEntry.getValue().getDescription() :
+									("automatically created: " + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)), 
+								roleEntry.getValue().isActive()));
 			});
 		}
 		return errors;

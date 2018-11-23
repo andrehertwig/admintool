@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author Andre
  *
  */
-public interface AdminToolFilebrowserService {
+public interface AdminToolFilebrowserService extends ATFileBrowserPermissions {
 	
 	/**
 	 * checks if file is allowed to access
@@ -29,7 +29,7 @@ public interface AdminToolFilebrowserService {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException;
+	boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException;
 	
 	/**
 	 * to url-encode a string
@@ -226,12 +226,4 @@ public interface AdminToolFilebrowserService {
 	 * @since 1.1.6
 	 */
 	boolean saveFile(String decodedPath, MultipartFile upload) throws IOException, GenericFilebrowserException;
-
-	boolean isCreateFolderAllowed(String currentDir);
-
-	boolean isUploadFileAllowed(String currentDir);
-
-	boolean isDeleteFileAllowed(File currentFile);
-
-	boolean isDeleteFolderAllowed(File currentDir);
 }

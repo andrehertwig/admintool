@@ -17,14 +17,16 @@ import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
+import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
+import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserGroupValidator;
 
 /**
  * UserGroup Controller
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Controller
@@ -35,6 +37,9 @@ public class AdminToolSecDBUserGroupController extends ATSecDBAbctractController
 
 	@Autowired
 	private AdminToolSecDBUserGroupService userGroupService;
+
+	@Autowired
+	private AdminToolSecDBRoleService roleService;
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
@@ -47,6 +52,18 @@ public class AdminToolSecDBUserGroupController extends ATSecDBAbctractController
 	public Select2GroupedTO<?> getUserGroups() {
 		List<ATUserGroup> usergroups = userGroupService.getAllUserGroups();
 		return transformUtil.transformAccessRelationToSelect2(usergroups);
+	}
+	
+	/**
+	 * required to have this method under /accessmanagement/usergroup because 
+	 * if editor has no privilege to see roles but edit userGroups, functionality will not work
+	 * @return
+	 */
+	@RequestMapping(path="/roles", method=RequestMethod.GET)
+	@ResponseBody
+	public Select2GroupedTO<?> getRoles() {
+		List<ATRole> roles = roleService.getAllRoles();
+		return transformUtil.transformAccessRelationToSelect2(roles);
 	}
 	
 	@RequestMapping(path="/state/name/{name}", method=RequestMethod.POST)

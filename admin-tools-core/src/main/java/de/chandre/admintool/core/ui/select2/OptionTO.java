@@ -2,7 +2,7 @@ package de.chandre.admintool.core.ui.select2;
 
 import java.io.Serializable;
 
-public class OptionTO implements Serializable {
+public class OptionTO implements Serializable, Comparable<OptionTO> {
 	private static final long serialVersionUID = 6804008394662197234L;
 	
 	private String id;
@@ -56,5 +56,10 @@ public class OptionTO implements Serializable {
 		builder.append("OptionTO [id=").append(id).append(", text=").append(text).append(", selected=").append(selected)
 				.append(", disabled=").append(disabled).append("]");
 		return builder.toString();
+	}
+
+	@Override
+	public int compareTo(OptionTO o) {
+		return this.id.compareTo(o.getId());
 	}
 }

@@ -12,7 +12,7 @@ $.extend(AdminTool.UserGroups.prototype, {
 	
 	additionalPostInits: function() {
 		this.options = $.extend( this.options, {
-			getRolesURL : '/admintool/accessmanagement/role/get',
+			getRolesURL : '/admintool/accessmanagement/usergroup/roles',
 		});
 		
 		this.select2Util = new AdminTool.Select2Util(this);

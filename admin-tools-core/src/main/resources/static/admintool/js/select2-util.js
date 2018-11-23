@@ -70,7 +70,12 @@ AdminTool.Select2Util = function(parent) {
 	this.initSelectFormFromData = function(selectObject, selectId, placeholder='', width='100%', allowClear=false, theme='default', parent=null,
 				hideIfNoData=false, closestSelctor = '.row') {
 		if (selectObject && typeof selectObject === "object" && selectObject.result && selectObject.result.length > 0) {
-			selectObject.result.hasChildren = function() {return this.children && this.children.length > 0;};
+			//add function for mustache to check if collection has children
+			$.each( selectObject.result, function( key, value ) {
+				value["hasChildren"] = function(){
+					return this.children && this.children.length > 0;
+				};
+			});
 			getByID(selectId).replaceWith(Mustache.render(self.getSelectMultipleMustacheTemplate(), {result: selectObject.result, selectId: selectId}));
 			
 			self.initSelect(selectId, parent, placeholder, width, allowClear, theme);

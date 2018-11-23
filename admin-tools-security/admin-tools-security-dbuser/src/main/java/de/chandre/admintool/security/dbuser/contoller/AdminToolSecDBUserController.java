@@ -1,6 +1,7 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -15,20 +16,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.ui.ATError;
+import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.core.utils.ReflectUtils;
 import de.chandre.admintool.security.commons.auth.UserStateType;
 import de.chandre.admintool.security.commons.auth.UserTO;
 import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
 import de.chandre.admintool.security.dbuser.auth.ExtUserTO;
+import de.chandre.admintool.security.dbuser.domain.ATClient;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
+import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
+import de.chandre.admintool.security.dbuser.service.AdminToolSecDBClientService;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsService;
+import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
 import de.chandre.admintool.security.dbuser.service.comm.SendException;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserValidator;
 
 /**
  * User controller
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Controller
@@ -39,9 +45,18 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 	
 	@Autowired
 	private AdminToolSecDBUserDetailsService userService;
+	
+	@Autowired
+	private AdminToolSecDBUserGroupService userGroupService;
+	
+	@Autowired
+	private AdminToolSecDBClientService clientService;
 
 	@Autowired
 	private AdminToolSecDBUserValidator userValidator;
+	
+	@Autowired
+	private AdminToolSecDBTransformUtil transformUtil;
 	
 	@RequestMapping(value="/get/{userId}", method=RequestMethod.GET)
 	@ResponseBody
@@ -55,6 +70,30 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 		output.setClients(user.getClientNames());
 		output.setActiveRoles(user.getActiveAuthorityNames());
 		return output;
+	}
+	
+	/**
+	 * required to have this method under /accessmanagement/user because 
+	 * if editor has no privilege to see userGroups but edit users, functionality will not work
+	 * @return
+	 */
+	@RequestMapping(path="/usergroups", method=RequestMethod.GET)
+	@ResponseBody
+	public Select2GroupedTO<?> getUserGroups() {
+		List<ATUserGroup> usergroups = userGroupService.getAllUserGroups();
+		return transformUtil.transformAccessRelationToSelect2(usergroups);
+	}
+	
+	/**
+	 * required to have this method under /accessmanagement/user because 
+	 * if editor has no privilege to see clients but edit users, functionality will not work
+	 * @return
+	 */
+	@RequestMapping(path="/clients", method=RequestMethod.GET)
+	@ResponseBody
+	public Select2GroupedTO<?> getClients() {
+		List<ATClient> clients = clientService.getAllClients();
+		return transformUtil.transformAccessRelationToSelect2(clients);
 	}
 	
 	@RequestMapping(value="/changeState/{type}", method=RequestMethod.POST)

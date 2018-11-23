@@ -1,23 +1,14 @@
 package de.chandre.admintool.filebrowser;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 
- * @author André
- * @since 1.1.7
- *
+ * @author Andre
+ * @since 1.2.0
  */
-public interface ATFilebrowserPermissionHandler {
+public interface ATFilebrowserPermissionHandler extends ATFileBrowserPermissions{
 	
-	boolean isAllowed(File path, boolean write);
-	
-	boolean isCreateFolderAllowed(String currentDir);
-
-	boolean isUploadFileAllowed(String currentDir);
-
-	boolean isDeleteFileAllowed(File currentFile);
-
-	boolean isDeleteFolderAllowed(File currentDir);
-	
+	boolean isAllowed(File path, boolean write, AdminToolFilebrowserService delegate) throws IOException;
 }

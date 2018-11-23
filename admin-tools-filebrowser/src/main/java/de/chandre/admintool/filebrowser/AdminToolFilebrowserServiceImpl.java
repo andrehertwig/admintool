@@ -514,7 +514,15 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 	 * @throws IOException
 	 */
 	protected boolean isAllowed(File path, boolean write) throws IOException {
-		return isAllowed(path, write, config.isReadOnly());
+		return isAllowedInternal(path, write, config.isReadOnly());
+	}
+	
+	@Override
+	protected boolean isAllowedInternal(File path, boolean write, boolean configReadOnly) throws IOException {
+		if (null != permissionHandler) {
+			return permissionHandler.isAllowed(path, write, this);
+		}
+		return super.isAllowed(path, write, configReadOnly);
 	}
 	
 	@Override
@@ -730,5 +738,21 @@ public class AdminToolFilebrowserServiceImpl extends AbstractFileBrowserService 
 			return permissionHandler.isDeleteFolderAllowed(currentDir);
 		}
 		return config.isDeleteFolderAllowed();
+	}
+
+	@Override
+	public boolean isDownloadAllowed(File currentDir) {
+		if (null != permissionHandler) {
+			return permissionHandler.isDownloadAllowed(currentDir);
+		}
+		return config.isDownloadAllowed();
+	}
+
+	@Override
+	public boolean isDownloadCompressedAllowed(File currentDir) {
+		if (null != permissionHandler) {
+			return permissionHandler.isDownloadCompressedAllowed(currentDir);
+		}
+		return config.isDownloadCompressedAllowed();
 	}
 }

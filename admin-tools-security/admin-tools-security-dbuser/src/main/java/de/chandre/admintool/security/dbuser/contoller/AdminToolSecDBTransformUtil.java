@@ -1,8 +1,10 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import de.chandre.admintool.core.ui.select2.OptionGroupTO;
 import de.chandre.admintool.core.ui.select2.OptionTO;
@@ -12,7 +14,7 @@ import de.chandre.admintool.security.dbuser.domain.AccessRelation;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Service
@@ -31,6 +33,13 @@ public class AdminToolSecDBTransformUtil {
 				optionInactive.addChild(option);
 			}
 		});
+		
+		if (!CollectionUtils.isEmpty(optionActive.getChildren())) {
+			Collections.sort(optionActive.getChildren());
+		}
+		if (!CollectionUtils.isEmpty(optionInactive.getChildren())) {
+			Collections.sort(optionInactive.getChildren());
+		}
 		
 		if (optionActive.hasChildren() && optionInactive.hasChildren()) {
 			response.addResult(optionActive);

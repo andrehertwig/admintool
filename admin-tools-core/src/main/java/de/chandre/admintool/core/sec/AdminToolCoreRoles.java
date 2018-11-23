@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.sec.ATInitRole.ATInitRoleBuilder;
 import de.chandre.admintool.core.sec.AdminToolRoles;
 
 /**
@@ -16,10 +17,11 @@ import de.chandre.admintool.core.sec.AdminToolRoles;
 @Component
 public class AdminToolCoreRoles implements AdminToolRoles {
 	
-	public static String ROLE_ATCORE = "ATCORE";
+	public static final ATInitRole ROLE_ATCORE = ATInitRoleBuilder.builder()
+			.name("ATCORE").displayName("AdminTool Core Role").description("This is used for everthing which has no special role").active(true).build();
 	
 	@Override
-	public Collection<String> getRoles() {
+	public Collection<ATInitRole> getRoles() {
 		return Collections.unmodifiableList(Arrays.asList(ROLE_ATCORE));
 	}
 	

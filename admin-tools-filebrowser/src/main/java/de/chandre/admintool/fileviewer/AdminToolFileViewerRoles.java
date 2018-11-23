@@ -6,7 +6,9 @@ import java.util.Collections;
 
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.sec.ATInitRole;
 import de.chandre.admintool.core.sec.AdminToolRoles;
+import de.chandre.admintool.core.sec.ATInitRole.ATInitRoleBuilder;
 
 /**
  * 
@@ -16,11 +18,15 @@ import de.chandre.admintool.core.sec.AdminToolRoles;
 @Component
 public class AdminToolFileViewerRoles implements AdminToolRoles {
 	
-	public static String ROLE_FILEVIEWER = "FILEVIEWER";
+	public static final ATInitRole ROLE_FILEVIEWER = ATInitRoleBuilder.builder()
+			.name("FILEVIEWER").displayName("FileViewer Role").description("This role is for the usage of file viewer").build();
+	
+	public static final ATInitRole ROLE_FILEVIEWER_CHANGE = ATInitRoleBuilder.builder()
+			.name("FILEVIEWER_CHANGE").displayName("FileViewer Change").description("Allows change file functionality").build();
 	
 	@Override
-	public Collection<String> getRoles() {
-		return Collections.unmodifiableList(Arrays.asList(ROLE_FILEVIEWER));
+	public Collection<ATInitRole> getRoles() {
+		return Collections.unmodifiableList(Arrays.asList(ROLE_FILEVIEWER, ROLE_FILEVIEWER_CHANGE));
 	}
 	
 }

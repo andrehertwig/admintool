@@ -164,7 +164,7 @@
 												</button>
 												
 												<a class="btn btn-xs btn-primary pull-right" 
-													th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}" 
+													th:if="${@adminToolFilebrowserService.isDownloadCompressedAllowed(directory)}" 
 													th:href="@{${adminToolContext} + '/filebrowser/zip'(selectedFile=${encodedAbsolutePath})}"
 													title="Compress and Download"
 													>
@@ -208,7 +208,7 @@
 												</button>
 											
 												<a class="btn btn-xs btn-primary pull-right" 
-													th:if="${@adminToolFilebrowserConfig.isDownloadAllowed()}" 
+													th:if="${@adminToolFilebrowserService.isDownloadAllowed(file)}" 
 													th:href="@{${adminToolContext} + '/filebrowser/download'(file=${encodedAbsolutePath})}"
 													title="Download"
 													>
@@ -216,7 +216,7 @@
 												</a>
 													
 												<a class="btn btn-xs btn-primary pull-right" 
-													th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}" 
+													th:if="${@adminToolFilebrowserService.isDownloadCompressedAllowed(file)}" 
 													th:href="@{${adminToolContext} + '/filebrowser/zip'(selectedFile=${encodedAbsolutePath})}"
 													title="Compress and Download"
 													>
@@ -240,7 +240,7 @@
 							</table>
 						</div>
 					</div>
-					<div class="box-footer clearfix" th:if="${@adminToolFilebrowserConfig.isDownloadCompressedAllowed()}">
+					<div class="box-footer clearfix" th:if="${@adminToolFilebrowserService.isDownloadCompressedAllowed(null)}">
 						<button id="selectDirs" type="button" class="btn btn-default">
 							<th:block th:include="admintool/fragments/fragements :: message ('ui.admintool.core.filebrowser.btn.selectAllDirs', 'Select all dirs')" />
 						</button>

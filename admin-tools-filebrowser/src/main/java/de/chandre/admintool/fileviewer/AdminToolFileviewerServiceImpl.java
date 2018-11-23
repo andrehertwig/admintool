@@ -28,12 +28,6 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	@Override
 	public void isFileAllowed(File file, boolean write) throws GenericFilebrowserException {
 		
-		if (null != permissionHandler) {
-			if (!permissionHandler.isAllowed(file, write)) {
-				throw new GenericFilebrowserException("insufficient file permissions");
-			}
-		}
-		
 		try {
 			if (!config.isEnabled() || !isAllowed(file, write, config.isReadOnly()) || !isExtensionAllowedAndReadable(file)
 					|| (write && !isExtensionAllowedAndWriteable(file))) {
@@ -42,6 +36,17 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 		} catch (IOException e) {
 			throw new GenericFilebrowserException("Error while try to check file permission: " + e.getMessage(), e);
 		}
+	}
+	
+	@Override
+	protected boolean isAllowedInternal(File path, boolean write, boolean configReadOnly) throws IOException, GenericFilebrowserException {
+		if (null != permissionHandler) {
+			if (!permissionHandler.isAllowed(path, write, this)) {
+				throw new GenericFilebrowserException("insufficient file permissions");
+			}
+		}
+		isFileAllowed(path, write);
+		return true;
 	}
 	
 	@Override
@@ -71,7 +76,7 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	@Override
 	public boolean isChangeable(File file) {
 		if (null != permissionHandler) {
-			return permissionHandler.isChangeable(file);
+			return permissionHandler.isChangeable(file, this);
 		}
 		if (isExtensionAllowedAndWriteable(file)) {
 			return true;
@@ -80,8 +85,8 @@ public class AdminToolFileviewerServiceImpl extends AbstractFileBrowserService i
 	}
 	
 	@Override
-	public void writeStringToFile(File file, String encoding, String fileContent) throws GenericFilebrowserException {
-		isFileAllowed(file, true);
+	public void writeStringToFile(File file, String encoding, String fileContent) throws GenericFilebrowserException, IOException {
+		isAllowedInternal(file, true, config.isReadOnly());
 		try {
 			FileUtils.writeStringToFile(file, fileContent, encoding, false);
 		} catch (Exception e) {

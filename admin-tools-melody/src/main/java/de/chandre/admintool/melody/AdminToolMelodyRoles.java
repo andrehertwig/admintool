@@ -6,7 +6,9 @@ import java.util.Collections;
 
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.sec.ATInitRole;
 import de.chandre.admintool.core.sec.AdminToolRoles;
+import de.chandre.admintool.core.sec.ATInitRole.ATInitRoleBuilder;
 
 /**
  * 
@@ -16,10 +18,11 @@ import de.chandre.admintool.core.sec.AdminToolRoles;
 @Component
 public class AdminToolMelodyRoles implements AdminToolRoles {
 	
-	public static String ROLE_MELODY = "MELODY";
+	public static final ATInitRole ROLE_MELODY = ATInitRoleBuilder.builder()
+			.name("MELODY").displayName("JavaMelody Role").description("This role is for the usage of JavaMelody view").build();
 	
 	@Override
-	public Collection<String> getRoles() {
+	public Collection<ATInitRole> getRoles() {
 		return Collections.unmodifiableList(Arrays.asList(ROLE_MELODY));
 	}
 	

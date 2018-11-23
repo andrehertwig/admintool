@@ -6,7 +6,9 @@ import java.util.Collections;
 
 import org.springframework.stereotype.Component;
 
+import de.chandre.admintool.core.sec.ATInitRole;
 import de.chandre.admintool.core.sec.AdminToolRoles;
+import de.chandre.admintool.core.sec.ATInitRole.ATInitRoleBuilder;
 
 /**
  * 
@@ -16,10 +18,11 @@ import de.chandre.admintool.core.sec.AdminToolRoles;
 @Component
 public class AdminToolPropertiesRoles implements AdminToolRoles {
 	
-	public static String ROLE_PROPS = "PROPS";
+	public static final ATInitRole ROLE_PROPS = ATInitRoleBuilder.builder()
+			.name("PROPS").displayName("Properties Role").description("This role is for the usage of properties view").build();
 	
 	@Override
-	public Collection<String> getRoles() {
+	public Collection<ATInitRole> getRoles() {
 		return Collections.unmodifiableList(Arrays.asList(ROLE_PROPS));
 	}
 	

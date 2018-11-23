@@ -24,7 +24,7 @@ import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBCli
 /**
  * Client controller
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Controller
@@ -44,7 +44,7 @@ public class AdminToolSecDBClientController extends ATSecDBAbctractController {
 	
 	@RequestMapping(path="/get", method=RequestMethod.GET)
 	@ResponseBody
-	public Select2GroupedTO<?> getUserGroups() {
+	public Select2GroupedTO<?> getClients() {
 		List<ATClient> clients = clientService.getAllClients();
 		return transformUtil.transformAccessRelationToSelect2(clients);
 	}

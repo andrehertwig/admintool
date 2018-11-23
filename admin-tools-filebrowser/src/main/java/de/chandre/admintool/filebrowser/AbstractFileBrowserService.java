@@ -17,9 +17,6 @@ public abstract class AbstractFileBrowserService {
 	@Autowired
 	private AdminToolFilebrowserConfig config;
 	
-	@Autowired(required=false)
-	private ATFilebrowserPermissionHandler permissionHandler;
-	
 	public String encodeURL(String path) throws UnsupportedEncodingException {
 		return URLEncoder.encode(path, "UTF-8");
 	}
@@ -36,11 +33,6 @@ public abstract class AbstractFileBrowserService {
 	 */
 	public boolean isAllowed(File path, boolean write, boolean configReadOnly) throws IOException {
 		try {
-			
-			if (null != permissionHandler) {
-				return permissionHandler.isAllowed(path, write);
-			}
-			
 			if (configReadOnly && write) return false;
 			if (config.isRestrictedBrowsing()) {
 				if (null != config.getRestrictedPaths() && null != path) {
@@ -57,6 +49,9 @@ public abstract class AbstractFileBrowserService {
 		}
 		return true;
 	}
+	
+	protected abstract boolean isAllowedInternal(File path, boolean write, boolean configReadOnly) throws IOException, GenericFilebrowserException;
+	
 	
 	/**
 	 * returns the file extension by filename separated by last dot

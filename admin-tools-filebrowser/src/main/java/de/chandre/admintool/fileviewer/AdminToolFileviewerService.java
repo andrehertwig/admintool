@@ -79,5 +79,5 @@ public interface AdminToolFileviewerService {
 	 * @param fileContent the new content
 	 * @throws IOException
 	 */
-	void writeStringToFile(File file, String encoding, String fileContent) throws GenericFilebrowserException;
+	void writeStringToFile(File file, String encoding, String fileContent) throws IOException, GenericFilebrowserException;
 }
