@@ -10,7 +10,7 @@ import de.chandre.admintool.security.dbuser.domain.Entity;
  * interface custom validation interceptors
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  * @param <O> The entity to validate will be an implementation of {@link AbstractEntity}
  */
@@ -30,5 +30,5 @@ public interface AdminToolValidationInterceptor<O extends Entity> {
 	 * @param errors not empty! could already contain errors
 	 * @param delegator the calling service. will provide some convenience methods
 	 */
-	void validate(O object, Set<ATError> errors, AbstractValidator delegator);
+	void validate(O object, Set<ATError> errors, AbstractValidator<O> delegator);
 }

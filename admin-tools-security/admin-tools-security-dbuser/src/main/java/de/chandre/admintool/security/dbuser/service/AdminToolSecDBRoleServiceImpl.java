@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -48,6 +49,7 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	private AdminToolSecDBRoleValidator validator;
 	
 	@Override
+	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_ROLES.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS.getName())")
 	public List<ATRole> getAllRoles() {
 		return roleRepository.findAll();
 	}
@@ -104,6 +106,7 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_ROLES_UPDATE.getName())")
 	public Set<ATError> updateRole(AccessRelationTO accessRelationTO) {
 		Set<ATError> errors = null;
 		ATRole role = getRole(StringUtils.trimToNull(accessRelationTO.getName()));
@@ -157,6 +160,7 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_ROLES_UPDATE.getName())")
 	public ATRole changeState(String name) {
 		ATRole role = roleRepository.findByName(name);
 		if (null != role) {

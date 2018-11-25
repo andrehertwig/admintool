@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +38,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 	private AdminToolSecDBClientValidator validator;
 	
 	@Override
+	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS.getName())")
 	public List<ATClient> getAllClients() {
 		return clientRepository.findAll();
 	}
@@ -71,6 +73,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_UPDATE.getName())")
 	public Set<ATError> updateClient(AccessRelationTO accessRelationTO) {
 		Set<ATError> errors = null;
 		ATClient client = getClient(StringUtils.trimToNull(accessRelationTO.getName()));
@@ -87,6 +90,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_ADD.getName())")
 	public Set<ATError> addClient(AccessRelationTO accessRelationTO) {
 		Set<ATError> errors = null;
 		if (null != getClient(StringUtils.trimToNull(accessRelationTO.getName()))) {
@@ -103,6 +107,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 	}
 
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_UPDATE.getName())")
 	public ATClient changeState(String name) {
 		ATClient client = clientRepository.findByName(name);
 		if (null != client) {
@@ -114,6 +119,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_REMOVE.getName())")
 	public void removeByName(String name) {
 		this.clientRepository.deleteByName(name);
 	}

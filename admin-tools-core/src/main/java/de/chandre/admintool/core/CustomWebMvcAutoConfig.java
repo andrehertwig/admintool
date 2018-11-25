@@ -21,4 +21,6 @@ public class CustomWebMvcAutoConfig extends WebMvcConfigurerAdapter
 		
 		super.addResourceHandlers(registry);
 	}
+	
+	
 }

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +47,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	private AdminToolSecDBUserGroupValidator validator;
 	
 	@Override
+	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS.getName())")
 	public List<ATUserGroup> getAllUserGroups() {
 		return userGroupRepository.findAll();
 	}
@@ -91,6 +93,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS_UPDATE.getName())")
 	public Set<ATError> updateUserGroup(AccessRelationTO accessRelationTO) {
 		Set<ATError> errors = null;
 		ATUserGroup userGroup = getUserGroup(StringUtils.trimToNull(accessRelationTO.getName()));
@@ -107,6 +110,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS_ADD.getName())")
 	public Set<ATError> addUserGroup(AccessRelationTO accessRelationTO) {
 		Set<ATError> errors = null;
 		if (null != getUserGroup(StringUtils.trimToNull(accessRelationTO.getName()))) {
@@ -123,6 +127,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS_UPDATE.getName())")
 	public ATUserGroup changeState(String name) {
 		ATUserGroup usergroup = userGroupRepository.findByName(name);
 		if (null != usergroup) {
@@ -134,6 +139,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	}
 	
 	@Override
+	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS_REMOVE.getName())")
 	public void removeByName(String name) {
 		this.userGroupRepository.deleteByName(name);
 	}

@@ -2,12 +2,25 @@ package de.chandre.admintool.core.ui.select2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import de.chandre.admintool.core.ui.ATError;
+
+/**
+ * View representation for select elements for select2 
+ * @author Andre
+ * @since 1.2.0
+ *
+ * @param <E> {@link OptionTO} or {@link OptionGroupTO}
+ */
 public class Select2GroupedTO<E extends OptionTO> implements Serializable {
 	private static final long serialVersionUID = 922341647233302483L;
 	
-	private List<E> result = new ArrayList<>();;
+	private List<E> result = new ArrayList<>();
+	
+	private Set<ATError> errors;
 
 	public List<E> getResult() {
 		return result;
@@ -26,13 +39,27 @@ public class Select2GroupedTO<E extends OptionTO> implements Serializable {
 		}
 		return this.result.add(option);
 	}
+	
+	public Set<ATError> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(Set<ATError> errors) {
+		this.errors = errors;
+	}
+	
+	public void addError(ATError error) {
+		if (null == errors) {
+			this.errors = new HashSet<>();
+		}
+		this.errors.add(error);
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Select2TO [result=").append(result).append("]");
+		builder.append("Select2GroupedTO [result=").append(result).append(", errors=").append(errors).append("]");
 		return builder.toString();
 	}
-	
 	
 }

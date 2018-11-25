@@ -10,7 +10,7 @@ import de.chandre.admintool.security.dbuser.domain.ATClient;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 public interface AdminToolSecDBClientService {
 

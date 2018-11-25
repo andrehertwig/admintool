@@ -43,7 +43,7 @@ import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUse
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 @Service("adminToolSecDBUserDetailsService")
 @Transactional

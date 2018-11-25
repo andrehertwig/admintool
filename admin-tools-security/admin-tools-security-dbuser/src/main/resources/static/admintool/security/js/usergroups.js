@@ -12,7 +12,7 @@ $.extend(AdminTool.UserGroups.prototype, {
 	
 	additionalPostInits: function() {
 		this.options = $.extend( this.options, {
-			getRolesURL : '/admintool/accessmanagement/usergroup/roles',
+			getRolesURL : '/admintool/accessmanagement/role/get',
 		});
 		
 		this.select2Util = new AdminTool.Select2Util(this);
@@ -26,7 +26,13 @@ $.extend(AdminTool.UserGroups.prototype, {
 			requestType: "GET",
 			ctx: this,
 		}, function(data, query) {
-			query.ctx.select2Util.initSelectFormFromData(data, 'roles', 'Select one or more Role', '100%', true, 'default', '#relationDataModal', true);
+			if (data && data.errors && Array.isArray(data.errors) && data.errors.length == 0) {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error getting roles', data.errors);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data.errors, query.ctx.relationDataFormId);
+			} else {
+				query.ctx.select2Util.initSelectFormFromData(data, 'roles', 'Select one or more Role', '100%', true, 'default', '#relationDataModal', true);
+			}
 		});
 	},
 	

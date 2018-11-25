@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.ui.ATError;
+import de.chandre.admintool.core.ui.select2.OptionTO;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATClient;
@@ -45,21 +47,29 @@ public class AdminToolSecDBClientController extends ATSecDBAbctractController {
 	@RequestMapping(path="/get", method=RequestMethod.GET)
 	@ResponseBody
 	public Select2GroupedTO<?> getClients() {
-		List<ATClient> clients = clientService.getAllClients();
-		return transformUtil.transformAccessRelationToSelect2(clients);
+		try {
+			List<ATClient> clients = clientService.getAllClients();
+			return transformUtil.transformAccessRelationToSelect2(clients);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			Select2GroupedTO<OptionTO> to = new Select2GroupedTO<>();
+			to.setErrors(super.handleException(e, LOGGER, this.validator, "error.get.client", "get.client.error", "Could not get list of clients"));
+			return to;
+		}
 	}
 	
 	@RequestMapping(path="/state/name/{name}", method=RequestMethod.POST)
 	@ResponseBody
-	public String changeState(@PathVariable("name") String name) {
+	public Set<ATError> changeState(@PathVariable("name") String name) {
 		try {
 			if (null != clientService.changeState(name)) {
-				return Boolean.TRUE.toString();
+				return Collections.emptySet();
 			}
 		} catch (Exception e) {
-			LOGGER.debug(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
+			return super.handleException(e, LOGGER, validator, "error.update.state.client", "update.state.client.error", "Could not  not change Client state");
 		}
-		return Boolean.FALSE.toString();
+		return super.createError(this.validator, "error.update.state.client", "update.state.client.error", "Could not change client state for client: ", name);
 	}
 	
 	@RequestMapping(path="/update", method=RequestMethod.POST)
@@ -68,7 +78,8 @@ public class AdminToolSecDBClientController extends ATSecDBAbctractController {
 		try {
 			return clientService.updateClient(accessRelationTO);
 		} catch (Exception e) {
-			return handleException(e, LOGGER, validator, "error.update.client", "update.client.error", "Could not update Client");
+			LOGGER.error(e.getMessage(), e);
+			return super.handleException(e, LOGGER, validator, "error.update.state.client", "update.client.error", "Could not update Client");
 		}
 	}
 	
@@ -78,19 +89,20 @@ public class AdminToolSecDBClientController extends ATSecDBAbctractController {
 		try {
 			return clientService.addClient(accessRelationTO);
 		} catch (Exception e) {
-			return handleException(e, LOGGER, validator, "error.add.client", "add.client.error", "Could not add Client");
+			LOGGER.error(e.getMessage(), e);
+			return super.handleException(e, LOGGER, validator, "error.add.client", "add.client.error", "Could not add Client");
 		}
 	}
 	
 	@RequestMapping(path="/remove/name/{name}", method=RequestMethod.POST)
 	@ResponseBody
-	public String remove(@PathVariable("name") String name) {
+	public Set<ATError> remove(@PathVariable("name") String name) {
 		try {
 			clientService.removeByName(name);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			return Boolean.FALSE.toString();
+			return super.handleException(e, LOGGER, validator, "error.remove.client", "remove.client.error", "Could not remove Client", name);
 		}
-		return Boolean.TRUE.toString();
+		return Collections.emptySet();
 	}
 }

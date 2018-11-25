@@ -8,7 +8,10 @@
 				</h1>
 				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 			</section>
-			<section class="content">
+			<section class="content"
+				th:with="createAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS_ADD.getName())')},
+						editAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS_UPDATE.getName())')},
+						removeAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS_REMOVE.getName())')}">
 			
 				<div class="alert alert-warning alert-dismissible" th:if="${not #strings.isEmpty(@adminToolSecDBUserDetailsService.getInfoMessage())}">
 	            	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
@@ -26,7 +29,7 @@
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.users.subHeadline', 'Users')" />
 								</h3>
 							</div>
-							<div class="col-xs-9 col-md-10">
+							<div class="col-xs-9 col-md-10" th:if="${createAllowed}">
 								<a href="#" id="addUser"><i class="fa fa-user-plus fa-2x" aria-hidden="true" title="Add User"></i></a>
 							</div>
 						</div>
@@ -68,27 +71,31 @@
 										</td>
 										
 										<td>
-											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).ENABLE.type} + '_' + ${user.getUsername()}" 
+											<button th:if="${editAllowed}" th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).ENABLE.type} + '_' + ${user.getUsername()}" 
 												class="btn btn-sm enable state" th:text="${user.isEnabled()}"></button>
+											<th:block th:unless="${editAllowed}" th:text="${user.isEnabled()}"></th:block>
 										</td>
 										
 										<td>
-											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXPIRE.type} + '_' + ${user.getUsername()}"
+											<button th:if="${editAllowed}" th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXPIRE.type} + '_' + ${user.getUsername()}"
 												class="btn btn-sm expire state" th:text="${user.isAccountExpired()}" 
 												th:title="${user.getAccountExpiredSince()} ? 'expired since: ' + ${#temporals.format(user.getAccountExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
 											</button>
+											<th:block th:unless="${editAllowed}" th:text="${user.isAccountExpired()}"></th:block>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).LOCK.type} + '_' + ${user.getUsername()}" 
+											<button th:if="${editAllowed}" th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).LOCK.type} + '_' + ${user.getUsername()}" 
 												class="btn btn-sm lock state" th:text="${user.isAccountLocked()}"
 												th:title="${user.getAccountLockedSince()} ? 'expired since: ' + ${#temporals.format(user.getAccountLockedSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
 											</button>
+											<th:block th:unless="${editAllowed}" th:text="${user.isAccountLocked()}"></th:block>
 										</td>
 										<td>
-											<button th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXIPRE_CREDENTIALS.type} + '_' + ${user.getUsername()}" 
+											<button th:if="${editAllowed}" th:id="${T(de.chandre.admintool.security.commons.auth.UserStateType).EXIPRE_CREDENTIALS.type} + '_' + ${user.getUsername()}" 
 												class="btn btn-sm expcred state" th:text="${user.isCredentialsExpired()}"
 												th:title="${user.getCredentialsExpiredSince()} ? 'expired since: ' + ${#temporals.format(user.getCredentialsExpiredSince(), 'yyyy-MM-dd HH:mm')} : 'not expired'">
 											</button>
+											<th:block th:unless="${editAllowed}" th:text="${user.isCredentialsExpired()}"></th:block>
 										</td>
 										
 										<td class="userGroups" th:text="${#strings.listJoin(user.getUserGroupDisplayNames(),', ')}"
@@ -98,12 +105,12 @@
 											th:attr="data-clients=${#strings.listJoin(user.getClientNames(),',')}"></td>
 											
 										<td>
-											<button class="btn btn-xs pull-right spacer2left remove" th:id="'remove_' + ${user.getUsername()}" title="Delete user">
+											<button th:if="${removeAllowed}"  class="btn btn-xs pull-right spacer2left remove" th:id="'remove_' + ${user.getUsername()}" title="Delete user">
 												<i class="fa fa-trash-o" aria-hidden="true"></i>
 											</button>
 											
 											<button class="btn btn-xs pull-right spacer2left resetPassword" th:id="'resetPassword_' + ${user.getUsername()}" title="Reset Password" 
-												th:if="${@adminToolSecDBTemplateUtils.isCommunicatorImplemented()}">
+												th:if="${editAllowed} and ${@adminToolSecDBTemplateUtils.isCommunicatorImplemented()}">
 												<i class="fa fa-envelope-o" aria-hidden="true"></i>
 											</button>
 											
@@ -236,7 +243,7 @@
 									</h4>
 								</div>
 								<div class="col-xs-2 col-sm-1">
-									<button type="button" class="btn btn-primary" id="editUser">
+									<button type="button" class="btn btn-primary" id="editUser" th:if="${createAllowed} or ${editAllowed}">
 										<i class="fa fa-wrench" aria-hidden="true"></i>
 									</button>
 								</div>
@@ -275,8 +282,8 @@
 													<a id="showPassword" href="#"><i class="fa fa-eye eye-switch"></i></a>
 												</span>
 											</div>
-											<div>
-												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordInfo', 'User will receive password reset request.')" />
+											<div th:unless="${@adminToolSecDBTemplateUtils.isDirectPasswordChangeAllowed()}">
+												<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.users.modal.passwordInfo', 'Password reset request function is configured.')" />
 											</div>
 											<div class="help-block with-errors"></div>
 										</div>
@@ -405,7 +412,7 @@
 								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
 								</button>
-								<button type="button" class="btn btn-primary pull-right" id="saveUser">
+								<button type="button" class="btn btn-primary pull-right" id="saveUser" th:if="${createAllowed} or ${editAllowed}">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
 								</button>
 							</div>

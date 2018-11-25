@@ -31,7 +31,7 @@ import de.chandre.admintool.security.dbuser.domain.Entity;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  * @param <O> type of persisted entity
  */
@@ -163,7 +163,7 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 	}
 	
 	public String getMessageWithSuffix(String suffix, Object[] args, String defaultMessage) {
-		return getMessage(MSG_KEY_PREFIX + getMessageArea() + suffix, args, defaultMessage);
+		return getMessage(MSG_KEY_PREFIX + getMessageArea() + StringUtils.trimToEmpty(suffix), args, defaultMessage);
 	}
 	
 	public String getMessage(String code, Object[] args, String defaultMessage) {

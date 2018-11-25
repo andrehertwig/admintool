@@ -2,19 +2,20 @@ package de.chandre.admintool.security.dbuser;
 
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * 
+ * @author Andre
+ * @since 1.2.0
+ */
 @Component("adminToolSecDBProperties")
 @ConfigurationProperties(prefix = AdminToolSecDBProperties.PREFIX, ignoreUnknownFields = true)
 public class AdminToolSecDBProperties {
@@ -31,17 +32,7 @@ public class AdminToolSecDBProperties {
 	
 	private String select2Version = "4.0.5";
 	
-	@Value("#{'${admintool.security.ui.securityRoles.groups:}'.split(';')}")
-	private Set<String> securityRolesGroups = new HashSet<>();
-	
-	@Value("#{'${admintool.security.ui.securityRoles.roles:}'.split(';')}")
-	private Set<String> securityRolesRoles = new HashSet<>();
-	
-	@Value("#{'${admintool.security.ui.securityRoles.clients:}'.split(';')}")
-	private Set<String> securityRolesClients = new HashSet<>();
-	
-	@Value("#{'${admintool.security.ui.securityRoles.users:}'.split(';')}")
-	private Set<String> securityRolesUsers = new HashSet<>();
+	private boolean addMissingRolesAutomatically = true;
 	
 	private Users users = new Users();
 	
@@ -91,36 +82,12 @@ public class AdminToolSecDBProperties {
 		this.select2Version = select2Version;
 	}
 
-	public Set<String> getSecurityRolesGroups() {
-		return securityRolesGroups;
+	public boolean isAddMissingRolesAutomatically() {
+		return addMissingRolesAutomatically;
 	}
 
-	public void setSecurityRolesGroups(Set<String> securityRolesGroups) {
-		this.securityRolesGroups = securityRolesGroups;
-	}
-
-	public Set<String> getSecurityRolesRoles() {
-		return securityRolesRoles;
-	}
-
-	public void setSecurityRolesRoles(Set<String> securityRolesRoles) {
-		this.securityRolesRoles = securityRolesRoles;
-	}
-
-	public Set<String> getSecurityRolesClients() {
-		return securityRolesClients;
-	}
-
-	public void setSecurityRolesClients(Set<String> securityRolesClients) {
-		this.securityRolesClients = securityRolesClients;
-	}
-
-	public Set<String> getSecurityRolesUsers() {
-		return securityRolesUsers;
-	}
-
-	public void setSecurityRolesUsers(Set<String> securityRolesUsers) {
-		this.securityRolesUsers = securityRolesUsers;
+	public void setAddMissingRolesAutomatically(boolean addMissingRolesAutomatically) {
+		this.addMissingRolesAutomatically = addMissingRolesAutomatically;
 	}
 
 	public Users getUsers() {
@@ -170,6 +137,8 @@ public class AdminToolSecDBProperties {
 		private boolean directPasswordChangeInProfileAllowed = true;
 		
 		private String passwordHashPeriod = "P7D";
+		
+		private String maxPasswordAge= "";
 		
 		public List<String> getAvailableLocales() {
 			return availableLocales;
@@ -232,7 +201,17 @@ public class AdminToolSecDBProperties {
 			return Period.parse(passwordHashPeriod);
 		}
 		
-		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Users [availableLocales=").append(availableLocales).append(", username=").append(username)
+					.append(", password=").append(password).append(", firstName=").append(firstName)
+					.append(", lastName=").append(lastName).append(", email=").append(email).append(", phone=")
+					.append(phone).append(", directPasswordChangeAllowed=").append(directPasswordChangeAllowed)
+					.append(", directPasswordChangeInProfileAllowed=").append(directPasswordChangeInProfileAllowed)
+					.append(", passwordHashPeriod=").append(passwordHashPeriod).append("]");
+			return builder.toString();
+		}
 	}
 	
 	public static class UserGroups {
@@ -258,6 +237,14 @@ public class AdminToolSecDBProperties {
 		public void setDescription(Validations description) {
 			this.description = description;
 		}
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("UserGroups [name=").append(name).append(", displayName=").append(displayName)
+					.append(", description=").append(description).append("]");
+			return builder.toString();
+		}
 	}
 
 	public static class Roles {
@@ -282,6 +269,14 @@ public class AdminToolSecDBProperties {
 		}
 		public void setDescription(Validations description) {
 			this.description = description;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Roles [name=").append(name).append(", displayName=").append(displayName)
+					.append(", description=").append(description).append("]");
+			return builder.toString();
 		}
 	}
 	
@@ -314,6 +309,14 @@ public class AdminToolSecDBProperties {
 		}
 		public void setDescription(Validations description) {
 			this.description = description;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Clients [enabled=").append(enabled).append(", name=").append(name).append(", displayName=")
+					.append(displayName).append(", description=").append(description).append("]");
+			return builder.toString();
 		}
 	}
 	
@@ -362,6 +365,27 @@ public class AdminToolSecDBProperties {
 		public Pattern getPattern() {
 			return pattern;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Validations [maxLength=").append(maxLength).append(", minLength=").append(minLength)
+					.append(", patternStr=").append(patternStr).append(", patternCaseSensitive=")
+					.append(patternCaseSensitive).append(", pattern=").append(pattern).append("]");
+			return builder.toString();
+		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AdminToolSecDBProperties [enabled=").append(enabled).append(", position=").append(position)
+				.append(", validatorCdnPath=").append(validatorCdnPath).append(", mustacheVersion=")
+				.append(mustacheVersion).append(", select2Version=").append(select2Version)
+				.append(", addMissingRolesAutomatically=").append(addMissingRolesAutomatically).append(", users=")
+				.append(users).append(", userGroups=").append(userGroups).append(", roles=").append(roles)
+				.append(", clients=").append(clients).append("]");
+		return builder.toString();
 	}
 	
 }

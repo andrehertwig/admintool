@@ -23,7 +23,7 @@ import de.chandre.admintool.security.dbuser.Constants;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 @Entity
 @Table(name="AT_USER_GROUP")
@@ -155,7 +155,6 @@ public class ATUserGroup extends AbstractEntity implements UserGroup, Constants 
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}

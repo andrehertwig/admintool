@@ -21,7 +21,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * requires @EnableJpaAuditing in JPA configuration
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 @SuppressWarnings("serial")
 @MappedSuperclass

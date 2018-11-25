@@ -85,15 +85,20 @@ $.extend(AdminTool.AccessRelation.prototype, {
 		this.sendRequest({
 			url: Mustache.render(this.options.changeStateURL, {"type": this.type, "name": name}), 
 			requestType: "POST", 
-			dataType: "text",
+			dataType: "json",
 			showModalOnError: true,
 			ctx: this,
 			btn: button
 		},
 		function(data, query) {
-			if (data && data == 'true') {
+			if (data && ((Array.isArray(data) && data.length == 0) || (data == 'true'))) {
 				var wasTrue = query.btn.text() === 'true';
 				query.btn.text(!wasTrue);
+			}
+			else {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error saving Relation', data);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data, query.ctx.relationDataFormId);
 			}
 		});
 	},
@@ -297,11 +302,13 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			ctx: this
 		},
 		function(data, query) {
-			if (data && data == 'true') {
+			if (data && ((Array.isArray(data) && data.length == 0) || (data == 'true'))) {
 				location.reload();
-			} else {
+			}
+			else {
 				//show error modal (AdminTool.Core)
 				query.ctx.showErrorModal('Error removing Relation', data);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data, query.ctx.relationDataFormId);
 			}
 		});
 	},

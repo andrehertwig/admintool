@@ -13,8 +13,8 @@ $.extend(AdminTool.Users.prototype, {
 	postInit: function() {
 		
 		this.options = $.extend( this.options, {
-			getUserGroupsURL 	: '/admintool/accessmanagement/user/usergroups',
-			getClientsURL	 	: '/admintool/accessmanagement/user/clients',
+			getUserGroupsURL 	: '/admintool/accessmanagement/usergroup/get',
+			getClientsURL	 	: '/admintool/accessmanagement/client/get',
 			changeUserStateURL 	: '/admintool/accessmanagement/user/changeState/{{type}}',
 			addUserURL 			: '/admintool/accessmanagement/user/add',
 			updateUserURL 		: '/admintool/accessmanagement/user/update',
@@ -72,7 +72,13 @@ $.extend(AdminTool.Users.prototype, {
 			requestType: "GET",
 			ctx: this,
 		}, function(data, query) {
-			query.ctx.select2Util.initSelectFormFromData(data, 'authorities', 'Select one or more UserGroup', '100%', true, 'default', '#userDataModal', true);
+			if (data && data.errors && Array.isArray(data.errors) && data.errors.length == 0) {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error getting user groups', data.errors);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data.errors, query.ctx.relationDataFormId);
+			} else {
+				query.ctx.select2Util.initSelectFormFromData(data, 'authorities', 'Select one or more UserGroup', '100%', true, 'default', '#userDataModal', true);
+			}
 		});
 	},
 
@@ -82,7 +88,13 @@ $.extend(AdminTool.Users.prototype, {
 			requestType: "GET",
 			ctx: this,
 		}, function(data, query) {
-			query.ctx.select2Util.initSelectFormFromData(data, 'clients', 'Select one or more Client', '100%', true, 'default', '#userDataModal', true);
+			if (data && data.errors && Array.isArray(data.errors) && data.errors.length == 0) {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error getting clients', data.errors);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data.errors, query.ctx.relationDataFormId);
+			} else {
+				query.ctx.select2Util.initSelectFormFromData(data, 'clients', 'Select one or more Client', '100%', true, 'default', '#userDataModal', true);
+			}
 		});
 	},
 
@@ -127,13 +139,21 @@ $.extend(AdminTool.Users.prototype, {
 			showModalOnError: true,
 			ctx: this,
 			btn: button,
+			changeType: type,
 			newState: data.newState
 		},
 		function(data, query) {
-			if (data && data == 'true') {
-				query.btn.text(query.newState);
-			} else if (data && data == 'reload') {
-				query.ctx.reloadPage();
+			if (data && ((Array.isArray(data) && data.length == 0) || (data == 'true'))) {
+				if (query.changeType == 'ENABLE') {
+					query.ctx.reloadPage();
+				} else {
+					query.btn.text(query.newState);
+				}
+			}
+			else {
+				//show error modal (AdminTool.Core)
+				query.ctx.showErrorModal('Error change user state', data);
+				query.ctx.validationUtil.showFieldErrorsOnATErrorList(data, query.ctx.relationDataFormId);
 			}
 		});
 	},

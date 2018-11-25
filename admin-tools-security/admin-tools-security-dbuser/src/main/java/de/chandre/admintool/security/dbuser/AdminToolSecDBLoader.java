@@ -24,7 +24,7 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Component
@@ -43,7 +43,8 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 	@Autowired
 	private AdminToolSecDBRoleService roleService;
 	
-	@Autowired Collection<AdminToolRoles> atRoles;
+	@Autowired(required=false) 
+	private Collection<AdminToolRoles> atRoles;
 	
 	@PostConstruct
 	public void configureAdminTool()
@@ -52,6 +53,7 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 			LOGGER.info("admin tool's database user management is deactivated");
 			return;
 		}
+		LOGGER.info("adding database user management view to admin tool");
 		
 		Java8TimeDialect timeDialect = new Java8TimeDialect();
 		if (!templateEngine.getDialectsByPrefix().containsKey(timeDialect.getPrefix())) {
@@ -59,13 +61,13 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 			templateEngine.addDialect(timeDialect);
 		}
 		
-		int roleInterfaceSize = atRoles != null ? atRoles.size() : 0;
-		LOGGER.info("found " + roleInterfaceSize + " interfaces with roles");
-		if (roleInterfaceSize > 0) {
-			roleService.addRolesIfNotExists(atRoles.stream().flatMap(roleI -> roleI.getRoles().stream()).collect(Collectors.toSet()));
+		if (config.isAddMissingRolesAutomatically()) {
+			int roleInterfaceSize = atRoles != null ? atRoles.size() : 0;
+			LOGGER.debug("found " + roleInterfaceSize + " interfaces with roles");
+			if (roleInterfaceSize > 0) {
+				roleService.addRolesIfNotExists(atRoles.stream().flatMap(roleI -> roleI.getRoles().stream()).collect(Collectors.toSet()));
+			}
 		}
-		
-		LOGGER.info("adding database user management view to admin tool");
 		
 		AdminComponent component = new AdminComponentImpl.AdminComponentBuilder()
 				.displayName("User-Management")

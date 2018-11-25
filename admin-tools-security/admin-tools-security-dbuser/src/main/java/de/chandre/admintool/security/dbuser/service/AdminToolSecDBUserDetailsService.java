@@ -13,7 +13,7 @@ import de.chandre.admintool.security.dbuser.service.comm.SendException;
  * extend interface for DB UserDetails service
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 public interface AdminToolSecDBUserDetailsService extends AdminToolUserDetailsService {
 

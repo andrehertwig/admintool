@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="admintool/layout/standardLayout" xmlns:atsec="http://www.thymeleaf.org/extras/spring-security-at">
 	<body>
 		<div layout:fragment="content">
 			<section class="content-header">
@@ -8,7 +8,11 @@
 				</h1>
 				<ol class="breadcrumb" th:replace="admintool/fragments/fragements :: breadcrumb"></ol>
 			</section>
-			<section class="content">
+			<section class="content" 
+				th:with="createAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_ADD.getName())')},
+						editAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_UPDATE.getName())')},
+						removeAllowed=${#authorization.expression('hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_CLIENTS_REMOVE.getName())')}">
+						
 				<span id="relationType" style="visibility: hidden;">client</span>
 			
 				<div class="box box-info" id="accessrelation">
@@ -21,7 +25,7 @@
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.clients.subHeadline', 'Clients')" />
 								</h3>
 							</div>
-							<div class="col-xs-9 col-md-10">
+							<div class="col-xs-9 col-md-10" th:if="${createAllowed}">
 								<a href="#" id="addRelation"><i class="fa fa-plus fa-2x" title="Add Client"></i></a>
 							</div>
 						</div>
@@ -48,10 +52,11 @@
 										<td class="displayName" th:text="${client.getDisplayName()}"></td>
 										<td class="description" th:text="${client.getDescription()}"></td>
 										<td>
-											<button th:id="'state_' + ${client.getName()}" class="btn btn-sm state" th:text="${client.isActive()}"></button>
+											<button th:if="${editAllowed}" th:id="'state_' + ${client.getName()}" class="btn btn-sm state" th:text="${client.isActive()}"></button>
+											<th:block th:unless="${editAllowed}" th:text="${client.isActive()}"></th:block>
 										</td>
 										<td>
-											<button class="btn btn-xs remove" th:id="'remove_' + ${client.getName()}" title="Delete client">
+											<button th:if="${removeAllowed}" class="btn btn-xs remove" th:id="'remove_' + ${client.getName()}" title="Delete client">
 												<i class="fa fa-trash-o" aria-hidden="true"></i>
 											</button>
 										</td>
@@ -89,7 +94,7 @@
 									</h4>
 								</div>
 								<div class="col-xs-2 col-sm-1">
-									<button type="button" class="btn btn-primary" id="editRelationBtn">
+									<button type="button" class="btn btn-primary" id="editRelationBtn" th:if="${createAllowed} or ${editAllowed}">
 										<i class="fa fa-wrench" aria-hidden="true"></i>
 									</button>
 								</div>
@@ -161,7 +166,7 @@
 								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
 								</button>
-								<button type="button" class="btn btn-primary pull-right" id="saveRelationBtn">
+								<button type="button" class="btn btn-primary pull-right" id="saveRelationBtn" th:if="${createAllowed} or ${editAllowed}">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
 								</button>
 							</div>

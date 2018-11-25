@@ -34,7 +34,7 @@ import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUse
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Controller
@@ -72,7 +72,7 @@ public class AdminToolSecDBProfileController extends ATSecDBAbctractController {
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> profileUpdate(@RequestBody UserTO userTO, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		LOGGER.debug("receiving /update request");
+		LOGGER.debug("receiving profile/update request");
 		if (templateUserService.isAnonymous()) {
 			return null;
 		}
@@ -90,7 +90,7 @@ public class AdminToolSecDBProfileController extends ATSecDBAbctractController {
 	@RequestMapping(value="/password/update", method=RequestMethod.POST)
 	@ResponseBody
 	public Set<ATError> updatePassword(@RequestBody PasswordTO userTO, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		LOGGER.debug("receiving /password/update request");
+		LOGGER.debug("receiving  profile/password/update request");
 		if (!properties.getUsers().isDirectPasswordChangeInProfileAllowed() || templateUserService.isAnonymous()) {
 			return null;
 		}
@@ -113,7 +113,7 @@ public class AdminToolSecDBProfileController extends ATSecDBAbctractController {
 	@RequestMapping(value="/password/reset", method=RequestMethod.POST)
 	@ResponseBody
 	public String resetPassword( HttpServletRequest request, HttpServletResponse response) throws IOException {
-		LOGGER.debug("receiving /password/reset request");
+		LOGGER.debug("receiving  profile/password/reset request");
 		if (!templateUtils.isCommunicatorImplemented() || templateUserService.isAnonymous()) {
 			return Boolean.FALSE.toString();
 		}

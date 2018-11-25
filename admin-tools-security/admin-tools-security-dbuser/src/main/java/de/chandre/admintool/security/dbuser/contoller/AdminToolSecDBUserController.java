@@ -1,7 +1,7 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -16,18 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.chandre.admintool.core.AdminTool;
 import de.chandre.admintool.core.ui.ATError;
-import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.core.utils.ReflectUtils;
 import de.chandre.admintool.security.commons.auth.UserStateType;
 import de.chandre.admintool.security.commons.auth.UserTO;
 import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
 import de.chandre.admintool.security.dbuser.auth.ExtUserTO;
-import de.chandre.admintool.security.dbuser.domain.ATClient;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
-import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
-import de.chandre.admintool.security.dbuser.service.AdminToolSecDBClientService;
+import de.chandre.admintool.security.dbuser.service.ATSecDBUserControllerAuthProxy;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsService;
-import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
 import de.chandre.admintool.security.dbuser.service.comm.SendException;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserValidator;
 
@@ -44,62 +40,43 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 	private final Log LOGGER = LogFactory.getLog(AdminToolSecDBUserController.class);
 	
 	@Autowired
-	private AdminToolSecDBUserDetailsService userService;
-	
-	@Autowired
-	private AdminToolSecDBUserGroupService userGroupService;
-	
-	@Autowired
-	private AdminToolSecDBClientService clientService;
+	private ATSecDBUserControllerAuthProxy userService;
 
 	@Autowired
 	private AdminToolSecDBUserValidator userValidator;
 	
-	@Autowired
-	private AdminToolSecDBTransformUtil transformUtil;
-	
 	@RequestMapping(value="/get/{userId}", method=RequestMethod.GET)
 	@ResponseBody
 	public ExtUserTO addUser(@PathVariable("userId") String userId) {
-		
-		ATUser user = userService.getUserForId(userId);
-		ExtUserTO output = new ExtUserTO();
-		output = ReflectUtils.copyFields(ATUser.class, user, output, false, Arrays.asList("password"), true);
-		
-		output.setAuthorities(user.getUserGroupNames());
-		output.setClients(user.getClientNames());
-		output.setActiveRoles(user.getActiveAuthorityNames());
-		return output;
-	}
-	
-	/**
-	 * required to have this method under /accessmanagement/user because 
-	 * if editor has no privilege to see userGroups but edit users, functionality will not work
-	 * @return
-	 */
-	@RequestMapping(path="/usergroups", method=RequestMethod.GET)
-	@ResponseBody
-	public Select2GroupedTO<?> getUserGroups() {
-		List<ATUserGroup> usergroups = userGroupService.getAllUserGroups();
-		return transformUtil.transformAccessRelationToSelect2(usergroups);
-	}
-	
-	/**
-	 * required to have this method under /accessmanagement/user because 
-	 * if editor has no privilege to see clients but edit users, functionality will not work
-	 * @return
-	 */
-	@RequestMapping(path="/clients", method=RequestMethod.GET)
-	@ResponseBody
-	public Select2GroupedTO<?> getClients() {
-		List<ATClient> clients = clientService.getAllClients();
-		return transformUtil.transformAccessRelationToSelect2(clients);
+		try {
+			ATUser user = userService.getUserForId(userId);
+			ExtUserTO output = new ExtUserTO();
+			output = ReflectUtils.copyFields(ATUser.class, user, output, false, Arrays.asList("password"), true);
+			
+			output.setAuthorities(user.getUserGroupNames());
+			output.setClients(user.getClientNames());
+			output.setActiveRoles(user.getActiveAuthorityNames());
+			return output;
+		} catch (Exception e) {
+			//TODO: handle error in ui
+			LOGGER.error(e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	@RequestMapping(value="/changeState/{type}", method=RequestMethod.POST)
 	@ResponseBody
-	public String changeUserState(@RequestBody UserTO userTo, @PathVariable("type") String type) {
-		return setUserState(userTo, type);
+	public Set<ATError> changeUserState(@RequestBody UserTO userTo, @PathVariable("type") String type) {
+		try {
+			if(setUserState(userTo, type)) {
+				return Collections.emptySet();
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return handleException(e, LOGGER, userValidator, "error.update.state.group", "update.state.group.error", "Could not change UserGroup state");
+		}
+		return super.createError(this.userValidator, "error.update.state.group", "update.state.group.error", "Could not change UserGroup state for group: ", userTo.getUsername());
+	
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
@@ -109,6 +86,7 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 		try {
 			return userService.createUser(userTo);
 		} catch (SendException e) {
+			LOGGER.error(e.getMessage(), e);
 			return handleException(e, LOGGER, userValidator, "error.create.user", "create.user.error", "Could not create user");
 		}
 	}
@@ -119,6 +97,7 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 		try {
 			return userService.updateUser(userTo);
 		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 			return handleException(e, LOGGER, userValidator, "error.update.user", "update.user.error", "Could not update user");
 		}
 	}
@@ -147,7 +126,7 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 		return Boolean.TRUE.toString();
 	}
 	
-	protected String setUserState(UserTO userTo, String type) {
+	protected boolean setUserState(UserTO userTo, String type) {
 		return setUserState(userTo, UserStateType.fromType(type));
 	}
 	
@@ -157,11 +136,10 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 	 * @param type the user state type to change
 	 * @return
 	 */
-	protected String setUserState(UserTO userTo, UserStateType type) {
+	protected boolean setUserState(UserTO userTo, UserStateType type) {
 		switch (type) {
 			case ENABLE:
 				userService.setUserEnabled(userTo.getUsername(), userTo.getNewState());
-				return "reload";
 			case EXIPRE_CREDENTIALS:
 				userService.setUserCredentialsExpired(userTo.getUsername(), userTo.getNewState());
 				break;
@@ -173,8 +151,8 @@ public class AdminToolSecDBUserController extends ATSecDBAbctractController {
 				break;
 	
 			default:
-				return Boolean.FALSE.toString();
+				return Boolean.FALSE.booleanValue();
 		}
-		return Boolean.TRUE.toString();
+		return Boolean.TRUE.booleanValue();
 	}
 }

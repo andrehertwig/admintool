@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * uses the UUID to generate a unique non-reproducible string
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 public class DefaultPasswordLinkHashGenerator implements PasswordLinkHashGenerator {
