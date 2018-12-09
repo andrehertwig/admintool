@@ -1,6 +1,7 @@
 package de.chandre.admintool.security.dbuser.service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.dbuser.Constants;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
+import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 import de.chandre.admintool.security.dbuser.repo.RoleRepository;
 import de.chandre.admintool.security.dbuser.repo.UserGroupRepository;
@@ -50,6 +52,16 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS.getName())")
 	public List<ATUserGroup> getAllUserGroups() {
 		return userGroupRepository.findAll();
+	}
+	
+	@Override
+	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_ROLES.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS.getName())")
+	public List<ATUserGroup> getUserGroupsByRoleName(String roleName) {
+		ATRole role = roleRepository.findByName(roleName);
+		if (null != role) {
+			return userGroupRepository.findByRolesIn(Arrays.asList(role));
+		}
+		return Collections.emptyList();
 	}
 	
 	@Override

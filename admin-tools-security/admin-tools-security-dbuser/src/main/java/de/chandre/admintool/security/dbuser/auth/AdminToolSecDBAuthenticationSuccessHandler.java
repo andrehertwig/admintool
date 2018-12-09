@@ -23,7 +23,7 @@ import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsSer
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 public class AdminToolSecDBAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler  {

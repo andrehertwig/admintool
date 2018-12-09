@@ -37,7 +37,7 @@
 								<thead>
 									<tr>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.name', 'Name')" /></th>
-										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.displayName', 'Diaplay Name')" /></th>
+										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.displayName', 'Display Name')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.description', 'Description')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.active', 'Active')" /></th>
 										<th><th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.db.usergroups.tableHead.roles', 'Assigned Roles')" /></th>
@@ -60,7 +60,12 @@
 										<td class="roles" th:text="${#strings.listJoin(usergroup.getRoleDisplayNames(),', ')}" 
 											th:attr="data-roles=${#strings.listJoin(usergroup.getRoleNames(),',')}">
 										</td>
-										<td class="userCount" th:text="${@adminToolSecDBUserGroupService.getAssignedUserCount(usergroup)}"></td>
+										<td class="userCount" th:with="userCount = ${@adminToolSecDBUserGroupService.getAssignedUserCount(usergroup)}">
+											<button th:if="${userCount > 0}" class="btn btn-xs assignedUsers" th:id="'users_' + ${usergroup.getName()}" title="Assigned Users"
+												th:text="${userCount}">
+											</button>
+											<span th:unless="${userCount > 0}" th:text="${userCount}"></span>
+										</td>
 										<td>
 											<button th:if="${removeAllowed}" class="btn btn-xs remove" th:id="'remove_' + ${usergroup.getName()}" title="Delete usergroup">
 												<i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -189,6 +194,42 @@
 								</button>
 								<button type="button" class="btn btn-primary pull-right" id="saveRelationBtn" th:if="${createAllowed} or ${editAllowed}">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="assignedUsersModal" tabindex="-1" role="dialog" aria-labelledby="assignedUsersModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="assignedUsersModalLabel">
+										<span id="usersTitle">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.userGroups.modal.head.users', 'Assigned Users: ')" />
+										</span>
+										<span id="assignedUsersTitleAdd"></span>
+									</h4>
+								</div>
+							</div>
+						</div>
+						<form id="relationDataForm">
+							<div class="modal-body">
+								
+								<div id="assignedUsersTableContainer">
+									<table id="assignedUsersTable"></table>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
 								</button>
 							</div>
 						</form>

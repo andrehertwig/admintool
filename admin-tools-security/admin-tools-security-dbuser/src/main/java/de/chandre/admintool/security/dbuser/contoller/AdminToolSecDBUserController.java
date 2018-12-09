@@ -23,7 +23,6 @@ import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
 import de.chandre.admintool.security.dbuser.auth.ExtUserTO;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.service.ATSecDBUserControllerAuthProxy;
-import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsService;
 import de.chandre.admintool.security.dbuser.service.comm.SendException;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserValidator;
 

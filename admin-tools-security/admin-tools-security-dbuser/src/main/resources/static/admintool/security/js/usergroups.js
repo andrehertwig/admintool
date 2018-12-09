@@ -13,11 +13,17 @@ $.extend(AdminTool.UserGroups.prototype, {
 	additionalPostInits: function() {
 		this.options = $.extend( this.options, {
 			getRolesURL : '/admintool/accessmanagement/role/get',
+			getUsersURL : '/admintool/accessmanagement/usergroup/{{name}}/users',
 		});
 		
 		this.select2Util = new AdminTool.Select2Util(this);
 		
 		this.initRoles();
+		this.initAssignedUsers();
+	},
+	
+	additionalTablePostInits: function() {
+		this.initAssignedUsers();
 	},
 	
 	initRoles:function() {
@@ -36,7 +42,61 @@ $.extend(AdminTool.UserGroups.prototype, {
 		});
 	},
 	
-	porstClearRelationForm: function(){
+	initAssignedUsers: function() {
+		var ctx = this;
+		$(".assignedUsers").each(function () {
+			$(this).off();
+			$(this).on('click', $.proxy(ctx.showUsers, ctx, this));
+		});
+	},
+	
+	showUsers: function(btn) {
+		var $button = $(btn);
+		var name = this.getIdentifier($button, "users");
+		var displayName =  $button.parent().parent().find('.displayName').text();
+		 
+		this.sendRequest({
+			url: Mustache.render(this.options.getUsersURL, {"name": name}), 
+			requestType: "GET",
+			ctx: this,
+			userGroupName: displayName
+		}, function(data, query) {
+			query.ctx.renderUsersTable(data, query.userGroupName);
+		});
+	},
+	
+	renderUsersTable: function(data, userGroupName) {
+		
+		if (data && Array.isArray(data) && data.length > 0) {
+			getByID("assignedUsersModal").modal('show');
+			getByID('assignedUsersTitleAdd').text(userGroupName);
+			
+			if ( $.fn.dataTable.isDataTable( '#assignedUsersTable' ) ) {
+				var dataTable = getByID("assignedUsersTable").DataTable();
+				dataTable.clear();
+				dataTable.rows.add(data);
+				dataTable.draw();
+			}
+			else {
+				getByID("assignedUsersTable").DataTable({
+					data: data,
+					columns: [
+				        { data: 'username', title: 'User name'},
+				        { data: 'firstName', title: 'First name'},
+				        { data: 'lastName', title: 'Last name'},
+				        { data: 'lastLoginISO', title: 'Last login'}
+				    ]
+				});
+			}
+		} else {
+			if ( $.fn.dataTable.isDataTable( '#assignedUsersTable' ) ) {
+				var dataTable = getByID("assignedUsersTable").DataTable();
+				dataTable.clear();
+			}
+		}
+	},
+	
+	postClearRelationForm: function(){
 		this.select2Util.clearSelect('roles');
 	},
 	

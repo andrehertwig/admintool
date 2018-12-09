@@ -58,7 +58,12 @@
 											<button th:if="${editAllowed}" th:id="'state_' + ${role.getName()}" class="btn btn-sm state" th:text="${role.isActive()}"></button>
 											<th:block th:unless="${editAllowed}" th:text="${role.isActive()}"></th:block>
 										</td>
-										<td class="userGroupCount" th:text="${@adminToolSecDBRoleService.getAssignedUserGroupCount(role)}"></td>
+										<td class="userGroupCount" th:with="roleCount = ${@adminToolSecDBRoleService.getAssignedUserGroupCount(role)}">
+											<button th:if="${roleCount > 0}" class="btn btn-xs assignedUserGroups" th:id="'userGroups_' + ${role.getName()}" title="Assigned UserGroups"
+												th:text="${roleCount}">
+											</button>
+											<span th:unless="${roleCount > 0}" th:text="${roleCount}"></span>
+										</td>
 										<td th:text="${role.getCreated()} ? ${#temporals.format(role.getCreated(), 'yyyy-MM-dd HH:mm')} : 'n/a'" 
 											th:title="${role.getCreatedBy()}"></td>
 										<td th:text="${role.getModified()} ? ${#temporals.format(role.getModified(), 'yyyy-MM-dd HH:mm')} : 'n/a'"
@@ -183,6 +188,42 @@
 								</button>
 								<button type="button" class="btn btn-primary pull-right" id="saveRelationBtn" th:if="${editAllowed}">
 									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.save', 'Save')" />
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="assignedUserGroupsModal" tabindex="-1" role="dialog" aria-labelledby="assignedUserGroupsModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div class="row">
+								<div class="col-xs-9 col-sm-10">
+									<h4 class="modal-title" id="assignedUserGroupsModalLabel">
+										<span id="usersTitle">
+											<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.security.db.roless.modal.head.userGroups', 'Assigned UserGroups: ')" />
+										</span>
+										<span id="assignedUserGroupsTitleAdd"></span>
+									</h4>
+								</div>
+							</div>
+						</div>
+						<form id="relationDataForm">
+							<div class="modal-body">
+								
+								<div id="assignedUserGroupsTableContainer">
+									<table id="assignedUserGroupsTable"></table>
+								</div>
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+									<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.modal.btn.close', 'Close')" />
 								</button>
 							</div>
 						</form>

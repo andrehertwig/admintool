@@ -33,6 +33,7 @@ $.extend(AdminTool.AccessRelation.prototype, {
 			ctx.initStatusChange();
 			ctx.initShowRelation();
 			ctx.initRemoveRelation();
+			ctx.additionalTablePostInits();
 		});
 		
 		this.initStatusChange();
@@ -44,6 +45,8 @@ $.extend(AdminTool.AccessRelation.prototype, {
 	},
 	
 	additionalPostInits: function() {},
+	
+	additionalTablePostInits: function() {},
 	
 	gatherAllRelationNames: function() {
 		this.relationNames = [];
@@ -124,13 +127,13 @@ $.extend(AdminTool.AccessRelation.prototype, {
 		}
 	},
 	
-	porstClearRelationForm: function(){},
+	postClearRelationForm: function(){},
 	
 	clearRelationForm: function() {
-		$(this.userDataFormId + ' input').each(function() {
+		$(this.relationDataFormId + ' input').each(function() {
 			$(this).val("");
 		});
-		this.porstClearRelationForm();
+		this.postClearRelationForm();
 		this.validationUtil.reloadValidator(this.relationDataFormId);
 	},
 	

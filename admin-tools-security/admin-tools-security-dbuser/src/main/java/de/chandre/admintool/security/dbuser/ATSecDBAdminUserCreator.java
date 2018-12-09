@@ -22,6 +22,11 @@ import de.chandre.admintool.security.dbuser.repo.UserGroupRepository;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserDetailsService;
 
+/**
+ * 
+ * @author André
+ * @since 1.2.0
+ */
 public class ATSecDBAdminUserCreator {
 	private static final Log LOGGER = LogFactory.getLog(ATSecDBAdminUserCreator.class);
 
@@ -44,7 +49,8 @@ public class ATSecDBAdminUserCreator {
 		createOrUpdateAdminUserAndGroup(null, null, null, null, null, null, null, null, null, onlyAccessManagementRoles);
 	}
 	
-	public void createOrUpdateAdminUserAndGroup(String username, String password, String firstName, String lastName, Locale locale, TimeZone timeZone,
+	public void createOrUpdateAdminUserAndGroup(String username, String password, String firstName, String lastName, 
+			Locale locale, TimeZone timeZone,
 			String userGroupName, String userGroupDisplayName, String userGroupDescription,
 			boolean onlyAccessManagementRoles) {
 		

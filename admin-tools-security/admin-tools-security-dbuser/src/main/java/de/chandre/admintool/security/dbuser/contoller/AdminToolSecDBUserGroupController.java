@@ -3,11 +3,13 @@ package de.chandre.admintool.security.dbuser.contoller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,10 @@ import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.core.ui.select2.OptionTO;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
-import de.chandre.admintool.security.dbuser.domain.ATRole;
+import de.chandre.admintool.security.dbuser.auth.ExtUserTO;
+import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
+import de.chandre.admintool.security.dbuser.service.ATSecDBUserControllerAuthProxy;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBUserGroupValidator;
 
@@ -38,6 +42,9 @@ public class AdminToolSecDBUserGroupController extends ATSecDBAbctractController
 
 	@Autowired
 	private AdminToolSecDBUserGroupService userGroupService;
+
+	@Autowired
+	private ATSecDBUserControllerAuthProxy userService;
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
@@ -57,6 +64,23 @@ public class AdminToolSecDBUserGroupController extends ATSecDBAbctractController
 			to.setErrors(super.handleException(e, LOGGER, this.validator, "error.get.group", "get.group.error", "Could not get list of groups"));
 			return to;
 		}
+	}
+	
+	@RequestMapping(path="/{name}/users", method=RequestMethod.GET)
+	@ResponseBody
+	public List<ExtUserTO> getUsersByUserGroupName(@PathVariable("name") String userGroupName ) {
+		List<ATUser> users = userService.getUsersByUserGroupName(userGroupName);
+		if (!CollectionUtils.isEmpty(users)) {
+			return users.stream().map(user -> {
+				ExtUserTO userTo = new ExtUserTO();
+				userTo.setUsername(user.getUsername());
+				userTo.setFirstName(user.getFirstName());
+				userTo.setLastName(user.getLastName());
+				userTo.setLastLogin(user.getLastLogin());
+				return userTo;
+			}).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 	
 	@RequestMapping(path="/state/name/{name}", method=RequestMethod.POST)

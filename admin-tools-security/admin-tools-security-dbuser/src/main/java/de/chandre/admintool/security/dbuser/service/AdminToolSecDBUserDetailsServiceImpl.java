@@ -1,6 +1,7 @@
 package de.chandre.admintool.security.dbuser.service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,6 +89,15 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 			LOGGER.debug("no passwordLinkHashGenerator found, using default (UUID)");
 			this.passwordLinkHashGenerator = new DefaultPasswordLinkHashGenerator();
 		}
+	}
+	
+	@Override
+	public List<ATUser> getUsersByUserGroupName(String userGroupName) {
+		ATUserGroup ug = userGroupRepository.findByName(userGroupName);
+		if (null != ug) {
+			return userRepository.findByUserGroupsIn(Arrays.asList(ug));
+		}
+		return Collections.emptyList();
 	}
 
 	@Override

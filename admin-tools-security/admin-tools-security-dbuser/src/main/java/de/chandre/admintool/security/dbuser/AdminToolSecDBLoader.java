@@ -75,7 +75,7 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 				.build();
 		
 		if (StringUtils.isEmpty(config.getValidatorCdnPath())) {
-			component.addAdditionalJS("/static/admintool/security/js/validator.min.js", true);
+			component.addAdditionalJS("/static/admintool/js/validator.min.js", true);
 		} else {
 			component.addAdditionalJS(config.getValidatorCdnPath(), false);
 		}
@@ -93,8 +93,8 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 		component.addAdditionalJS("/static/admintool/js/validation-util.js", true);
 		component.addAdditionalJS("/static/admintool/js/select2-util.js", true);
 		
-		component.addAdditionalJS("/static/admintool/security/js/password.min.js", true);
-		component.addAdditionalCSS("/static/admintool/security/css/password.min.css", true);
+//		component.addAdditionalJS("/static/admintool/security/js/password.min.js", true);
+//		component.addAdditionalCSS("/static/admintool/security/css/password.min.css", true);
 		
 		component.addAdditionalCSS("/static/admintool/security/css/accessmanagement.css", true);
 		component.addAdditionalJS("/static/admintool/security/js/passwordgen.js", true);
@@ -128,6 +128,7 @@ public class AdminToolSecDBLoader extends AbstractAdminToolLoader {
 				.resouceMessageKeySuffix(Constants.MSG_KEY_PREFIX + "accessManagement.roles.displayname")
 				.target("security/content/roles")
 				.additionalJS("/static/admintool/security/js/accessrelation.js", true)
+				.additionalJS("/static/admintool/security/js/roles.js", true)
 				.build());
 		
 		if (config.getClients().isEnabled()) {

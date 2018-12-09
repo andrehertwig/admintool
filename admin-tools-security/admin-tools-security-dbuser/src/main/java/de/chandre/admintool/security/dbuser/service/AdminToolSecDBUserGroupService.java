@@ -30,4 +30,6 @@ public interface AdminToolSecDBUserGroupService {
 
 	int getAssignedUserCount(ATUserGroup userGroup);
 
+	List<ATUserGroup> getUserGroupsByRoleName(String roleName);
+
 }

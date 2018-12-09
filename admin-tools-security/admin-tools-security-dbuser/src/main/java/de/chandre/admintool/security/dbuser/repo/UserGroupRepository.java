@@ -14,7 +14,7 @@ import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 @Repository
 public interface UserGroupRepository extends JpaRepository<ATUserGroup, String> {
@@ -31,4 +31,6 @@ public interface UserGroupRepository extends JpaRepository<ATUserGroup, String> 
 	void deleteByName(String name);
 
 	int countUserGroupsByRolesIn(List<ATRole> asList);
+	
+	List<ATUserGroup> findByRolesIn(List<ATRole> asList);
 }

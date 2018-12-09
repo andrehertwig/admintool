@@ -14,7 +14,7 @@ import de.chandre.admintool.security.dbuser.service.comm.AdminToolSecDBCommunica
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 @Component("adminToolSecDBTemplateUtils")

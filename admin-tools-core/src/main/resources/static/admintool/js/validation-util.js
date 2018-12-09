@@ -1,3 +1,9 @@
+/**
+ * Admintool utility class for 1000Hz validation plugin
+ * 
+ * @author André
+ * @Since 1.2.0
+ */
 AdminTool.ValidationUtil = function(parent) {
 	var self = this;
 

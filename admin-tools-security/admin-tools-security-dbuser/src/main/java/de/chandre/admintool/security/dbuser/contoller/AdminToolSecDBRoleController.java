@@ -3,11 +3,13 @@ package de.chandre.admintool.security.dbuser.contoller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,9 @@ import de.chandre.admintool.core.ui.select2.OptionTO;
 import de.chandre.admintool.core.ui.select2.Select2GroupedTO;
 import de.chandre.admintool.security.dbuser.auth.AccessRelationTO;
 import de.chandre.admintool.security.dbuser.domain.ATRole;
+import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
 import de.chandre.admintool.security.dbuser.service.AdminToolSecDBRoleService;
+import de.chandre.admintool.security.dbuser.service.AdminToolSecDBUserGroupService;
 import de.chandre.admintool.security.dbuser.service.validation.AdminToolSecDBRoleValidator;
 
 /**
@@ -37,6 +41,9 @@ public class AdminToolSecDBRoleController extends ATSecDBAbctractController {
 	
 	@Autowired
 	private AdminToolSecDBRoleService roleService;
+	
+	@Autowired
+	private AdminToolSecDBUserGroupService userGroupService;
 	
 	@Autowired
 	private AdminToolSecDBTransformUtil transformUtil;
@@ -56,6 +63,23 @@ public class AdminToolSecDBRoleController extends ATSecDBAbctractController {
 			to.setErrors(super.handleException(e, LOGGER, this.validator, "error.get.role", "get.role.error", "Could not get list of roles"));
 			return to;
 		}
+	}
+	
+	@RequestMapping(path="/{name}/usergroups", method=RequestMethod.GET)
+	@ResponseBody
+	public List<AccessRelationTO> getUserGroupsByRoleName(@PathVariable("name") String roleName ) {
+		List<ATUserGroup> userGroups = userGroupService.getUserGroupsByRoleName(roleName);
+		if (!CollectionUtils.isEmpty(userGroups)) {
+			return userGroups.stream().map(ug -> {
+				AccessRelationTO ugTo = new AccessRelationTO();
+				ugTo.setActive(ug.isActive());
+				ugTo.setName(ug.getName());
+				ugTo.setDisplayName(ug.getDisplayName());
+				ugTo.setDescription(ug.getDescription());
+				return ugTo;
+			}).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 	
 	@RequestMapping(path="/state/name/{name}", method=RequestMethod.POST)

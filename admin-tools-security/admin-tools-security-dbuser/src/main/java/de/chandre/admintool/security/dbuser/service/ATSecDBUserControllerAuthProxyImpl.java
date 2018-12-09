@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,12 @@ public class ATSecDBUserControllerAuthProxyImpl implements ATSecDBUserController
 	@PreAuthorize(value="hasRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS_UPDATE.getName())")
 	public void setUserLocked(String username, boolean newState) {
 		userDetailsService.setUserLocked(username, newState);
+	}
+	
+	@Override
+	@PreAuthorize(value="hasAnyRole(T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_GROUPS.getName(), T(de.chandre.admintool.security.dbuser.AdminToolSecDBRoles).ROLE_USERS.getName())")
+	public List<ATUser> getUsersByUserGroupName(String userGroupId) {
+		return userDetailsService.getUsersByUserGroupName(userGroupId);
 	}
 
 }

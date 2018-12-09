@@ -3,7 +3,7 @@ package de.chandre.admintool.security.dbuser;
 /**
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  */
 public interface Constants {
 	

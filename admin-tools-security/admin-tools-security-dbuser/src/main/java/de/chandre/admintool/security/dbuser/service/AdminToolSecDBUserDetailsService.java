@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser.service;
 
+import java.util.List;
 import java.util.Set;
 
 import de.chandre.admintool.core.ui.ATError;
@@ -82,5 +83,7 @@ public interface AdminToolSecDBUserDetailsService extends AdminToolUserDetailsSe
 	 * @param password the new password
 	 */
 	void resetPassword(String username, String password);
+
+	List<ATUser> getUsersByUserGroupName(String userGroupId);
 
 }

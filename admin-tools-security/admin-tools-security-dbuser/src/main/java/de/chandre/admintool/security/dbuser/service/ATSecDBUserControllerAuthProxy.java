@@ -1,5 +1,6 @@
 package de.chandre.admintool.security.dbuser.service;
 
+import java.util.List;
 import java.util.Set;
 
 import de.chandre.admintool.core.ui.ATError;
@@ -79,5 +80,7 @@ public interface ATSecDBUserControllerAuthProxy {
 	 * @param newState
 	 */
 	void setUserLocked(String username, boolean newState);
+
+	List<ATUser> getUsersByUserGroupName(String userGroupId);
 
 }
