@@ -2,12 +2,12 @@
 > Integrates Spring Security and overrides the menu to use admintool.*.securityRoles to check if menu entries could be shown
 
 ## Features
-* `simple user view`: a view where you can manage user states, passwords and roles and add new users(since 1.1.5)
+* `database user view`: a view where you can manage user states, passwords and roles and add new users(since 1.2.0)
 
 ![Preview image](doc/screen_userview_org.png?raw=true "AdminTool User-View UI")
 
 ## Introduced with
-* admin-tools-core:1.1.7
+* admin-tools-core:1.2.0
 
 ## Requirements, Dependencies
 * spring-framework (core, security, spring-data, spring-mvc)
@@ -16,17 +16,17 @@
 
 
 ## Usage
-Until version 1.1.7 the following dependencies must be used. 
+Until version 1.2.0 the following dependencies must be used. 
 ```xml
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.7</version>
+	<version>1.2.0</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools.security</groupId>
 	<artifactId>admin-tools-security-dbuser</artifactId>
-	<version>1.1.7</version>
+	<version>1.2.0</version>
 </dependency>
 ```
 
@@ -99,7 +99,7 @@ public class SecurityBeans {
 ```
 
 ### Security-Config
-This is just an example configuration, role names depending on your own!
+This is just an example configuration, role names for your own modules depending on your own!
 
 ```java
 @EnableWebSecurity

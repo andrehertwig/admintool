@@ -112,8 +112,10 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 		ATRole role = getRole(StringUtils.trimToNull(accessRelationTO.getName()));
 		if (null == role) {
 			errors = new HashSet<>();
-			errors.add(new ATError(Constants.MSG_KEY_PREFIX + "role.notFound", 
-					validator.getMessageWithSuffix("notFound", null, "No user foud"), "name"));
+			errors.add(new ATError(Constants.MSG_KEY_PREFIX + "role.notFound",
+					validator.getMessageWithSuffix("notFound", new Object[] { accessRelationTO.getName() },
+							"No role found with name: " + accessRelationTO.getName()),
+					"name"));
 			return errors;
 		}
 		if (LOGGER.isDebugEnabled()) {
@@ -130,8 +132,10 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 				saveRole(role);
 			} catch (Exception e) {
 				LOGGER.debug(e.getMessage(), e);
-				errors.add(new ATError(Constants.MSG_KEY_PREFIX + "role.save", 
-						validator.getMessageWithSuffix("save", null, "Exception during save"), "generic"));
+				errors.add(new ATError(Constants.MSG_KEY_PREFIX + "role.save",
+						validator.getMessageWithSuffix("save", new Object[] { accessRelationTO.getName() },
+								"Exception saving role: " + accessRelationTO.getName()),
+						"generic"));
 			}
 			
 		}
@@ -144,7 +148,15 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 		role.setDisplayName(displayName);
 		role.setDescription(description);
 		role.setActive(active);
-		return addRole(role);
+		try {
+			return addRole(role);
+		} catch (Exception e) {
+			LOGGER.debug(e.getMessage(), e);
+			Set<ATError> errors = new HashSet<>();
+			errors.add(new ATError(Constants.MSG_KEY_PREFIX + "role.save", 
+					validator.getMessageWithSuffix("save", new Object[] {name}, "Exception saving role: " +name), "generic"));
+			return errors;
+		}
 	}
 	
 	public Set<ATError> addRole(ATRole role) {

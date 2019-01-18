@@ -29,7 +29,7 @@ import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.domain.Entity;
 
 /**
- * 
+ * Abstract class with common validation methods and message finding
  * @author André
  * @since 1.2.0
  *
@@ -129,7 +129,7 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 		if (null == errors) {
 			errors = new HashSet<>();
 		}
-		if (validations.getMinLength() < 1) {
+		if (validations.getMinLength() < 1 || null == validations.getPattern()) {
 			//no further validations required
 			return;
 		}
@@ -140,25 +140,29 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 			return;
 		}
 		
-		if (value.length() < validations.getMinLength()) {
-			errors.add(new ATError(errorCode, 
-					getMessage(
-							errorCode + ".minLength", 
-							new Object[] {validations.getMinLength()}, 
-							fieldName + " is to short min-length is " + validations.getMinLength()),
-					fieldName));
+		if (validations.getMinLength() > 0 && value.length() < validations.getMinLength()) {
+			String message = getMessage(
+					errorCode + ".minLength", 
+					new Object[] {validations.getMinLength()}, 
+					fieldName + " is to short min-length is " + validations.getMinLength());
+			errors.add(new ATError(errorCode, message, fieldName));
+			LOGGER.trace(message);
 		}
 		if (validations.getMaxLength() > 0 && value.length() > validations.getMaxLength()) {
-			errors.add(new ATError(errorCode, 
-					getMessage(
-							errorCode + ".maxLength", 
-							new Object[] {validations.getMaxLength()}, 
-							fieldName + " is to long. max-length is " + validations.getMaxLength()),
-					fieldName));
+			String message = getMessage(
+					errorCode + ".maxLength", 
+					new Object[] {validations.getMaxLength()}, 
+					fieldName + " is to long. max-length is " + validations.getMaxLength());
+			errors.add(new ATError(errorCode, message, fieldName));
+			LOGGER.trace(message);
 		}
 		if (null != validations.getPattern() && !validations.getPattern().matcher(value).matches()) {
-			errors.add(new ATError(errorCode, getMessage(errorCode + ".patternMismatch", new Object[] {validations.getPatternStr()},
-					fieldName + " doesn't matches the required pattern"), fieldName));
+			String message = getMessage(
+					errorCode + ".patternMismatch", 
+					new Object[] {validations.getPatternStr()},
+					fieldName + " doesn't matches the required pattern");
+			errors.add(new ATError(errorCode, message, fieldName));
+			LOGGER.trace(message);
 		}
 	}
 	

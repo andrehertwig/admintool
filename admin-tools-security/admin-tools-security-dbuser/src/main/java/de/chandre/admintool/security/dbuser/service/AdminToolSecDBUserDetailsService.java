@@ -6,6 +6,8 @@ import java.util.Set;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.commons.auth.AdminToolUserDetailsService;
 import de.chandre.admintool.security.commons.auth.UserTO;
+import de.chandre.admintool.security.dbuser.AdminToolSecDBProperties;
+import de.chandre.admintool.security.dbuser.AdminToolSecDBProperties.Users;
 import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.service.comm.SendException;
@@ -84,6 +86,19 @@ public interface AdminToolSecDBUserDetailsService extends AdminToolUserDetailsSe
 	 */
 	void resetPassword(String username, String password);
 
+	/**
+	 * returns all users assigned to userGroupName
+	 * @param userGroupId
+	 * @return
+	 */
 	List<ATUser> getUsersByUserGroupName(String userGroupId);
+
+	/**
+	 * checks if last password change ins older than now minus {@link Users#getPasswordHashPeriod()}.
+	 * set credentials expired to user if check results in true
+	 * @param user
+	 * @return
+	 */
+	ATUser checkIfPasswordExpired(ATUser user);
 
 }

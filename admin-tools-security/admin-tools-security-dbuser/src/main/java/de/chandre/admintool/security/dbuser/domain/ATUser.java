@@ -244,7 +244,10 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 	
 	public void setLocale(Locale locale) {
-		this.locale = locale.toString();
+		if (null != locale) {
+			this.locale = locale.toString();
+		}
+		locale = null;
 	}
 
 	public void setLocale(String locale) {
@@ -266,7 +269,10 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 	
 	public void setTimeZone(TimeZone timeZone) {
-		this.timeZone = timeZone.getID();
+		if (null != timeZone) {
+			this.timeZone = timeZone.getID();
+		}
+		this.timeZone = null;
 	}
 	
 	public void setTimeZone(ZoneId zoneId) {

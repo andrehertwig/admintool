@@ -12,8 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import de.chandre.admintool.core.sec.ATInitRole;
+import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.dbuser.domain.ATRole;
 import de.chandre.admintool.security.dbuser.domain.ATUser;
 import de.chandre.admintool.security.dbuser.domain.ATUserGroup;
@@ -59,12 +61,11 @@ public class ATSecDBAdminUserCreator {
 		if (StringUtils.isEmpty(username)) {
 			LOGGER.info("set admin username to: admin");
 			username = "admin";
-		} else {
-			user = userDetailsService.getUser(username);
 		}
+		user = userDetailsService.getUser(username);
 		if (null == user && StringUtils.isEmpty(password)) {
 			LOGGER.info("set admin password to: admin");
-			username = "admin";
+			password = "admin";
 		}
 		if (null == user && null == locale) locale = Locale.getDefault();
 		if (null == user && null == timeZone) timeZone = TimeZone.getDefault();
@@ -94,11 +95,15 @@ public class ATSecDBAdminUserCreator {
 		}
 		
 		LOGGER.info("addRolesIfNotExists");
-		roleService.addRolesIfNotExists(new HashSet<>(roles.getRoles()));
-		Set<String> allAccessMgmtRoleNames = roles.getRoles().stream().map(ATInitRole::getNamePrefixed).collect(Collectors.toSet());
-		
+		Set<ATError> errors = roleService.addRolesIfNotExists(new HashSet<>(roles.getRoles()));
+		if (!CollectionUtils.isEmpty(errors)) {
+			for (ATError atError : errors) {
+				LOGGER.error(atError.getKey() + ": " + atError.getMessage());
+			}
+		}
 		List<ATRole> assignableRoles = null;
 		if (onlyAccessManagementRoles) {
+			Set<String> allAccessMgmtRoleNames = roles.getRoles().stream().map(ATInitRole::getNamePrefixed).collect(Collectors.toSet());
 			assignableRoles = roleRepository.findByNameIn(allAccessMgmtRoleNames);
 		} else {
 			assignableRoles = roleRepository.findAll();
@@ -113,6 +118,7 @@ public class ATSecDBAdminUserCreator {
 	
 	private void createOrUpdateUser(ATUser user, String username, String password, String firstName, String lastName, 
 			Locale locale, TimeZone timeZone, Set<ATUserGroup> userGroupAd) {
+		boolean newUser = null == user;
 		if (null == user) {
 			LOGGER.info("creating user: " + username);
 			user = new ATUser(username, password);
@@ -120,14 +126,22 @@ public class ATSecDBAdminUserCreator {
 		} else {
 			LOGGER.info("updating user: " + username);
 		}
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setLocale(locale);
-		user.setTimeZone(timeZone);
+		if (null != firstName) {
+			user.setFirstName(firstName);
+		}
+		if (null != lastName) {
+			user.setLastName(lastName);
+		}
+		if (null != locale) {
+			user.setLocale(locale);
+		}
+		if (null != timeZone) {
+			user.setTimeZone(timeZone);
+		}
 		for (ATUserGroup atUserGroup : userGroupAd) {
 			user.getUserGroups().add(atUserGroup);
 		}
-		user = userDetailsService.saveUser(user, true);
+		user = userDetailsService.saveUser(user, newUser);
 	}
 
 	private ATUserGroup createOrUpdateGroup(String groupName, String displayName, String desc, boolean active, List<ATRole> roles) {

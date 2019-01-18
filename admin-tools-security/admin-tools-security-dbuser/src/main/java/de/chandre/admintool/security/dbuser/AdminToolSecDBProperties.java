@@ -136,9 +136,11 @@ public class AdminToolSecDBProperties {
 		private boolean directPasswordChangeAllowed = true;
 		private boolean directPasswordChangeInProfileAllowed = true;
 		
-		private String passwordHashPeriod = "P7D";
+		private String passwordHashPeriodStr = "P7D";
 		
-		private String maxPasswordAge= "";
+		private String maxLoginAttemptPeriodStr = "P7D";
+		
+		private String maxPasswordAgePeriodStr = "P3M";
 		
 		public List<String> getAvailableLocales() {
 			return availableLocales;
@@ -194,13 +196,33 @@ public class AdminToolSecDBProperties {
 		public void setDirectPasswordChangeInProfileAllowed(boolean directPasswordChangeInProfileAllowed) {
 			this.directPasswordChangeInProfileAllowed = directPasswordChangeInProfileAllowed;
 		}
-		public void setPasswordHashPeriod(String passwordHashPeriod) {
-			this.passwordHashPeriod = passwordHashPeriod;
+		public String getPasswordHashPeriodStr() {
+			return passwordHashPeriodStr;
+		}
+		public void setPasswordHashPeriodStr(String passwordHashPeriodStr) {
+			this.passwordHashPeriodStr = passwordHashPeriodStr;
+		}
+		public String getMaxLoginAttemptPeriodStr() {
+			return maxLoginAttemptPeriodStr;
+		}
+		public void setMaxLoginAttemptPeriodStr(String maxLoginAttemptPeriodStr) {
+			this.maxLoginAttemptPeriodStr = maxLoginAttemptPeriodStr;
+		}
+		public String getMaxPasswordAgePeriodStr() {
+			return maxPasswordAgePeriodStr;
+		}
+		public void setMaxPasswordAgePeriodStr(String maxPasswordAgePeriodStr) {
+			this.maxPasswordAgePeriodStr = maxPasswordAgePeriodStr;
 		}
 		public Period getPasswordHashPeriod() {
-			return Period.parse(passwordHashPeriod);
+			return null != this.passwordHashPeriodStr ? Period.parse(this.passwordHashPeriodStr) : null;
 		}
-		
+		public Period getMaxLoginAttemptPeriod() {
+			return null != this.maxLoginAttemptPeriodStr ? Period.parse(this.maxLoginAttemptPeriodStr) : null;
+		}
+		public Period getMaxPasswordAgePeriod() {
+			return null != this.maxPasswordAgePeriodStr ? Period.parse(this.maxPasswordAgePeriodStr) : null;
+		}
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -209,7 +231,9 @@ public class AdminToolSecDBProperties {
 					.append(", lastName=").append(lastName).append(", email=").append(email).append(", phone=")
 					.append(phone).append(", directPasswordChangeAllowed=").append(directPasswordChangeAllowed)
 					.append(", directPasswordChangeInProfileAllowed=").append(directPasswordChangeInProfileAllowed)
-					.append(", passwordHashPeriod=").append(passwordHashPeriod).append("]");
+					.append(", passwordHashPeriodStr=").append(passwordHashPeriodStr)
+					.append(", maxLoginAttemptPeriodStr=").append(maxLoginAttemptPeriodStr)
+					.append(", maxPasswordAgePeriodStr=").append(maxPasswordAgePeriodStr).append("]");
 			return builder.toString();
 		}
 	}
@@ -329,7 +353,7 @@ public class AdminToolSecDBProperties {
 		private Pattern pattern;
 		
 		@PostConstruct
-		private void init() {
+		public void init() {
 			if(minLength > 0 && minLength > maxLength) {
 				throw new IllegalArgumentException("The minLength of validation config should be smaller than or equals to maxLegth!");
 			}

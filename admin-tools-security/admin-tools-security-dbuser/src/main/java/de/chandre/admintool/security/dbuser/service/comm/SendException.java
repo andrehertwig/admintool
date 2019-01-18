@@ -1,9 +1,10 @@
 package de.chandre.admintool.security.dbuser.service.comm;
 
 /**
+ * Exception to be sent when sending the information fails
  * 
  * @author André
- * @since 1.1.7
+ * @since 1.2.0
  *
  */
 public class SendException extends Exception {

@@ -1,6 +1,7 @@
 package de.chandre.admintool.security.dbuser.service;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -104,16 +106,31 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		ATUser user = getUser(username);
 		if (null == user) {
-			throw new UsernameNotFoundException("no user found");
+			throw new UsernameNotFoundException("no user found, for username: " + username);
 		}
 		if(user.isNotEnabled()) {
-			throw new UsernameNotFoundException("user is not enabled");
+			throw new AccountExpiredException("user '"+username+"' is not enabled");
 		}
 		
 		boolean locked = user.isAccountLocked();
 		if (null != loginAttemptService) {
 			locked = loginAttemptService.isBlocked(username);
-			setUserLocked(user, locked);
+			user = setUserLocked(user, locked);
+		}
+		if (!locked) {
+			user = checkIfPasswordExpired(user);
+		}
+		return user;
+	}
+
+	@Override
+	public ATUser checkIfPasswordExpired(ATUser user) {
+		if(null != user.getPasswordDate() && null != properties.getUsers().getMaxPasswordAgePeriod()) {
+			Period maxLifeTimePeriod = properties.getUsers().getMaxPasswordAgePeriod();
+			LocalDateTime maxDate = user.getPasswordDate().plus(maxLifeTimePeriod);
+			if(LocalDateTime.now().isAfter(maxDate)) {
+				user = setUserExpired(user, true);
+			}
 		}
 		return user;
 	}
@@ -310,7 +327,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 			} catch (Exception e) {
 				LOGGER.debug(e.getMessage(), e);
 				errors.add(new ATError(Constants.MSG_KEY_PREFIX + "user.save", 
-						validator.getMessageWithSuffix("save", null, "Exception during save"), "generic"));
+						validator.getMessageWithSuffix("save", new Object[] {userTO.getUsername()}, "Exception saving user: " + userTO.getUsername()), "generic"));
 			}
 		}
 		return errors;
@@ -323,7 +340,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 		if (null != getUser(StringUtils.trimToNull(userTO.getUsername()))) {
 			errors = new HashSet<>();
 			errors.add(new ATError(Constants.MSG_KEY_PREFIX + "user.alreadyExists", 
-					validator.getMessageWithSuffix("alreadyExists", null, "The user exists already"), "username"));
+					validator.getMessageWithSuffix("alreadyExists", new Object[] {userTO.getUsername()}, "The user exists already: " + userTO.getUsername()), "username"));
 			return errors;
 		}
 		ATUser user = new ATUser(StringUtils.trimToNull(userTO.getUsername()), StringUtils.trimToNull(userTO.getPassword()));
@@ -335,7 +352,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 		if (!properties.getUsers().isDirectPasswordChangeAllowed()) {
 			user.setPasswordLinkHash(this.passwordLinkHashGenerator.generatePasswordLinkHash());
 			user.expireCredentials();
-			communicator.sendResetedPasswordNotice(CommunicationProcess.CREATE_USER, user.getUsername(), user.getEmail(), user.getPhone(), user.getPasswordLinkHash());
+			communicator.sendResetPasswordNotice(CommunicationProcess.CREATE_USER, user.getUsername(), user.getEmail(), user.getPhone(), user.getPasswordLinkHash());
 			validatePassword = false;
 		}
 		
@@ -354,7 +371,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 		if (null == user) {
 			errors = new HashSet<>();
 			errors.add(new ATError(Constants.MSG_KEY_PREFIX + "user.notFound", 
-					validator.getMessageWithSuffix("notFound", null, "No user foud"), "username"));
+					validator.getMessageWithSuffix("notFound", new Object[] {userTO.getUsername()}, "No user foud, with name: " + userTO.getUsername()), "username"));
 			return errors;
 		}
 		if (LOGGER.isDebugEnabled()) {
@@ -407,7 +424,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 		user.setPasswordLinkHash(this.passwordLinkHashGenerator.generatePasswordLinkHash());
 		user.expireCredentials();
 		saveUser(user);
-		communicator.sendResetedPasswordNotice(process, user.getUsername(), user.getEmail(), user.getPhone(), user.getPasswordLinkHash());
+		communicator.sendResetPasswordNotice(process, user.getUsername(), user.getEmail(), user.getPhone(), user.getPasswordLinkHash());
 	}
 	
 	@Override
@@ -470,7 +487,7 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 	@Override
 	@Transactional
 	public void loginFailed(String username) {
-		LOGGER.info("registering login attempt");
+		LOGGER.info("registering login attempt for user: " + username);
 		ATUser user = getUser(username);
 		int currentTry = user.getLoginAttempts() +1;
 		user.setLoginAttempts(currentTry);
@@ -485,11 +502,14 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 	@Transactional
 	public void loginSuccess(String username) {
 		ATUser user = getUser(username);
-		if (user.getLastLoginAttempt() != null 
-				&& user.getLastLoginAttempt().isBefore(LocalDateTime.now().minusDays(7))) {
-			LOGGER.info("removing login attempts");
-			user.setLoginAttempts(0);
-			
+		if (user.getLastLoginAttempt() != null) {
+			//removing the login attempt if older than...
+			Period maxLifeTimePeriod = properties.getUsers().getMaxLoginAttemptPeriod();
+			LocalDateTime maxDate = user.getLastLoginAttempt().plus(maxLifeTimePeriod);
+			if(LocalDateTime.now().isAfter(maxDate)) {
+				LOGGER.info("removing login attempts for user: " + username);
+				user.setLoginAttempts(0);
+			}
 		}
 		user.setLastLogin(LocalDateTime.now());
 		saveUser(user);
