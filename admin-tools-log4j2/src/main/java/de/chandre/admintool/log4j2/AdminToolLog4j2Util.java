@@ -437,13 +437,7 @@ public class AdminToolLog4j2Util
 		AdminToolLog4j2OutputStream baos = new AdminToolLog4j2OutputStream(4096, encodingToUse);
 		outputStreams.put(appenderName, baos);
 		
-		OutputStreamAppender appender = OutputStreamAppender.newBuilder()
-				.setName(appenderName)
-				.setTarget(baos)
-				.setLayout(layout)
-				.setFollow(false)
-				.build();
-		
+		OutputStreamAppender appender = OutputStreamAppender.createAppender(layout, null, baos, appenderName, false, true);
 		appender.start();
 		
 		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);

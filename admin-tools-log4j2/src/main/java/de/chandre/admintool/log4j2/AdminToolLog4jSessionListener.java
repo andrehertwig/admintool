@@ -2,6 +2,7 @@ package de.chandre.admintool.log4j2;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -32,6 +33,11 @@ public class AdminToolLog4jSessionListener implements HttpSessionListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent sessionEvent) {}
+	
+	@PostConstruct
+	private void log() {
+		LOGGER.info("AdminToolLog4j2Util has been autowired: " + (null != log4jUtil));
+	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent sessionEvent) {
