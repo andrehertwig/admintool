@@ -18,6 +18,10 @@ public class JmxMethodTO implements Serializable {
 	
 	private String generalType;
 	
+	private Boolean notPrimitive;
+	private boolean setToEmpty;
+	private String typeInstance;
+	
 	public String getName() {
 		return name;
 	}
@@ -55,12 +59,32 @@ public class JmxMethodTO implements Serializable {
 		this.generalType = generalType;
 	}
 	
+	public boolean isSetToEmpty() {
+		return setToEmpty;
+	}
+	public void setSetToEmpty(boolean setToEmpty) {
+		this.setToEmpty = setToEmpty;
+	}
+	public String getTypeInstance() {
+		return typeInstance;
+	}
+	public void setTypeInstance(String typeInstance) {
+		this.typeInstance = typeInstance;
+	}
+	
+	public Boolean isNotPrimitive() {
+		return notPrimitive;
+	}
+	public void setNotPrimitive(Boolean primitive) {
+		this.notPrimitive = primitive;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("JmxMethodTO [name=").append(name).append(", type=").append(type).append(", value=")
 				.append(value).append(", newValue=").append(newValue).append(", description=").append(description)
-				.append(", generalType=").append(generalType).append("]");
+				.append(", generalType=").append(generalType).append(", notPrimitive=").append(notPrimitive)
+				.append(", setToEmpty=").append(setToEmpty).append(", typeInstance=").append(typeInstance).append("]");
 		return builder.toString();
 	}
 }

@@ -224,6 +224,9 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 					parameter.setDescription(mBeanParameterInfo.getDescription());
 					parameter.setType(mBeanParameterInfo.getType());
 					parameter.setGeneralType(getGeneralType(mBeanParameterInfo.getType()));
+					if(!SIMPLE_TYPES.contains(mBeanParameterInfo.getType())) {
+						parameter.setNotPrimitive(Boolean.TRUE);
+					}
 					method.addParameter(parameter);
 				}
 				
@@ -251,7 +254,7 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 							if (method.getName().equals(mBeanParameterInfo.getName())) {
 								//found matching parameter
 								signatures[i] = mBeanParameterInfo.getType();
-								values[i] = parse(method.getNewValue(),  mBeanParameterInfo.getType());
+								values[i] = parse(method.getNewValue(), getAttributeType(mBeanParameterInfo.getType(), method), !method.isSetToEmpty());
 								i++;
 							}
 						}
@@ -261,15 +264,24 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 					Object result = server.invoke(
 							new ObjectName(queryTo.getDomain()+":"+queryTo.getMbean()), 
 							queryTo.getName(), values, signatures);
+					response.setReturnValue(result);
 				}
 			}
 			response.setSuccess(Boolean.TRUE);
 		} catch (ReflectionException | MBeanException | InstanceNotFoundException | MalformedObjectNameException e) {
 			LOGGER.error(e.getMessage(), e);
 			response.setSuccess(Boolean.FALSE);
+			response.setReturnValue("Exception: " + e.getMessage());
 		}
 		
 		return response;
+	}
+	
+	protected static String getAttributeType(String originalType, JmxMethodTO method) {
+		if (null == method || StringUtils.isBlank(method.getTypeInstance())) {
+			return originalType;
+		}
+		return method.getTypeInstance();
 	}
 	
 	protected Object getAttributeValue(JmxQueryTO queryTo, String attributeName) {
@@ -290,7 +302,7 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 		return "[error retrieving value]";
 	}
 	
-	private String getGeneralType(String type) {
+	protected static String getGeneralType(String type) {
 		if (type == null) {
 			return type;
 		}
@@ -311,10 +323,20 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 		return type;
 	}
 	
-	public Object parse(String value, String type) throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException {
+	public Object parse(String value, String type, boolean nullable) 
+			throws JsonParseException, JsonMappingException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		Object result = null;
 		
 		if(!SIMPLE_TYPES.contains(type)) {
+			
+			if ("".equals(value) && nullable) {
+				Class<?> clazz = Class.forName(type);
+				return clazz.newInstance();
+			}
+			
+			if (type.equals(String.class.getName())) {
+				return value;
+			}
 			
 			if (type.equals("[Ljava.lang.String;")) {
 				result = StringUtils.splitPreserveAllTokens(value, stringArraySeparator);
@@ -345,6 +367,7 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 			else if (type.equals("boolean")) {
 				return Boolean.valueOf(value).booleanValue();
 			}
+			
 		}
 
 		if (result == null) {
@@ -366,7 +389,7 @@ public class AdminToolJmxServiceImpl implements AdminToolJmxService {
 				
 				MBeanOperationInfo info = i.next();
 				Object role = info.getDescriptor().getFieldValue(ROLE);
-	            if(null != role && info.getSignature().length == 0 || GETTER.equals(role)) {
+	            if(null == role || GETTER.equals(role)) {
 	                i.remove();
 	            }
 	        }

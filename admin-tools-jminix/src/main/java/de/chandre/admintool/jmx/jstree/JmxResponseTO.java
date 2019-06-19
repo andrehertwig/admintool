@@ -9,6 +9,7 @@ public class JmxResponseTO implements Serializable {
 	
 	private List<JmxMethodTO> methods = new ArrayList<>();
 	private Boolean success;
+	private Object returnValue;
 
 	public List<JmxMethodTO> getMethods() {
 		return methods;
@@ -30,10 +31,19 @@ public class JmxResponseTO implements Serializable {
 		this.success = success;
 	}
 
+	public Object getReturnValue() {
+		return returnValue;
+	}
+
+	public void setReturnValue(Object returnValue) {
+		this.returnValue = returnValue;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("JmxResponseTO [methods=").append(methods).append(", success=").append(success).append("]");
+		builder.append("JmxResponseTO [methods=").append(methods).append(", success=").append(success)
+				.append(", returnValue=").append(returnValue).append("]");
 		return builder.toString();
 	}
 }

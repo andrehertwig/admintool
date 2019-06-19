@@ -11,6 +11,9 @@ import de.chandre.admintool.core.AdminToolConfig;
 @Component
 public class ExampleMXBean implements AdminToolConfig {
 	
+	private Double myDouble = Double.valueOf(123.456d);
+	private double myPrimitiveDouble =  654.321d;
+	
 	public Date getDate() {
 		return new Date();
 	}
@@ -24,11 +27,19 @@ public class ExampleMXBean implements AdminToolConfig {
 	}
 	
 	public Double getDouble() {
-		return Double.valueOf(123.456d);
+		return myDouble;
+	}
+	
+	public void setDouble(Double doubleValue) {
+		this.myDouble = doubleValue;
 	}
 	
 	public double getPrimitiveDouble() {
-		return 654.321d;
+		return this.myPrimitiveDouble;
+	}
+	
+	public void setPrimitiveDouble(double doubleValue) {
+		this.myPrimitiveDouble = doubleValue;
 	}
 
 	@Override

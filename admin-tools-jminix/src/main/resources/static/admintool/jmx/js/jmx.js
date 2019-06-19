@@ -12,7 +12,10 @@ $.extend(AdminTool.Jmx.prototype, {
 	
 	postInit: function() {
 		this.debug=false;
-		this.initJsTree()
+		
+		this.primitiveTypes = ["boolean", "byte", "short", "int", "long", "double", "float"];
+		
+		this.initJsTree();
 	},
 	
 	initJsTree: function() {
@@ -185,18 +188,25 @@ $.extend(AdminTool.Jmx.prototype, {
 		}
 		
 		var result = "";
+		var shouldTimeoutSet = true; 
 		if (data && data.methods && data.methods.length > 0) {
 			
 			if(data.success != null && data.success === false) {
 				result = Mustache.render(opperationFailedTpl, data.methods[0]);
 			} else {
+				if (data.returnValue && data.returnValue != null && data.returnValue != "") {
+					data.methods[0].returnValue = "<p>ReturnValue:</p> "+ JSON.stringify(data.returnValue);
+					shouldTimeoutSet = false;
+				} else {
+					data.methods[0].returnValue = "Method executed";
+				}
 				data.methods[0].success = data.success;
 				data.methods[0].successMessage = function () {
 					return function (text, render) {
 						if (this.success && this.success === true) {
 							return '<div id="save_success" class="alert alert-success alert-dismissible" role="alert">'+
 							'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-							'Value saved successfully' + 
+							this.returnValue + 
 							'</div>';
 						}
 						return "";
@@ -213,13 +223,13 @@ $.extend(AdminTool.Jmx.prototype, {
 		}
 		
 		var msg = $('#jmxView').find('#save_success');
-		if (msg && msg.length > 0) {
+		if (shouldTimeoutSet && msg && msg.length > 0) {
 			clearTimeout(this.saveTimout);
 			this.saveTimout = window.setTimeout(function() {
 				$("#save_success").fadeTo(500, 0).slideUp(500, function(){
 					$(this).remove(); 
 				});
-			}, 3000);
+			}, 5000);
 		}
 	},
 	
@@ -232,7 +242,9 @@ $.extend(AdminTool.Jmx.prototype, {
 				var parameter = {
 					"name" : param.name,
 					"type" : param.type,
-					"newValue" : $('#jmxView').find(getID(param.name)).val()
+					"newValue" : $('#jmxView').find(getID(param.name)).val(),
+					"setToEmpty" : $('#jmxView').find(getID(param.name+'_setToEmpty')).prop('checked'),
+					"typeInstance" : $('#jmxView').find(getID(param.name)+'_typeInstance').val(),
 				};
 				paramList.push(parameter);
 			}
@@ -291,22 +303,39 @@ Mustache.parse(attributeTpl);
 var opperationsTpl =
 	'<h4>{{name}}</h4>'+
 	'{{#successMessage}}1{{/successMessage}}' +
-	'<div class="table-responsive"><table class="table no-margin table-hover"><tbody>' +
+	'<div class="table-responsive"><table class="table no-margin table-hover" width="100%"><tbody>' +
+		'<colgroup><col width="5%"><col width="30%"><col width="65%"></colgroup>'+
 		'<tr id="dec_{{name}}">' +
-			'<td>Description</td>' +
+			'<td colspan="2">Description</td>' +
 			'<td>{{description}}</td>' +
 		'</tr>' +
 		'<tr id="type_{{name}}">' +
-			'<td>Return-Type</td>' +
+			'<td colspan="2">Return-Type</td>' +
 			'<td>{{type}}</td>' +
 		'</tr>' +
 		'{{#parameters}}' +
 			'<tr>' +
-				'<td title="{{description}}">{{name}}</td>' +
+				'<td colspan="2" title="{{description}}"><label for="{{name}}">{{name}}</label></td>' +
 				'<td title="{{type}}">'+
 					'<input class="form-control" type="text" id="{{name}}" name="{{name}}" placeholder="{{type}}" value=""/>'+
 				'</td>' +
 			'</tr>' +
+			'{{#notPrimitive}}'+
+			'<tr>' +
+				'<td></td>'+
+				'<td title="To set the value empty, instead of \'null\'"><label for="{{name}}_setToEmpty">Set object empty</label></td>' +
+				'<td >'+
+					'<input  type="checkbox" id="{{name}}_setToEmpty" name="{{name}}_setToEmpty" value="1"/>'+
+				'</td>' +
+			'</tr>' +
+			'<tr>' +
+				'<td></td>'+
+				'<td title="Define an explicite class for instancing the new object"><label for="{{name}}_typeInstance">Type instance class</label></td>' +
+				'<td>'+
+					'<input class="form-control" type="text" id="{{name}}_typeInstance" name="{{name}}_typeInstance" value="{{type}}"/>'+
+				'</td>' +
+			'</tr>' +
+			'{{/notPrimitive}}'+
 		'{{/parameters}}' +
 	'</tbody></table></div>'+
 	'<div><button type="button" id="execute" class="btn btn-default">Execute</button></div>'
