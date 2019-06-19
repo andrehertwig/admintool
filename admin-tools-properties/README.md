@@ -12,12 +12,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.7.1</version>
+	<version>1.1.7.2</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-properties</artifactId>
-	<version>1.1.7.1</version>
+	<version>1.1.7.2</version>
 </dependency>
 ```
 
