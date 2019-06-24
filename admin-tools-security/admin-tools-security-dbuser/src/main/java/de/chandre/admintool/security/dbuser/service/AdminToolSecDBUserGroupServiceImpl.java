@@ -131,7 +131,7 @@ public class AdminToolSecDBUserGroupServiceImpl implements AdminToolSecDBUserGro
 					validator.getMessageWithSuffix("alreadyExists", null, "The client exists already"), "name"));
 			return errors;
 		}
-		ATUserGroup userGroup = new ATUserGroup(StringUtils.trimToNull(accessRelationTO.getName()));
+		ATUserGroup userGroup = ATUserGroup.createNew(StringUtils.trimToNull(accessRelationTO.getName()));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug(String.format("creating client: %s", userGroup.getName()));
 		}

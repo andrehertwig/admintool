@@ -1,7 +1,7 @@
 package de.chandre.admintool.security.dbuser.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -38,7 +38,7 @@ public abstract class AbstractEntity implements Serializable, Entity {
 	
 	@CreatedDate
 	@Column(name="CREATED", nullable=false)
-	private LocalDateTime created;
+	private ZonedDateTime created;
 	
 	@CreatedBy
 	@Column(name="CREATED_BY", nullable=true)
@@ -46,15 +46,22 @@ public abstract class AbstractEntity implements Serializable, Entity {
 	
 	@LastModifiedDate
 	@Column(name="MODIFIED", nullable=true)
-	private LocalDateTime modified;
+	private ZonedDateTime modified;
 	
 	@LastModifiedBy
 	@Column(name="MODIFIED_BY", nullable=true)
 	private String modifiedBy;
 	
 	public AbstractEntity() {
+		super();
+	}
+	
+	/**
+	 * separated function to generate and set UUID and creation date
+	 */
+	public void create() {
 		setId(UUID.randomUUID().toString());
-		setCreated(LocalDateTime.now());
+		setCreated(ZonedDateTime.now());
 	}
 
 	@Override
@@ -77,11 +84,11 @@ public abstract class AbstractEntity implements Serializable, Entity {
 	}
 
 	@Override
-	public LocalDateTime getCreated() {
+	public ZonedDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(ZonedDateTime created) {
 		this.created = created;
 	}
 	
@@ -95,11 +102,11 @@ public abstract class AbstractEntity implements Serializable, Entity {
 	}
 
 	@Override
-	public LocalDateTime getModified() {
+	public ZonedDateTime getModified() {
 		return modified;
 	}
 
-	public void setModified(LocalDateTime modified) {
+	public void setModified(ZonedDateTime modified) {
 		this.modified = modified;
 	}
 
@@ -120,7 +127,6 @@ public abstract class AbstractEntity implements Serializable, Entity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((created == null) ? 0 : created.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -134,11 +140,6 @@ public abstract class AbstractEntity implements Serializable, Entity {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractEntity other = (AbstractEntity) obj;
-		if (created == null) {
-			if (other.created != null)
-				return false;
-		} else if (!created.equals(other.created))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;

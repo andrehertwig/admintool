@@ -14,7 +14,8 @@
 						<h4><i class="icon fa fa-warning"></i>&nbsp;
 							<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.login.error.headline', 'Error')" />
 						</h4>
-						<th:block th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.login.error.message', 'User name and/or password incorrect')" />
+						<th:block th:unless="${message}" th:include="admintool/fragments/fragements :: message('ui.admintool.core.security.login.error.message', 'User name and/or password incorrect')" />
+						<p th:if="${message}" th:text="${message}"></p>
 					</div>
 				
 					<form method="post" th:action="@{login}">

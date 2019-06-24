@@ -173,7 +173,7 @@ public abstract class AbstractValidator<O extends Entity> implements Constants, 
 	public String getMessage(String code, Object[] args, String defaultMessage) {
 		if (null != messageSource) {
 			ATUser user = (ATUser)templateUserService.getUserPrincipal();
-			Locale locale = null != user.getLocale() ? user.getLocaleAsLocale() : LocaleContextHolder.getLocale();
+			Locale locale = (null != user && null != user.getLocale()) ? user.getLocaleAsLocale() : LocaleContextHolder.getLocale();
 			return messageSource.getMessage(code, args, defaultMessage, locale);
 		}
 		return defaultMessage;

@@ -1,7 +1,7 @@
 package de.chandre.admintool.security.dbuser.domain;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.security.core.GrantedAuthority;
 
+import de.chandre.admintool.security.dbuser.ATSecDBUtils;
 import de.chandre.admintool.security.dbuser.Constants;
 
 /**
@@ -53,7 +55,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	private String timeZone;
 	
 	@Column(name="PASSWORD_DATE", nullable=true)
-	private LocalDateTime passwordDate;
+	private ZonedDateTime passwordDate;
 	
 	@Valid
 	@NotNull(message = MSG_KEY_PREFIX + "user.userGroups.NotNull")
@@ -80,11 +82,11 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	private boolean credentialsNonExpired;
 	
 	@Column(name="ACC_EXP_SINCE", nullable=true)
-	private LocalDateTime accountExpiredSince;
+	private ZonedDateTime accountExpiredSince;
 	@Column(name="ACC_LOCK_SINCE", nullable=true)
-	private LocalDateTime accountLockedSince;
+	private ZonedDateTime accountLockedSince;
 	@Column(name="CRED_EXP_SINCE", nullable=true)
-	private LocalDateTime credentialsExpiredSince;
+	private ZonedDateTime credentialsExpiredSince;
 	
 	@Column(name="FIRSTNAME", nullable=true)
 	private String firstName;
@@ -98,15 +100,15 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	@Column(name="PWD_LINK_HASH", nullable=true)
 	private String passwordLinkHash;
 	@Column(name="PWD_LINK_CREATED", nullable=true)
-	private LocalDateTime passwordLinkCreated;
+	private ZonedDateTime passwordLinkCreated;
 	
 	@Column(name="LOGIN_ATTEMPTS", nullable=false)
 	private int loginAttempts;
 	@Column(name="LAST_LOGIN_ATTEMPT", nullable=true)
-	private LocalDateTime lastLoginAttempt;
+	private ZonedDateTime lastLoginAttempt;
 	
 	@Column(name="LAST_LOGIN", nullable=true)
-	private LocalDateTime lastLogin;
+	private ZonedDateTime lastLogin;
 	
 	public ATUser() {
 		super();
@@ -120,50 +122,51 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		setPassword(password);
 	}
 	
+	public static ATUser createNew() {
+		ATUser user = new ATUser();
+		user.create();
+		return user;
+	}
+	
+	public static ATUser createNew(String username, String password) {
+		ATUser user = new ATUser(username, password);
+		user.create();
+		return user;
+	}
+	
 	private void init() {
 		this.accountNonExpired = true;
 		this.accountNonLocked = true;
 		this.credentialsNonExpired = true;
 		this.loginAttempts=0;
 	}
+	
+	private Stream<? extends ATRole> getRoles() {
+		return this.userGroups.stream()
+			//only active groups
+			.filter(ATUserGroup::isActive)
+			//merge active roles
+			.flatMap(ATUserGroup::getActiveRoles);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (this.userGroups != null) {
-			return this.userGroups.stream()
-					//only active groups
-					.filter(ATUserGroup::isActive)
-					//merge active roles
-					.flatMap(ATUserGroup::getActiveRoles)
-					.collect(Collectors.toSet());
+			return getRoles().collect(Collectors.toSet());
 		}
 		return Collections.emptySet();
 	}
 	
 	public Set<String> getActiveAuthorityNames() {
 		if (this.userGroups != null) {
-			return this.userGroups.stream()
-					//only active groups
-					.filter(ATUserGroup::isActive)
-					//merge active roles
-					.flatMap(ATUserGroup::getActiveRoles)
-					//map only display name
-					.map(ATRole::getName)
-					.collect(Collectors.toSet());
+			return getRoles().map(ATRole::getName).collect(Collectors.toSet());
 		}
 		return Collections.emptySet();
 	}
 	
 	public List<String> getActiveAuthorityDisplayNames() {
 		if (this.userGroups != null) {
-			return this.userGroups.stream()
-					//only active groups
-					.filter(ATUserGroup::isActive)
-					//merge active roles
-					.flatMap(ATUserGroup::getActiveRoles)
-					//map only display name
-					.map(ATRole::getDisplayName)
-					.collect(Collectors.toList());
+			return getRoles().map(ATRole::getDisplayName).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
@@ -173,7 +176,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		return this.password;
 	}
 
-	public LocalDateTime getPasswordDate() {
+	public ZonedDateTime getPasswordDate() {
 		return passwordDate;
 	}
 
@@ -227,7 +230,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		setAccountNonLocked(enabled);
 		setCredentialsNonExpired(enabled);
 		
-		LocalDateTime now = LocalDateTime.now();
+		ZonedDateTime now = ZonedDateTime.now();
 		setAccountExpiredSince(enabled ? null : now);
 		setAccountLockedSince(enabled ? null : now);
 		setCredentialsExpiredSince(enabled ? null : now);
@@ -247,7 +250,6 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		if (null != locale) {
 			this.locale = locale.toString();
 		}
-		locale = null;
 	}
 
 	public void setLocale(String locale) {
@@ -272,7 +274,6 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		if (null != timeZone) {
 			this.timeZone = timeZone.getID();
 		}
-		this.timeZone = null;
 	}
 	
 	public void setTimeZone(ZoneId zoneId) {
@@ -311,29 +312,29 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 
 	@Override
-	public LocalDateTime getAccountExpiredSince() {
+	public ZonedDateTime getAccountExpiredSince() {
 		return accountExpiredSince;
 	}
 
-	public void setAccountExpiredSince(LocalDateTime accountExpiredSince) {
+	public void setAccountExpiredSince(ZonedDateTime accountExpiredSince) {
 		this.accountExpiredSince = accountExpiredSince;
 	}
 
 	@Override
-	public LocalDateTime getAccountLockedSince() {
+	public ZonedDateTime getAccountLockedSince() {
 		return accountLockedSince;
 	}
 
-	public void setAccountLockedSince(LocalDateTime accountLockedSince) {
+	public void setAccountLockedSince(ZonedDateTime accountLockedSince) {
 		this.accountLockedSince = accountLockedSince;
 	}
 
 	@Override
-	public LocalDateTime getCredentialsExpiredSince() {
+	public ZonedDateTime getCredentialsExpiredSince() {
 		return credentialsExpiredSince;
 	}
 
-	public void setCredentialsExpiredSince(LocalDateTime credentialsExpiredSince) {
+	public void setCredentialsExpiredSince(ZonedDateTime credentialsExpiredSince) {
 		this.credentialsExpiredSince = credentialsExpiredSince;
 	}
 
@@ -381,7 +382,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	public void setPasswordLinkHash(String passwordLinkHash) {
 		if (null != passwordLinkHash) {
 			this.passwordLinkHash = passwordLinkHash;
-			this.passwordLinkCreated = LocalDateTime.now();
+			this.passwordLinkCreated = ZonedDateTime.now();
 		} else {
 			this.passwordLinkHash = null;
 			this.passwordLinkCreated = null;
@@ -389,11 +390,11 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 
 	@Override
-	public LocalDateTime getPasswordLinkCreated() {
+	public ZonedDateTime getPasswordLinkCreated() {
 		return passwordLinkCreated;
 	}
 
-	public void setPasswordLinkCreated(LocalDateTime passwordLinkCreated) {
+	public void setPasswordLinkCreated(ZonedDateTime passwordLinkCreated) {
 		this.passwordLinkCreated = passwordLinkCreated;
 	}
 
@@ -407,12 +408,16 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 
 	@Override
-	public LocalDateTime getLastLoginAttempt() {
+	public ZonedDateTime getLastLoginAttempt() {
 		return lastLoginAttempt;
 	}
 
-	public void setLastLoginAttempt(LocalDateTime lastLoginAttempt) {
+	public void setLastLoginAttempt(ZonedDateTime lastLoginAttempt) {
 		this.lastLoginAttempt = lastLoginAttempt;
+	}
+	
+	public void setLastLoginAttemptNow() {
+		this.lastLoginAttempt = ATSecDBUtils.getNowZoned(this);
 	}
 
 	public void setUsername(String username) {
@@ -421,7 +426,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 
 	public void setPassword(String password) {
 		this.password = password;
-		this.passwordDate = LocalDateTime.now();
+		this.passwordDate = ATSecDBUtils.getNowZoned(this);
 	}
 
 	public void setAccountNonExpired(boolean accountNonExpired) {
@@ -430,7 +435,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	
 	public void expireAccount() {
 		this.accountNonExpired = false;
-		this.accountExpiredSince = LocalDateTime.now();
+		this.accountExpiredSince = ATSecDBUtils.getNowZoned(this);
 	}
 
 	public void setAccountNonLocked(boolean accountNonLocked) {
@@ -439,7 +444,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	
 	public void lockAccount() {
 		this.accountNonLocked = false;
-		this.accountLockedSince = LocalDateTime.now();
+		this.accountLockedSince = ATSecDBUtils.getNowZoned(this);
 	}
 
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
@@ -448,7 +453,7 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	
 	public void expireCredentials() {
 		this.credentialsNonExpired = false;
-		this.credentialsExpiredSince = LocalDateTime.now();
+		this.credentialsExpiredSince = ATSecDBUtils.getNowZoned(this);
 	}
 	
 	@Override
@@ -491,14 +496,18 @@ public class ATUser extends AbstractEntity implements User, Constants {
 	}
 
 	@Override
-	public LocalDateTime getLastLogin() {
+	public ZonedDateTime getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(LocalDateTime lastLogin) {
+	public void setLastLogin(ZonedDateTime lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-
+	
+	public void setLastLoginNow() {
+		this.lastLogin = ATSecDBUtils.getNowZoned(this);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -516,69 +525,6 @@ public class ATUser extends AbstractEntity implements User, Constants {
 		if (getClass() != obj.getClass())
 			return false;
 		ATUser other = (ATUser) obj;
-		if (accountExpiredSince == null) {
-			if (other.accountExpiredSince != null)
-				return false;
-		} else if (!accountExpiredSince.equals(other.accountExpiredSince))
-			return false;
-		if (accountLockedSince == null) {
-			if (other.accountLockedSince != null)
-				return false;
-		} else if (!accountLockedSince.equals(other.accountLockedSince))
-			return false;
-		if (accountNonExpired != other.accountNonExpired)
-			return false;
-		if (accountNonLocked != other.accountNonLocked)
-			return false;
-		if (credentialsExpiredSince == null) {
-			if (other.credentialsExpiredSince != null)
-				return false;
-		} else if (!credentialsExpiredSince.equals(other.credentialsExpiredSince))
-			return false;
-		if (credentialsNonExpired != other.credentialsNonExpired)
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastLoginAttempt == null) {
-			if (other.lastLoginAttempt != null)
-				return false;
-		} else if (!lastLoginAttempt.equals(other.lastLoginAttempt))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		if (loginAttempts != other.loginAttempts)
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (passwordLinkCreated == null) {
-			if (other.passwordLinkCreated != null)
-				return false;
-		} else if (!passwordLinkCreated.equals(other.passwordLinkCreated))
-			return false;
-		if (passwordLinkHash == null) {
-			if (other.passwordLinkHash != null)
-				return false;
-		} else if (!passwordLinkHash.equals(other.passwordLinkHash))
-			return false;
-		if (phone == null) {
-			if (other.phone != null)
-				return false;
-		} else if (!phone.equals(other.phone))
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;

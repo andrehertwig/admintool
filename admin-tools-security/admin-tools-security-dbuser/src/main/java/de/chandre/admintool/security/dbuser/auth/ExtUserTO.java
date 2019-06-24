@@ -1,6 +1,6 @@
 package de.chandre.admintool.security.dbuser.auth;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import de.chandre.admintool.security.commons.auth.UserTO;
 public class ExtUserTO extends UserTO {
 	private static final long serialVersionUID = 8288644849241619248L;
 	
-	private LocalDateTime passwordDate;
+	private ZonedDateTime passwordDate;
 	
 	private Set<String> activeRoles;
 	
@@ -23,21 +23,21 @@ public class ExtUserTO extends UserTO {
 	private boolean accountLocked;
 	private boolean credentialsExpired;
 	
-	private LocalDateTime accountExpiredSince;
-	private LocalDateTime accountLockedSince;
-	private LocalDateTime credentialsExpiredSince;
+	private ZonedDateTime accountExpiredSince;
+	private ZonedDateTime accountLockedSince;
+	private ZonedDateTime credentialsExpiredSince;
 	
 	private int loginAttempts;
-	private LocalDateTime lastLoginAttempt;
+	private ZonedDateTime lastLoginAttempt;
 	
-	private LocalDateTime passwordLinkCreated;
+	private ZonedDateTime passwordLinkCreated;
 	
-	private LocalDateTime lastLogin;
+	private ZonedDateTime lastLogin;
 	
-	private LocalDateTime created;
+	private ZonedDateTime created;
 	private String createdBy;
 	
-	private LocalDateTime modified;
+	private ZonedDateTime modified;
 	private String modifiedBy;
 	
 	private String passwordDateISO;
@@ -50,18 +50,18 @@ public class ExtUserTO extends UserTO {
 	private String createdISO;
 	private String modifiedISO;
 
-	public LocalDateTime getPasswordDate() {
+	public ZonedDateTime getPasswordDate() {
 		return passwordDate;
 	}
 	
-	private static String getISODate(LocalDateTime dateTime) {
+	private static String getISODate(ZonedDateTime dateTime) {
 		if (null != dateTime) {
 			return dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 		}
 		return null;
 	}
 
-	public void setPasswordDate(LocalDateTime passwordDate) {
+	public void setPasswordDate(ZonedDateTime passwordDate) {
 		this.passwordDate = passwordDate;
 		this.passwordDateISO = getISODate(passwordDate);
 	}
@@ -98,29 +98,29 @@ public class ExtUserTO extends UserTO {
 		this.credentialsExpired = credentialsExpired;
 	}
 
-	public LocalDateTime getAccountExpiredSince() {
+	public ZonedDateTime getAccountExpiredSince() {
 		return accountExpiredSince;
 	}
 
-	public void setAccountExpiredSince(LocalDateTime accountExpiredSince) {
+	public void setAccountExpiredSince(ZonedDateTime accountExpiredSince) {
 		this.accountExpiredSince = accountExpiredSince;
 		this.accountExpiredSinceISO = getISODate(accountExpiredSince);
 	}
 
-	public LocalDateTime getAccountLockedSince() {
+	public ZonedDateTime getAccountLockedSince() {
 		return accountLockedSince;
 	}
 
-	public void setAccountLockedSince(LocalDateTime accountLockedSince) {
+	public void setAccountLockedSince(ZonedDateTime accountLockedSince) {
 		this.accountLockedSince = accountLockedSince;
 		this.accountLockedSinceISO = getISODate(accountLockedSince);
 	}
 
-	public LocalDateTime getCredentialsExpiredSince() {
+	public ZonedDateTime getCredentialsExpiredSince() {
 		return credentialsExpiredSince;
 	}
 
-	public void setCredentialsExpiredSince(LocalDateTime credentialsExpiredSince) {
+	public void setCredentialsExpiredSince(ZonedDateTime credentialsExpiredSince) {
 		this.credentialsExpiredSince = credentialsExpiredSince;
 		this.credentialsExpiredSinceISO = getISODate(credentialsExpiredSince);
 	}
@@ -133,38 +133,38 @@ public class ExtUserTO extends UserTO {
 		this.loginAttempts = loginAttempts;
 	}
 
-	public LocalDateTime getLastLoginAttempt() {
+	public ZonedDateTime getLastLoginAttempt() {
 		return lastLoginAttempt;
 	}
 
-	public void setLastLoginAttempt(LocalDateTime lastLoginAttempt) {
+	public void setLastLoginAttempt(ZonedDateTime lastLoginAttempt) {
 		this.lastLoginAttempt = lastLoginAttempt;
 		this.lastLoginAttemptISO = getISODate(lastLoginAttempt);
 	}
 
-	public LocalDateTime getPasswordLinkCreated() {
+	public ZonedDateTime getPasswordLinkCreated() {
 		return passwordLinkCreated;
 	}
 
-	public void setPasswordLinkCreated(LocalDateTime passwordLinkCreated) {
+	public void setPasswordLinkCreated(ZonedDateTime passwordLinkCreated) {
 		this.passwordLinkCreated = passwordLinkCreated;
 		this.passwordLinkCreatedISO = getISODate(passwordLinkCreated);
 	}
 
-	public LocalDateTime getLastLogin() {
+	public ZonedDateTime getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(LocalDateTime lastLogin) {
+	public void setLastLogin(ZonedDateTime lastLogin) {
 		this.lastLogin = lastLogin;
 		this.lastLoginISO = getISODate(lastLogin);
 	}
 
-	public LocalDateTime getCreated() {
+	public ZonedDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(ZonedDateTime created) {
 		this.created = created;
 		this.createdISO = getISODate(created);
 	}
@@ -177,11 +177,11 @@ public class ExtUserTO extends UserTO {
 		this.createdBy = createdBy;
 	}
 
-	public LocalDateTime getModified() {
+	public ZonedDateTime getModified() {
 		return modified;
 	}
 
-	public void setModified(LocalDateTime modified) {
+	public void setModified(ZonedDateTime modified) {
 		this.modified = modified;
 		this.modifiedISO = getISODate(modified);
 	}

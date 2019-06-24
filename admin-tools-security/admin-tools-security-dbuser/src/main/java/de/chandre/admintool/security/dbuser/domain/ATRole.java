@@ -13,7 +13,8 @@ import javax.validation.constraints.Size;
 import de.chandre.admintool.security.dbuser.Constants;
 
 /**
- * 
+ * Role entity.<br>
+ * call {@link ATRole#create()} when creating an new instance
  * @author André
  * @since 1.2.0
  */
@@ -42,14 +43,23 @@ public class ATRole extends AbstractEntity implements Role, Constants {
 	private boolean active;
 	
 	public ATRole() {
-		super();
-		setActive(true);
+		this(null);
 	}
 	
 	public ATRole(String authority) {
 		super();
 		setName(authority);
 		setActive(true);
+	}
+	
+	public static ATRole createNew() {
+		return ATRole.createNew(null);
+	}
+	
+	public static ATRole createNew(String authority) {
+		ATRole role = new ATRole(authority);
+		role.create();
+		return role;
 	}
 
 	@Override
@@ -133,16 +143,6 @@ public class ATRole extends AbstractEntity implements Role, Constants {
 		if (getClass() != obj.getClass())
 			return false;
 		ATRole other = (ATRole) obj;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (displayName == null) {
-			if (other.displayName != null)
-				return false;
-		} else if (!displayName.equals(other.displayName))
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;

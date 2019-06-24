@@ -1,8 +1,8 @@
 package de.chandre.admintool.security.dbuser.contoller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,8 +85,8 @@ public class AdminToolSecDBPublicController extends AbstractAdminController {
 		}
 		
 		Period hashPeriod = properties.getUsers().getPasswordHashPeriod();
-		LocalDateTime maxDate = user.getPasswordLinkCreated().plus(hashPeriod);
-		if (LocalDateTime.now().isAfter(maxDate)) {
+		ZonedDateTime maxDate = user.getPasswordLinkCreated().plus(hashPeriod);
+		if (ZonedDateTime.now().isAfter(maxDate)) {
 			LOGGER.warn(String.format("reset password for hash %s and user %s is expired", passwordLinkHash, user.getUsername()));
 			response.sendRedirect(super.getRootContext(request) + LoginController.LOGIN_PATH + "?error=hashToOld");
 		}

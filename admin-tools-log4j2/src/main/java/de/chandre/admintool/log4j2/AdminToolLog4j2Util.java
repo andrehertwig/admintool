@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.OutputStreamAppender.Builder;
 import org.apache.logging.log4j.core.appender.OutputStreamAppender;
 import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -344,7 +345,7 @@ public class AdminToolLog4j2Util
 			List<AppenderRef> currentRefs = loggerConfig.getAppenderRefs();
 			Iterator<AppenderRef> refIter = currentRefs.iterator();
 			while (refIter.hasNext()) {
-				AppenderRef ref = (AppenderRef) refIter.next(); 
+				AppenderRef ref = refIter.next(); 
 				if (!appenderNames.contains(ref.getRef())) {
 					refIter.remove();
 					loggerConfig.removeAppender(ref.getRef());
@@ -437,12 +438,12 @@ public class AdminToolLog4j2Util
 		AdminToolLog4j2OutputStream baos = new AdminToolLog4j2OutputStream(4096, encodingToUse);
 		outputStreams.put(appenderName, baos);
 		
-		OutputStreamAppender appender = OutputStreamAppender.newBuilder()
-				.setName(appenderName)
-				.setTarget(baos)
-				.setLayout(layout)
-				.setFollow(false)
-				.build();
+		Builder<?> builder = OutputStreamAppender.newBuilder();
+		builder.setTarget(baos);
+		builder.setName(appenderName);
+		builder.setLayout(layout);
+		builder.setFollow(false);
+		OutputStreamAppender appender = builder.build();
 		
 		appender.start();
 		

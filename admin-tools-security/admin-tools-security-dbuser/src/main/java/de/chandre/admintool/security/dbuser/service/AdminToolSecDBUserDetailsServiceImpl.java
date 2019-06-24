@@ -1,7 +1,7 @@
 package de.chandre.admintool.security.dbuser.service;
 
-import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import de.chandre.admintool.core.ui.ATError;
 import de.chandre.admintool.security.commons.auth.LoginAttemptService;
 import de.chandre.admintool.security.commons.auth.UserTO;
+import de.chandre.admintool.security.dbuser.ATSecDBUtils;
 import de.chandre.admintool.security.dbuser.AdminToolSecDBProperties;
 import de.chandre.admintool.security.dbuser.Constants;
 import de.chandre.admintool.security.dbuser.Constants.CommunicationProcess;
@@ -127,8 +128,8 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 	public ATUser checkIfPasswordExpired(ATUser user) {
 		if(null != user.getPasswordDate() && null != properties.getUsers().getMaxPasswordAgePeriod()) {
 			Period maxLifeTimePeriod = properties.getUsers().getMaxPasswordAgePeriod();
-			LocalDateTime maxDate = user.getPasswordDate().plus(maxLifeTimePeriod);
-			if(LocalDateTime.now().isAfter(maxDate)) {
+			ZonedDateTime maxDate = user.getPasswordDate().plus(maxLifeTimePeriod);
+			if(ZonedDateTime.now().isAfter(maxDate)) {
 				user = setUserExpired(user, true);
 			}
 		}
@@ -489,9 +490,12 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 	public void loginFailed(String username) {
 		LOGGER.info("registering login attempt for user: " + username);
 		ATUser user = getUser(username);
+		if (null == user) {
+			return;
+		}
 		int currentTry = user.getLoginAttempts() +1;
 		user.setLoginAttempts(currentTry);
-		user.setLastLoginAttempt(LocalDateTime.now());
+		user.setLastLoginAttemptNow();
 		if (currentTry > getMaxLoginAttempts()) {
 			user.lockAccount();
 		}
@@ -505,13 +509,13 @@ public class AdminToolSecDBUserDetailsServiceImpl implements AdminToolSecDBUserD
 		if (user.getLastLoginAttempt() != null) {
 			//removing the login attempt if older than...
 			Period maxLifeTimePeriod = properties.getUsers().getMaxLoginAttemptPeriod();
-			LocalDateTime maxDate = user.getLastLoginAttempt().plus(maxLifeTimePeriod);
-			if(LocalDateTime.now().isAfter(maxDate)) {
+			ZonedDateTime maxDate = user.getLastLoginAttempt().plus(maxLifeTimePeriod);
+			if(ATSecDBUtils.getNowZoned(user).isAfter(maxDate)) {
 				LOGGER.info("removing login attempts for user: " + username);
 				user.setLoginAttempts(0);
 			}
 		}
-		user.setLastLogin(LocalDateTime.now());
+		user.setLastLoginNow();
 		saveUser(user);
 	}
 	

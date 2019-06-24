@@ -143,8 +143,7 @@ public class AdminToolSecDBRoleServiceImpl implements AdminToolSecDBRoleService 
 	}
 	
 	public Set<ATError> addRole(String name, String displayName, String description, boolean active) {
-		ATRole role = new ATRole();
-		role.setName(name);
+		ATRole role = ATRole.createNew(name);
 		role.setDisplayName(displayName);
 		role.setDescription(description);
 		role.setActive(active);

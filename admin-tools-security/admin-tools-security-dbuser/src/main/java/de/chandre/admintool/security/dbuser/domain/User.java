@@ -1,6 +1,6 @@
 package de.chandre.admintool.security.dbuser.domain;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
@@ -23,13 +23,13 @@ public interface User extends UserDetails, Entity {
 
 	Set<ATClient> getActiveClients();
 
-	LocalDateTime getLastLogin();
+	ZonedDateTime getLastLogin();
 
-	LocalDateTime getLastLoginAttempt();
+	ZonedDateTime getLastLoginAttempt();
 
 	int getLoginAttempts();
 
-	LocalDateTime getPasswordLinkCreated();
+	ZonedDateTime getPasswordLinkCreated();
 
 	String getPasswordLinkHash();
 
@@ -41,11 +41,11 @@ public interface User extends UserDetails, Entity {
 
 	String getFirstName();
 
-	LocalDateTime getCredentialsExpiredSince();
+	ZonedDateTime getCredentialsExpiredSince();
 
-	LocalDateTime getAccountLockedSince();
+	ZonedDateTime getAccountLockedSince();
 
-	LocalDateTime getAccountExpiredSince();
+	ZonedDateTime getAccountExpiredSince();
 
 	String getLocale();
 

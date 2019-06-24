@@ -99,7 +99,7 @@ public class AdminToolSecDBClientServiceImpl implements AdminToolSecDBClientServ
 					validator.getMessageWithSuffix("alreadyExists", null, "The client exists already"), "name"));
 			return errors;
 		}
-		ATClient client = new ATClient(StringUtils.trimToNull(accessRelationTO.getName()));
+		ATClient client = ATClient.createNew(StringUtils.trimToNull(accessRelationTO.getName()));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug(String.format("creating client: %s", client.getName()));
 		}

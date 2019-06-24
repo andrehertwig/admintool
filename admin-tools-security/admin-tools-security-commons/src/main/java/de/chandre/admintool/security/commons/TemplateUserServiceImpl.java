@@ -67,8 +67,8 @@ public class TemplateUserServiceImpl implements TemplateUserService {
 	public Object getUserPrincipal() {
 		
 		Authentication authentication = getAuthentication();
-		if (authentication.getAuthorities().size() == 1
-				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS)) {
+		if (null == authentication || (authentication.getAuthorities().size() == 1
+				&& authentication.getAuthorities().iterator().next().getAuthority().equals(ROLE_ANONYMOUS))) {
 			return null;
 		}
 		return authentication.getPrincipal();

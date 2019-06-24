@@ -1,6 +1,6 @@
 package de.chandre.admintool.security.dbuser.domain;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.springframework.data.domain.Persistable;
 
@@ -15,11 +15,11 @@ public interface Entity extends Persistable<String> {
 	
 	Integer getVersion();
 
-	LocalDateTime getCreated();
+	ZonedDateTime getCreated();
 
 	String getCreatedBy();
 
-	LocalDateTime getModified();
+	ZonedDateTime getModified();
 
 	String getModifiedBy();
 

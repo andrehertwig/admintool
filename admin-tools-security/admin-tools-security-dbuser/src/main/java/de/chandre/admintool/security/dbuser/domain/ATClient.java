@@ -33,14 +33,23 @@ public class ATClient extends AbstractEntity implements Client, Constants {
 	private boolean active;
 	
 	public ATClient() {
-		super();
-		setActive(true);
+		this(null);
 	}
 	
 	public ATClient(String name) {
 		super();
 		setActive(true);
 		setName(name);
+	}
+	
+	public static ATClient createNew() {
+		return ATClient.createNew(null);
+	}
+	
+	public static ATClient createNew(String name) {
+		ATClient client = new ATClient(name);
+		client.create();
+		return client;
 	}
 
 	@Override
@@ -96,18 +105,6 @@ public class ATClient extends AbstractEntity implements Client, Constants {
 		if (getClass() != obj.getClass())
 			return false;
 		ATClient other = (ATClient) obj;
-		if (active != other.active)
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (displayName == null) {
-			if (other.displayName != null)
-				return false;
-		} else if (!displayName.equals(other.displayName))
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;

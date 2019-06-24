@@ -17,22 +17,22 @@ public class Logging
 {
 	@Id
     @GeneratedValue
-    @Column(name="ID")
+    @Column(name="UUID")
     private Long id;
 	
-	@Column(name="DATE")
+	@Column(name="LOG_DATE")
 	private Date date;
 	
-	@Column(name= "LEVEL")
+	@Column(name="LOG_LEVEL")
 	private String level;
 	
-	@Column(name="LOGGER")
+	@Column(name="LOG_LOGGER")
 	private String logger;
 	
-	@Column(name="MESSAGE", length=2000)
+	@Column(name="LOG_MESSAGE", length=2000)
 	private String message;
 	
-	@Column(name="EXCEPTION")
+	@Column(name="LOG_EXCEPTION")
 	@Lob
 	private String exception;
 	

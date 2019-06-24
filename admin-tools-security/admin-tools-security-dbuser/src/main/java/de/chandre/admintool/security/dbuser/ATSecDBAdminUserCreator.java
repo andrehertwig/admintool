@@ -1,6 +1,5 @@
 package de.chandre.admintool.security.dbuser;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -121,8 +120,8 @@ public class ATSecDBAdminUserCreator {
 		boolean newUser = null == user;
 		if (null == user) {
 			LOGGER.info("creating user: " + username);
-			user = new ATUser(username, password);
-			user.setAccountExpiredSince(LocalDateTime.now());
+			user = ATUser.createNew(username, password);
+//			user.setAccountExpiredSince(ATSecDBUtils.getNowZoned(user));
 		} else {
 			LOGGER.info("updating user: " + username);
 		}
@@ -148,7 +147,7 @@ public class ATSecDBAdminUserCreator {
 		ATUserGroup userGroup = groupRepo.findByName(groupName);
 		if (null == userGroup) {
 			LOGGER.info("creating group: " + groupName);
-			userGroup = new ATUserGroup(groupName);
+			userGroup = ATUserGroup.createNew(groupName);
 		} else {
 			LOGGER.info("updating group: " + groupName);
 		}

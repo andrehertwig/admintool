@@ -57,14 +57,23 @@ public class ATUserGroup extends AbstractEntity implements UserGroup, Constants 
 	private boolean active;
 	
 	public ATUserGroup() {
-		super();
-		setActive(true);
+		this(null);
 	}
 	
 	public ATUserGroup(String name) {
 		super();
 		setActive(true);
 		setName(name);
+	}
+	
+	public static ATUserGroup createNew() {
+		return ATUserGroup.createNew(null);
+	}
+	
+	public static ATUserGroup createNew(String name) {
+		ATUserGroup ug = new ATUserGroup(name);
+		ug.create();
+		return ug;
 	}
 
 	@Override
