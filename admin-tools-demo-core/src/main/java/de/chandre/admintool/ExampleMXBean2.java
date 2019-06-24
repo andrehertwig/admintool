@@ -52,5 +52,68 @@ public class ExampleMXBean2 {
 		this.simpleList = simpleList;
 	}
 	
+	@ManagedOperation(description="Description for Simple execution")
+	public void operationWithNoArg() {
+		System.out.println("operationWithNoArg called");
+	}
+	
+	@ManagedOperation(description="Description for Simple arg setter")
+	public void operationWithArg(String arg) {
+		System.out.println("operationWithArg called: " + arg);
+	}
+	
+	@ManagedOperation(description="Description for Simple arg getter")
+	public String operationWithNoArgResp() {
+		System.out.println("operationWithNoArg called");
+		return "Hello World";
+	}
+	
+	@ManagedOperation(description="Description for Simple arg setter")
+	public String operationWithArgResp(String arg) {
+		System.out.println("operationWithArg called: " + arg);
+		return String.format("Hello World Arg (arg: %s) ", arg);
+	}
+	
+	@ManagedOperation(description="Description for multiple args setter")
+	public String operationWithArgResp2(String arg, String myOtherArg) {
+		System.out.println("operationWithArg called: " + arg + ", " + myOtherArg);
+		return String.format("Hello World Arg 2 (arg: %s, myOtherArg: %s) ", arg, myOtherArg);
+	}
+	
+	@ManagedOperation(description="Description for Simple List getter")
+	public List<MyObject> operationWithNoArgListResp() {
+		System.out.println("operationWithNoArg called");
+		
+		List<MyObject> result = new ArrayList<>();
+		result.add(new MyObject("Object 1", 1));
+		
+		MyObject o2 = new MyObject("Object 2", 2);
+		o2.addProp("Property 1", "Value 1");
+		o2.addProp("Property 2", "Value 2");
+		result.add(o2);
+		
+		result.add(new MyObject("Object 3", 54656));
+
+		return result;
+	}
+	
+	private static class MyObject {
+		String name;
+		int value;
+		Map<String, String> props;
+
+		public MyObject(String name, int value) {
+			super();
+			this.name = name;
+			this.value = value;
+		}
+		
+		public void addProp(String name, String value) {
+			if(this.props == null) {
+				this.props = new HashMap<>(2);
+			}
+			this.props.put(name, value);
+		}
+	}
 	
 }
