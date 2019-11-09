@@ -65,12 +65,24 @@ public class AdminToolPropertiesService {
 		return gitProperties;
 	}
 	
+	private void filterProperties(Properties prop) {
+		Iterator<Entry<Object, Object>> iter = prop.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry<java.lang.Object, java.lang.Object> entry = (Map.Entry<java.lang.Object, java.lang.Object>) iter.next();
+			if(config.getBlacklistPatterns().stream().anyMatch( p -> p.matcher(entry.getKey().toString()).matches())) {
+				iter.remove();
+			}
+		}
+	}
+	
 	private void loadGitProperties() {
 		try {
 			Resource gitResource = this.applicationContext.getResource(config.getGitPropertiesPath());
 			Reader reader = new InputStreamReader(gitResource.getInputStream(), config.getGitPropertiesEncoding());
 			Properties p = new Properties();
 			p.load(reader);
+			
+			filterProperties(p);
 
 			for (Entry<Object, Object> entry : p.entrySet()) {
 				gitProperties.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
@@ -94,7 +106,9 @@ public class AdminToolPropertiesService {
             if (ps instanceof EnumerablePropertySource<?>) {
                 for (String propName : ((EnumerablePropertySource<?>) ps).getPropertyNames()) {
                 	try {
-                		res.put(propName, env.getProperty(propName));
+                		if(!config.getBlacklistPatterns().stream().anyMatch( p -> p.matcher(propName).matches())) {
+                			res.put(propName, env.getProperty(propName));
+                		}
 					} catch (Exception e) {
 						LOGGER.warn("unresolveable property: " + propName);
 						res.put(propName, "UNRESOLVEABLE");
@@ -133,6 +147,9 @@ public class AdminToolPropertiesService {
 					Reader reader = new InputStreamReader(resource.getInputStream(), config.getGitPropertiesEncoding());
 					Properties p = new Properties();
 					p.load(reader);
+
+					filterProperties(p);
+					
 					return p;
 				}
 			}

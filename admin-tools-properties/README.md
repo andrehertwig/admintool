@@ -12,12 +12,12 @@
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.7.2</version>
+	<version>1.1.7.3</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-properties</artifactId>
-	<version>1.1.7.2</version>
+	<version>1.1.7.3</version>
 </dependency>
 ```
 
@@ -75,5 +75,9 @@ admintool.properties.componentPosition=
 # semicolon separated list of additional properties. Spring resource loading will be used.
 # paths should start either with "classpath:/" or "file:/"
 admintool.properties.addPropertiesPaths=
+
+# since 1.1.7.3
+# semicolon separated list of regex patterns for blacklisting property keys
+admintool.properties.pattern.blacklist=
 	
 ```

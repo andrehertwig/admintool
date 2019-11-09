@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	if($('#envProps').length > 0) {
-		$('#envProps').DataTable();
+	if($('.propsTable').length > 0) {
+		$('.propsTable').DataTable();
 	}
 });

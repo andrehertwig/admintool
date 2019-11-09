@@ -1,13 +1,18 @@
 package de.chandre.admintool.properties;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import de.chandre.admintool.core.AdminToolConfig;
@@ -42,6 +47,21 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 	
 	@Value("#{'${admintool.properties.addPropertiesPaths:}'.split(';')}")
 	private List<String> addPropertiesPaths;
+	
+	@Value("#{'${admintool.properties.pattern.blacklist:}'.split(';')}")
+	private Set<String> patternBlacklist = new HashSet<>();
+	
+	private Set<Pattern> blacklistPatterns;
+	
+	@PostConstruct
+	private void initPattern() {
+		if (!CollectionUtils.isEmpty(patternBlacklist)) {
+			blacklistPatterns = new HashSet<>(patternBlacklist.size());
+			patternBlacklist.forEach(str -> blacklistPatterns.add(Pattern.compile(str, Pattern.CASE_INSENSITIVE)));
+		} else {
+			blacklistPatterns = Collections.emptySet();
+		}
+	}
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -121,6 +141,19 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 	public void setAddPropertiesPaths(List<String> addPropertiesPaths) {
 		this.addPropertiesPaths = addPropertiesPaths;
 	}
+	
+	public Set<String> getPatternBlacklist() {
+		return patternBlacklist;
+	}
+
+	public void setPatternBlacklist(Set<String> patternBlacklist) {
+		this.patternBlacklist = patternBlacklist;
+		initPattern();
+	}
+	
+	public Set<Pattern> getBlacklistPatterns() {
+		return blacklistPatterns;
+	}
 
 	@Override
 	public void printConfig() {
@@ -134,7 +167,8 @@ public class AdminToolPropertiesConfig implements AdminToolConfig
 				.append(gitPropertiesPath).append(", gitPropertiesEncoding=").append(gitPropertiesEncoding)
 				.append(", showEnvironmentProperties=").append(showEnvironmentProperties).append(", securityRoles=")
 				.append(securityRoles).append(", componentPosition=").append(componentPosition)
-				.append(", addPropertiesPaths=").append(addPropertiesPaths).append("]");
+				.append(", addPropertiesPaths=").append(addPropertiesPaths).append(", patternBlacklist=")
+				.append(patternBlacklist).append("]");
 		return builder.toString();
 	}
 
