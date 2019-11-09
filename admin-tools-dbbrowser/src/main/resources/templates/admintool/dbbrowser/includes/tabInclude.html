@@ -128,7 +128,7 @@
 			
 				<div class="row" th:if="${null != queryResultTO.sqlWarnings}">
 					<div class="col-xs-2 col-md-1"><label>SQL-Warning</label></div>
-					<div class="col-xs-10 col-md-11" th:text="{queryResultTO.sqlWarnings}"></div>
+					<div class="col-xs-10 col-md-11" th:text="${queryResultTO.sqlWarnings}"></div>
 				</div>
 				
 				<th:block th:if="${(not queryResultTO.isSelect()) and (null == queryResultTO.exceptionMessage)}">
