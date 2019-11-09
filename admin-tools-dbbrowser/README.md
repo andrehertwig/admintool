@@ -32,12 +32,12 @@ Result will be displayed via jquery.datatables
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-core</artifactId>
-	<version>1.1.7.2</version>
+	<version>1.1.7.3</version>
 </dependency>
 <dependency>
 	<groupId>de.chandre.admin-tools</groupId>
 	<artifactId>admin-tools-dbbrowser</artifactId>
-	<version>1.1.7.2</version>
+	<version>1.1.7.3</version>
 </dependency>
 ```
 
