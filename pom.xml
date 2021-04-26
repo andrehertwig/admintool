@@ -206,7 +206,7 @@
 		
 		<commons-lang.version>3.9</commons-lang.version>
 		<commons-collections.version>4.3</commons-collections.version>
-		<commons-io.version>2.6</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<commons-logging.version>1.2</commons-logging.version>
 		
 		<org.json.version>20151123</org.json.version>
